@@ -1,3 +1,7 @@
 {
-	"itemGroup.itemgroupassemblyline": "Assembly Line"
+	"block.assemblyline.conveyorbelt": "Conveyor Belt",
+	"block.assemblyline.conveyorbeltrunning": "Conveyor Belt Running",
+	"block.assemblyline.manipulator": "Manipulator",
+	"itemGroup.itemgroupassemblyline": "Assembly Line",
+	"tooltip.conveyorbelt.powerusage": "Power Usage: 10W"
 }

@@ -17,6 +17,9 @@ public class AssemblyLine {
 
 	public AssemblyLine() {
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+		DeferredRegisters.BLOCKS.register(bus);
+		DeferredRegisters.ITEMS.register(bus);
+		DeferredRegisters.TILES.register(bus);
 	}
 
 	@SubscribeEvent

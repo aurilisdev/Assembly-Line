@@ -1,13 +1,13 @@
 modLoader="javafml" #mandatory
 loaderVersion="[32,)" #mandatory This is typically bumped every Minecraft version by Forge. See our download page for lists of versions.
 license="All rights reserved"
-issueTrackerURL="https://github.com/Aurilisdev/AssemblyLine" #optional
+issueTrackerURL="https://github.com/aurilisdev/Assembly-Line" #optional
 [[mods]] #mandatory
 modId="assemblyline" #mandatory
 version="${file.jarVersion}" #mandatory
-displayName="Assembyl Line" #mandatory
-displayURL="https://github.com/Aurilisdev/AssemblyLine" #optional
-logoFile="electrodynamics.png" #optional
+displayName="Assembly Line" #mandatory
+displayURL="https://github.com/aurilisdev/Assembly-Line" #optional
+logoFile="assemblyline.png" #optional
 credits="Thanks to all contributors" #optional
 authors="aurilisdev" #optional
 description='''

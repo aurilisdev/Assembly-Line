@@ -1,8 +1,8 @@
 package assemblyline.common.tab;
 
+import assemblyline.DeferredRegisters;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 
 public class ItemGroupAssemblyLine extends ItemGroup {
 
@@ -12,6 +12,6 @@ public class ItemGroupAssemblyLine extends ItemGroup {
 
 	@Override
 	public ItemStack createIcon() {
-		return new ItemStack(Items.APPLE);
+		return new ItemStack(DeferredRegisters.blockConveyorbelt);
 	}
 }
