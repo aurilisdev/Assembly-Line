@@ -2,6 +2,7 @@ package assemblyline.tile;
 
 import assemblyline.DeferredRegisters;
 import assemblyline.block.BlockConveyorBelt;
+import assemblyline.block.BlockManipulator;
 import electrodynamics.api.tile.ITickableTileBase;
 import electrodynamics.common.tile.generic.GenericTileBase;
 import net.minecraft.entity.item.ItemEntity;
@@ -27,6 +28,9 @@ public class TileManipulator extends GenericTileBase implements ITickableTileBas
 			TileEntity facing = world.getTileEntity(pos.offset(dir));
 			TileEntity opposite = world.getTileEntity(pos.offset(dir.getOpposite()));
 			if (opposite instanceof TileConveyorBelt && opposite.getBlockState().get(BlockConveyorBelt.FACING).getOpposite() != dir) {
+				if (((BlockManipulator) getBlockState().getBlock()).input) {
+					world.setBlockState(pos, DeferredRegisters.blockManipulatorOutput.getDefaultState().with(BlockManipulator.FACING, getFacing()));
+				}
 				if (facing instanceof IInventory) {
 					IInventory inv = (IInventory) facing;
 					if (inv instanceof ISidedInventory) {
@@ -59,6 +63,10 @@ public class TileManipulator extends GenericTileBase implements ITickableTileBas
 							}
 						}
 					}
+				}
+			} else {
+				if (!((BlockManipulator) getBlockState().getBlock()).input) {
+					world.setBlockState(pos, DeferredRegisters.blockManipulatorInput.getDefaultState().with(BlockManipulator.FACING, getFacing()));
 				}
 			}
 		}

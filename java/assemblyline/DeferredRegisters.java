@@ -24,17 +24,20 @@ public class DeferredRegisters {
 	public static final DeferredRegister<TileEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, References.ID);
 	public static BlockConveyorBelt blockConveyorbelt;
 	public static BlockConveyorBelt blockConveyorbeltRunning;
-	public static BlockManipulator blockManipulator;
+	public static BlockManipulator blockManipulatorInput;
+	public static BlockManipulator blockManipulatorOutput;
 	public static BlockDetector blockDetector;
 
 	static {
 		BLOCKS.register("conveyorbelt", supplier(blockConveyorbelt = new BlockConveyorBelt(false)));
 		BLOCKS.register("conveyorbeltrunning", supplier(blockConveyorbeltRunning = new BlockConveyorBelt(true)));
-		BLOCKS.register("manipulator", supplier(blockManipulator = new BlockManipulator()));
+		BLOCKS.register("manipulatorinput", supplier(blockManipulatorInput = new BlockManipulator(true)));
+		BLOCKS.register("manipulatoroutput", supplier(blockManipulatorOutput = new BlockManipulator(false)));
 		BLOCKS.register("detector", supplier(blockDetector = new BlockDetector()));
 		ITEMS.register("conveyorbelt", supplier(new BlockItemDescriptable(blockConveyorbelt, new Item.Properties().group(References.CORETAB))));
 		ITEMS.register("conveyorbeltrunning", supplier(new BlockItemDescriptable(blockConveyorbeltRunning, new Item.Properties())));
-		ITEMS.register("manipulator", supplier(new BlockItemDescriptable(blockManipulator, new Item.Properties().group(References.CORETAB))));
+		ITEMS.register("manipulatorinput", supplier(new BlockItemDescriptable(blockManipulatorInput, new Item.Properties().group(References.CORETAB))));
+		ITEMS.register("manipulatoroutput", supplier(new BlockItemDescriptable(blockManipulatorOutput, new Item.Properties())));
 		ITEMS.register("detector", supplier(new BlockItemDescriptable(blockDetector, new Item.Properties().group(References.CORETAB))));
 		BlockItemDescriptable.addDescription(blockConveyorbelt, "|translate|tooltip.conveyorbelt.powerusage");
 		BlockItemDescriptable.addDescription(blockConveyorbeltRunning, "|translate|tooltip.conveyorbelt.powerusage");
@@ -43,7 +46,8 @@ public class DeferredRegisters {
 
 	public static final RegistryObject<TileEntityType<TileConveyorBelt>> TILE_CONVEYORBELT = TILES.register("conveyorbelt",
 			() -> new TileEntityType<>(TileConveyorBelt::new, Sets.newHashSet(blockConveyorbelt, blockConveyorbeltRunning), null));
-	public static final RegistryObject<TileEntityType<TileManipulator>> TILE_MANIPULATOR = TILES.register("manipulator", () -> new TileEntityType<>(TileManipulator::new, Sets.newHashSet(blockManipulator), null));
+	public static final RegistryObject<TileEntityType<TileManipulator>> TILE_MANIPULATOR = TILES.register("manipulator",
+			() -> new TileEntityType<>(TileManipulator::new, Sets.newHashSet(blockManipulatorInput, blockManipulatorOutput), null));
 	public static final RegistryObject<TileEntityType<TileDetector>> TILE_DETECTOR = TILES.register("detector", () -> new TileEntityType<>(TileDetector::new, Sets.newHashSet(blockDetector), null));
 
 	private static <T extends IForgeRegistryEntry<T>> Supplier<? extends T> supplier(T entry) {
