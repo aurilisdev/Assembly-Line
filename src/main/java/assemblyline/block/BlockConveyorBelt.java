@@ -82,7 +82,8 @@ public class BlockConveyorBelt extends Block {
 						ItemEntity itemEntity = (ItemEntity) entityIn;
 						if (!itemEntity.getItem().isEmpty()) {
 							if (side.getBlock() instanceof BlockManipulator) {
-								if (side.get(BlockManipulator.FACING) == dir.getOpposite()) { // TODO: This could be optimized by moving it to the manipulator tile
+								if (side.get(BlockManipulator.FACING) == dir.getOpposite()) { // TODO: This could be optimized by moving it to the manipulator tile so it
+																								// doesnt do it for every item each individually but for all at the same time
 									BlockPos chestPos = next.offset(dir);
 									TileEntity chestTile = world.getTileEntity(chestPos);
 									if (chestTile instanceof IInventory) {
