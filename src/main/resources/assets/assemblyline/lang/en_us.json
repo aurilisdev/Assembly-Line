@@ -3,8 +3,11 @@
 	"block.assemblyline.conveyorbeltrunning": "Conveyor Belt Running",
 	"block.assemblyline.manipulatorinput": "Manipulator",
 	"block.assemblyline.manipulatoroutput": "Manipulator Output",
+	"block.assemblyline.manipulatorinputrunning": "Manipulator Running",
+	"block.assemblyline.manipulatoroutputrunning": "Manipulator Output Running",
 	"block.assemblyline.detector": "Detector",
 	"itemGroup.itemgroupassemblyline": "Assembly Line",
 	"tooltip.conveyorbelt.powerusage": "Power Usage: 10W",
+	"tooltip.manipulator.powerusage": "Power Usage: 10W",
 	"tooltip.detector": "Emits redstone signal when an item is in front of it"
 }

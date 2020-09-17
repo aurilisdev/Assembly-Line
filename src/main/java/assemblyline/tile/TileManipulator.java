@@ -4,7 +4,11 @@ import assemblyline.DeferredRegisters;
 import assemblyline.block.BlockConveyorBelt;
 import assemblyline.block.BlockManipulator;
 import electrodynamics.api.tile.ITickableTileBase;
+import electrodynamics.api.tile.electric.IElectricTile;
+import electrodynamics.api.tile.electric.IPowerReceiver;
+import electrodynamics.api.utilities.TransferPack;
 import electrodynamics.common.tile.generic.GenericTileBase;
+import net.minecraft.block.Block;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
@@ -13,7 +17,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
-public class TileManipulator extends GenericTileBase implements ITickableTileBase {
+public class TileManipulator extends GenericTileBase implements ITickableTileBase, IPowerReceiver, IElectricTile {
+	public static final double MAX_JOULES = 100;
+	public double joules = 0;
+
 	private long ticks = 0;
 
 	public TileManipulator() {
@@ -23,7 +30,21 @@ public class TileManipulator extends GenericTileBase implements ITickableTileBas
 	@Override
 	public void tickServer() {
 		ticks++;
+		boolean running = ((BlockManipulator) getBlockState().getBlock()).running;
+		boolean input = ((BlockManipulator) getBlockState().getBlock()).input;
 		if (ticks % 20 == 0) {
+			if (joules < 0.5) {
+				if (running) {
+					Block next = input ? DeferredRegisters.blockManipulatorInput : DeferredRegisters.blockManipulatorOutput;
+					world.setBlockState(pos, next.getDefaultState().with(BlockConveyorBelt.FACING, getFacing()));
+				}
+			} else {
+				joules -= 0.5;
+				if (!running) {
+					Block next = input ? DeferredRegisters.blockManipulatorInputRunning : DeferredRegisters.blockManipulatorOutputRunning;
+					world.setBlockState(pos, next.getDefaultState().with(BlockConveyorBelt.FACING, getFacing()));
+				}
+			}
 			Direction dir = getFacing().getOpposite();
 			TileEntity facing = world.getTileEntity(pos.offset(dir));
 			TileEntity opposite = world.getTileEntity(pos.offset(dir.getOpposite()));
@@ -70,6 +91,23 @@ public class TileManipulator extends GenericTileBase implements ITickableTileBas
 				}
 			}
 		}
+	}
+
+	@Override
+	public TransferPack receivePower(TransferPack transfer, Direction dir, boolean debug) {
+		if (!canConnectElectrically(dir)) {
+			return TransferPack.EMPTY;
+		}
+		double received = Math.min(transfer.getJoules(), MAX_JOULES - joules);
+		if (!debug) {
+			joules += received;
+		}
+		return TransferPack.joulesVoltage(received, transfer.getVoltage());
+	}
+
+	@Override
+	public boolean canConnectElectrically(Direction dir) {
+		return dir == Direction.DOWN;
 	}
 
 }

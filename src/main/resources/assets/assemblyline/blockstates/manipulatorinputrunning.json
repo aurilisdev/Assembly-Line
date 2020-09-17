@@ -1,0 +1,20 @@
+{
+	"variants": {
+		"facing=east": {
+			"model": "assemblyline:block/manipulatorinputrunning",
+			"y": 0
+		},
+		"facing=north": {
+			"model": "assemblyline:block/manipulatorinputrunning",
+			"y": 270
+		},
+		"facing=south": {
+			"model": "assemblyline:block/manipulatorinputrunning",
+			"y": 90
+		},
+		"facing=west": {
+			"model": "assemblyline:block/manipulatorinputrunning",
+			"y": 180
+		}
+	}
+}

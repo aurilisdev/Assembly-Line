@@ -32,11 +32,13 @@ public class BlockManipulator extends Block {
 	private static final VoxelShape shape = VoxelShapes.create(0, 0, 0, 1, 11.0 / 16.0, 1);
 
 	public final boolean input;
+	public final boolean running;
 
-	public BlockManipulator(boolean input) {
+	public BlockManipulator(boolean input, boolean running) {
 		super(Properties.create(Material.IRON).hardnessAndResistance(3.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).notSolid());
 		setDefaultState(stateContainer.getBaseState().with(FACING, Direction.NORTH));
 		this.input = input;
+		this.running = running;
 	}
 
 	@Override
