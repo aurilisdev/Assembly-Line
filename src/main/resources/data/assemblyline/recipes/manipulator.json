@@ -6,10 +6,13 @@
 		},
 		{
 			"item": "electrodynamics:circuitbasic"
+		},
+		{
+			"item": "electrodynamics:conveyorbelt"
 		}
 	],
 	"result": {
 		"item": "assemblyline:manipulatorinput",
-		"count": 2
+		"count": 1
 	}
 }
