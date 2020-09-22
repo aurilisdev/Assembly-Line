@@ -58,7 +58,7 @@ public class BlockDetector extends Block {
 		return 0;
 	}
 
-	@SuppressWarnings("deprecation")
+	@Deprecated
 	@Override
 	public BlockState mirror(BlockState state, Mirror mirrorIn) {
 		return state.rotate(mirrorIn.toRotation(state.get(FACING)));

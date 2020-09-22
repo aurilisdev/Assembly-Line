@@ -106,13 +106,13 @@ public class BlockConveyorBelt extends Block {
 		return state.with(FACING, rot.rotate(state.get(FACING)));
 	}
 
-	@SuppressWarnings("deprecation")
+	@Deprecated
 	@Override
 	public BlockState mirror(BlockState state, Mirror mirrorIn) {
 		return state.rotate(mirrorIn.toRotation(state.get(FACING)));
 	}
 
-	@SuppressWarnings("deprecation")
+	@Deprecated
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		worldIn.markBlockRangeForRenderUpdate(pos, state, newState);

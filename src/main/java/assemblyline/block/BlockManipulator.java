@@ -56,7 +56,7 @@ public class BlockManipulator extends Block {
 		return Arrays.asList(new ItemStack(DeferredRegisters.blockManipulatorInput));
 	}
 
-	@SuppressWarnings("deprecation")
+	@Deprecated
 	@Override
 	public BlockState mirror(BlockState state, Mirror mirrorIn) {
 		return state.rotate(mirrorIn.toRotation(state.get(FACING)));
