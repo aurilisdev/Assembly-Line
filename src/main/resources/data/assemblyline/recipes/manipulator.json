@@ -5,10 +5,10 @@
 			"item": "minecraft:dispenser"
 		},
 		{
-			"item": "electrodynamics:circuitbasic"
+			"tag": "forge:circuits/basic"
 		},
 		{
-			"item": "electrodynamics:conveyorbelt"
+			"item": "assemblyline:conveyorbelt"
 		}
 	],
 	"result": {
