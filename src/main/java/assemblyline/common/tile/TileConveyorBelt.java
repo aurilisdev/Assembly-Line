@@ -1,6 +1,7 @@
-package assemblyline.tile;
+package assemblyline.common.tile;
 
 import assemblyline.DeferredRegisters;
+import assemblyline.common.settings.Constants;
 import electrodynamics.api.tile.electric.IElectricTile;
 import electrodynamics.api.tile.electric.IPowerReceiver;
 import electrodynamics.api.utilities.TransferPack;
@@ -8,7 +9,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 
 public class TileConveyorBelt extends TileEntity implements IPowerReceiver, IElectricTile {
-	public static final double MAX_JOULES = 100;
 	public double joules = 0;
 	public long lastTime = 0;
 
@@ -21,7 +21,7 @@ public class TileConveyorBelt extends TileEntity implements IPowerReceiver, IEle
 		if (!canConnectElectrically(dir)) {
 			return TransferPack.EMPTY;
 		}
-		double received = Math.min(transfer.getJoules(), MAX_JOULES - joules);
+		double received = Math.min(transfer.getJoules(), Constants.CONVEYORBELT_USAGE * 200 - joules);
 		if (!debug) {
 			joules += received;
 		}

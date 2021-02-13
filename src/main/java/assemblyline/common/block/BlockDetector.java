@@ -1,6 +1,6 @@
-package assemblyline.block;
+package assemblyline.common.block;
 
-import assemblyline.tile.TileDetector;
+import assemblyline.common.tile.TileDetector;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
@@ -21,8 +21,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraftforge.common.ToolType;
 
 public class BlockDetector extends Block {
-	public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 	private static final VoxelShape shape = VoxelShapes.create(0, 0, 0, 1, 11.0 / 16.0, 1);
+	public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 
 	public BlockDetector() {
 		super(Properties.create(Material.IRON).hardnessAndResistance(3.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).notSolid());

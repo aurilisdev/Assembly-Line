@@ -1,8 +1,9 @@
-package assemblyline.tile;
+package assemblyline.common.tile;
 
 import assemblyline.DeferredRegisters;
-import assemblyline.block.BlockConveyorBelt;
-import assemblyline.block.BlockManipulator;
+import assemblyline.common.block.BlockConveyorBelt;
+import assemblyline.common.block.BlockManipulator;
+import assemblyline.common.settings.Constants;
 import electrodynamics.api.tile.ITickableTileBase;
 import electrodynamics.api.tile.electric.IElectricTile;
 import electrodynamics.api.tile.electric.IPowerReceiver;
@@ -18,7 +19,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
 public class TileManipulator extends GenericTileBase implements ITickableTileBase, IPowerReceiver, IElectricTile {
-	public static final double MAX_JOULES = 100;
 	public double joules = 0;
 
 	private long ticks = 0;
@@ -33,13 +33,13 @@ public class TileManipulator extends GenericTileBase implements ITickableTileBas
 		boolean running = ((BlockManipulator) getBlockState().getBlock()).running;
 		boolean input = ((BlockManipulator) getBlockState().getBlock()).input;
 		if (ticks % 20 == 0) {
-			if (joules < 0.5) {
+			if (joules < Constants.MANIPULATOR_USAGE) {
 				if (running) {
 					Block next = input ? DeferredRegisters.blockManipulatorInput : DeferredRegisters.blockManipulatorOutput;
 					world.setBlockState(pos, next.getDefaultState().with(BlockConveyorBelt.FACING, getFacing()));
 				}
 			} else {
-				joules -= 0.5;
+				joules -= Constants.MANIPULATOR_USAGE;
 				if (!running) {
 					Block next = input ? DeferredRegisters.blockManipulatorInputRunning : DeferredRegisters.blockManipulatorOutputRunning;
 					world.setBlockState(pos, next.getDefaultState().with(BlockConveyorBelt.FACING, getFacing()));
@@ -98,7 +98,7 @@ public class TileManipulator extends GenericTileBase implements ITickableTileBas
 		if (!canConnectElectrically(dir)) {
 			return TransferPack.EMPTY;
 		}
-		double received = Math.min(transfer.getJoules(), MAX_JOULES - joules);
+		double received = Math.min(transfer.getJoules(), Constants.MANIPULATOR_USAGE * 200 - joules);
 		if (!debug) {
 			joules += received;
 		}

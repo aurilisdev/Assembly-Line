@@ -1,10 +1,11 @@
-package assemblyline.block;
+package assemblyline.common.block;
 
 import java.util.Arrays;
 import java.util.List;
 
 import assemblyline.DeferredRegisters;
-import assemblyline.tile.TileConveyorBelt;
+import assemblyline.common.settings.Constants;
+import assemblyline.common.tile.TileConveyorBelt;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
@@ -32,8 +33,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 
 public class BlockConveyorBelt extends Block {
-	public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 	private static final VoxelShape shape = VoxelShapes.create(0, 0, 0, 1, 5.0 / 16.0, 1);
+	public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 	public final boolean running;
 
 	public BlockConveyorBelt(boolean running) {
@@ -58,13 +59,13 @@ public class BlockConveyorBelt extends Block {
 		if (!world.isRemote) {
 			if (tile instanceof TileConveyorBelt) {
 				TileConveyorBelt belt = (TileConveyorBelt) tile;
-				if (belt.joules < 0.5) {
+				if (belt.joules < Constants.CONVEYORBELT_USAGE) {
 					if (running) {
 						world.setBlockState(pos, DeferredRegisters.blockConveyorbelt.getDefaultState().with(BlockConveyorBelt.FACING, state.get(BlockConveyorBelt.FACING)));
 					}
 				} else {
 					if (belt.lastTime != world.getGameTime()) {
-						belt.joules -= 0.5;
+						belt.joules -= Constants.CONVEYORBELT_USAGE;
 						belt.lastTime = world.getGameTime();
 						if (!running) {
 							world.setBlockState(pos, DeferredRegisters.blockConveyorbeltRunning.getDefaultState().with(BlockConveyorBelt.FACING, state.get(BlockConveyorBelt.FACING)));

@@ -1,4 +1,4 @@
-package assemblyline.tile;
+package assemblyline.common.tile;
 
 import java.util.List;
 import java.util.function.Predicate;

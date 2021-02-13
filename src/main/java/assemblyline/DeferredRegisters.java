@@ -3,12 +3,12 @@ package assemblyline;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Sets;
 
-import assemblyline.block.BlockConveyorBelt;
-import assemblyline.block.BlockDetector;
-import assemblyline.block.BlockManipulator;
-import assemblyline.tile.TileConveyorBelt;
-import assemblyline.tile.TileDetector;
-import assemblyline.tile.TileManipulator;
+import assemblyline.common.block.BlockConveyorBelt;
+import assemblyline.common.block.BlockDetector;
+import assemblyline.common.block.BlockManipulator;
+import assemblyline.common.tile.TileConveyorBelt;
+import assemblyline.common.tile.TileDetector;
+import assemblyline.common.tile.TileManipulator;
 import electrodynamics.common.blockitem.BlockItemDescriptable;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;

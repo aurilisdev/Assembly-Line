@@ -1,10 +1,10 @@
-package assemblyline.block;
+package assemblyline.common.block;
 
 import java.util.Arrays;
 import java.util.List;
 
 import assemblyline.DeferredRegisters;
-import assemblyline.tile.TileManipulator;
+import assemblyline.common.tile.TileManipulator;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
@@ -28,8 +28,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 
 public class BlockManipulator extends Block {
-	public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 	private static final VoxelShape shape = VoxelShapes.create(0, 0, 0, 1, 11.0 / 16.0, 1);
+	public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 
 	public final boolean input;
 	public final boolean running;
