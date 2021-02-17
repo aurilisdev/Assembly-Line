@@ -67,10 +67,12 @@ public class BlockManipulator extends Block {
 		return getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!(state.getBlock() instanceof BlockManipulator)) {
-			worldIn.removeTileEntity(pos);
+		worldIn.markBlockRangeForRenderUpdate(pos, state, newState);
+		if (!(newState.getBlock() instanceof BlockManipulator)) {
+			super.onReplaced(state, worldIn, pos, newState, isMoving);
 		}
 	}
 

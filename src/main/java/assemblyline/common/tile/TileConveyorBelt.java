@@ -1,6 +1,7 @@
 package assemblyline.common.tile;
 
 import assemblyline.DeferredRegisters;
+import assemblyline.common.settings.Constants;
 import electrodynamics.api.tile.electric.CapabilityElectrodynamic;
 import electrodynamics.api.tile.electric.IElectrodynamic;
 import net.minecraft.tileentity.TileEntity;
@@ -37,6 +38,6 @@ public class TileConveyorBelt extends TileEntity implements IElectrodynamic {
 
 	@Override
 	public double getMaxJoulesStored() {
-		return joules * 200;
+		return Constants.CONVEYORBELT_USAGE * 200;
 	}
 }

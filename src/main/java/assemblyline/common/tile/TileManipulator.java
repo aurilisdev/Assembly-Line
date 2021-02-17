@@ -115,7 +115,7 @@ public class TileManipulator extends GenericTileBase implements ITickableTileBas
 
 	@Override
 	public double getMaxJoulesStored() {
-		return joules * 200;
+		return Constants.MANIPULATOR_USAGE * 200;
 	}
 
 }
