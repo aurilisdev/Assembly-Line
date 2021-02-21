@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import assemblyline.DeferredRegisters;
-import assemblyline.common.settings.Constants;
 import assemblyline.common.tile.TileConveyorBelt;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -12,14 +11,11 @@ import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext.Builder;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Mirror;
@@ -59,45 +55,7 @@ public class BlockConveyorBelt extends Block {
 		if (!world.isRemote) {
 			if (tile instanceof TileConveyorBelt) {
 				TileConveyorBelt belt = (TileConveyorBelt) tile;
-				if (belt.joules < Constants.CONVEYORBELT_USAGE) {
-					if (running) {
-						world.setBlockState(pos, DeferredRegisters.blockConveyorbelt.getDefaultState().with(BlockConveyorBelt.FACING, state.get(BlockConveyorBelt.FACING)));
-					}
-				} else {
-					if (belt.lastTime != world.getGameTime()) {
-						belt.joules -= Constants.CONVEYORBELT_USAGE;
-						belt.lastTime = world.getGameTime();
-						if (!running) {
-							world.setBlockState(pos, DeferredRegisters.blockConveyorbeltRunning.getDefaultState().with(BlockConveyorBelt.FACING, state.get(BlockConveyorBelt.FACING)));
-						}
-					}
-				}
-			}
-			if (((BlockConveyorBelt) world.getBlockState(pos).getBlock()).running) {
-				if (entityIn.getPosY() > pos.getY() + 4.0 / 16.0) {
-					Direction dir = state.get(FACING).getOpposite();
-					entityIn.addVelocity(dir.getXOffset() / 20.0, 0, dir.getZOffset() / 20.0);
-					BlockPos next = pos.offset(dir);
-					BlockState side = world.getBlockState(next);
-					if (entityIn instanceof ItemEntity) {
-						ItemEntity itemEntity = (ItemEntity) entityIn;
-						if (!itemEntity.getItem().isEmpty()) {
-							if (side.getBlock() instanceof BlockManipulator) {
-								if (side.get(BlockManipulator.FACING) == dir.getOpposite()) { // TODO: This could be optimized by moving it to the manipulator tile so it
-																								// doesnt do it for every item each individually but for all at the same time
-									BlockPos chestPos = next.offset(dir);
-									TileEntity chestTile = world.getTileEntity(chestPos);
-									if (chestTile instanceof IInventory) {
-										itemEntity.setItem(HopperTileEntity.putStackInInventoryAllSlots(null, (IInventory) chestTile, itemEntity.getItem(), dir.getOpposite()));
-										if (itemEntity.getItem().isEmpty()) {
-											itemEntity.remove();
-										}
-									}
-								}
-							}
-						}
-					}
-				}
+				belt.onEntityCollision(entityIn, running);
 			}
 		}
 	}

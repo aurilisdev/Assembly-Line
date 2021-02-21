@@ -7,13 +7,11 @@ import assemblyline.DeferredRegisters;
 import assemblyline.common.tile.TileManipulator;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext.Builder;
-import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -29,14 +27,13 @@ import net.minecraftforge.common.ToolType;
 
 public class BlockManipulator extends Block {
 	private static final VoxelShape shape = VoxelShapes.create(0, 0, 0, 1, 11.0 / 16.0, 1);
-	public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 
 	public final boolean input;
 	public final boolean running;
 
 	public BlockManipulator(boolean input, boolean running) {
 		super(Properties.create(Material.IRON).hardnessAndResistance(3.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).notSolid());
-		setDefaultState(stateContainer.getBaseState().with(FACING, Direction.NORTH));
+		setDefaultState(stateContainer.getBaseState().with(BlockConveyorBelt.FACING, Direction.NORTH));
 		this.input = input;
 		this.running = running;
 	}
@@ -48,7 +45,7 @@ public class BlockManipulator extends Block {
 
 	@Override
 	public BlockState rotate(BlockState state, Rotation rot) {
-		return state.with(FACING, rot.rotate(state.get(FACING)));
+		return state.with(BlockConveyorBelt.FACING, rot.rotate(state.get(BlockConveyorBelt.FACING)));
 	}
 
 	@Override
@@ -59,12 +56,12 @@ public class BlockManipulator extends Block {
 	@Deprecated
 	@Override
 	public BlockState mirror(BlockState state, Mirror mirrorIn) {
-		return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+		return state.rotate(mirrorIn.toRotation(state.get(BlockConveyorBelt.FACING)));
 	}
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return getDefaultState().with(FACING, context.getPlacementHorizontalFacing().getOpposite());
+		return getDefaultState().with(BlockConveyorBelt.FACING, context.getPlacementHorizontalFacing().getOpposite());
 	}
 
 	@SuppressWarnings("deprecation")
@@ -78,7 +75,7 @@ public class BlockManipulator extends Block {
 
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-		builder.add(FACING);
+		builder.add(BlockConveyorBelt.FACING);
 	}
 
 	@Override

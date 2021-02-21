@@ -3,37 +3,49 @@ package assemblyline.common.tile;
 import assemblyline.DeferredRegisters;
 import assemblyline.common.block.BlockConveyorBelt;
 import assemblyline.common.block.BlockManipulator;
+import assemblyline.common.inventory.container.ContainerSorterBelt;
 import assemblyline.common.settings.Constants;
 import electrodynamics.api.tile.electric.CapabilityElectrodynamic;
 import electrodynamics.api.tile.electric.IElectrodynamic;
+import electrodynamics.common.tile.generic.GenericTileInventory;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
+import net.minecraft.inventory.container.Container;
+import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.IntArray;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class TileConveyorBelt extends TileEntity implements IElectrodynamic {
+public class TileSorterBelt extends GenericTileInventory implements IElectrodynamic, INamedContainerProvider {
 	public double joules = 0;
 	public long lastTime = 0;
 
-	public TileConveyorBelt() {
-		super(DeferredRegisters.TILE_CONVEYORBELT.get());
+	public TileSorterBelt() {
+		super(DeferredRegisters.TILE_SORTERBELT.get());
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
-		Direction check = getBlockState().get(BlockConveyorBelt.FACING);
-		;
-		if (capability == CapabilityElectrodynamic.ELECTRODYNAMIC && facing != Direction.UP && facing != check && facing != check.getOpposite()) {
+		if (capability == CapabilityElectrodynamic.ELECTRODYNAMIC && facing == Direction.DOWN) {
 			return (LazyOptional<T>) LazyOptional.of(() -> this);
 		}
 		return super.getCapability(capability, facing);
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
+		return new TranslationTextComponent("container.sorterbelt");
 	}
 
 	@Override
@@ -51,16 +63,53 @@ public class TileConveyorBelt extends TileEntity implements IElectrodynamic {
 		return Constants.CONVEYORBELT_USAGE * 200;
 	}
 
+	@Override
+	public int getSizeInventory() {
+		return 18;
+	}
+
+	@Override
+	public int[] getSlotsForFace(Direction side) {
+		return SLOTS_EMPTY;
+	}
+
+	@Override
+	protected Container createMenu(int id, PlayerInventory player) {
+		return new ContainerSorterBelt(id, player, this, new IntArray(0));
+	}
+
 	public void onEntityCollision(Entity entityIn, boolean running) {
 		Direction facing = getBlockState().get(BlockConveyorBelt.FACING);
 		if (running) {
 			if (entityIn.getPosY() > pos.getY() + 4.0 / 16.0) {
 				Direction dir = facing.getOpposite();
-				entityIn.addVelocity(dir.getXOffset() / 20.0, 0, dir.getZOffset() / 20.0);
 				BlockPos next = pos.offset(dir);
 				BlockState side = world.getBlockState(next);
 				if (entityIn instanceof ItemEntity) {
 					ItemEntity itemEntity = (ItemEntity) entityIn;
+					boolean hasRight = false;
+					boolean hasLeft = false;
+					for (int i = 0; i < 9; i++) {
+						ItemStack s = getStackInSlot(i);
+						if (s.getItem() == itemEntity.getItem().getItem()) {
+							hasLeft = true;
+							break;
+						}
+					}
+					for (int i = 9; i < 18; i++) {
+						ItemStack s = getStackInSlot(i);
+						if (s.getItem() == itemEntity.getItem().getItem()) {
+							hasRight = true;
+							break;
+						}
+					}
+					if (hasLeft) {
+						entityIn.addVelocity(dir.rotateYCCW().getXOffset() / 20.0, 0, dir.rotateYCCW().getZOffset() / 20.0);
+					} else if (hasRight) {
+						entityIn.addVelocity(dir.rotateY().getXOffset() / 20.0, 0, dir.rotateY().getZOffset() / 20.0);
+					} else {
+						entityIn.addVelocity(dir.getXOffset() / 20.0, 0, dir.getZOffset() / 20.0);
+					}
 					if (!itemEntity.getItem().isEmpty()) {
 						if (side.getBlock() instanceof BlockManipulator) {
 							if (side.get(BlockConveyorBelt.FACING) == dir.getOpposite()) {
@@ -75,19 +124,21 @@ public class TileConveyorBelt extends TileEntity implements IElectrodynamic {
 							}
 						}
 					}
+				} else {
+					entityIn.addVelocity(dir.getXOffset() / 20.0, 0, dir.getZOffset() / 20.0);
 				}
 			}
 		}
-		if (joules < Constants.CONVEYORBELT_USAGE) {
+		if (joules < Constants.SORTERBELT_USAGE) {
 			if (running) {
-				world.setBlockState(pos, DeferredRegisters.blockConveyorbelt.getDefaultState().with(BlockConveyorBelt.FACING, facing));
+				world.setBlockState(pos, DeferredRegisters.blockSorterBelt.getDefaultState().with(BlockConveyorBelt.FACING, facing));
 			}
 		} else {
 			if (lastTime != world.getGameTime()) {
-				joules -= Constants.CONVEYORBELT_USAGE;
+				joules -= Constants.SORTERBELT_USAGE;
 				lastTime = world.getGameTime();
 				if (!running) {
-					world.setBlockState(pos, DeferredRegisters.blockConveyorbeltRunning.getDefaultState().with(BlockConveyorBelt.FACING, facing));
+					world.setBlockState(pos, DeferredRegisters.blockSorterBeltRunning.getDefaultState().with(BlockConveyorBelt.FACING, facing));
 				}
 			}
 		}

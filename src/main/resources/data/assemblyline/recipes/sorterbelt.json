@@ -1,0 +1,18 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"csc"
+	],
+	"key": {
+		"s": {
+			"item": "assemblyline:conveyorbelt"
+		},
+		"c": {
+			"item": "minecraft:hopper"
+		}
+	},
+	"result": {
+		"item": "assemblyline:sorterbelt",
+		"count": 1
+	}
+}

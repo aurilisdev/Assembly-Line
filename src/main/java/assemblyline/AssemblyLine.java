@@ -1,11 +1,16 @@
 package assemblyline;
 
+import assemblyline.client.ClientRegister;
 import assemblyline.common.settings.Constants;
 import electrodynamics.api.configuration.ConfigurationHandler;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(References.ID)
@@ -18,5 +23,13 @@ public class AssemblyLine {
 		DeferredRegisters.BLOCKS.register(bus);
 		DeferredRegisters.ITEMS.register(bus);
 		DeferredRegisters.TILES.register(bus);
+		DeferredRegisters.CONTAINERS.register(bus);
 	}
+
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
+	public static void onClientSetup(FMLClientSetupEvent event) {
+		ClientRegister.setup();
+	}
+
 }

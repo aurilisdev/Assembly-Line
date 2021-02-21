@@ -1,13 +1,17 @@
 {
 	"block.assemblyline.conveyorbelt": "Conveyor Belt",
 	"block.assemblyline.conveyorbeltrunning": "Conveyor Belt Running",
+	"block.assemblyline.sorterbelt": "Sorter Belt",
+	"block.assemblyline.sorterbeltrunning": "Sorter Belt Running",
 	"block.assemblyline.manipulatorinput": "Manipulator",
 	"block.assemblyline.manipulatoroutput": "Manipulator Output",
 	"block.assemblyline.manipulatorinputrunning": "Manipulator Running",
 	"block.assemblyline.manipulatoroutputrunning": "Manipulator Output Running",
 	"block.assemblyline.detector": "Detector",
+	"container.sorterbelt": "Sorter Belt",
 	"itemGroup.itemgroupassemblyline": "Assembly Line",
 	"tooltip.conveyorbelt.powerusage": "Power Usage: 10W",
+	"tooltip.sorterbelt.powerusage": "Power Usage: 10W",
 	"tooltip.manipulator.powerusage": "Power Usage: 10W",
 	"tooltip.detector": "Emits redstone signal when an item is in front of it"
 }
