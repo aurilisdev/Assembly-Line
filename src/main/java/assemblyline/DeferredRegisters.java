@@ -3,6 +3,7 @@ package assemblyline;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Sets;
 
+import assemblyline.common.block.BlockCache;
 import assemblyline.common.block.BlockConveyorBelt;
 import assemblyline.common.block.BlockDetector;
 import assemblyline.common.block.BlockManipulator;
@@ -36,6 +37,7 @@ public class DeferredRegisters {
 	public static BlockManipulator blockManipulatorOutput;
 	public static BlockManipulator blockManipulatorOutputRunning;
 	public static BlockDetector blockDetector;
+	public static BlockCache blockCache;
 
 	static {
 		BLOCKS.register("conveyorbelt", supplier(blockConveyorbelt = new BlockConveyorBelt(false)));
@@ -47,15 +49,17 @@ public class DeferredRegisters {
 		BLOCKS.register("manipulatorinputrunning", supplier(blockManipulatorInputRunning = new BlockManipulator(true, true)));
 		BLOCKS.register("manipulatoroutputrunning", supplier(blockManipulatorOutputRunning = new BlockManipulator(false, true)));
 		BLOCKS.register("detector", supplier(blockDetector = new BlockDetector()));
-		ITEMS.register("conveyorbelt", supplier(new BlockItemDescriptable(blockConveyorbelt, new Item.Properties().group(References.CORETAB))));
+		BLOCKS.register("cache", supplier(blockCache = new BlockCache()));
+		ITEMS.register("conveyorbelt", supplier(new BlockItemDescriptable(blockConveyorbelt, new Item.Properties().group(References.ASSEMBLYLINETAB))));
 		ITEMS.register("conveyorbeltrunning", supplier(new BlockItemDescriptable(blockConveyorbeltRunning, new Item.Properties())));
-		ITEMS.register("sorterbelt", supplier(new BlockItemDescriptable(blockSorterBelt, new Item.Properties().group(References.CORETAB))));
+		ITEMS.register("sorterbelt", supplier(new BlockItemDescriptable(blockSorterBelt, new Item.Properties().group(References.ASSEMBLYLINETAB))));
 		ITEMS.register("sorterbeltrunning", supplier(new BlockItemDescriptable(blockSorterBeltRunning, new Item.Properties())));
-		ITEMS.register("manipulatorinput", supplier(new BlockItemDescriptable(blockManipulatorInput, new Item.Properties().group(References.CORETAB))));
+		ITEMS.register("manipulatorinput", supplier(new BlockItemDescriptable(blockManipulatorInput, new Item.Properties().group(References.ASSEMBLYLINETAB))));
 		ITEMS.register("manipulatorinputrunning", supplier(new BlockItemDescriptable(blockManipulatorInputRunning, new Item.Properties())));
 		ITEMS.register("manipulatoroutput", supplier(new BlockItemDescriptable(blockManipulatorOutput, new Item.Properties())));
 		ITEMS.register("manipulatoroutputrunning", supplier(new BlockItemDescriptable(blockManipulatorOutputRunning, new Item.Properties())));
-		ITEMS.register("detector", supplier(new BlockItemDescriptable(blockDetector, new Item.Properties().group(References.CORETAB))));
+		ITEMS.register("detector", supplier(new BlockItemDescriptable(blockDetector, new Item.Properties().group(References.ASSEMBLYLINETAB))));
+		ITEMS.register("cache", supplier(new BlockItemDescriptable(blockCache, new Item.Properties().group(References.ASSEMBLYLINETAB))));
 		BlockItemDescriptable.addDescription(blockConveyorbelt, "|translate|tooltip.conveyorbelt.powerusage");
 		BlockItemDescriptable.addDescription(blockSorterBelt, "|translate|tooltip.sorterbelt.powerusage");
 		BlockItemDescriptable.addDescription(blockDetector, "|translate|tooltip.detector");
