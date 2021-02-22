@@ -9,6 +9,7 @@ import assemblyline.common.block.BlockDetector;
 import assemblyline.common.block.BlockManipulator;
 import assemblyline.common.block.BlockSorterBelt;
 import assemblyline.common.inventory.container.ContainerSorterBelt;
+import assemblyline.common.tile.TileCache;
 import assemblyline.common.tile.TileConveyorBelt;
 import assemblyline.common.tile.TileDetector;
 import assemblyline.common.tile.TileManipulator;
@@ -71,7 +72,9 @@ public class DeferredRegisters {
 	public static final RegistryObject<TileEntityType<TileManipulator>> TILE_MANIPULATOR = TILES.register("manipulator",
 			() -> new TileEntityType<>(TileManipulator::new, Sets.newHashSet(blockManipulatorInput, blockManipulatorInputRunning, blockManipulatorOutput, blockManipulatorOutputRunning), null));
 	public static final RegistryObject<TileEntityType<TileDetector>> TILE_DETECTOR = TILES.register("detector", () -> new TileEntityType<>(TileDetector::new, Sets.newHashSet(blockDetector), null));
-	public static final RegistryObject<TileEntityType<TileSorterBelt>> TILE_SORTERBELT = TILES.register("sorterbelt", () -> new TileEntityType<>(TileSorterBelt::new, Sets.newHashSet(blockDetector), null));
+	public static final RegistryObject<TileEntityType<TileSorterBelt>> TILE_SORTERBELT = TILES.register("sorterbelt",
+			() -> new TileEntityType<>(TileSorterBelt::new, Sets.newHashSet(blockSorterBelt, blockSorterBeltRunning), null));
+	public static final RegistryObject<TileEntityType<TileCache>> TILE_CACHE = TILES.register("cache", () -> new TileEntityType<>(TileCache::new, Sets.newHashSet(blockCache), null));
 	public static final RegistryObject<ContainerType<ContainerSorterBelt>> CONTAINER_SORTERBELT = CONTAINERS.register("sorterbelt", () -> new ContainerType<>(ContainerSorterBelt::new));
 
 	private static <T extends IForgeRegistryEntry<T>> Supplier<? extends T> supplier(T entry) {

@@ -85,13 +85,13 @@ public class TileManipulator extends GenericTileBase implements ITickableTileBas
 			if (joules < Constants.MANIPULATOR_USAGE) {
 				if (running) {
 					Block next = input ? DeferredRegisters.blockManipulatorInput : DeferredRegisters.blockManipulatorOutput;
-					world.setBlockState(pos, next.getDefaultState().with(BlockConveyorBelt.FACING, getFacing()));
+					world.setBlockState(pos, next.getDefaultState().with(BlockConveyorBelt.FACING, getFacing()), 2 | 16);
 				}
 			} else {
 				joules -= Constants.MANIPULATOR_USAGE;
 				if (!running) {
 					Block next = input ? DeferredRegisters.blockManipulatorInputRunning : DeferredRegisters.blockManipulatorOutputRunning;
-					world.setBlockState(pos, next.getDefaultState().with(BlockConveyorBelt.FACING, getFacing()));
+					world.setBlockState(pos, next.getDefaultState().with(BlockConveyorBelt.FACING, getFacing()), 2 | 16);
 				}
 			}
 		}

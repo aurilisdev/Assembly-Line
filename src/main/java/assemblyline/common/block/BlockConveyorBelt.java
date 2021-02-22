@@ -74,7 +74,6 @@ public class BlockConveyorBelt extends Block {
 	@Deprecated
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		worldIn.markBlockRangeForRenderUpdate(pos, state, newState);
 		if (!(newState.getBlock() instanceof BlockConveyorBelt)) {
 			super.onReplaced(state, worldIn, pos, newState, isMoving);
 		}

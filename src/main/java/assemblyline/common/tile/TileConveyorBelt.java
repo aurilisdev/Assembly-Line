@@ -80,14 +80,14 @@ public class TileConveyorBelt extends TileEntity implements IElectrodynamic {
 		}
 		if (joules < Constants.CONVEYORBELT_USAGE) {
 			if (running) {
-				world.setBlockState(pos, DeferredRegisters.blockConveyorbelt.getDefaultState().with(BlockConveyorBelt.FACING, facing));
+				world.setBlockState(pos, DeferredRegisters.blockConveyorbelt.getDefaultState().with(BlockConveyorBelt.FACING, facing), 2 | 16);
 			}
 		} else {
 			if (lastTime != world.getGameTime()) {
 				joules -= Constants.CONVEYORBELT_USAGE;
 				lastTime = world.getGameTime();
 				if (!running) {
-					world.setBlockState(pos, DeferredRegisters.blockConveyorbeltRunning.getDefaultState().with(BlockConveyorBelt.FACING, facing));
+					world.setBlockState(pos, DeferredRegisters.blockConveyorbeltRunning.getDefaultState().with(BlockConveyorBelt.FACING, facing), 2 | 16);
 				}
 			}
 		}

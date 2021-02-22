@@ -114,7 +114,6 @@ public class BlockSorterBelt extends Block implements IWrenchable {
 	@Deprecated
 	@Override
 	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		worldIn.markBlockRangeForRenderUpdate(pos, state, newState);
 		if (!(newState.getBlock() instanceof BlockSorterBelt)) {
 			TileEntity tile = worldIn.getTileEntity(pos);
 			if (tile instanceof IInventory) {

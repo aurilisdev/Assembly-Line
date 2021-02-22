@@ -131,14 +131,14 @@ public class TileSorterBelt extends GenericTileInventory implements IElectrodyna
 		}
 		if (joules < Constants.SORTERBELT_USAGE) {
 			if (running) {
-				world.setBlockState(pos, DeferredRegisters.blockSorterBelt.getDefaultState().with(BlockConveyorBelt.FACING, facing));
+				world.setBlockState(pos, DeferredRegisters.blockSorterBelt.getDefaultState().with(BlockConveyorBelt.FACING, facing), 2 | 16);
 			}
 		} else {
 			if (lastTime != world.getGameTime()) {
 				joules -= Constants.SORTERBELT_USAGE;
 				lastTime = world.getGameTime();
 				if (!running) {
-					world.setBlockState(pos, DeferredRegisters.blockSorterBeltRunning.getDefaultState().with(BlockConveyorBelt.FACING, facing));
+					world.setBlockState(pos, DeferredRegisters.blockSorterBeltRunning.getDefaultState().with(BlockConveyorBelt.FACING, facing), 2 | 16);
 				}
 			}
 		}
