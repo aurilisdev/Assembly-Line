@@ -2,9 +2,11 @@ package assemblyline.common.tile;
 
 import assemblyline.DeferredRegisters;
 import electrodynamics.common.tile.generic.GenericTileInventory;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 
 public class TileCache extends GenericTileInventory {
@@ -33,9 +35,14 @@ public class TileCache extends GenericTileInventory {
 	}
 
 	@Override
+	public void read(BlockState state, CompoundNBT compound) {
+		super.read(state, compound);
+		sendUpdatePacket();
+	}
+
+	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack) {
-		if(stack.isEmpty())
-		{
+		if (stack.isEmpty()) {
 			return true;
 		}
 		for (int i = 0; i < 64; i++) {
@@ -48,6 +55,25 @@ public class TileCache extends GenericTileInventory {
 			}
 		}
 		return super.isItemValidForSlot(index, stack);
+	}
+
+	@Override
+	public CompoundNBT createUpdateTag() {
+		CompoundNBT nbt = super.createUpdateTag();
+		getStackInSlot(0).write(nbt);
+		return nbt;
+	}
+
+	@Override
+	public void handleUpdatePacket(CompoundNBT nbt) {
+		super.handleUpdatePacket(nbt);
+		ItemStack.read(nbt);
+	}
+
+	@Override
+	public void setInventorySlotContents(int index, ItemStack stack) {
+		super.setInventorySlotContents(index, stack);
+		sendUpdatePacket();
 	}
 
 	@Override
