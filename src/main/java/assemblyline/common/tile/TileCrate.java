@@ -1,18 +1,19 @@
 package assemblyline.common.tile;
 
 import assemblyline.DeferredRegisters;
+import electrodynamics.api.tile.ITickableTileBase;
 import electrodynamics.common.tile.generic.GenericTileInventory;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 
-public class TileCache extends GenericTileInventory {
+public class TileCrate extends GenericTileInventory implements ITickableTileBase {
+	private int count = 0;
 
-	public TileCache() {
-		super(DeferredRegisters.TILE_CACHE.get());
+	public TileCrate() {
+		super(DeferredRegisters.TILE_CRATE.get());
 	}
 
 	@Override
@@ -35,12 +36,6 @@ public class TileCache extends GenericTileInventory {
 	}
 
 	@Override
-	public void read(BlockState state, CompoundNBT compound) {
-		super.read(state, compound);
-		sendUpdatePacket();
-	}
-
-	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack) {
 		if (stack.isEmpty()) {
 			return true;
@@ -60,14 +55,23 @@ public class TileCache extends GenericTileInventory {
 	@Override
 	public CompoundNBT createUpdateTag() {
 		CompoundNBT nbt = super.createUpdateTag();
-		getStackInSlot(0).write(nbt);
+		ItemStack stack = ItemStack.EMPTY;
+		for (int i = 0; i < 64; i++) {
+			if (!getStackInSlot(i).isEmpty()) {
+				stack = getStackInSlot(i);
+				break;
+			}
+		}
+		new ItemStack(stack.getItem()).write(nbt);
+		nbt.putInt("acccount", getCount());
 		return nbt;
 	}
 
 	@Override
 	public void handleUpdatePacket(CompoundNBT nbt) {
 		super.handleUpdatePacket(nbt);
-		ItemStack.read(nbt);
+		setInventorySlotContents(0, ItemStack.read(nbt));
+		count = nbt.getInt("acccount");
 	}
 
 	@Override
@@ -79,6 +83,26 @@ public class TileCache extends GenericTileInventory {
 	@Override
 	protected Container createMenu(int id, PlayerInventory player) {
 		return null;
+	}
+
+	@Override
+	public void tickServer() {
+		if (world.getWorldInfo().getGameTime() % 40 == 0) {
+			sendUpdatePacket();
+		}
+	}
+
+	public int getCount() {
+		if (!world.isRemote) {
+			this.count = 0;
+			for (int i = 0; i < 64; i++) {
+				ItemStack stack = getStackInSlot(i);
+				if (!stack.isEmpty()) {
+					count += stack.getCount();
+				}
+			}
+		}
+		return count;
 	}
 
 }

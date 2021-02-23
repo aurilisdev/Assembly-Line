@@ -1,23 +1,23 @@
 {
-	"type": "minecraft:crafting_shaped",
-	"pattern": [
-		"ses",
-		"sbs",
-		"s s"
-	],
-	"key": {
-		"s": {
-			"item": "electrodynamics:ingotsteel"
-		},
-		"e": {
-			"item": "minecraft:ender_eye"
-		},
-		"b": {
-			"item": "electrodynamics:circuitbasic"
-		}
-	},
-	"result": {
-		"item": "assemblyline:detector",
-		"count": 1
-	}
+    "type": "minecraft:crafting_shaped",
+    "pattern": [
+        "iIi",
+        "ICI",
+        "iIi"
+    ],
+    "key": {
+        "i": {
+            "item": "minecraft:iron_ingot"
+        },
+        "I": {
+            "item": "minecraft:iron_bars"
+        },
+        "C": {
+            "item": "minecraft:chest"
+        }
+    },
+    "result": {
+        "item": "assemblyline:crate",
+        "count": 1
+    }
 }

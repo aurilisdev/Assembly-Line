@@ -8,7 +8,7 @@
 	"block.assemblyline.manipulatorinputrunning": "Manipulator Running",
 	"block.assemblyline.manipulatoroutputrunning": "Manipulator Output Running",
 	"block.assemblyline.detector": "Detector",
-	"block.assemblyline.cache": "Cache",
+	"block.assemblyline.crate": "Crate",
 	"container.sorterbelt": "Sorter Belt",
 	"itemGroup.itemgroupassemblyline": "Assembly Line",
 	"tooltip.conveyorbelt.powerusage": "Power Usage: 10W",

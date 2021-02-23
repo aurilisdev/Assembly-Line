@@ -1,6 +1,6 @@
 package assemblyline.common.block;
 
-import assemblyline.common.tile.TileCache;
+import assemblyline.common.tile.TileCrate;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -20,9 +20,9 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 
-public class BlockCache extends Block {
+public class BlockCrate extends Block {
 
-	public BlockCache() {
+	public BlockCrate() {
 		super(Properties.create(Material.IRON).hardnessAndResistance(3.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE));
 	}
 
@@ -41,7 +41,7 @@ public class BlockCache extends Block {
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		if (!worldIn.isRemote) {
-			TileCache tile = (TileCache) worldIn.getTileEntity(pos);
+			TileCrate tile = (TileCrate) worldIn.getTileEntity(pos);
 			if (tile != null) {
 				player.setItemStackToSlot(handIn == Hand.MAIN_HAND ? EquipmentSlotType.MAINHAND : EquipmentSlotType.OFFHAND,
 						HopperTileEntity.putStackInInventoryAllSlots(player.inventory, tile, player.getHeldItem(handIn), Direction.DOWN));
@@ -57,6 +57,6 @@ public class BlockCache extends Block {
 
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new TileCache();
+		return new TileCrate();
 	}
 }
