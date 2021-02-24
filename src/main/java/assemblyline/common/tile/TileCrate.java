@@ -10,99 +10,99 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 
 public class TileCrate extends GenericTileInventory implements ITickableTileBase {
-	private int count = 0;
+    private int count = 0;
 
-	public TileCrate() {
-		super(DeferredRegisters.TILE_CRATE.get());
+    public TileCrate() {
+	super(DeferredRegisters.TILE_CRATE.get());
+    }
+
+    @Override
+    public int getSizeInventory() {
+	return 64;
+    }
+
+    @Override
+    public int getInventoryStackLimit() {
+	return 4096;
+    }
+
+    @Override
+    public int[] getSlotsForFace(Direction side) {
+	int[] arr = new int[64];
+	for (int i = 0; i < arr.length; i++) {
+	    arr[i] = i;
 	}
+	return arr;
+    }
 
-	@Override
-	public int getSizeInventory() {
-		return 64;
+    @Override
+    public boolean isItemValidForSlot(int index, ItemStack stack) {
+	if (stack.isEmpty()) {
+	    return true;
 	}
-
-	@Override
-	public int getInventoryStackLimit() {
-		return 4096;
+	for (int i = 0; i < 64; i++) {
+	    ItemStack s = getStackInSlot(i);
+	    if (s.isEmpty()) {
+		continue;
+	    }
+	    if (stack.getItem() != s.getItem()) {
+		return false;
+	    }
 	}
+	return super.isItemValidForSlot(index, stack);
+    }
 
-	@Override
-	public int[] getSlotsForFace(Direction side) {
-		int[] arr = new int[64];
-		for (int i = 0; i < arr.length; i++) {
-			arr[i] = i;
+    @Override
+    public CompoundNBT createUpdateTag() {
+	CompoundNBT nbt = super.createUpdateTag();
+	ItemStack stack = ItemStack.EMPTY;
+	for (int i = 0; i < 64; i++) {
+	    if (!getStackInSlot(i).isEmpty()) {
+		stack = getStackInSlot(i);
+		break;
+	    }
+	}
+	new ItemStack(stack.getItem()).write(nbt);
+	nbt.putInt("acccount", getCount());
+	return nbt;
+    }
+
+    @Override
+    public void handleUpdatePacket(CompoundNBT nbt) {
+	super.handleUpdatePacket(nbt);
+	setInventorySlotContents(0, ItemStack.read(nbt));
+	count = nbt.getInt("acccount");
+    }
+
+    @Override
+    public void setInventorySlotContents(int index, ItemStack stack) {
+	super.setInventorySlotContents(index, stack);
+	sendUpdatePacket();
+    }
+
+    @Override
+    protected Container createMenu(int id, PlayerInventory player) {
+	return null;
+    }
+
+    @Override
+    public void tickServer() {
+	if (world.getWorldInfo().getGameTime() % 40 == 0) {
+	    sendUpdatePacket();
+	}
+    }
+
+    public int getCount() {
+	if (!world.isRemote) {
+	    count = 0;
+	    for (int i = 0; i < 64; i++) {
+		ItemStack stack = getStackInSlot(i);
+		if (!stack.isEmpty()) {
+		    count += stack.getCount();
 		}
-		return arr;
+	    }
 	}
-
-	@Override
-	public boolean isItemValidForSlot(int index, ItemStack stack) {
-		if (stack.isEmpty()) {
-			return true;
-		}
-		for (int i = 0; i < 64; i++) {
-			ItemStack s = getStackInSlot(i);
-			if (s.isEmpty()) {
-				continue;
-			}
-			if (stack.getItem() != s.getItem()) {
-				return false;
-			}
-		}
-		return super.isItemValidForSlot(index, stack);
-	}
-
-	@Override
-	public CompoundNBT createUpdateTag() {
-		CompoundNBT nbt = super.createUpdateTag();
-		ItemStack stack = ItemStack.EMPTY;
-		for (int i = 0; i < 64; i++) {
-			if (!getStackInSlot(i).isEmpty()) {
-				stack = getStackInSlot(i);
-				break;
-			}
-		}
-		new ItemStack(stack.getItem()).write(nbt);
-		nbt.putInt("acccount", getCount());
-		return nbt;
-	}
-
-	@Override
-	public void handleUpdatePacket(CompoundNBT nbt) {
-		super.handleUpdatePacket(nbt);
-		setInventorySlotContents(0, ItemStack.read(nbt));
-		count = nbt.getInt("acccount");
-	}
-
-	@Override
-	public void setInventorySlotContents(int index, ItemStack stack) {
-		super.setInventorySlotContents(index, stack);
-		sendUpdatePacket();
-	}
-
-	@Override
-	protected Container createMenu(int id, PlayerInventory player) {
-		return null;
-	}
-
-	@Override
-	public void tickServer() {
-		if (world.getWorldInfo().getGameTime() % 40 == 0) {
-			sendUpdatePacket();
-		}
-	}
-
-	public int getCount() {
-		if (!world.isRemote) {
-			this.count = 0;
-			for (int i = 0; i < 64; i++) {
-				ItemStack stack = getStackInSlot(i);
-				if (!stack.isEmpty()) {
-					count += stack.getCount();
-				}
-			}
-		}
-		return count;
-	}
+	return count;
+    }
 
 }

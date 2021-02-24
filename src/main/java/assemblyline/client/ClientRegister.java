@@ -11,9 +11,9 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 @OnlyIn(Dist.CLIENT)
 public class ClientRegister {
 
-	public static void setup() {
-		ScreenManager.registerFactory(DeferredRegisters.CONTAINER_SORTERBELT.get(), ScreenSorterBelt::new);
-		ClientRegistry.bindTileEntityRenderer(DeferredRegisters.TILE_CRATE.get(), RenderCrate::new);
+    public static void setup() {
+	ScreenManager.registerFactory(DeferredRegisters.CONTAINER_SORTERBELT.get(), ScreenSorterBelt::new);
+	ClientRegistry.bindTileEntityRenderer(DeferredRegisters.TILE_CRATE.get(), RenderCrate::new);
 
-	}
+    }
 }

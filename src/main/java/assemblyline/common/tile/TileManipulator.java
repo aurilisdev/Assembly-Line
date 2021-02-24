@@ -20,105 +20,114 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 
 public class TileManipulator extends GenericTileBase implements ITickableTileBase, IElectrodynamic {
-	public double joules = 0;
+    public double joules = 0;
 
-	private long ticks = 0;
+    private long ticks = 0;
 
-	public TileManipulator() {
-		super(DeferredRegisters.TILE_MANIPULATOR.get());
-	}
+    public TileManipulator() {
+	super(DeferredRegisters.TILE_MANIPULATOR.get());
+    }
 
-	@Override
-	public void tickServer() {
-		ticks++;
-		boolean running = ((BlockManipulator) getBlockState().getBlock()).running;
-		boolean input = ((BlockManipulator) getBlockState().getBlock()).input;
-		if (ticks % 20 == 0) {
-			if (running) {
-				Direction dir = getFacing().getOpposite();
-				TileEntity facing = world.getTileEntity(pos.offset(dir));
-				TileEntity opposite = world.getTileEntity(pos.offset(dir.getOpposite()));
-				if (opposite instanceof TileConveyorBelt && opposite.getBlockState().get(BlockConveyorBelt.FACING).getOpposite() != dir
-						|| opposite instanceof TileSorterBelt && opposite.getBlockState().get(BlockConveyorBelt.FACING).getOpposite() != dir) {
-					if (((BlockManipulator) getBlockState().getBlock()).input) {
-						world.setBlockState(pos, DeferredRegisters.blockManipulatorOutput.getDefaultState().with(BlockConveyorBelt.FACING, getFacing()));
-					}
-					if (facing instanceof IInventory) {
-						IInventory inv = (IInventory) facing;
-						if (inv instanceof ISidedInventory) {
-							ISidedInventory sided = (ISidedInventory) inv;
-							for (int slot : sided.getSlotsForFace(dir.getOpposite())) {
-								ItemStack stack = inv.getStackInSlot(slot);
-								if (!stack.isEmpty()) {
-									if (sided.canExtractItem(slot, stack, dir.getOpposite())) {
-										BlockPos offset = pos.offset(dir.getOpposite());
-										ItemEntity entity = new ItemEntity(world, offset.getX() + 0.5, offset.getY() + 0.5, offset.getZ() + 0.5);
-										entity.setMotion(0, 0, 0);
-										entity.setItem(stack);
-										world.addEntity(entity);
-										inv.setInventorySlotContents(slot, ItemStack.EMPTY);
-										break;
-									}
-								}
-							}
-						} else {
-							for (int slot = 0; slot < inv.getSizeInventory(); slot++) {
-								ItemStack stack = inv.getStackInSlot(slot);
-								if (!stack.isEmpty()) {
-									BlockPos offset = pos.offset(dir.getOpposite());
-									ItemEntity entity = new ItemEntity(world, offset.getX() + 0.5, offset.getY() + 0.5, offset.getZ() + 0.5);
-									entity.setMotion(0, 0, 0);
-									entity.setItem(stack);
-									world.addEntity(entity);
-									inv.setInventorySlotContents(slot, ItemStack.EMPTY);
-									break;
-								}
-							}
-						}
-					}
+    @Override
+    public void tickServer() {
+	ticks++;
+	boolean running = ((BlockManipulator) getBlockState().getBlock()).running;
+	boolean input = ((BlockManipulator) getBlockState().getBlock()).input;
+	if (ticks % 20 == 0) {
+	    if (running) {
+		Direction dir = getFacing().getOpposite();
+		TileEntity facing = world.getTileEntity(pos.offset(dir));
+		TileEntity opposite = world.getTileEntity(pos.offset(dir.getOpposite()));
+		if (opposite instanceof TileConveyorBelt
+			&& opposite.getBlockState().get(BlockConveyorBelt.FACING).getOpposite() != dir
+			|| opposite instanceof TileSorterBelt
+				&& opposite.getBlockState().get(BlockConveyorBelt.FACING).getOpposite() != dir) {
+		    if (((BlockManipulator) getBlockState().getBlock()).input) {
+			world.setBlockState(pos, DeferredRegisters.blockManipulatorOutput.getDefaultState()
+				.with(BlockConveyorBelt.FACING, getFacing()));
+		    }
+		    if (facing instanceof IInventory) {
+			IInventory inv = (IInventory) facing;
+			if (inv instanceof ISidedInventory) {
+			    ISidedInventory sided = (ISidedInventory) inv;
+			    for (int slot : sided.getSlotsForFace(dir.getOpposite())) {
+				ItemStack stack = inv.getStackInSlot(slot);
+				if (!stack.isEmpty()) {
+				    if (sided.canExtractItem(slot, stack, dir.getOpposite())) {
+					BlockPos offset = pos.offset(dir.getOpposite());
+					ItemEntity entity = new ItemEntity(world, offset.getX() + 0.5,
+						offset.getY() + 0.5, offset.getZ() + 0.5);
+					entity.setMotion(0, 0, 0);
+					entity.setItem(stack);
+					world.addEntity(entity);
+					inv.setInventorySlotContents(slot, ItemStack.EMPTY);
+					break;
+				    }
 				}
+			    }
 			} else {
-				if (!input) {
-					world.setBlockState(pos, DeferredRegisters.blockManipulatorInput.getDefaultState().with(BlockConveyorBelt.FACING, getFacing()));
+			    for (int slot = 0; slot < inv.getSizeInventory(); slot++) {
+				ItemStack stack = inv.getStackInSlot(slot);
+				if (!stack.isEmpty()) {
+				    BlockPos offset = pos.offset(dir.getOpposite());
+				    ItemEntity entity = new ItemEntity(world, offset.getX() + 0.5, offset.getY() + 0.5,
+					    offset.getZ() + 0.5);
+				    entity.setMotion(0, 0, 0);
+				    entity.setItem(stack);
+				    world.addEntity(entity);
+				    inv.setInventorySlotContents(slot, ItemStack.EMPTY);
+				    break;
 				}
+			    }
 			}
-			if (joules < Constants.MANIPULATOR_USAGE) {
-				if (running) {
-					Block next = input ? DeferredRegisters.blockManipulatorInput : DeferredRegisters.blockManipulatorOutput;
-					world.setBlockState(pos, next.getDefaultState().with(BlockConveyorBelt.FACING, getFacing()), 2 | 16);
-				}
-			} else {
-				joules -= Constants.MANIPULATOR_USAGE;
-				if (!running) {
-					Block next = input ? DeferredRegisters.blockManipulatorInputRunning : DeferredRegisters.blockManipulatorOutputRunning;
-					world.setBlockState(pos, next.getDefaultState().with(BlockConveyorBelt.FACING, getFacing()), 2 | 16);
-				}
-			}
+		    }
 		}
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
-		if (capability == CapabilityElectrodynamic.ELECTRODYNAMIC && facing == Direction.DOWN) {
-			return (LazyOptional<T>) LazyOptional.of(() -> this);
+	    } else {
+		if (!input) {
+		    world.setBlockState(pos, DeferredRegisters.blockManipulatorInput.getDefaultState()
+			    .with(BlockConveyorBelt.FACING, getFacing()));
 		}
-		return super.getCapability(capability, facing);
+	    }
+	    if (joules < Constants.MANIPULATOR_USAGE) {
+		if (running) {
+		    Block next = input ? DeferredRegisters.blockManipulatorInput
+			    : DeferredRegisters.blockManipulatorOutput;
+		    world.setBlockState(pos, next.getDefaultState().with(BlockConveyorBelt.FACING, getFacing()),
+			    2 | 16);
+		}
+	    } else {
+		joules -= Constants.MANIPULATOR_USAGE;
+		if (!running) {
+		    Block next = input ? DeferredRegisters.blockManipulatorInputRunning
+			    : DeferredRegisters.blockManipulatorOutputRunning;
+		    world.setBlockState(pos, next.getDefaultState().with(BlockConveyorBelt.FACING, getFacing()),
+			    2 | 16);
+		}
+	    }
 	}
+    }
 
-	@Override
-	public void setJoulesStored(double joules) {
-		this.joules = joules;
+    @Override
+    public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
+	if (capability == CapabilityElectrodynamic.ELECTRODYNAMIC && facing == Direction.DOWN) {
+	    return (LazyOptional<T>) LazyOptional.of(() -> this);
 	}
+	return super.getCapability(capability, facing);
+    }
 
-	@Override
-	public double getJoulesStored() {
-		return joules;
-	}
+    @Override
+    public void setJoulesStored(double joules) {
+	this.joules = joules;
+    }
 
-	@Override
-	public double getMaxJoulesStored() {
-		return Constants.MANIPULATOR_USAGE * 200;
-	}
+    @Override
+    public double getJoulesStored() {
+	return joules;
+    }
+
+    @Override
+    public double getMaxJoulesStored() {
+	return Constants.MANIPULATOR_USAGE * 200;
+    }
 
 }

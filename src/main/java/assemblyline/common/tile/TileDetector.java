@@ -12,28 +12,30 @@ import net.minecraft.util.math.AxisAlignedBB;
 
 public class TileDetector extends GenericTileBase implements ITickableTileBase {
 
-	private int _ticks;
-	public boolean isPowered = false;
+    private int _ticks;
+    public boolean isPowered = false;
 
-	public TileDetector() {
-		super(DeferredRegisters.TILE_DETECTOR.get());
-	}
+    public TileDetector() {
+	super(DeferredRegisters.TILE_DETECTOR.get());
+    }
 
-	@Override
-	public void tickServer() {
-		_ticks++;
-		if (_ticks % 4 == 0) {
-			List<ItemEntity> entities = world.getEntitiesWithinAABB(EntityType.ITEM, new AxisAlignedBB(pos.offset(getFacing())), (Predicate<ItemEntity>) t -> t != null && !t.getItem().isEmpty());
-			if (entities.size() > 0) {
-				if (!isPowered) {
-					isPowered = true;
-					world.notifyNeighborsOfStateChange(pos, getBlockState().getBlock());
-				}
-			} else if (isPowered) {
-				isPowered = false;
-				world.notifyNeighborsOfStateChange(pos, getBlockState().getBlock());
-			}
-
+    @Override
+    public void tickServer() {
+	_ticks++;
+	if (_ticks % 4 == 0) {
+	    List<ItemEntity> entities = world.getEntitiesWithinAABB(EntityType.ITEM,
+		    new AxisAlignedBB(pos.offset(getFacing())),
+		    (Predicate<ItemEntity>) t -> t != null && !t.getItem().isEmpty());
+	    if (entities.size() > 0) {
+		if (!isPowered) {
+		    isPowered = true;
+		    world.notifyNeighborsOfStateChange(pos, getBlockState().getBlock());
 		}
+	    } else if (isPowered) {
+		isPowered = false;
+		world.notifyNeighborsOfStateChange(pos, getBlockState().getBlock());
+	    }
+
 	}
+    }
 }

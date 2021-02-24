@@ -22,41 +22,46 @@ import net.minecraftforge.common.ToolType;
 
 public class BlockCrate extends Block {
 
-	public BlockCrate() {
-		super(Properties.create(Material.IRON).hardnessAndResistance(3.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE));
-	}
+    public BlockCrate() {
+	super(Properties.create(Material.IRON).hardnessAndResistance(3.5F).sound(SoundType.METAL)
+		.harvestTool(ToolType.PICKAXE));
+    }
 
-	@Deprecated
-	@Override
-	public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		TileEntity tile = worldIn.getTileEntity(pos);
-		if (tile instanceof IInventory) {
-			if (!(state.getBlock() == newState.getBlock() && state.get(BlockConveyorBelt.FACING) != newState.get(BlockConveyorBelt.FACING))) {
-				InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) tile);
-			}
-		}
-		super.onReplaced(state, worldIn, pos, newState, isMoving);
+    @Deprecated
+    @Override
+    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+	TileEntity tile = worldIn.getTileEntity(pos);
+	if (tile instanceof IInventory) {
+	    if (!(state.getBlock() == newState.getBlock()
+		    && state.get(BlockConveyorBelt.FACING) != newState.get(BlockConveyorBelt.FACING))) {
+		InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) tile);
+	    }
 	}
+	super.onReplaced(state, worldIn, pos, newState, isMoving);
+    }
 
-	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-		if (!worldIn.isRemote) {
-			TileCrate tile = (TileCrate) worldIn.getTileEntity(pos);
-			if (tile != null) {
-				player.setItemStackToSlot(handIn == Hand.MAIN_HAND ? EquipmentSlotType.MAINHAND : EquipmentSlotType.OFFHAND,
-						HopperTileEntity.putStackInInventoryAllSlots(player.inventory, tile, player.getHeldItem(handIn), Direction.DOWN));
-			}
-		}
-		return ActionResultType.SUCCESS;
+    @Override
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player,
+	    Hand handIn, BlockRayTraceResult hit) {
+	if (!worldIn.isRemote) {
+	    TileCrate tile = (TileCrate) worldIn.getTileEntity(pos);
+	    if (tile != null) {
+		player.setItemStackToSlot(
+			handIn == Hand.MAIN_HAND ? EquipmentSlotType.MAINHAND : EquipmentSlotType.OFFHAND,
+			HopperTileEntity.putStackInInventoryAllSlots(player.inventory, tile, player.getHeldItem(handIn),
+				Direction.DOWN));
+	    }
 	}
+	return ActionResultType.SUCCESS;
+    }
 
-	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
+    @Override
+    public boolean hasTileEntity(BlockState state) {
+	return true;
+    }
 
-	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		return new TileCrate();
-	}
+    @Override
+    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	return new TileCrate();
+    }
 }
