@@ -28,13 +28,13 @@ import net.minecraftforge.common.util.LazyOptional;
 
 public class TileSorterBelt extends GenericTileInventory implements IElectrodynamic, INamedContainerProvider {
 	public double joules = 0;
+	public int currentSpread = 0;
 	public long lastTime = 0;
 
 	public TileSorterBelt() {
 		super(DeferredRegisters.TILE_SORTERBELT.get());
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
 		if (capability == CapabilityElectrodynamic.ELECTRODYNAMIC && facing == Direction.DOWN) {
@@ -104,7 +104,8 @@ public class TileSorterBelt extends GenericTileInventory implements IElectrodyna
 						}
 					}
 					if (hasLeft) {
-						entityIn.addVelocity(dir.rotateYCCW().getXOffset() / 20.0, 0, dir.rotateYCCW().getZOffset() / 20.0);
+						entityIn.addVelocity(dir.rotateYCCW().getXOffset() / 20.0, 0,
+								dir.rotateYCCW().getZOffset() / 20.0);
 					} else if (hasRight) {
 						entityIn.addVelocity(dir.rotateY().getXOffset() / 20.0, 0, dir.rotateY().getZOffset() / 20.0);
 					} else {
@@ -116,7 +117,8 @@ public class TileSorterBelt extends GenericTileInventory implements IElectrodyna
 								BlockPos chestPos = next.offset(dir);
 								TileEntity chestTile = world.getTileEntity(chestPos);
 								if (chestTile instanceof IInventory) {
-									itemEntity.setItem(HopperTileEntity.putStackInInventoryAllSlots(null, (IInventory) chestTile, itemEntity.getItem(), dir.getOpposite()));
+									itemEntity.setItem(HopperTileEntity.putStackInInventoryAllSlots(null,
+											(IInventory) chestTile, itemEntity.getItem(), dir.getOpposite()));
 									if (itemEntity.getItem().isEmpty()) {
 										itemEntity.remove();
 									}
@@ -129,17 +131,61 @@ public class TileSorterBelt extends GenericTileInventory implements IElectrodyna
 				}
 			}
 		}
-		if (joules < Constants.SORTERBELT_USAGE) {
-			if (running) {
-				world.setBlockState(pos, DeferredRegisters.blockSorterBelt.getDefaultState().with(BlockConveyorBelt.FACING, facing), 2 | 16);
+		checkForSpread();
+		if (currentSpread == 0 || currentSpread == 16) {
+			if (joules < Constants.CONVEYORBELT_USAGE) {
+				if (running) {
+					world.setBlockState(pos,
+							DeferredRegisters.blockSorterBelt.getDefaultState().with(BlockConveyorBelt.FACING, facing),
+							2 | 16);
+					currentSpread = 0;
+				}
+			} else {
+				if (lastTime != world.getGameTime()) {
+					joules -= Constants.CONVEYORBELT_USAGE;
+					lastTime = world.getGameTime();
+					if (!running) {
+						world.setBlockState(pos, DeferredRegisters.blockSorterBeltRunning.getDefaultState()
+								.with(BlockConveyorBelt.FACING, facing), 2 | 16);
+						currentSpread = 16;
+					}
+					currentSpread = 16;
+				}
 			}
 		} else {
-			if (lastTime != world.getGameTime()) {
-				joules -= Constants.SORTERBELT_USAGE;
-				lastTime = world.getGameTime();
-				if (!running) {
-					world.setBlockState(pos, DeferredRegisters.blockSorterBeltRunning.getDefaultState().with(BlockConveyorBelt.FACING, facing), 2 | 16);
+			if (currentSpread > 0 && !running) {
+				world.setBlockState(pos, DeferredRegisters.blockSorterBeltRunning.getDefaultState()
+						.with(BlockConveyorBelt.FACING, facing), 2 | 16);
+			}
+		}
+	}
+
+	private long lastCheck = 0;
+
+	public void checkForSpread() {
+		if (world.getWorldInfo().getGameTime() - lastCheck > 100) {
+			lastCheck = world.getWorldInfo().getGameTime();
+			int lastMax = currentSpread;
+			int max = 0;
+			for (BlockPos po : TileConveyorBelt.offsets) {
+				TileEntity at = world.getTileEntity(pos.add(po));
+				if (at instanceof TileConveyorBelt) {
+					TileConveyorBelt belt = (TileConveyorBelt) at;
+					int their = belt.currentSpread;
+					if (their - 1 > max) {
+						max = their - 1;
+					}
+				} else if (at instanceof TileSorterBelt) {
+					TileSorterBelt belt = (TileSorterBelt) at;
+					int their = belt.currentSpread;
+					if (their - 1 > max) {
+						max = their - 1;
+					}
 				}
+			}
+			currentSpread = max;
+			if (lastMax > currentSpread) {
+				currentSpread = 0;
 			}
 		}
 	}

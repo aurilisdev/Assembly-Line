@@ -33,6 +33,8 @@ public class DeferredRegisters {
 			.create(ForgeRegistries.CONTAINERS, References.ID);
 	public static BlockConveyorBelt blockConveyorbelt;
 	public static BlockConveyorBelt blockConveyorbeltRunning;
+	public static BlockConveyorBelt blockSlantedConveyorbelt;
+	public static BlockConveyorBelt blockSlantedConveyorbeltRunning;
 	public static BlockSorterBelt blockSorterBelt;
 	public static BlockSorterBelt blockSorterBeltRunning;
 	public static BlockManipulator blockManipulatorInput;
@@ -45,6 +47,9 @@ public class DeferredRegisters {
 	static {
 		BLOCKS.register("conveyorbelt", supplier(blockConveyorbelt = new BlockConveyorBelt(false)));
 		BLOCKS.register("conveyorbeltrunning", supplier(blockConveyorbeltRunning = new BlockConveyorBelt(true)));
+		BLOCKS.register("slantedconveyorbelt", supplier(blockSlantedConveyorbelt = new BlockConveyorBelt(false)));
+		BLOCKS.register("slantedconveyorbeltrunning",
+				supplier(blockSlantedConveyorbeltRunning = new BlockConveyorBelt(true)));
 		BLOCKS.register("sorterbelt", supplier(blockSorterBelt = new BlockSorterBelt(false)));
 		BLOCKS.register("sorterbeltrunning", supplier(blockSorterBeltRunning = new BlockSorterBelt(true)));
 		BLOCKS.register("manipulatorinput", supplier(blockManipulatorInput = new BlockManipulator(true, false)));

@@ -1,5 +1,7 @@
 package assemblyline.common.tile;
 
+import java.util.ArrayList;
+
 import assemblyline.DeferredRegisters;
 import assemblyline.common.block.BlockConveyorBelt;
 import assemblyline.common.block.BlockManipulator;
@@ -19,18 +21,19 @@ import net.minecraftforge.common.util.LazyOptional;
 
 public class TileConveyorBelt extends TileEntity implements IElectrodynamic {
 	public double joules = 0;
+	public int currentSpread = 0;
 	public long lastTime = 0;
 
 	public TileConveyorBelt() {
 		super(DeferredRegisters.TILE_CONVEYORBELT.get());
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
 		Direction check = getBlockState().get(BlockConveyorBelt.FACING);
 		;
-		if (capability == CapabilityElectrodynamic.ELECTRODYNAMIC && facing != Direction.UP && facing != check && facing != check.getOpposite()) {
+		if (capability == CapabilityElectrodynamic.ELECTRODYNAMIC && facing != Direction.UP && facing != check
+				&& facing != check.getOpposite()) {
 			return (LazyOptional<T>) LazyOptional.of(() -> this);
 		}
 		return super.getCapability(capability, facing);
@@ -52,11 +55,19 @@ public class TileConveyorBelt extends TileEntity implements IElectrodynamic {
 	}
 
 	public void onEntityCollision(Entity entityIn, boolean running) {
-		Direction facing = getBlockState().get(BlockConveyorBelt.FACING);
+		BlockState state = world.getBlockState(pos);
+		Direction facing = state.get(BlockConveyorBelt.FACING);
+		boolean slanted = state.getBlock() == DeferredRegisters.blockSlantedConveyorbelt
+				|| state.getBlock() == DeferredRegisters.blockSlantedConveyorbeltRunning;
 		if (running) {
 			if (entityIn.getPosY() > pos.getY() + 4.0 / 16.0) {
 				Direction dir = facing.getOpposite();
-				entityIn.addVelocity(dir.getXOffset() / 20.0, 0, dir.getZOffset() / 20.0);
+				if (slanted) {
+					entityIn.setPosition(entityIn.getPosX() + dir.getXOffset(), entityIn.getPosY() + 1.2,
+							entityIn.getPosZ() + dir.getZOffset());
+				} else {
+					entityIn.addVelocity(dir.getXOffset() / 20.0, 0.0, dir.getZOffset() / 20.0);
+				}
 				BlockPos next = pos.offset(dir);
 				BlockState side = world.getBlockState(next);
 				if (entityIn instanceof ItemEntity) {
@@ -67,7 +78,8 @@ public class TileConveyorBelt extends TileEntity implements IElectrodynamic {
 								BlockPos chestPos = next.offset(dir);
 								TileEntity chestTile = world.getTileEntity(chestPos);
 								if (chestTile instanceof IInventory) {
-									itemEntity.setItem(HopperTileEntity.putStackInInventoryAllSlots(null, (IInventory) chestTile, itemEntity.getItem(), dir.getOpposite()));
+									itemEntity.setItem(HopperTileEntity.putStackInInventoryAllSlots(null,
+											(IInventory) chestTile, itemEntity.getItem(), dir.getOpposite()));
 									if (itemEntity.getItem().isEmpty()) {
 										itemEntity.remove();
 									}
@@ -78,17 +90,88 @@ public class TileConveyorBelt extends TileEntity implements IElectrodynamic {
 				}
 			}
 		}
-		if (joules < Constants.CONVEYORBELT_USAGE) {
-			if (running) {
-				world.setBlockState(pos, DeferredRegisters.blockConveyorbelt.getDefaultState().with(BlockConveyorBelt.FACING, facing), 2 | 16);
+		checkForSpread();
+		if (currentSpread == 0 || currentSpread == 16) {
+			if (joules < Constants.CONVEYORBELT_USAGE) {
+				if (running) {
+					world.setBlockState(pos,
+							(slanted ? DeferredRegisters.blockSlantedConveyorbelt : DeferredRegisters.blockConveyorbelt)
+									.getDefaultState().with(BlockConveyorBelt.FACING, facing),
+							2 | 16);
+					currentSpread = 0;
+				}
+			} else {
+				if (lastTime != world.getGameTime()) {
+					joules -= Constants.CONVEYORBELT_USAGE;
+					lastTime = world.getGameTime();
+					if (!running) {
+						world.setBlockState(pos,
+								(slanted ? DeferredRegisters.blockSlantedConveyorbeltRunning
+										: DeferredRegisters.blockConveyorbeltRunning).getDefaultState()
+												.with(BlockConveyorBelt.FACING, facing),
+								2 | 16);
+						currentSpread = 16;
+					}
+					currentSpread = 16;
+				}
 			}
 		} else {
-			if (lastTime != world.getGameTime()) {
-				joules -= Constants.CONVEYORBELT_USAGE;
-				lastTime = world.getGameTime();
-				if (!running) {
-					world.setBlockState(pos, DeferredRegisters.blockConveyorbeltRunning.getDefaultState().with(BlockConveyorBelt.FACING, facing), 2 | 16);
+			if (currentSpread > 0 && !running) {
+				world.setBlockState(pos,
+						(slanted ? DeferredRegisters.blockSlantedConveyorbeltRunning
+								: DeferredRegisters.blockConveyorbeltRunning).getDefaultState()
+										.with(BlockConveyorBelt.FACING, facing),
+						2 | 16);
+			}
+		}
+	}
+
+	public static ArrayList<BlockPos> offsets = new ArrayList<>();
+	static {
+		offsets.add(new BlockPos(0, 0, 0).offset(Direction.EAST));
+		offsets.add(new BlockPos(0, 0, 0).offset(Direction.WEST));
+		offsets.add(new BlockPos(0, 0, 0).offset(Direction.NORTH));
+		offsets.add(new BlockPos(0, 0, 0).offset(Direction.SOUTH));
+		offsets.add(new BlockPos(0, 0, 0).offset(Direction.EAST));
+		offsets.add(new BlockPos(0, 0, 0).offset(Direction.WEST));
+		offsets.add(new BlockPos(0, 0, 0).offset(Direction.NORTH));
+		offsets.add(new BlockPos(0, 0, 0).offset(Direction.SOUTH));
+		offsets.add(new BlockPos(0, 0, 0).offset(Direction.DOWN).offset(Direction.EAST));
+		offsets.add(new BlockPos(0, 0, 0).offset(Direction.DOWN).offset(Direction.WEST));
+		offsets.add(new BlockPos(0, 0, 0).offset(Direction.DOWN).offset(Direction.NORTH));
+		offsets.add(new BlockPos(0, 0, 0).offset(Direction.DOWN).offset(Direction.SOUTH));
+		offsets.add(new BlockPos(0, 0, 0).offset(Direction.UP).offset(Direction.EAST));
+		offsets.add(new BlockPos(0, 0, 0).offset(Direction.UP).offset(Direction.WEST));
+		offsets.add(new BlockPos(0, 0, 0).offset(Direction.UP).offset(Direction.NORTH));
+		offsets.add(new BlockPos(0, 0, 0).offset(Direction.UP).offset(Direction.SOUTH));
+	}
+
+	private long lastCheck = 0;
+
+	public void checkForSpread() {
+		if (world.getWorldInfo().getGameTime() - lastCheck > 100) {
+			lastCheck = world.getWorldInfo().getGameTime();
+			int lastMax = currentSpread;
+			int max = 0;
+			for (BlockPos po : offsets) {
+				TileEntity at = world.getTileEntity(pos.add(po));
+				if (at instanceof TileConveyorBelt) {
+					TileConveyorBelt belt = (TileConveyorBelt) at;
+					int their = belt.currentSpread;
+					if (their - 1 > max) {
+						max = their - 1;
+					}
+				} else if (at instanceof TileSorterBelt) {
+					TileSorterBelt belt = (TileSorterBelt) at;
+					int their = belt.currentSpread;
+					if (their - 1 > max) {
+						max = their - 1;
+					}
 				}
+			}
+			currentSpread = max;
+			if (lastMax > currentSpread) {
+				currentSpread = 0;
 			}
 		}
 	}
