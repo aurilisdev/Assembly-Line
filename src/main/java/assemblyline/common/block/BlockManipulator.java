@@ -40,16 +40,19 @@ public class BlockManipulator extends Block {
     }
 
     @Override
+    @Deprecated
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 	return shape;
     }
 
     @Override
+    @Deprecated
     public BlockState rotate(BlockState state, Rotation rot) {
 	return state.with(BlockConveyorBelt.FACING, rot.rotate(state.get(BlockConveyorBelt.FACING)));
     }
 
     @Override
+    @Deprecated
     public List<ItemStack> getDrops(BlockState state, Builder builder) {
 	return Arrays.asList(new ItemStack(DeferredRegisters.blockManipulatorInput));
     }
@@ -66,6 +69,7 @@ public class BlockManipulator extends Block {
     }
 
     @Override
+    @Deprecated
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 	if (!(newState.getBlock() instanceof BlockManipulator)) {
 	    super.onReplaced(state, worldIn, pos, newState, isMoving);

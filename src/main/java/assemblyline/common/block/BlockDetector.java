@@ -31,26 +31,31 @@ public class BlockDetector extends Block {
     }
 
     @Override
+    @Deprecated
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 	return shape;
     }
 
     @Override
+    @Deprecated
     public BlockState rotate(BlockState state, Rotation rot) {
 	return state.with(FACING, rot.rotate(state.get(FACING)));
     }
 
     @Override
+    @Deprecated
     public boolean canProvidePower(BlockState state) {
 	return true;
     }
 
     @Override
+    @Deprecated
     public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
 	return blockState.getWeakPower(blockAccess, pos, side);
     }
 
     @Override
+    @Deprecated
     public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
 	TileEntity tile = blockAccess.getTileEntity(pos);
 	if (tile instanceof TileDetector) {

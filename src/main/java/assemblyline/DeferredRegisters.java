@@ -18,6 +18,7 @@ import electrodynamics.common.blockitem.BlockItemDescriptable;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
+import net.minecraft.item.Item.Properties;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
@@ -31,55 +32,52 @@ public class DeferredRegisters {
 	    .create(ForgeRegistries.TILE_ENTITIES, References.ID);
     public static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister
 	    .create(ForgeRegistries.CONTAINERS, References.ID);
-    public static BlockConveyorBelt blockConveyorbelt;
-    public static BlockConveyorBelt blockConveyorbeltRunning;
-    public static BlockConveyorBelt blockSlantedConveyorbelt;
-    public static BlockConveyorBelt blockSlantedConveyorbeltRunning;
-    public static BlockSorterBelt blockSorterBelt;
-    public static BlockSorterBelt blockSorterBeltRunning;
-    public static BlockManipulator blockManipulatorInput;
-    public static BlockManipulator blockManipulatorInputRunning;
-    public static BlockManipulator blockManipulatorOutput;
-    public static BlockManipulator blockManipulatorOutputRunning;
-    public static BlockDetector blockDetector;
-    public static BlockCrate blockCrate;
+    public static BlockConveyorBelt blockConveyorbelt = new BlockConveyorBelt(false);
+    public static BlockConveyorBelt blockConveyorbeltRunning = new BlockConveyorBelt(true);
+    public static BlockConveyorBelt blockSlantedConveyorbelt = new BlockConveyorBelt(false);
+    public static BlockConveyorBelt blockSlantedConveyorbeltRunning = new BlockConveyorBelt(true);
+    public static BlockSorterBelt blockSorterBelt = new BlockSorterBelt(false);
+    public static BlockSorterBelt blockSorterBeltRunning = new BlockSorterBelt(true);
+    public static BlockManipulator blockManipulatorInput = new BlockManipulator(true, false);
+    public static BlockManipulator blockManipulatorInputRunning = new BlockManipulator(false, false);
+    public static BlockManipulator blockManipulatorOutput = new BlockManipulator(true, true);
+    public static BlockManipulator blockManipulatorOutputRunning = new BlockManipulator(false, true);
+    public static BlockDetector blockDetector = new BlockDetector();
+    public static BlockCrate blockCrate = new BlockCrate();
 
     static {
-	BLOCKS.register("conveyorbelt", supplier(blockConveyorbelt = new BlockConveyorBelt(false)));
-	BLOCKS.register("conveyorbeltrunning", supplier(blockConveyorbeltRunning = new BlockConveyorBelt(true)));
-	BLOCKS.register("slantedconveyorbelt", supplier(blockSlantedConveyorbelt = new BlockConveyorBelt(false)));
-	BLOCKS.register("slantedconveyorbeltrunning",
-		supplier(blockSlantedConveyorbeltRunning = new BlockConveyorBelt(true)));
-	BLOCKS.register("sorterbelt", supplier(blockSorterBelt = new BlockSorterBelt(false)));
-	BLOCKS.register("sorterbeltrunning", supplier(blockSorterBeltRunning = new BlockSorterBelt(true)));
-	BLOCKS.register("manipulatorinput", supplier(blockManipulatorInput = new BlockManipulator(true, false)));
-	BLOCKS.register("manipulatoroutput", supplier(blockManipulatorOutput = new BlockManipulator(false, false)));
-	BLOCKS.register("manipulatorinputrunning",
-		supplier(blockManipulatorInputRunning = new BlockManipulator(true, true)));
-	BLOCKS.register("manipulatoroutputrunning",
-		supplier(blockManipulatorOutputRunning = new BlockManipulator(false, true)));
-	BLOCKS.register("detector", supplier(blockDetector = new BlockDetector()));
-	BLOCKS.register("crate", supplier(blockCrate = new BlockCrate()));
+	BLOCKS.register("conveyorbelt", supplier(blockConveyorbelt));
+	BLOCKS.register("conveyorbeltrunning", supplier(blockConveyorbeltRunning));
+	BLOCKS.register("slantedconveyorbelt", supplier(blockSlantedConveyorbelt));
+	BLOCKS.register("slantedconveyorbeltrunning", supplier(blockSlantedConveyorbeltRunning));
+	BLOCKS.register("sorterbelt", supplier(blockSorterBelt));
+	BLOCKS.register("sorterbeltrunning", supplier(blockSorterBeltRunning));
+	BLOCKS.register("manipulatorinput", supplier(blockManipulatorInput));
+	BLOCKS.register("manipulatoroutput", supplier(blockManipulatorOutput));
+	BLOCKS.register("manipulatorinputrunning", supplier(blockManipulatorInputRunning));
+	BLOCKS.register("manipulatoroutputrunning", supplier(blockManipulatorOutputRunning));
+	BLOCKS.register("detector", supplier(blockDetector));
+	BLOCKS.register("crate", supplier(blockCrate));
 	ITEMS.register("conveyorbelt", supplier(
-		new BlockItemDescriptable(blockConveyorbelt, new Item.Properties().group(References.ASSEMBLYLINETAB))));
+		new BlockItemDescriptable(blockConveyorbelt, new Properties().group(References.ASSEMBLYLINETAB))));
 	ITEMS.register("conveyorbeltrunning",
-		supplier(new BlockItemDescriptable(blockConveyorbeltRunning, new Item.Properties())));
+		supplier(new BlockItemDescriptable(blockConveyorbeltRunning, new Properties())));
 	ITEMS.register("sorterbelt", supplier(
-		new BlockItemDescriptable(blockSorterBelt, new Item.Properties().group(References.ASSEMBLYLINETAB))));
+		new BlockItemDescriptable(blockSorterBelt, new Properties().group(References.ASSEMBLYLINETAB))));
 	ITEMS.register("sorterbeltrunning",
-		supplier(new BlockItemDescriptable(blockSorterBeltRunning, new Item.Properties())));
-	ITEMS.register("manipulatorinput", supplier(new BlockItemDescriptable(blockManipulatorInput,
-		new Item.Properties().group(References.ASSEMBLYLINETAB))));
+		supplier(new BlockItemDescriptable(blockSorterBeltRunning, new Properties())));
+	ITEMS.register("manipulatorinput", supplier(
+		new BlockItemDescriptable(blockManipulatorInput, new Properties().group(References.ASSEMBLYLINETAB))));
 	ITEMS.register("manipulatorinputrunning",
-		supplier(new BlockItemDescriptable(blockManipulatorInputRunning, new Item.Properties())));
+		supplier(new BlockItemDescriptable(blockManipulatorInputRunning, new Properties())));
 	ITEMS.register("manipulatoroutput",
-		supplier(new BlockItemDescriptable(blockManipulatorOutput, new Item.Properties())));
+		supplier(new BlockItemDescriptable(blockManipulatorOutput, new Properties())));
 	ITEMS.register("manipulatoroutputrunning",
-		supplier(new BlockItemDescriptable(blockManipulatorOutputRunning, new Item.Properties())));
-	ITEMS.register("detector", supplier(
-		new BlockItemDescriptable(blockDetector, new Item.Properties().group(References.ASSEMBLYLINETAB))));
-	ITEMS.register("crate", supplier(
-		new BlockItemDescriptable(blockCrate, new Item.Properties().group(References.ASSEMBLYLINETAB))));
+		supplier(new BlockItemDescriptable(blockManipulatorOutputRunning, new Properties())));
+	ITEMS.register("detector",
+		supplier(new BlockItemDescriptable(blockDetector, new Properties().group(References.ASSEMBLYLINETAB))));
+	ITEMS.register("crate",
+		supplier(new BlockItemDescriptable(blockCrate, new Properties().group(References.ASSEMBLYLINETAB))));
 	BlockItemDescriptable.addDescription(blockConveyorbelt, "|translate|tooltip.conveyorbelt.powerusage");
 	BlockItemDescriptable.addDescription(blockSorterBelt, "|translate|tooltip.sorterbelt.powerusage");
 	BlockItemDescriptable.addDescription(blockDetector, "|translate|tooltip.detector");

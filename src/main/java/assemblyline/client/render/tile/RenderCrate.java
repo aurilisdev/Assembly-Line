@@ -50,7 +50,7 @@ public class RenderCrate extends TileEntityRenderer<TileCrate> {
 		    float scale = 0.025f / (fontrenderer.getStringPropertyWidth(displayNameIn) / 32f);
 		    matrixStackIn.scale(-scale, -scale, scale);
 		    Matrix4f matrix4f = matrixStackIn.getLast().getMatrix();
-		    float f2 = -fontrenderer.getStringPropertyWidth(displayNameIn) / 2;
+		    float f2 = -fontrenderer.getStringPropertyWidth(displayNameIn) / 2.0f;
 		    fontrenderer.func_243247_a(displayNameIn, f2, 0, 0, false, matrix4f, bufferIn, false, 0,
 			    combinedLightIn);
 		    matrixStackIn.pop();

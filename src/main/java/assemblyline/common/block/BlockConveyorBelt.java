@@ -41,27 +41,29 @@ public class BlockConveyorBelt extends Block {
     }
 
     @Override
+    @Deprecated
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 	return shape;
     }
 
     @Override
+    @Deprecated
     public List<ItemStack> getDrops(BlockState state, Builder builder) {
 	return Arrays.asList(new ItemStack(DeferredRegisters.blockConveyorbelt));
     }
 
     @Override
+    @Deprecated
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entityIn) {
 	TileEntity tile = world.getTileEntity(pos);
-	if (!world.isRemote) {
-	    if (tile instanceof TileConveyorBelt) {
-		TileConveyorBelt belt = (TileConveyorBelt) tile;
-		belt.onEntityCollision(entityIn, running);
-	    }
+	if (!world.isRemote && tile instanceof TileConveyorBelt) {
+	    TileConveyorBelt belt = (TileConveyorBelt) tile;
+	    belt.onEntityCollision(entityIn, running);
 	}
     }
 
     @Override
+    @Deprecated
     public BlockState rotate(BlockState state, Rotation rot) {
 	return state.with(FACING, rot.rotate(state.get(FACING)));
     }

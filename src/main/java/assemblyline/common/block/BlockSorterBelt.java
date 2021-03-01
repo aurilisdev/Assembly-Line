@@ -50,27 +50,29 @@ public class BlockSorterBelt extends Block implements IWrenchable {
     }
 
     @Override
+    @Deprecated
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 	return shape;
     }
 
     @Override
+    @Deprecated
     public List<ItemStack> getDrops(BlockState state, Builder builder) {
 	return Arrays.asList(new ItemStack(DeferredRegisters.blockSorterBelt));
     }
 
     @Override
+    @Deprecated
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entityIn) {
 	TileEntity tile = world.getTileEntity(pos);
-	if (!world.isRemote) {
-	    if (tile instanceof TileSorterBelt) {
-		TileSorterBelt belt = (TileSorterBelt) tile;
-		belt.onEntityCollision(entityIn, running);
-	    }
+	if (!world.isRemote && tile instanceof TileSorterBelt) {
+	    TileSorterBelt belt = (TileSorterBelt) tile;
+	    belt.onEntityCollision(entityIn, running);
 	}
     }
 
     @Override
+    @Deprecated
     public void onRotate(ItemStack stack, BlockPos pos, PlayerEntity player) {
 	player.world.setBlockState(pos, rotate(player.world.getBlockState(pos), Rotation.CLOCKWISE_90));
     }
@@ -88,6 +90,7 @@ public class BlockSorterBelt extends Block implements IWrenchable {
     }
 
     @Override
+    @Deprecated
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player,
 	    Hand handIn, BlockRayTraceResult hit) {
 	if (worldIn.isRemote) {
@@ -104,6 +107,7 @@ public class BlockSorterBelt extends Block implements IWrenchable {
     }
 
     @Override
+    @Deprecated
     public BlockState rotate(BlockState state, Rotation rot) {
 	return state.with(BlockConveyorBelt.FACING, rot.rotate(state.get(BlockConveyorBelt.FACING)));
     }
@@ -119,14 +123,12 @@ public class BlockSorterBelt extends Block implements IWrenchable {
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 	if (!(newState.getBlock() instanceof BlockSorterBelt)) {
 	    TileEntity tile = worldIn.getTileEntity(pos);
-	    if (tile instanceof IInventory) {
-		if (!(state.getBlock() == newState.getBlock()
-			&& state.get(BlockConveyorBelt.FACING) != newState.get(BlockConveyorBelt.FACING))) {
-		    InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) tile);
-		}
+	    if (tile instanceof IInventory && !(state.getBlock() == newState.getBlock()
+		    && state.get(BlockConveyorBelt.FACING) != newState.get(BlockConveyorBelt.FACING))) {
+		InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) tile);
 	    }
-	    super.onReplaced(state, worldIn, pos, newState, isMoving);
 	}
+	super.onReplaced(state, worldIn, pos, newState, isMoving);
     }
 
     @Override

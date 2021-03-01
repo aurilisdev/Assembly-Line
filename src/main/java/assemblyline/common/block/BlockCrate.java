@@ -31,16 +31,16 @@ public class BlockCrate extends Block {
     @Override
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 	TileEntity tile = worldIn.getTileEntity(pos);
-	if (tile instanceof IInventory) {
-	    if (!(state.getBlock() == newState.getBlock()
-		    && state.get(BlockConveyorBelt.FACING) != newState.get(BlockConveyorBelt.FACING))) {
-		InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) tile);
-	    }
+	if (tile instanceof IInventory && !(state.getBlock() == newState.getBlock()
+		&& state.get(BlockConveyorBelt.FACING) != newState.get(BlockConveyorBelt.FACING))) {
+	    InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) tile);
 	}
 	super.onReplaced(state, worldIn, pos, newState, isMoving);
+
     }
 
     @Override
+    @Deprecated
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player,
 	    Hand handIn, BlockRayTraceResult hit) {
 	if (!worldIn.isRemote) {

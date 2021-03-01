@@ -52,17 +52,15 @@ public class TileManipulator extends GenericTileBase implements ITickableTileBas
 			    ISidedInventory sided = (ISidedInventory) inv;
 			    for (int slot : sided.getSlotsForFace(dir.getOpposite())) {
 				ItemStack stack = inv.getStackInSlot(slot);
-				if (!stack.isEmpty()) {
-				    if (sided.canExtractItem(slot, stack, dir.getOpposite())) {
-					BlockPos offset = pos.offset(dir.getOpposite());
-					ItemEntity entity = new ItemEntity(world, offset.getX() + 0.5,
-						offset.getY() + 0.5, offset.getZ() + 0.5);
-					entity.setMotion(0, 0, 0);
-					entity.setItem(stack);
-					world.addEntity(entity);
-					inv.setInventorySlotContents(slot, ItemStack.EMPTY);
-					break;
-				    }
+				if (!stack.isEmpty() && sided.canExtractItem(slot, stack, dir.getOpposite())) {
+				    BlockPos offset = pos.offset(dir.getOpposite());
+				    ItemEntity entity = new ItemEntity(world, offset.getX() + 0.5, offset.getY() + 0.5,
+					    offset.getZ() + 0.5);
+				    entity.setMotion(0, 0, 0);
+				    entity.setItem(stack);
+				    world.addEntity(entity);
+				    inv.setInventorySlotContents(slot, ItemStack.EMPTY);
+				    break;
 				}
 			    }
 			} else {

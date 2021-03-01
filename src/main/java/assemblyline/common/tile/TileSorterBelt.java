@@ -79,55 +79,49 @@ public class TileSorterBelt extends GenericTileInventory implements IElectrodyna
 
     public void onEntityCollision(Entity entityIn, boolean running) {
 	Direction facing = getBlockState().get(BlockConveyorBelt.FACING);
-	if (running) {
-	    if (entityIn.getPosY() > pos.getY() + 4.0 / 16.0) {
-		Direction dir = facing.getOpposite();
-		BlockPos next = pos.offset(dir);
-		BlockState side = world.getBlockState(next);
-		if (entityIn instanceof ItemEntity) {
-		    ItemEntity itemEntity = (ItemEntity) entityIn;
-		    boolean hasRight = false;
-		    boolean hasLeft = false;
-		    for (int i = 0; i < 9; i++) {
-			ItemStack s = getStackInSlot(i);
-			if (s.getItem() == itemEntity.getItem().getItem()) {
-			    hasLeft = true;
-			    break;
-			}
+	if (running && entityIn.getPosY() > pos.getY() + 4.0 / 16.0) {
+	    Direction dir = facing.getOpposite();
+	    BlockPos next = pos.offset(dir);
+	    BlockState side = world.getBlockState(next);
+	    if (entityIn instanceof ItemEntity) {
+		ItemEntity itemEntity = (ItemEntity) entityIn;
+		boolean hasRight = false;
+		boolean hasLeft = false;
+		for (int i = 0; i < 9; i++) {
+		    ItemStack s = getStackInSlot(i);
+		    if (s.getItem() == itemEntity.getItem().getItem()) {
+			hasLeft = true;
+			break;
 		    }
-		    for (int i = 9; i < 18; i++) {
-			ItemStack s = getStackInSlot(i);
-			if (s.getItem() == itemEntity.getItem().getItem()) {
-			    hasRight = true;
-			    break;
-			}
+		}
+		for (int i = 9; i < 18; i++) {
+		    ItemStack s = getStackInSlot(i);
+		    if (s.getItem() == itemEntity.getItem().getItem()) {
+			hasRight = true;
+			break;
 		    }
-		    if (hasLeft) {
-			entityIn.addVelocity(dir.rotateYCCW().getXOffset() / 20.0, 0,
-				dir.rotateYCCW().getZOffset() / 20.0);
-		    } else if (hasRight) {
-			entityIn.addVelocity(dir.rotateY().getXOffset() / 20.0, 0, dir.rotateY().getZOffset() / 20.0);
-		    } else {
-			entityIn.addVelocity(dir.getXOffset() / 20.0, 0, dir.getZOffset() / 20.0);
-		    }
-		    if (!itemEntity.getItem().isEmpty()) {
-			if (side.getBlock() instanceof BlockManipulator) {
-			    if (side.get(BlockConveyorBelt.FACING) == dir.getOpposite()) {
-				BlockPos chestPos = next.offset(dir);
-				TileEntity chestTile = world.getTileEntity(chestPos);
-				if (chestTile instanceof IInventory) {
-				    itemEntity.setItem(HopperTileEntity.putStackInInventoryAllSlots(null,
-					    (IInventory) chestTile, itemEntity.getItem(), dir.getOpposite()));
-				    if (itemEntity.getItem().isEmpty()) {
-					itemEntity.remove();
-				    }
-				}
-			    }
-			}
-		    }
+		}
+		if (hasLeft) {
+		    entityIn.addVelocity(dir.rotateYCCW().getXOffset() / 20.0, 0, dir.rotateYCCW().getZOffset() / 20.0);
+		} else if (hasRight) {
+		    entityIn.addVelocity(dir.rotateY().getXOffset() / 20.0, 0, dir.rotateY().getZOffset() / 20.0);
 		} else {
 		    entityIn.addVelocity(dir.getXOffset() / 20.0, 0, dir.getZOffset() / 20.0);
 		}
+		if (!itemEntity.getItem().isEmpty() && side.getBlock() instanceof BlockManipulator
+			&& side.get(BlockConveyorBelt.FACING) == dir.getOpposite()) {
+		    BlockPos chestPos = next.offset(dir);
+		    TileEntity chestTile = world.getTileEntity(chestPos);
+		    if (chestTile instanceof IInventory) {
+			itemEntity.setItem(HopperTileEntity.putStackInInventoryAllSlots(null, (IInventory) chestTile,
+				itemEntity.getItem(), dir.getOpposite()));
+			if (itemEntity.getItem().isEmpty()) {
+			    itemEntity.remove();
+			}
+		    }
+		}
+	    } else {
+		entityIn.addVelocity(dir.getXOffset() / 20.0, 0, dir.getZOffset() / 20.0);
 	    }
 	}
 	checkForSpread();

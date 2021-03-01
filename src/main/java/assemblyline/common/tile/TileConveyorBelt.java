@@ -58,32 +58,27 @@ public class TileConveyorBelt extends TileEntity implements IElectrodynamic {
 	Direction facing = state.get(BlockConveyorBelt.FACING);
 	boolean slanted = state.getBlock() == DeferredRegisters.blockSlantedConveyorbelt
 		|| state.getBlock() == DeferredRegisters.blockSlantedConveyorbeltRunning;
-	if (running) {
-	    if (entityIn.getPosY() > pos.getY() + 4.0 / 16.0) {
-		Direction dir = facing.getOpposite();
-		if (slanted) {
-		    entityIn.setPosition(entityIn.getPosX() + dir.getXOffset(), entityIn.getPosY() + 1.2,
-			    entityIn.getPosZ() + dir.getZOffset());
-		} else {
-		    entityIn.addVelocity(dir.getXOffset() / 20.0, 0.0, dir.getZOffset() / 20.0);
-		}
-		BlockPos next = pos.offset(dir);
-		BlockState side = world.getBlockState(next);
-		if (entityIn instanceof ItemEntity) {
-		    ItemEntity itemEntity = (ItemEntity) entityIn;
-		    if (!itemEntity.getItem().isEmpty()) {
-			if (side.getBlock() instanceof BlockManipulator) {
-			    if (side.get(BlockConveyorBelt.FACING) == dir.getOpposite()) {
-				BlockPos chestPos = next.offset(dir);
-				TileEntity chestTile = world.getTileEntity(chestPos);
-				if (chestTile instanceof IInventory) {
-				    itemEntity.setItem(HopperTileEntity.putStackInInventoryAllSlots(null,
-					    (IInventory) chestTile, itemEntity.getItem(), dir.getOpposite()));
-				    if (itemEntity.getItem().isEmpty()) {
-					itemEntity.remove();
-				    }
-				}
-			    }
+	if (running && entityIn.getPosY() > pos.getY() + 4.0 / 16.0) {
+	    Direction dir = facing.getOpposite();
+	    if (slanted) {
+		entityIn.setPosition(entityIn.getPosX() + dir.getXOffset(), entityIn.getPosY() + 1.2,
+			entityIn.getPosZ() + dir.getZOffset());
+	    } else {
+		entityIn.addVelocity(dir.getXOffset() / 20.0, 0.0, dir.getZOffset() / 20.0);
+	    }
+	    BlockPos next = pos.offset(dir);
+	    BlockState side = world.getBlockState(next);
+	    if (entityIn instanceof ItemEntity) {
+		ItemEntity itemEntity = (ItemEntity) entityIn;
+		if (!itemEntity.getItem().isEmpty() && side.getBlock() instanceof BlockManipulator
+			&& side.get(BlockConveyorBelt.FACING) == dir.getOpposite()) {
+		    BlockPos chestPos = next.offset(dir);
+		    TileEntity chestTile = world.getTileEntity(chestPos);
+		    if (chestTile instanceof IInventory) {
+			itemEntity.setItem(HopperTileEntity.putStackInInventoryAllSlots(null, (IInventory) chestTile,
+				itemEntity.getItem(), dir.getOpposite()));
+			if (itemEntity.getItem().isEmpty()) {
+			    itemEntity.remove();
 			}
 		    }
 		}
