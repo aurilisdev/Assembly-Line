@@ -114,6 +114,7 @@ public class TileManipulator extends GenericTileBase implements ITickableTileBas
     }
 
     @Override
+    @Deprecated
     public void setJoulesStored(double joules) {
 	this.joules = joules;
     }

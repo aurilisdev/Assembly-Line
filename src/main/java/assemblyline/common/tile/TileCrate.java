@@ -53,8 +53,8 @@ public class TileCrate extends GenericTileInventory implements ITickableTileBase
     }
 
     @Override
-    public CompoundNBT createUpdateTag() {
-	CompoundNBT nbt = super.createUpdateTag();
+    public CompoundNBT writeCustomPacket() {
+	CompoundNBT nbt = super.writeCustomPacket();
 	ItemStack stack = ItemStack.EMPTY;
 	for (int i = 0; i < 64; i++) {
 	    if (!getStackInSlot(i).isEmpty()) {
@@ -68,8 +68,8 @@ public class TileCrate extends GenericTileInventory implements ITickableTileBase
     }
 
     @Override
-    public void handleUpdatePacket(CompoundNBT nbt) {
-	super.handleUpdatePacket(nbt);
+    public void readCustomPacket(CompoundNBT nbt) {
+	super.readCustomPacket(nbt);
 	setInventorySlotContents(0, ItemStack.read(nbt));
 	count = nbt.getInt("acccount");
     }
@@ -77,7 +77,7 @@ public class TileCrate extends GenericTileInventory implements ITickableTileBase
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
 	super.setInventorySlotContents(index, stack);
-	sendUpdatePacket();
+	sendCustomPacket();
     }
 
     @Override
@@ -88,7 +88,7 @@ public class TileCrate extends GenericTileInventory implements ITickableTileBase
     @Override
     public void tickServer() {
 	if (world.getWorldInfo().getGameTime() % 40 == 0) {
-	    sendUpdatePacket();
+	    sendCustomPacket();
 	}
     }
 

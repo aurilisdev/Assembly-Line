@@ -39,6 +39,7 @@ public class TileConveyorBelt extends TileEntity implements IElectrodynamic {
     }
 
     @Override
+    @Deprecated
     public void setJoulesStored(double joules) {
 	this.joules = joules;
     }
