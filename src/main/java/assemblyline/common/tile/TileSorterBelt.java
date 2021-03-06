@@ -48,6 +48,7 @@ public class TileSorterBelt extends GenericTileInventory implements IElectrodyna
     }
 
     @Override
+    @Deprecated
     public void setJoulesStored(double joules) {
 	this.joules = joules;
     }
