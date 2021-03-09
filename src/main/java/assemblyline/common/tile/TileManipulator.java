@@ -38,13 +38,12 @@ public class TileManipulator extends GenericTileBase implements ITickableTileBas
 		Direction dir = getFacing().getOpposite();
 		TileEntity facing = world.getTileEntity(pos.offset(dir));
 		TileEntity opposite = world.getTileEntity(pos.offset(dir.getOpposite()));
-		if (opposite instanceof TileConveyorBelt
-			&& opposite.getBlockState().get(BlockConveyorBelt.FACING).getOpposite() != dir
-			|| opposite instanceof TileSorterBelt
-				&& opposite.getBlockState().get(BlockConveyorBelt.FACING).getOpposite() != dir) {
-		    if (((BlockManipulator) getBlockState().getBlock()).input) {
-			world.setBlockState(pos, DeferredRegisters.blockManipulatorOutput.getDefaultState()
+		if ((opposite instanceof TileConveyorBelt || opposite instanceof TileSorterBelt)
+			&& opposite.getBlockState().get(BlockConveyorBelt.FACING).getOpposite() != dir) {
+		    if (input) {
+			world.setBlockState(pos, DeferredRegisters.blockManipulatorOutputRunning.getDefaultState()
 				.with(BlockConveyorBelt.FACING, getFacing()));
+			input = false;
 		    }
 		    if (facing instanceof IInventory) {
 			IInventory inv = (IInventory) facing;
@@ -79,11 +78,15 @@ public class TileManipulator extends GenericTileBase implements ITickableTileBas
 			    }
 			}
 		    }
-		}
-	    } else {
-		if (!input) {
-		    world.setBlockState(pos, DeferredRegisters.blockManipulatorInput.getDefaultState()
-			    .with(BlockConveyorBelt.FACING, getFacing()));
+		} else {
+		    if (input) {
+			input = true;
+			world.setBlockState(pos,
+				running ? DeferredRegisters.blockManipulatorInputRunning.getDefaultState()
+					.with(BlockConveyorBelt.FACING, getFacing())
+					: DeferredRegisters.blockManipulatorInput.getDefaultState()
+						.with(BlockConveyorBelt.FACING, getFacing()));
+		    }
 		}
 	    }
 	    if (joules < Constants.MANIPULATOR_USAGE) {

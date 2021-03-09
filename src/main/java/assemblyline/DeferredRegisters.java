@@ -39,8 +39,8 @@ public class DeferredRegisters {
     public static BlockSorterBelt blockSorterBelt = new BlockSorterBelt(false);
     public static BlockSorterBelt blockSorterBeltRunning = new BlockSorterBelt(true);
     public static BlockManipulator blockManipulatorInput = new BlockManipulator(true, false);
-    public static BlockManipulator blockManipulatorInputRunning = new BlockManipulator(false, false);
-    public static BlockManipulator blockManipulatorOutput = new BlockManipulator(true, true);
+    public static BlockManipulator blockManipulatorInputRunning = new BlockManipulator(true, true);
+    public static BlockManipulator blockManipulatorOutput = new BlockManipulator(false, true);
     public static BlockManipulator blockManipulatorOutputRunning = new BlockManipulator(false, true);
     public static BlockDetector blockDetector = new BlockDetector();
     public static BlockCrate blockCrate = new BlockCrate();
