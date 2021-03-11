@@ -2,7 +2,7 @@ package assemblyline.common.inventory.container;
 
 import assemblyline.DeferredRegisters;
 import assemblyline.common.tile.TileSorterBelt;
-import electrodynamics.common.inventory.container.GenericContainerInventory;
+import electrodynamics.common.inventory.container.GenericContainer;
 import electrodynamics.common.inventory.container.slot.GenericSlot;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
@@ -10,7 +10,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.util.IIntArray;
 import net.minecraft.util.IntArray;
 
-public class ContainerSorterBelt extends GenericContainerInventory<TileSorterBelt> {
+public class ContainerSorterBelt extends GenericContainer<TileSorterBelt> {
 
     public ContainerSorterBelt(int id, PlayerInventory playerinv) {
 	this(id, playerinv, new Inventory(18));
