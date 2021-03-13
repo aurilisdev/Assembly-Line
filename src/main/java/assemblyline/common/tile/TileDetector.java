@@ -4,27 +4,28 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import assemblyline.DeferredRegisters;
-import electrodynamics.api.tile.ITickableTileBase;
-import electrodynamics.common.tile.generic.GenericTileBase;
+import electrodynamics.common.tile.generic.GenericTileTicking;
+import electrodynamics.common.tile.generic.component.ComponentType;
+import electrodynamics.common.tile.generic.component.type.ComponentDirection;
+import electrodynamics.common.tile.generic.component.type.ComponentTickable;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 
-public class TileDetector extends GenericTileBase implements ITickableTileBase {
-
-    private int ticks;
+public class TileDetector extends GenericTileTicking {
     public boolean isPowered = false;
 
     public TileDetector() {
 	super(DeferredRegisters.TILE_DETECTOR.get());
+	addComponent(new ComponentDirection());
+	addComponent(new ComponentTickable().addTickServer(this::tickServer));
     }
 
-    @Override
-    public void tickServer() {
-	ticks++;
-	if (ticks % 4 == 0) {
+    public void tickServer(ComponentTickable component) {
+	if (component.getTicks() % 4 == 0) {
 	    List<ItemEntity> entities = world.getEntitiesWithinAABB(EntityType.ITEM,
-		    new AxisAlignedBB(pos.offset(getFacing())),
+		    new AxisAlignedBB(
+			    pos.offset(this.<ComponentDirection>getComponent(ComponentType.Direction).getDirection())),
 		    (Predicate<ItemEntity>) t -> t != null && !t.getItem().isEmpty());
 	    if (!entities.isEmpty()) {
 		if (!isPowered) {
@@ -35,7 +36,6 @@ public class TileDetector extends GenericTileBase implements ITickableTileBase {
 		isPowered = false;
 		world.notifyNeighborsOfStateChange(pos, getBlockState().getBlock());
 	    }
-
 	}
     }
 }

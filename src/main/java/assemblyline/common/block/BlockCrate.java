@@ -1,6 +1,7 @@
 package assemblyline.common.block;
 
 import assemblyline.common.tile.TileCrate;
+import electrodynamics.common.tile.generic.component.ComponentType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -48,7 +49,8 @@ public class BlockCrate extends Block {
 	    if (tile != null) {
 		player.setItemStackToSlot(
 			handIn == Hand.MAIN_HAND ? EquipmentSlotType.MAINHAND : EquipmentSlotType.OFFHAND,
-			HopperTileEntity.putStackInInventoryAllSlots(player.inventory, tile, player.getHeldItem(handIn),
+			HopperTileEntity.putStackInInventoryAllSlots(player.inventory,
+				tile.getComponent(ComponentType.Inventory), player.getHeldItem(handIn),
 				Direction.DOWN));
 	    }
 	}

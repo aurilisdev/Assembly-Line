@@ -6,8 +6,10 @@ import assemblyline.DeferredRegisters;
 import assemblyline.common.block.BlockConveyorBelt;
 import assemblyline.common.block.BlockManipulator;
 import assemblyline.common.settings.Constants;
-import electrodynamics.api.tile.electric.CapabilityElectrodynamic;
-import electrodynamics.api.tile.electric.IElectrodynamic;
+import electrodynamics.common.tile.generic.GenericTile;
+import electrodynamics.common.tile.generic.component.ComponentType;
+import electrodynamics.common.tile.generic.component.type.ComponentDirection;
+import electrodynamics.common.tile.generic.component.type.ComponentElectrodynamic;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
@@ -16,42 +18,17 @@ import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
 
-public class TileConveyorBelt extends TileEntity implements IElectrodynamic {
-    public double joules = 0;
+public class TileConveyorBelt extends GenericTile {
     public int currentSpread = 0;
     public long lastTime = 0;
 
     public TileConveyorBelt() {
 	super(DeferredRegisters.TILE_CONVEYORBELT.get());
-    }
-
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
-	Direction check = getBlockState().get(BlockConveyorBelt.FACING);
-	if (capability == CapabilityElectrodynamic.ELECTRODYNAMIC && facing != Direction.UP && facing != check
-		&& facing != check.getOpposite()) {
-	    return (LazyOptional<T>) LazyOptional.of(() -> this);
-	}
-	return super.getCapability(capability, facing);
-    }
-
-    @Override
-    @Deprecated
-    public void setJoulesStored(double joules) {
-	this.joules = joules;
-    }
-
-    @Override
-    public double getJoulesStored() {
-	return joules;
-    }
-
-    @Override
-    public double getMaxJoulesStored() {
-	return Constants.CONVEYORBELT_USAGE * 200;
+	addComponent(new ComponentDirection());
+	addComponent(new ComponentElectrodynamic(this).setMaxJoules(Constants.CONVEYORBELT_USAGE * 20)
+		.addInputDirection(Direction.DOWN).addRelativeInputDirection(Direction.EAST)
+		.addRelativeInputDirection(Direction.WEST));
     }
 
     public void onEntityCollision(Entity entityIn, boolean running) {
@@ -85,9 +62,10 @@ public class TileConveyorBelt extends TileEntity implements IElectrodynamic {
 		}
 	    }
 	}
+	ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
 	checkForSpread();
 	if (currentSpread == 0 || currentSpread == 16) {
-	    if (joules < Constants.CONVEYORBELT_USAGE) {
+	    if (electro.getJoulesStored() < Constants.CONVEYORBELT_USAGE) {
 		if (running) {
 		    world.setBlockState(pos,
 			    (slanted ? DeferredRegisters.blockSlantedConveyorbelt : DeferredRegisters.blockConveyorbelt)
@@ -97,7 +75,7 @@ public class TileConveyorBelt extends TileEntity implements IElectrodynamic {
 		}
 	    } else {
 		if (lastTime != world.getGameTime()) {
-		    joules -= Constants.CONVEYORBELT_USAGE;
+		    electro.setJoules(electro.getJoulesStored() - Constants.CONVEYORBELT_USAGE);
 		    lastTime = world.getGameTime();
 		    if (!running) {
 			world.setBlockState(pos,

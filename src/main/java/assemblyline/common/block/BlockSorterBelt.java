@@ -7,6 +7,8 @@ import assemblyline.DeferredRegisters;
 import assemblyline.common.tile.TileSorterBelt;
 import electrodynamics.api.item.IWrench;
 import electrodynamics.api.tile.IWrenchable;
+import electrodynamics.common.tile.generic.GenericTile;
+import electrodynamics.common.tile.generic.component.ComponentType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -15,7 +17,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
@@ -81,8 +82,9 @@ public class BlockSorterBelt extends Block implements IWrenchable {
     public void onPickup(ItemStack stack, BlockPos pos, PlayerEntity player) {
 	World world = player.world;
 	TileEntity te = world.getTileEntity(pos);
-	if (te instanceof IInventory) {
-	    InventoryHelper.dropInventoryItems(player.world, pos, (IInventory) te);
+	if (te instanceof GenericTile) {
+	    InventoryHelper.dropInventoryItems(player.world, pos,
+		    ((GenericTile) te).getComponent(ComponentType.Inventory));
 	}
 	world.setBlockState(pos, Blocks.AIR.getDefaultState());
 	world.addEntity(
@@ -97,8 +99,9 @@ public class BlockSorterBelt extends Block implements IWrenchable {
 	    return ActionResultType.SUCCESS;
 	} else if (!(player.getHeldItem(handIn).getItem() instanceof IWrench)) {
 	    TileEntity tileentity = worldIn.getTileEntity(pos);
-	    if (tileentity instanceof INamedContainerProvider) {
-		player.openContainer((INamedContainerProvider) tileentity);
+	    if (tileentity instanceof GenericTile) {
+		player.openContainer((INamedContainerProvider) ((GenericTile) tileentity)
+			.getComponent(ComponentType.ContainerProvider));
 	    }
 	    player.addStat(Stats.INTERACT_WITH_FURNACE);
 	    return ActionResultType.CONSUME;
@@ -123,9 +126,10 @@ public class BlockSorterBelt extends Block implements IWrenchable {
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 	if (!(newState.getBlock() instanceof BlockSorterBelt)) {
 	    TileEntity tile = worldIn.getTileEntity(pos);
-	    if (tile instanceof IInventory && !(state.getBlock() == newState.getBlock()
+	    if (tile instanceof GenericTile && !(state.getBlock() == newState.getBlock()
 		    && state.get(BlockConveyorBelt.FACING) != newState.get(BlockConveyorBelt.FACING))) {
-		InventoryHelper.dropInventoryItems(worldIn, pos, (IInventory) tile);
+		InventoryHelper.dropInventoryItems(worldIn, pos,
+			((GenericTile) tile).getComponent(ComponentType.Inventory));
 	    }
 	}
 	super.onReplaced(state, worldIn, pos, newState, isMoving);

@@ -1,47 +1,45 @@
 package assemblyline.common.tile;
 
+import java.util.HashSet;
+
 import assemblyline.DeferredRegisters;
-import electrodynamics.api.tile.ITickableTileBase;
-import electrodynamics.common.tile.generic.GenericTileInventory;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
+import electrodynamics.common.tile.generic.GenericTileTicking;
+import electrodynamics.common.tile.generic.component.ComponentType;
+import electrodynamics.common.tile.generic.component.type.ComponentInventory;
+import electrodynamics.common.tile.generic.component.type.ComponentPacketHandler;
+import electrodynamics.common.tile.generic.component.type.ComponentTickable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 
-public class TileCrate extends GenericTileInventory implements ITickableTileBase {
+public class TileCrate extends GenericTileTicking {
+    private int lastCheckCount = 0;
     private int count = 0;
 
     public TileCrate() {
 	super(DeferredRegisters.TILE_CRATE.get());
+	addComponent(new ComponentInventory().setInventorySize(64).setGetSlotsFunction(this::getSlotsForFace)
+		.setItemValidPredicate(this::isItemValidForSlot));
+	addComponent(new ComponentPacketHandler().addCustomPacketWriter(this::writeCustomPacket)
+		.addCustomPacketReader(this::readCustomPacket));
+	addComponent(new ComponentTickable().addTickServer(this::tickServer));
     }
 
-    @Override
-    public int getSizeInventory() {
-	return 64;
-    }
-
-    @Override
-    public int getInventoryStackLimit() {
-	return 4096;
-    }
-
-    @Override
-    public int[] getSlotsForFace(Direction side) {
-	int[] arr = new int[64];
-	for (int i = 0; i < arr.length; i++) {
-	    arr[i] = i;
+    public HashSet<Integer> getSlotsForFace(Direction side) {
+	HashSet<Integer> set = new HashSet<>();
+	for (int i = 0; i < this.<ComponentInventory>getComponent(ComponentType.Inventory).getSizeInventory(); i++) {
+	    set.add(i);
 	}
-	return arr;
+	return set;
     }
 
-    @Override
     public boolean isItemValidForSlot(int index, ItemStack stack) {
+	ComponentInventory inv = getComponent(ComponentType.Inventory);
 	if (stack.isEmpty()) {
 	    return true;
 	}
-	for (int i = 0; i < 64; i++) {
-	    ItemStack s = getStackInSlot(i);
+	for (int i = 0; i < inv.getSizeInventory(); i++) {
+	    ItemStack s = inv.getStackInSlot(i);
 	    if (s.isEmpty()) {
 		continue;
 	    }
@@ -49,54 +47,42 @@ public class TileCrate extends GenericTileInventory implements ITickableTileBase
 		return false;
 	    }
 	}
-	return super.isItemValidForSlot(index, stack);
+	return true;
     }
 
-    @Override
-    public CompoundNBT writeCustomPacket() {
-	CompoundNBT nbt = super.writeCustomPacket();
+    public void writeCustomPacket(CompoundNBT nbt) {
+	ComponentInventory inv = getComponent(ComponentType.Inventory);
 	ItemStack stack = ItemStack.EMPTY;
-	for (int i = 0; i < 64; i++) {
-	    if (!getStackInSlot(i).isEmpty()) {
-		stack = getStackInSlot(i);
+	for (int i = 0; i < inv.getSizeInventory(); i++) {
+	    if (!inv.getStackInSlot(i).isEmpty()) {
+		stack = inv.getStackInSlot(i);
 		break;
 	    }
 	}
 	new ItemStack(stack.getItem()).write(nbt);
 	nbt.putInt("acccount", getCount());
-	return nbt;
     }
 
-    @Override
     public void readCustomPacket(CompoundNBT nbt) {
-	super.readCustomPacket(nbt);
-	setInventorySlotContents(0, ItemStack.read(nbt));
+	this.<ComponentInventory>getComponent(ComponentType.Inventory).setInventorySlotContents(0, ItemStack.read(nbt));
 	count = nbt.getInt("acccount");
     }
 
-    @Override
-    public void setInventorySlotContents(int index, ItemStack stack) {
-	super.setInventorySlotContents(index, stack);
-	sendCustomPacket();
-    }
-
-    @Override
-    protected Container createMenu(int id, PlayerInventory player) {
-	return null;
-    }
-
-    @Override
-    public void tickServer() {
-	if (world.getWorldInfo().getGameTime() % 40 == 0) {
-	    sendCustomPacket();
+    public void tickServer(ComponentTickable tickable) {
+	if (tickable.getTicks() % 20 == 0) {
+	    if (count != lastCheckCount) {
+		this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendCustomPacket();
+	    }
+	    count = lastCheckCount;
 	}
     }
 
     public int getCount() {
 	if (!world.isRemote) {
+	    ComponentInventory inv = getComponent(ComponentType.Inventory);
 	    count = 0;
-	    for (int i = 0; i < 64; i++) {
-		ItemStack stack = getStackInSlot(i);
+	    for (int i = 0; i < inv.getSizeInventory(); i++) {
+		ItemStack stack = inv.getStackInSlot(i);
 		if (!stack.isEmpty()) {
 		    count += stack.getCount();
 		}

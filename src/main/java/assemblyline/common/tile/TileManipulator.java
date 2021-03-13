@@ -4,10 +4,11 @@ import assemblyline.DeferredRegisters;
 import assemblyline.common.block.BlockConveyorBelt;
 import assemblyline.common.block.BlockManipulator;
 import assemblyline.common.settings.Constants;
-import electrodynamics.api.tile.ITickableTileBase;
-import electrodynamics.api.tile.electric.CapabilityElectrodynamic;
-import electrodynamics.api.tile.electric.IElectrodynamic;
-import electrodynamics.common.tile.generic.GenericTileBase;
+import electrodynamics.common.tile.generic.GenericTileTicking;
+import electrodynamics.common.tile.generic.component.ComponentType;
+import electrodynamics.common.tile.generic.component.type.ComponentDirection;
+import electrodynamics.common.tile.generic.component.type.ComponentElectrodynamic;
+import electrodynamics.common.tile.generic.component.type.ComponentTickable;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.inventory.IInventory;
@@ -16,33 +17,30 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
 
-public class TileManipulator extends GenericTileBase implements ITickableTileBase, IElectrodynamic {
-    public double joules = 0;
-
-    private long ticks = 0;
-
+public class TileManipulator extends GenericTileTicking {
     public TileManipulator() {
 	super(DeferredRegisters.TILE_MANIPULATOR.get());
+	addComponent(new ComponentDirection());
+	addComponent(new ComponentTickable().addTickServer(this::tickServer));
+	addComponent(new ComponentElectrodynamic(this).setMaxJoules(Constants.MANIPULATOR_USAGE * 20)
+		.addInputDirection(Direction.DOWN));
     }
 
-    @Override
-    public void tickServer() {
-	ticks++;
+    public void tickServer(ComponentTickable component) {
 	boolean running = ((BlockManipulator) getBlockState().getBlock()).running;
 	boolean input = ((BlockManipulator) getBlockState().getBlock()).input;
-	if (ticks % 20 == 0) {
+	ComponentDirection direction = getComponent(ComponentType.Direction);
+	if (component.getTicks() % 20 == 0) {
 	    if (running) {
-		Direction dir = getFacing().getOpposite();
+		Direction dir = direction.getDirection().getOpposite();
 		TileEntity facing = world.getTileEntity(pos.offset(dir));
 		TileEntity opposite = world.getTileEntity(pos.offset(dir.getOpposite()));
 		if ((opposite instanceof TileConveyorBelt || opposite instanceof TileSorterBelt)
 			&& opposite.getBlockState().get(BlockConveyorBelt.FACING).getOpposite() != dir) {
 		    if (input) {
 			world.setBlockState(pos, DeferredRegisters.blockManipulatorOutputRunning.getDefaultState()
-				.with(BlockConveyorBelt.FACING, getFacing()));
+				.with(BlockConveyorBelt.FACING, direction.getDirection()));
 			input = false;
 		    }
 		    if (facing instanceof IInventory) {
@@ -81,55 +79,28 @@ public class TileManipulator extends GenericTileBase implements ITickableTileBas
 		} else {
 		    if (input) {
 			input = true;
-			world.setBlockState(pos,
-				running ? DeferredRegisters.blockManipulatorInputRunning.getDefaultState()
-					.with(BlockConveyorBelt.FACING, getFacing())
-					: DeferredRegisters.blockManipulatorInput.getDefaultState()
-						.with(BlockConveyorBelt.FACING, getFacing()));
+			world.setBlockState(pos, DeferredRegisters.blockManipulatorInput.getDefaultState()
+				.with(BlockConveyorBelt.FACING, direction.getDirection()));
 		    }
 		}
 	    }
-	    if (joules < Constants.MANIPULATOR_USAGE) {
+	    ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
+	    if (electro.getJoulesStored() < Constants.MANIPULATOR_USAGE) {
 		if (running) {
 		    Block next = input ? DeferredRegisters.blockManipulatorInput
 			    : DeferredRegisters.blockManipulatorOutput;
-		    world.setBlockState(pos, next.getDefaultState().with(BlockConveyorBelt.FACING, getFacing()),
-			    2 | 16);
+		    world.setBlockState(pos,
+			    next.getDefaultState().with(BlockConveyorBelt.FACING, direction.getDirection()), 2 | 16);
 		}
 	    } else {
-		joules -= Constants.MANIPULATOR_USAGE;
+		electro.setJoules(electro.getJoulesStored() - Constants.MANIPULATOR_USAGE);
 		if (!running) {
 		    Block next = input ? DeferredRegisters.blockManipulatorInputRunning
 			    : DeferredRegisters.blockManipulatorOutputRunning;
-		    world.setBlockState(pos, next.getDefaultState().with(BlockConveyorBelt.FACING, getFacing()),
-			    2 | 16);
+		    world.setBlockState(pos,
+			    next.getDefaultState().with(BlockConveyorBelt.FACING, direction.getDirection()), 2 | 16);
 		}
 	    }
 	}
     }
-
-    @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> capability, Direction facing) {
-	if (capability == CapabilityElectrodynamic.ELECTRODYNAMIC && facing == Direction.DOWN) {
-	    return (LazyOptional<T>) LazyOptional.of(() -> this);
-	}
-	return super.getCapability(capability, facing);
-    }
-
-    @Override
-    @Deprecated
-    public void setJoulesStored(double joules) {
-	this.joules = joules;
-    }
-
-    @Override
-    public double getJoulesStored() {
-	return joules;
-    }
-
-    @Override
-    public double getMaxJoulesStored() {
-	return Constants.MANIPULATOR_USAGE * 200;
-    }
-
 }
