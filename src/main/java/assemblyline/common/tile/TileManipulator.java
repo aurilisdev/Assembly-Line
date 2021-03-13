@@ -79,7 +79,7 @@ public class TileManipulator extends GenericTileTicking {
 		} else {
 		    if (input) {
 			input = true;
-			world.setBlockState(pos, DeferredRegisters.blockManipulatorInput.getDefaultState()
+			world.setBlockState(pos, DeferredRegisters.blockManipulatorInputRunning.getDefaultState()
 				.with(BlockConveyorBelt.FACING, direction.getDirection()));
 		    }
 		}
