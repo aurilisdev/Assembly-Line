@@ -6,10 +6,10 @@ import assemblyline.DeferredRegisters;
 import assemblyline.common.block.BlockConveyorBelt;
 import assemblyline.common.block.BlockManipulator;
 import assemblyline.common.settings.Constants;
-import electrodynamics.common.tile.generic.GenericTile;
-import electrodynamics.common.tile.generic.component.ComponentType;
-import electrodynamics.common.tile.generic.component.type.ComponentDirection;
-import electrodynamics.common.tile.generic.component.type.ComponentElectrodynamic;
+import electrodynamics.api.tile.GenericTile;
+import electrodynamics.api.tile.components.ComponentType;
+import electrodynamics.api.tile.components.type.ComponentDirection;
+import electrodynamics.api.tile.components.type.ComponentElectrodynamic;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
@@ -26,9 +26,8 @@ public class TileConveyorBelt extends GenericTile {
     public TileConveyorBelt() {
 	super(DeferredRegisters.TILE_CONVEYORBELT.get());
 	addComponent(new ComponentDirection());
-	addComponent(new ComponentElectrodynamic(this).setMaxJoules(Constants.CONVEYORBELT_USAGE * 20)
-		.addInputDirection(Direction.DOWN).addRelativeInputDirection(Direction.EAST)
-		.addRelativeInputDirection(Direction.WEST));
+	addComponent(new ComponentElectrodynamic(this).setMaxJoules(Constants.CONVEYORBELT_USAGE * 20).addInputDirection(Direction.DOWN)
+		.addRelativeInputDirection(Direction.EAST).addRelativeInputDirection(Direction.WEST));
     }
 
     public void onEntityCollision(Entity entityIn, boolean running) {
@@ -39,8 +38,7 @@ public class TileConveyorBelt extends GenericTile {
 	if (running && entityIn.getPosY() > pos.getY() + 4.0 / 16.0) {
 	    Direction dir = facing.getOpposite();
 	    if (slanted) {
-		entityIn.setPosition(entityIn.getPosX() + dir.getXOffset(), entityIn.getPosY() + 1.2,
-			entityIn.getPosZ() + dir.getZOffset());
+		entityIn.setPosition(entityIn.getPosX() + dir.getXOffset(), entityIn.getPosY() + 1.2, entityIn.getPosZ() + dir.getZOffset());
 	    } else {
 		entityIn.addVelocity(dir.getXOffset() / 20.0, 0.0, dir.getZOffset() / 20.0);
 	    }
@@ -53,8 +51,8 @@ public class TileConveyorBelt extends GenericTile {
 		    BlockPos chestPos = next.offset(dir);
 		    TileEntity chestTile = world.getTileEntity(chestPos);
 		    if (chestTile instanceof IInventory) {
-			itemEntity.setItem(HopperTileEntity.putStackInInventoryAllSlots(null, (IInventory) chestTile,
-				itemEntity.getItem(), dir.getOpposite()));
+			itemEntity.setItem(
+				HopperTileEntity.putStackInInventoryAllSlots(null, (IInventory) chestTile, itemEntity.getItem(), dir.getOpposite()));
 			if (itemEntity.getItem().isEmpty()) {
 			    itemEntity.remove();
 			}
@@ -67,10 +65,8 @@ public class TileConveyorBelt extends GenericTile {
 	if (currentSpread == 0 || currentSpread == 16) {
 	    if (electro.getJoulesStored() < Constants.CONVEYORBELT_USAGE) {
 		if (running) {
-		    world.setBlockState(pos,
-			    (slanted ? DeferredRegisters.blockSlantedConveyorbelt : DeferredRegisters.blockConveyorbelt)
-				    .getDefaultState().with(BlockConveyorBelt.FACING, facing),
-			    2 | 16);
+		    world.setBlockState(pos, (slanted ? DeferredRegisters.blockSlantedConveyorbelt : DeferredRegisters.blockConveyorbelt)
+			    .getDefaultState().with(BlockConveyorBelt.FACING, facing), 2 | 16);
 		    currentSpread = 0;
 		}
 	    } else {
@@ -79,9 +75,8 @@ public class TileConveyorBelt extends GenericTile {
 		    lastTime = world.getGameTime();
 		    if (!running) {
 			world.setBlockState(pos,
-				(slanted ? DeferredRegisters.blockSlantedConveyorbeltRunning
-					: DeferredRegisters.blockConveyorbeltRunning).getDefaultState()
-						.with(BlockConveyorBelt.FACING, facing),
+				(slanted ? DeferredRegisters.blockSlantedConveyorbeltRunning : DeferredRegisters.blockConveyorbeltRunning)
+					.getDefaultState().with(BlockConveyorBelt.FACING, facing),
 				2 | 16);
 			currentSpread = 16;
 		    }
@@ -90,11 +85,8 @@ public class TileConveyorBelt extends GenericTile {
 	    }
 	} else {
 	    if (currentSpread > 0 && !running) {
-		world.setBlockState(pos,
-			(slanted ? DeferredRegisters.blockSlantedConveyorbeltRunning
-				: DeferredRegisters.blockConveyorbeltRunning).getDefaultState()
-					.with(BlockConveyorBelt.FACING, facing),
-			2 | 16);
+		world.setBlockState(pos, (slanted ? DeferredRegisters.blockSlantedConveyorbeltRunning : DeferredRegisters.blockConveyorbeltRunning)
+			.getDefaultState().with(BlockConveyorBelt.FACING, facing), 2 | 16);
 	    }
 	}
     }

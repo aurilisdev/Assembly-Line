@@ -25,8 +25,7 @@ public class BlockDetector extends Block {
     public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
 
     public BlockDetector() {
-	super(Properties.create(Material.IRON).hardnessAndResistance(3.5F).sound(SoundType.METAL)
-		.harvestTool(ToolType.PICKAXE).notSolid());
+	super(Properties.create(Material.IRON).hardnessAndResistance(3.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).notSolid());
 	setDefaultState(stateContainer.getBaseState().with(FACING, Direction.NORTH));
     }
 

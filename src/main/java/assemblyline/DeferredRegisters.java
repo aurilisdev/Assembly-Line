@@ -28,10 +28,8 @@ import net.minecraftforge.registries.IForgeRegistryEntry;
 public class DeferredRegisters {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, References.ID);
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, References.ID);
-    public static final DeferredRegister<TileEntityType<?>> TILES = DeferredRegister
-	    .create(ForgeRegistries.TILE_ENTITIES, References.ID);
-    public static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister
-	    .create(ForgeRegistries.CONTAINERS, References.ID);
+    public static final DeferredRegister<TileEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, References.ID);
+    public static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, References.ID);
     public static BlockConveyorBelt blockConveyorbelt = new BlockConveyorBelt(false);
     public static BlockConveyorBelt blockConveyorbeltRunning = new BlockConveyorBelt(true);
     public static BlockConveyorBelt blockSlantedConveyorbelt = new BlockConveyorBelt(false);
@@ -58,49 +56,37 @@ public class DeferredRegisters {
 	BLOCKS.register("manipulatoroutputrunning", supplier(blockManipulatorOutputRunning));
 	BLOCKS.register("detector", supplier(blockDetector));
 	BLOCKS.register("crate", supplier(blockCrate));
-	ITEMS.register("conveyorbelt", supplier(
-		new BlockItemDescriptable(blockConveyorbelt, new Properties().group(References.ASSEMBLYLINETAB))));
-	ITEMS.register("conveyorbeltrunning",
-		supplier(new BlockItemDescriptable(blockConveyorbeltRunning, new Properties())));
-	ITEMS.register("sorterbelt", supplier(
-		new BlockItemDescriptable(blockSorterBelt, new Properties().group(References.ASSEMBLYLINETAB))));
-	ITEMS.register("sorterbeltrunning",
-		supplier(new BlockItemDescriptable(blockSorterBeltRunning, new Properties())));
-	ITEMS.register("manipulatorinput", supplier(
-		new BlockItemDescriptable(blockManipulatorInput, new Properties().group(References.ASSEMBLYLINETAB))));
-	ITEMS.register("manipulatorinputrunning",
-		supplier(new BlockItemDescriptable(blockManipulatorInputRunning, new Properties())));
-	ITEMS.register("manipulatoroutput",
-		supplier(new BlockItemDescriptable(blockManipulatorOutput, new Properties())));
-	ITEMS.register("manipulatoroutputrunning",
-		supplier(new BlockItemDescriptable(blockManipulatorOutputRunning, new Properties())));
-	ITEMS.register("detector",
-		supplier(new BlockItemDescriptable(blockDetector, new Properties().group(References.ASSEMBLYLINETAB))));
-	ITEMS.register("crate",
-		supplier(new BlockItemDescriptable(blockCrate, new Properties().group(References.ASSEMBLYLINETAB))));
+	ITEMS.register("conveyorbelt", supplier(new BlockItemDescriptable(blockConveyorbelt, new Properties().group(References.ASSEMBLYLINETAB))));
+	ITEMS.register("conveyorbeltrunning", supplier(new BlockItemDescriptable(blockConveyorbeltRunning, new Properties())));
+	ITEMS.register("sorterbelt", supplier(new BlockItemDescriptable(blockSorterBelt, new Properties().group(References.ASSEMBLYLINETAB))));
+	ITEMS.register("sorterbeltrunning", supplier(new BlockItemDescriptable(blockSorterBeltRunning, new Properties())));
+	ITEMS.register("manipulatorinput",
+		supplier(new BlockItemDescriptable(blockManipulatorInput, new Properties().group(References.ASSEMBLYLINETAB))));
+	ITEMS.register("manipulatorinputrunning", supplier(new BlockItemDescriptable(blockManipulatorInputRunning, new Properties())));
+	ITEMS.register("manipulatoroutput", supplier(new BlockItemDescriptable(blockManipulatorOutput, new Properties())));
+	ITEMS.register("manipulatoroutputrunning", supplier(new BlockItemDescriptable(blockManipulatorOutputRunning, new Properties())));
+	ITEMS.register("detector", supplier(new BlockItemDescriptable(blockDetector, new Properties().group(References.ASSEMBLYLINETAB))));
+	ITEMS.register("crate", supplier(new BlockItemDescriptable(blockCrate, new Properties().group(References.ASSEMBLYLINETAB))));
 	BlockItemDescriptable.addDescription(blockConveyorbelt, "|translate|tooltip.conveyorbelt.powerusage");
 	BlockItemDescriptable.addDescription(blockSorterBelt, "|translate|tooltip.sorterbelt.powerusage");
 	BlockItemDescriptable.addDescription(blockDetector, "|translate|tooltip.detector");
 	BlockItemDescriptable.addDescription(blockManipulatorInput, "|translate|tooltip.manipulator.powerusage");
     }
 
-    public static final RegistryObject<TileEntityType<TileConveyorBelt>> TILE_CONVEYORBELT = TILES
-	    .register("conveyorbelt", () -> new TileEntityType<>(TileConveyorBelt::new,
-		    Sets.newHashSet(blockConveyorbelt, blockConveyorbeltRunning), null));
-    public static final RegistryObject<TileEntityType<TileManipulator>> TILE_MANIPULATOR = TILES
-	    .register("manipulator",
-		    () -> new TileEntityType<>(TileManipulator::new, Sets.newHashSet(blockManipulatorInput,
-			    blockManipulatorInputRunning, blockManipulatorOutput, blockManipulatorOutputRunning),
-			    null));
+    public static final RegistryObject<TileEntityType<TileConveyorBelt>> TILE_CONVEYORBELT = TILES.register("conveyorbelt",
+	    () -> new TileEntityType<>(TileConveyorBelt::new, Sets.newHashSet(blockConveyorbelt, blockConveyorbeltRunning), null));
+    public static final RegistryObject<TileEntityType<TileManipulator>> TILE_MANIPULATOR = TILES.register("manipulator",
+	    () -> new TileEntityType<>(TileManipulator::new,
+		    Sets.newHashSet(blockManipulatorInput, blockManipulatorInputRunning, blockManipulatorOutput, blockManipulatorOutputRunning),
+		    null));
     public static final RegistryObject<TileEntityType<TileDetector>> TILE_DETECTOR = TILES.register("detector",
 	    () -> new TileEntityType<>(TileDetector::new, Sets.newHashSet(blockDetector), null));
     public static final RegistryObject<TileEntityType<TileSorterBelt>> TILE_SORTERBELT = TILES.register("sorterbelt",
-	    () -> new TileEntityType<>(TileSorterBelt::new, Sets.newHashSet(blockSorterBelt, blockSorterBeltRunning),
-		    null));
+	    () -> new TileEntityType<>(TileSorterBelt::new, Sets.newHashSet(blockSorterBelt, blockSorterBeltRunning), null));
     public static final RegistryObject<TileEntityType<TileCrate>> TILE_CRATE = TILES.register("crate",
 	    () -> new TileEntityType<>(TileCrate::new, Sets.newHashSet(blockCrate), null));
-    public static final RegistryObject<ContainerType<ContainerSorterBelt>> CONTAINER_SORTERBELT = CONTAINERS
-	    .register("sorterbelt", () -> new ContainerType<>(ContainerSorterBelt::new));
+    public static final RegistryObject<ContainerType<ContainerSorterBelt>> CONTAINER_SORTERBELT = CONTAINERS.register("sorterbelt",
+	    () -> new ContainerType<>(ContainerSorterBelt::new));
 
     private static <T extends IForgeRegistryEntry<T>> Supplier<? extends T> supplier(T entry) {
 	return () -> entry;

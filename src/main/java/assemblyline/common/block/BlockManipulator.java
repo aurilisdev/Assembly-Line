@@ -32,8 +32,7 @@ public class BlockManipulator extends Block {
     public final boolean running;
 
     public BlockManipulator(boolean input, boolean running) {
-	super(Properties.create(Material.IRON).hardnessAndResistance(3.5F).sound(SoundType.METAL)
-		.harvestTool(ToolType.PICKAXE).notSolid());
+	super(Properties.create(Material.IRON).hardnessAndResistance(3.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).notSolid());
 	setDefaultState(stateContainer.getBaseState().with(BlockConveyorBelt.FACING, Direction.NORTH));
 	this.input = input;
 	this.running = running;

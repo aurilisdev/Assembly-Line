@@ -34,8 +34,7 @@ public class BlockConveyorBelt extends Block {
     public final boolean running;
 
     public BlockConveyorBelt(boolean running) {
-	super(Properties.create(Material.IRON).hardnessAndResistance(3.5F).sound(SoundType.METAL)
-		.harvestTool(ToolType.PICKAXE).notSolid());
+	super(Properties.create(Material.IRON).hardnessAndResistance(3.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).notSolid());
 	setDefaultState(stateContainer.getBaseState().with(FACING, Direction.NORTH));
 	this.running = running;
     }
@@ -87,12 +86,10 @@ public class BlockConveyorBelt extends Block {
 	BlockPos pos = context.getPos().offset(context.getPlacementHorizontalFacing());
 	Block blockAtNext = context.getWorld().getBlockState(pos).getBlock();
 	BlockState returner = getDefaultState();
-	if (!(blockAtNext instanceof BlockConveyorBelt || blockAtNext instanceof BlockManipulator
-		|| blockAtNext instanceof BlockSorterBelt)) {
+	if (!(blockAtNext instanceof BlockConveyorBelt || blockAtNext instanceof BlockManipulator || blockAtNext instanceof BlockSorterBelt)) {
 	    pos = pos.offset(Direction.UP);
 	    blockAtNext = context.getWorld().getBlockState(pos).getBlock();
-	    if (blockAtNext instanceof BlockConveyorBelt || blockAtNext instanceof BlockManipulator
-		    || blockAtNext instanceof BlockSorterBelt) {
+	    if (blockAtNext instanceof BlockConveyorBelt || blockAtNext instanceof BlockManipulator || blockAtNext instanceof BlockSorterBelt) {
 		if (running) {
 		    returner = DeferredRegisters.blockSlantedConveyorbeltRunning.getDefaultState();
 		} else {

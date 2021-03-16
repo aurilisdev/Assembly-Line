@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import assemblyline.DeferredRegisters;
-import electrodynamics.common.tile.generic.GenericTileTicking;
-import electrodynamics.common.tile.generic.component.ComponentType;
-import electrodynamics.common.tile.generic.component.type.ComponentDirection;
-import electrodynamics.common.tile.generic.component.type.ComponentTickable;
+import electrodynamics.api.tile.GenericTileTicking;
+import electrodynamics.api.tile.components.ComponentType;
+import electrodynamics.api.tile.components.type.ComponentDirection;
+import electrodynamics.api.tile.components.type.ComponentTickable;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -24,8 +24,7 @@ public class TileDetector extends GenericTileTicking {
     public void tickServer(ComponentTickable component) {
 	if (component.getTicks() % 4 == 0) {
 	    List<ItemEntity> entities = world.getEntitiesWithinAABB(EntityType.ITEM,
-		    new AxisAlignedBB(
-			    pos.offset(this.<ComponentDirection>getComponent(ComponentType.Direction).getDirection())),
+		    new AxisAlignedBB(pos.offset(this.<ComponentDirection>getComponent(ComponentType.Direction).getDirection())),
 		    (Predicate<ItemEntity>) t -> t != null && !t.getItem().isEmpty());
 	    if (!entities.isEmpty()) {
 		if (!isPowered) {

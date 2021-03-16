@@ -5,12 +5,12 @@ import assemblyline.common.block.BlockConveyorBelt;
 import assemblyline.common.block.BlockManipulator;
 import assemblyline.common.inventory.container.ContainerSorterBelt;
 import assemblyline.common.settings.Constants;
-import electrodynamics.common.tile.generic.GenericTile;
-import electrodynamics.common.tile.generic.component.ComponentType;
-import electrodynamics.common.tile.generic.component.type.ComponentContainerProvider;
-import electrodynamics.common.tile.generic.component.type.ComponentDirection;
-import electrodynamics.common.tile.generic.component.type.ComponentElectrodynamic;
-import electrodynamics.common.tile.generic.component.type.ComponentInventory;
+import electrodynamics.api.tile.GenericTile;
+import electrodynamics.api.tile.components.ComponentType;
+import electrodynamics.api.tile.components.type.ComponentContainerProvider;
+import electrodynamics.api.tile.components.type.ComponentDirection;
+import electrodynamics.api.tile.components.type.ComponentElectrodynamic;
+import electrodynamics.api.tile.components.type.ComponentInventory;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
@@ -29,12 +29,10 @@ public class TileSorterBelt extends GenericTile {
     public TileSorterBelt() {
 	super(DeferredRegisters.TILE_SORTERBELT.get());
 	addComponent(new ComponentDirection());
-	addComponent(new ComponentElectrodynamic(this).setMaxJoules(Constants.CONVEYORBELT_USAGE * 20)
-		.addInputDirection(Direction.DOWN));
+	addComponent(new ComponentElectrodynamic(this).setMaxJoules(Constants.CONVEYORBELT_USAGE * 20).addInputDirection(Direction.DOWN));
 	addComponent(new ComponentInventory().setInventorySize(18));
 	addComponent(new ComponentContainerProvider("container.sorterbelt")
-		.setCreateMenuFunction((id, player) -> new ContainerSorterBelt(id, player,
-			getComponent(ComponentType.Inventory), new IntArray(0))));
+		.setCreateMenuFunction((id, player) -> new ContainerSorterBelt(id, player, getComponent(ComponentType.Inventory), new IntArray(0))));
     }
 
     public void onEntityCollision(Entity entityIn, boolean running) {
@@ -75,8 +73,8 @@ public class TileSorterBelt extends GenericTile {
 		    BlockPos chestPos = next.offset(dir);
 		    TileEntity chestTile = world.getTileEntity(chestPos);
 		    if (chestTile instanceof IInventory) {
-			itemEntity.setItem(HopperTileEntity.putStackInInventoryAllSlots(null, (IInventory) chestTile,
-				itemEntity.getItem(), dir.getOpposite()));
+			itemEntity.setItem(
+				HopperTileEntity.putStackInInventoryAllSlots(null, (IInventory) chestTile, itemEntity.getItem(), dir.getOpposite()));
 			if (itemEntity.getItem().isEmpty()) {
 			    itemEntity.remove();
 			}
@@ -90,9 +88,7 @@ public class TileSorterBelt extends GenericTile {
 	if (currentSpread == 0 || currentSpread == 16) {
 	    if (electro.getJoulesStored() < Constants.SORTERBELT_USAGE) {
 		if (running) {
-		    world.setBlockState(pos,
-			    DeferredRegisters.blockSorterBelt.getDefaultState().with(BlockConveyorBelt.FACING, facing),
-			    2 | 16);
+		    world.setBlockState(pos, DeferredRegisters.blockSorterBelt.getDefaultState().with(BlockConveyorBelt.FACING, facing), 2 | 16);
 		    currentSpread = 0;
 		}
 	    } else {
@@ -100,8 +96,8 @@ public class TileSorterBelt extends GenericTile {
 		    electro.setJoules(electro.getJoulesStored() - Constants.SORTERBELT_USAGE);
 		    lastTime = world.getGameTime();
 		    if (!running) {
-			world.setBlockState(pos, DeferredRegisters.blockSorterBeltRunning.getDefaultState()
-				.with(BlockConveyorBelt.FACING, facing), 2 | 16);
+			world.setBlockState(pos, DeferredRegisters.blockSorterBeltRunning.getDefaultState().with(BlockConveyorBelt.FACING, facing),
+				2 | 16);
 			currentSpread = 16;
 		    }
 		    currentSpread = 16;
@@ -109,8 +105,7 @@ public class TileSorterBelt extends GenericTile {
 	    }
 	} else {
 	    if (currentSpread > 0 && !running) {
-		world.setBlockState(pos, DeferredRegisters.blockSorterBeltRunning.getDefaultState()
-			.with(BlockConveyorBelt.FACING, facing), 2 | 16);
+		world.setBlockState(pos, DeferredRegisters.blockSorterBeltRunning.getDefaultState().with(BlockConveyorBelt.FACING, facing), 2 | 16);
 	    }
 	}
     }

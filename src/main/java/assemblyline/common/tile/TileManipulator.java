@@ -4,11 +4,11 @@ import assemblyline.DeferredRegisters;
 import assemblyline.common.block.BlockConveyorBelt;
 import assemblyline.common.block.BlockManipulator;
 import assemblyline.common.settings.Constants;
-import electrodynamics.common.tile.generic.GenericTileTicking;
-import electrodynamics.common.tile.generic.component.ComponentType;
-import electrodynamics.common.tile.generic.component.type.ComponentDirection;
-import electrodynamics.common.tile.generic.component.type.ComponentElectrodynamic;
-import electrodynamics.common.tile.generic.component.type.ComponentTickable;
+import electrodynamics.api.tile.GenericTileTicking;
+import electrodynamics.api.tile.components.ComponentType;
+import electrodynamics.api.tile.components.type.ComponentDirection;
+import electrodynamics.api.tile.components.type.ComponentElectrodynamic;
+import electrodynamics.api.tile.components.type.ComponentTickable;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.inventory.IInventory;
@@ -23,8 +23,7 @@ public class TileManipulator extends GenericTileTicking {
 	super(DeferredRegisters.TILE_MANIPULATOR.get());
 	addComponent(new ComponentDirection());
 	addComponent(new ComponentTickable().addTickServer(this::tickServer));
-	addComponent(new ComponentElectrodynamic(this).setMaxJoules(Constants.MANIPULATOR_USAGE * 20)
-		.addInputDirection(Direction.DOWN));
+	addComponent(new ComponentElectrodynamic(this).setMaxJoules(Constants.MANIPULATOR_USAGE * 20).addInputDirection(Direction.DOWN));
     }
 
     public void tickServer(ComponentTickable component) {
@@ -39,8 +38,8 @@ public class TileManipulator extends GenericTileTicking {
 		if ((opposite instanceof TileConveyorBelt || opposite instanceof TileSorterBelt)
 			&& opposite.getBlockState().get(BlockConveyorBelt.FACING).getOpposite() != dir) {
 		    if (input) {
-			world.setBlockState(pos, DeferredRegisters.blockManipulatorOutputRunning.getDefaultState()
-				.with(BlockConveyorBelt.FACING, direction.getDirection()));
+			world.setBlockState(pos, DeferredRegisters.blockManipulatorOutputRunning.getDefaultState().with(BlockConveyorBelt.FACING,
+				direction.getDirection()));
 			input = false;
 		    }
 		    if (facing instanceof IInventory) {
@@ -51,8 +50,7 @@ public class TileManipulator extends GenericTileTicking {
 				ItemStack stack = inv.getStackInSlot(slot);
 				if (!stack.isEmpty() && sided.canExtractItem(slot, stack, dir.getOpposite())) {
 				    BlockPos offset = pos.offset(dir.getOpposite());
-				    ItemEntity entity = new ItemEntity(world, offset.getX() + 0.5, offset.getY() + 0.5,
-					    offset.getZ() + 0.5);
+				    ItemEntity entity = new ItemEntity(world, offset.getX() + 0.5, offset.getY() + 0.5, offset.getZ() + 0.5);
 				    entity.setMotion(0, 0, 0);
 				    entity.setItem(stack);
 				    world.addEntity(entity);
@@ -65,8 +63,7 @@ public class TileManipulator extends GenericTileTicking {
 				ItemStack stack = inv.getStackInSlot(slot);
 				if (!stack.isEmpty()) {
 				    BlockPos offset = pos.offset(dir.getOpposite());
-				    ItemEntity entity = new ItemEntity(world, offset.getX() + 0.5, offset.getY() + 0.5,
-					    offset.getZ() + 0.5);
+				    ItemEntity entity = new ItemEntity(world, offset.getX() + 0.5, offset.getY() + 0.5, offset.getZ() + 0.5);
 				    entity.setMotion(0, 0, 0);
 				    entity.setItem(stack);
 				    world.addEntity(entity);
@@ -79,26 +76,22 @@ public class TileManipulator extends GenericTileTicking {
 		} else {
 		    if (input) {
 			input = true;
-			world.setBlockState(pos, DeferredRegisters.blockManipulatorInputRunning.getDefaultState()
-				.with(BlockConveyorBelt.FACING, direction.getDirection()));
+			world.setBlockState(pos, DeferredRegisters.blockManipulatorInputRunning.getDefaultState().with(BlockConveyorBelt.FACING,
+				direction.getDirection()));
 		    }
 		}
 	    }
 	    ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
 	    if (electro.getJoulesStored() < Constants.MANIPULATOR_USAGE) {
 		if (running) {
-		    Block next = input ? DeferredRegisters.blockManipulatorInput
-			    : DeferredRegisters.blockManipulatorOutput;
-		    world.setBlockState(pos,
-			    next.getDefaultState().with(BlockConveyorBelt.FACING, direction.getDirection()), 2 | 16);
+		    Block next = input ? DeferredRegisters.blockManipulatorInput : DeferredRegisters.blockManipulatorOutput;
+		    world.setBlockState(pos, next.getDefaultState().with(BlockConveyorBelt.FACING, direction.getDirection()), 2 | 16);
 		}
 	    } else {
 		electro.setJoules(electro.getJoulesStored() - Constants.MANIPULATOR_USAGE);
 		if (!running) {
-		    Block next = input ? DeferredRegisters.blockManipulatorInputRunning
-			    : DeferredRegisters.blockManipulatorOutputRunning;
-		    world.setBlockState(pos,
-			    next.getDefaultState().with(BlockConveyorBelt.FACING, direction.getDirection()), 2 | 16);
+		    Block next = input ? DeferredRegisters.blockManipulatorInputRunning : DeferredRegisters.blockManipulatorOutputRunning;
+		    world.setBlockState(pos, next.getDefaultState().with(BlockConveyorBelt.FACING, direction.getDirection()), 2 | 16);
 		}
 	    }
 	}

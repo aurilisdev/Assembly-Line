@@ -3,11 +3,11 @@ package assemblyline.common.tile;
 import java.util.HashSet;
 
 import assemblyline.DeferredRegisters;
-import electrodynamics.common.tile.generic.GenericTileTicking;
-import electrodynamics.common.tile.generic.component.ComponentType;
-import electrodynamics.common.tile.generic.component.type.ComponentInventory;
-import electrodynamics.common.tile.generic.component.type.ComponentPacketHandler;
-import electrodynamics.common.tile.generic.component.type.ComponentTickable;
+import electrodynamics.api.tile.GenericTileTicking;
+import electrodynamics.api.tile.components.ComponentType;
+import electrodynamics.api.tile.components.type.ComponentInventory;
+import electrodynamics.api.tile.components.type.ComponentPacketHandler;
+import electrodynamics.api.tile.components.type.ComponentTickable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
@@ -20,8 +20,7 @@ public class TileCrate extends GenericTileTicking {
 	super(DeferredRegisters.TILE_CRATE.get());
 	addComponent(new ComponentInventory().setInventorySize(64).setGetSlotsFunction(this::getSlotsForFace)
 		.setItemValidPredicate(this::isItemValidForSlot));
-	addComponent(new ComponentPacketHandler().addCustomPacketWriter(this::writeCustomPacket)
-		.addCustomPacketReader(this::readCustomPacket));
+	addComponent(new ComponentPacketHandler().addCustomPacketWriter(this::writeCustomPacket).addCustomPacketReader(this::readCustomPacket));
 	addComponent(new ComponentTickable().addTickServer(this::tickServer));
     }
 

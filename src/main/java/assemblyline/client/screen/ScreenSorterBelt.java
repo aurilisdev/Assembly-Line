@@ -11,8 +11,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class ScreenSorterBelt extends GenericContainerScreenUpgradeable<ContainerSorterBelt> {
-    public static final ResourceLocation SCREEN_BACKGROUND = new ResourceLocation(
-	    References.ID + ":textures/gui/sorterbelt.png");
+    public static final ResourceLocation SCREEN_BACKGROUND = new ResourceLocation(References.ID + ":textures/gui/sorterbelt.png");
 
     public ScreenSorterBelt(ContainerSorterBelt container, PlayerInventory playerInventory, ITextComponent title) {
 	super(container, playerInventory, title);
