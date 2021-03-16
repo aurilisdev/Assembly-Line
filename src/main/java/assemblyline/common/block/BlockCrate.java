@@ -51,7 +51,7 @@ public class BlockCrate extends Block {
 			handIn == Hand.MAIN_HAND ? EquipmentSlotType.MAINHAND : EquipmentSlotType.OFFHAND,
 			HopperTileEntity.putStackInInventoryAllSlots(player.inventory,
 				tile.getComponent(ComponentType.Inventory), player.getHeldItem(handIn),
-				Direction.DOWN));
+				Direction.EAST));
 	    }
 	}
 	return ActionResultType.SUCCESS;

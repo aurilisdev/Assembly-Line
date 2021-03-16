@@ -30,6 +30,7 @@ public class TileCrate extends GenericTileTicking {
 	for (int i = 0; i < this.<ComponentInventory>getComponent(ComponentType.Inventory).getSizeInventory(); i++) {
 	    set.add(i);
 	}
+	this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendCustomPacket();
 	return set;
     }
 
