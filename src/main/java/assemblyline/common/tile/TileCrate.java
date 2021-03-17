@@ -20,7 +20,9 @@ public class TileCrate extends GenericTileTicking {
     public TileCrate() {
 	super(DeferredRegisters.TILE_CRATE.get());
 	addComponent(new ComponentInventory().setInventorySize(64).setGetSlotsFunction(this::getSlotsForFace)
-		.setItemValidPredicate(this::isItemValidForSlot));
+		.setItemValidPredicate(this::isItemValidForSlot).addSlotsOnFace(Direction.DOWN, 0).addSlotsOnFace(Direction.SOUTH, 0)
+		.addSlotsOnFace(Direction.UP, 0).addSlotsOnFace(Direction.NORTH, 0).addSlotsOnFace(Direction.EAST, 0)
+		.addSlotsOnFace(Direction.WEST, 0));
 	addComponent(new ComponentPacketHandler().addCustomPacketWriter(this::writeCustomPacket).addCustomPacketReader(this::readCustomPacket));
 	addComponent(new ComponentTickable().addTickServer(this::tickServer));
     }
@@ -72,9 +74,7 @@ public class TileCrate extends GenericTileTicking {
 
     public void tickServer(ComponentTickable tickable) {
 	if (tickable.getTicks() % 20 == 0) {
-	    if (count != lastCheckCount) {
-		this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendCustomPacket();
-	    }
+	    this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendCustomPacket();
 	    count = lastCheckCount;
 	}
     }
