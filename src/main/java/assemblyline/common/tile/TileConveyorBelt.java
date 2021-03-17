@@ -13,11 +13,12 @@ import electrodynamics.api.tile.components.type.ComponentElectrodynamic;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 public class TileConveyorBelt extends GenericTile {
     public int currentSpread = 0;
@@ -50,11 +51,13 @@ public class TileConveyorBelt extends GenericTile {
 			&& side.get(BlockConveyorBelt.FACING) == dir.getOpposite()) {
 		    BlockPos chestPos = next.offset(dir);
 		    TileEntity chestTile = world.getTileEntity(chestPos);
-		    if (chestTile instanceof IInventory) {
-			itemEntity.setItem(
-				HopperTileEntity.putStackInInventoryAllSlots(null, (IInventory) chestTile, itemEntity.getItem(), dir.getOpposite()));
-			if (itemEntity.getItem().isEmpty()) {
-			    itemEntity.remove();
+		    if (chestTile != null) {
+			LazyOptional<IItemHandler> cap = chestTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dir.getOpposite());
+			if (cap.isPresent()) {
+			    IItemHandler handler = cap.resolve().get();
+			    for (int slot = 0; slot < handler.getSlots(); slot++) {
+				itemEntity.setItem(handler.insertItem(slot, itemEntity.getItem(), false));
+			    }
 			}
 		    }
 		}
