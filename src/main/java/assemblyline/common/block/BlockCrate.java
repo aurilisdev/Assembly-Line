@@ -1,5 +1,8 @@
 package assemblyline.common.block;
 
+import java.util.Arrays;
+import java.util.List;
+
 import assemblyline.common.tile.TileCrate;
 import electrodynamics.api.tile.GenericTile;
 import electrodynamics.api.tile.components.ComponentType;
@@ -10,6 +13,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext.Builder;
 import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -40,6 +45,12 @@ public class BlockCrate extends Block {
 	}
 	super.onReplaced(state, worldIn, pos, newState, isMoving);
 
+    }
+
+    @Override
+    @Deprecated
+    public List<ItemStack> getDrops(BlockState state, Builder builder) {
+	return Arrays.asList(new ItemStack(this));
     }
 
     @Override

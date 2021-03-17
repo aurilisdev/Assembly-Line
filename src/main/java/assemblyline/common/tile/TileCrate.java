@@ -8,6 +8,7 @@ import electrodynamics.api.tile.components.ComponentType;
 import electrodynamics.api.tile.components.type.ComponentInventory;
 import electrodynamics.api.tile.components.type.ComponentPacketHandler;
 import electrodynamics.api.tile.components.type.ComponentTickable;
+import electrodynamics.api.utilities.Scheduler;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
@@ -29,6 +30,7 @@ public class TileCrate extends GenericTileTicking {
 	for (int i = 0; i < this.<ComponentInventory>getComponent(ComponentType.Inventory).getSizeInventory(); i++) {
 	    set.add(i);
 	}
+	Scheduler.schedule(1, () -> this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendCustomPacket());
 	this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendCustomPacket();
 	return set;
     }

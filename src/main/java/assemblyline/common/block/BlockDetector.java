@@ -1,5 +1,8 @@
 package assemblyline.common.block;
 
+import java.util.Arrays;
+import java.util.List;
+
 import assemblyline.common.tile.TileDetector;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -7,6 +10,8 @@ import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.loot.LootContext.Builder;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
@@ -33,6 +38,12 @@ public class BlockDetector extends Block {
     @Deprecated
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 	return shape;
+    }
+
+    @Override
+    @Deprecated
+    public List<ItemStack> getDrops(BlockState state, Builder builder) {
+	return Arrays.asList(new ItemStack(this));
     }
 
     @Override
