@@ -3,14 +3,12 @@ package assemblyline;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Sets;
 
-import assemblyline.common.block.BlockBelt;
 import assemblyline.common.block.BlockConveyorBelt;
 import assemblyline.common.block.BlockCrate;
 import assemblyline.common.block.BlockDetector;
 import assemblyline.common.block.BlockManipulator;
 import assemblyline.common.block.BlockSorterBelt;
 import assemblyline.common.inventory.container.ContainerSorterBelt;
-import assemblyline.common.tile.TileBelt;
 import assemblyline.common.tile.TileConveyorBelt;
 import assemblyline.common.tile.TileCrate;
 import assemblyline.common.tile.TileDetector;
@@ -32,11 +30,7 @@ public class DeferredRegisters {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, References.ID);
     public static final DeferredRegister<TileEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, References.ID);
     public static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, References.ID);
-    public static BlockBelt blockBelt = new BlockBelt();
-    public static BlockConveyorBelt blockConveyorbelt = new BlockConveyorBelt(false);
-    public static BlockConveyorBelt blockConveyorbeltRunning = new BlockConveyorBelt(true);
-    public static BlockConveyorBelt blockSlantedConveyorbelt = new BlockConveyorBelt(false);
-    public static BlockConveyorBelt blockSlantedConveyorbeltRunning = new BlockConveyorBelt(true);
+    public static BlockConveyorBelt blockConveyorBelt = new BlockConveyorBelt();
     public static BlockSorterBelt blockSorterBelt = new BlockSorterBelt(false);
     public static BlockSorterBelt blockSorterBeltRunning = new BlockSorterBelt(true);
     public static BlockManipulator blockManipulatorInput = new BlockManipulator(true, false);
@@ -47,7 +41,7 @@ public class DeferredRegisters {
     public static BlockCrate blockCrate = new BlockCrate();
 
     static {
-	BLOCKS.register("belt", supplier(blockBelt));
+	BLOCKS.register("conveyorbelt", supplier(blockConveyorBelt));
 	BLOCKS.register("sorterbelt", supplier(blockSorterBelt));
 	BLOCKS.register("sorterbeltrunning", supplier(blockSorterBeltRunning));
 	BLOCKS.register("manipulatorinput", supplier(blockManipulatorInput));
@@ -56,9 +50,7 @@ public class DeferredRegisters {
 	BLOCKS.register("manipulatoroutputrunning", supplier(blockManipulatorOutputRunning));
 	BLOCKS.register("detector", supplier(blockDetector));
 	BLOCKS.register("crate", supplier(blockCrate));
-	ITEMS.register("belt", supplier(new BlockItemDescriptable(blockBelt, new Properties().group(References.ASSEMBLYLINETAB))));
-	ITEMS.register("conveyorbelt", supplier(new BlockItemDescriptable(blockConveyorbelt, new Properties().group(References.ASSEMBLYLINETAB))));
-	ITEMS.register("conveyorbeltrunning", supplier(new BlockItemDescriptable(blockConveyorbeltRunning, new Properties())));
+	ITEMS.register("belt", supplier(new BlockItemDescriptable(blockConveyorBelt, new Properties().group(References.ASSEMBLYLINETAB))));
 	ITEMS.register("sorterbelt", supplier(new BlockItemDescriptable(blockSorterBelt, new Properties().group(References.ASSEMBLYLINETAB))));
 	ITEMS.register("sorterbeltrunning", supplier(new BlockItemDescriptable(blockSorterBeltRunning, new Properties())));
 	ITEMS.register("manipulatorinput",
@@ -68,15 +60,12 @@ public class DeferredRegisters {
 	ITEMS.register("manipulatoroutputrunning", supplier(new BlockItemDescriptable(blockManipulatorOutputRunning, new Properties())));
 	ITEMS.register("detector", supplier(new BlockItemDescriptable(blockDetector, new Properties().group(References.ASSEMBLYLINETAB))));
 	ITEMS.register("crate", supplier(new BlockItemDescriptable(blockCrate, new Properties().group(References.ASSEMBLYLINETAB))));
-	BlockItemDescriptable.addDescription(blockConveyorbelt, "|translate|tooltip.conveyorbelt.powerusage");
 	BlockItemDescriptable.addDescription(blockSorterBelt, "|translate|tooltip.sorterbelt.powerusage");
 	BlockItemDescriptable.addDescription(blockDetector, "|translate|tooltip.detector");
 	BlockItemDescriptable.addDescription(blockManipulatorInput, "|translate|tooltip.manipulator.powerusage");
     }
-    public static final RegistryObject<TileEntityType<TileBelt>> TILE_BELT = TILES.register("belt",
-	    () -> new TileEntityType<>(TileBelt::new, Sets.newHashSet(blockBelt), null));
-    public static final RegistryObject<TileEntityType<TileConveyorBelt>> TILE_CONVEYORBELT = TILES.register("conveyorbelt",
-	    () -> new TileEntityType<>(TileConveyorBelt::new, Sets.newHashSet(blockConveyorbelt, blockConveyorbeltRunning), null));
+    public static final RegistryObject<TileEntityType<TileConveyorBelt>> TILE_BELT = TILES.register("belt",
+	    () -> new TileEntityType<>(TileConveyorBelt::new, Sets.newHashSet(blockConveyorBelt), null));
     public static final RegistryObject<TileEntityType<TileManipulator>> TILE_MANIPULATOR = TILES.register("manipulator",
 	    () -> new TileEntityType<>(TileManipulator::new,
 		    Sets.newHashSet(blockManipulatorInput, blockManipulatorInputRunning, blockManipulatorOutput, blockManipulatorOutputRunning),

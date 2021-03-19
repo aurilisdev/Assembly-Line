@@ -1,7 +1,6 @@
 package assemblyline.common.tile;
 
 import assemblyline.DeferredRegisters;
-import assemblyline.common.block.BlockConveyorBelt;
 import assemblyline.common.block.BlockManipulator;
 import assemblyline.common.settings.Constants;
 import electrodynamics.api.tile.GenericTileTicking;
@@ -9,6 +8,7 @@ import electrodynamics.api.tile.components.ComponentType;
 import electrodynamics.api.tile.components.type.ComponentDirection;
 import electrodynamics.api.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.api.tile.components.type.ComponentTickable;
+import electrodynamics.common.block.BlockGenericMachine;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.ItemStack;
@@ -37,9 +37,9 @@ public class TileManipulator extends GenericTileTicking {
 		TileEntity facing = world.getTileEntity(pos.offset(dir));
 		TileEntity opposite = world.getTileEntity(pos.offset(dir.getOpposite()));
 		if ((opposite instanceof TileConveyorBelt || opposite instanceof TileSorterBelt)
-			&& opposite.getBlockState().get(BlockConveyorBelt.FACING).getOpposite() != dir) {
+			&& opposite.getBlockState().get(BlockGenericMachine.FACING).getOpposite() != dir) {
 		    if (input) {
-			world.setBlockState(pos, DeferredRegisters.blockManipulatorOutputRunning.getDefaultState().with(BlockConveyorBelt.FACING,
+			world.setBlockState(pos, DeferredRegisters.blockManipulatorOutputRunning.getDefaultState().with(BlockGenericMachine.FACING,
 				direction.getDirection()));
 			input = false;
 		    }
@@ -64,7 +64,7 @@ public class TileManipulator extends GenericTileTicking {
 	    } else {
 		if (input) {
 		    input = true;
-		    world.setBlockState(pos, DeferredRegisters.blockManipulatorInputRunning.getDefaultState().with(BlockConveyorBelt.FACING,
+		    world.setBlockState(pos, DeferredRegisters.blockManipulatorInputRunning.getDefaultState().with(BlockGenericMachine.FACING,
 			    direction.getDirection()));
 		}
 	    }
@@ -74,13 +74,13 @@ public class TileManipulator extends GenericTileTicking {
 	if (electro.getJoulesStored() < Constants.MANIPULATOR_USAGE) {
 	    if (running) {
 		Block next = input ? DeferredRegisters.blockManipulatorInput : DeferredRegisters.blockManipulatorOutput;
-		world.setBlockState(pos, next.getDefaultState().with(BlockConveyorBelt.FACING, direction.getDirection()), 2 | 16);
+		world.setBlockState(pos, next.getDefaultState().with(BlockGenericMachine.FACING, direction.getDirection()), 2 | 16);
 	    }
 	} else {
 	    electro.setJoules(electro.getJoulesStored() - Constants.MANIPULATOR_USAGE);
 	    if (!running) {
 		Block next = input ? DeferredRegisters.blockManipulatorInputRunning : DeferredRegisters.blockManipulatorOutputRunning;
-		world.setBlockState(pos, next.getDefaultState().with(BlockConveyorBelt.FACING, direction.getDirection()), 2 | 16);
+		world.setBlockState(pos, next.getDefaultState().with(BlockGenericMachine.FACING, direction.getDirection()), 2 | 16);
 	    }
 	}
     }

@@ -1,7 +1,6 @@
 package assemblyline.common.tile;
 
 import assemblyline.DeferredRegisters;
-import assemblyline.common.block.BlockConveyorBelt;
 import assemblyline.common.block.BlockManipulator;
 import assemblyline.common.inventory.container.ContainerSorterBelt;
 import assemblyline.common.settings.Constants;
@@ -11,6 +10,7 @@ import electrodynamics.api.tile.components.type.ComponentContainerProvider;
 import electrodynamics.api.tile.components.type.ComponentDirection;
 import electrodynamics.api.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.api.tile.components.type.ComponentInventory;
+import electrodynamics.common.block.BlockGenericMachine;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
@@ -38,7 +38,7 @@ public class TileSorterBelt extends GenericTile {
     public void onEntityCollision(Entity entityIn, boolean running) {
 	ComponentInventory inv = getComponent(ComponentType.Inventory);
 	ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
-	Direction facing = getBlockState().get(BlockConveyorBelt.FACING);
+	Direction facing = getBlockState().get(BlockGenericMachine.FACING);
 	if (running && entityIn.getPosY() > pos.getY() + 4.0 / 16.0) {
 	    Direction dir = facing.getOpposite();
 	    BlockPos next = pos.offset(dir);
@@ -69,7 +69,7 @@ public class TileSorterBelt extends GenericTile {
 		    entityIn.addVelocity(dir.getXOffset() / 20.0, 0, dir.getZOffset() / 20.0);
 		}
 		if (!itemEntity.getItem().isEmpty() && side.getBlock() instanceof BlockManipulator
-			&& side.get(BlockConveyorBelt.FACING) == dir.getOpposite()) {
+			&& side.get(BlockGenericMachine.FACING) == dir.getOpposite()) {
 		    BlockPos chestPos = next.offset(dir);
 		    TileEntity chestTile = world.getTileEntity(chestPos);
 		    if (chestTile instanceof IInventory) {
@@ -88,7 +88,7 @@ public class TileSorterBelt extends GenericTile {
 	if (currentSpread == 0 || currentSpread == 16) {
 	    if (electro.getJoulesStored() < Constants.SORTERBELT_USAGE) {
 		if (running) {
-		    world.setBlockState(pos, DeferredRegisters.blockSorterBelt.getDefaultState().with(BlockConveyorBelt.FACING, facing), 2 | 16);
+		    world.setBlockState(pos, DeferredRegisters.blockSorterBelt.getDefaultState().with(BlockGenericMachine.FACING, facing), 2 | 16);
 		    currentSpread = 0;
 		}
 	    } else {
@@ -96,16 +96,15 @@ public class TileSorterBelt extends GenericTile {
 		    electro.setJoules(electro.getJoulesStored() - Constants.SORTERBELT_USAGE);
 		    lastTime = world.getGameTime();
 		    if (!running) {
-			world.setBlockState(pos, DeferredRegisters.blockSorterBeltRunning.getDefaultState().with(BlockConveyorBelt.FACING, facing),
+			world.setBlockState(pos, DeferredRegisters.blockSorterBeltRunning.getDefaultState().with(BlockGenericMachine.FACING, facing),
 				2 | 16);
-			currentSpread = 16;
 		    }
 		    currentSpread = 16;
 		}
 	    }
 	} else {
 	    if (currentSpread > 0 && !running) {
-		world.setBlockState(pos, DeferredRegisters.blockSorterBeltRunning.getDefaultState().with(BlockConveyorBelt.FACING, facing), 2 | 16);
+		world.setBlockState(pos, DeferredRegisters.blockSorterBeltRunning.getDefaultState().with(BlockGenericMachine.FACING, facing), 2 | 16);
 	    }
 	}
     }
@@ -113,7 +112,7 @@ public class TileSorterBelt extends GenericTile {
     private long lastCheck = 0;
 
     public void checkForSpread() {
-	if (world.getWorldInfo().getGameTime() - lastCheck > 100) {
+	if (world.getWorldInfo().getGameTime() - lastCheck > 40) {
 	    lastCheck = world.getWorldInfo().getGameTime();
 	    int lastMax = currentSpread;
 	    int max = 0;
@@ -135,7 +134,7 @@ public class TileSorterBelt extends GenericTile {
 	    }
 	    currentSpread = max;
 	    if (lastMax > currentSpread) {
-		currentSpread = 0;
+		currentSpread = lastMax;
 	    }
 	}
     }

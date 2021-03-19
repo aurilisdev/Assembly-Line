@@ -5,16 +5,20 @@ import java.util.List;
 
 import assemblyline.DeferredRegisters;
 import assemblyline.common.tile.TileConveyorBelt;
+import electrodynamics.api.tile.GenericTile;
+import electrodynamics.api.tile.components.ComponentType;
+import electrodynamics.common.block.BlockGenericMachine;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext.Builder;
-import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -30,13 +34,10 @@ import net.minecraftforge.common.ToolType;
 
 public class BlockConveyorBelt extends Block {
     private static final VoxelShape shape = VoxelShapes.create(0, 0, 0, 1, 5.0 / 16.0, 1);
-    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
-    public final boolean running;
 
-    public BlockConveyorBelt(boolean running) {
+    public BlockConveyorBelt() {
 	super(Properties.create(Material.IRON).hardnessAndResistance(3.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).notSolid());
-	setDefaultState(stateContainer.getBaseState().with(FACING, Direction.NORTH));
-	this.running = running;
+	setDefaultState(stateContainer.getBaseState().with(BlockGenericMachine.FACING, Direction.NORTH));
     }
 
     @Override
@@ -48,61 +49,62 @@ public class BlockConveyorBelt extends Block {
     @Override
     @Deprecated
     public List<ItemStack> getDrops(BlockState state, Builder builder) {
-	return Arrays.asList(new ItemStack(DeferredRegisters.blockConveyorbelt));
+	return Arrays.asList(new ItemStack(DeferredRegisters.blockConveyorBelt));
     }
 
     @Override
     @Deprecated
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entityIn) {
 	TileEntity tile = world.getTileEntity(pos);
-	if (!world.isRemote && tile instanceof TileConveyorBelt) {
+	if (!world.isRemote && tile instanceof TileConveyorBelt && entityIn instanceof ItemEntity && entityIn.ticksExisted > 5) {
 	    TileConveyorBelt belt = (TileConveyorBelt) tile;
-	    belt.onEntityCollision(entityIn, running);
+	    ItemEntity item = (ItemEntity) entityIn;
+	    item.setItem(belt.addItemOnBelt(item.getItem()));
 	}
     }
 
     @Override
     @Deprecated
     public BlockState rotate(BlockState state, Rotation rot) {
-	return state.with(FACING, rot.rotate(state.get(FACING)));
+	return state.with(BlockGenericMachine.FACING, rot.rotate(state.get(BlockGenericMachine.FACING)));
     }
 
     @Deprecated
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-	return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+	return state.rotate(mirrorIn.toRotation(state.get(BlockGenericMachine.FACING)));
     }
 
     @Deprecated
     @Override
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 	if (!(newState.getBlock() instanceof BlockConveyorBelt)) {
+	    TileEntity tile = worldIn.getTileEntity(pos);
+	    if (!(state.getBlock() == newState.getBlock() && state.get(BlockGenericMachine.FACING) != newState.get(BlockGenericMachine.FACING))
+		    && tile instanceof GenericTile) {
+		GenericTile generic = (GenericTile) tile;
+		if (generic.hasComponent(ComponentType.Inventory)) {
+		    InventoryHelper.dropInventoryItems(worldIn, pos, generic.getComponent(ComponentType.Inventory));
+		}
+	    }
 	    super.onReplaced(state, worldIn, pos, newState, isMoving);
 	}
     }
 
     @Override
+    @Deprecated
+    public BlockRenderType getRenderType(BlockState state) {
+	return BlockRenderType.INVISIBLE;
+    }
+
+    @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-	BlockPos pos = context.getPos().offset(context.getPlacementHorizontalFacing());
-	Block blockAtNext = context.getWorld().getBlockState(pos).getBlock();
-	BlockState returner = getDefaultState();
-	if (!(blockAtNext instanceof BlockConveyorBelt || blockAtNext instanceof BlockManipulator || blockAtNext instanceof BlockSorterBelt)) {
-	    pos = pos.offset(Direction.UP);
-	    blockAtNext = context.getWorld().getBlockState(pos).getBlock();
-	    if (blockAtNext instanceof BlockConveyorBelt || blockAtNext instanceof BlockManipulator || blockAtNext instanceof BlockSorterBelt) {
-		if (running) {
-		    returner = DeferredRegisters.blockSlantedConveyorbeltRunning.getDefaultState();
-		} else {
-		    returner = DeferredRegisters.blockSlantedConveyorbelt.getDefaultState();
-		}
-	    }
-	}
-	return returner.with(FACING, context.getPlacementHorizontalFacing().getOpposite());
+	return getDefaultState().with(BlockGenericMachine.FACING, context.getPlacementHorizontalFacing().getOpposite());
     }
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-	builder.add(FACING);
+	builder.add(BlockGenericMachine.FACING);
     }
 
     @Override

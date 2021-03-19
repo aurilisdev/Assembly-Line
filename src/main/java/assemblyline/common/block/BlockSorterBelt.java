@@ -9,11 +9,13 @@ import electrodynamics.api.IWrenchItem;
 import electrodynamics.api.tile.GenericTile;
 import electrodynamics.api.tile.IWrenchable;
 import electrodynamics.api.tile.components.ComponentType;
+import electrodynamics.common.block.BlockGenericMachine;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -40,19 +42,20 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 
 public class BlockSorterBelt extends Block implements IWrenchable {
-    private static final VoxelShape shape = VoxelShapes.create(0, 0, 0, 1, 5.0 / 16.0, 1);
+    private static final VoxelShape shape = VoxelShapes.or(VoxelShapes.create(0, 14.0 / 16.0, 0, 1, 1, 1),
+	    VoxelShapes.create(0, 0, 0, 1, 5.0 / 16.0, 1));
     public final boolean running;
 
     public BlockSorterBelt(boolean running) {
 	super(Properties.create(Material.IRON).hardnessAndResistance(3.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).notSolid());
-	setDefaultState(stateContainer.getBaseState().with(BlockConveyorBelt.FACING, Direction.NORTH));
+	setDefaultState(stateContainer.getBaseState().with(BlockGenericMachine.FACING, Direction.NORTH));
 	this.running = running;
     }
 
     @Override
     @Deprecated
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-	return shape;
+	return worldIn instanceof ClientWorld ? VoxelShapes.fullCube() : shape;
     }
 
     @Override
@@ -108,13 +111,13 @@ public class BlockSorterBelt extends Block implements IWrenchable {
     @Override
     @Deprecated
     public BlockState rotate(BlockState state, Rotation rot) {
-	return state.with(BlockConveyorBelt.FACING, rot.rotate(state.get(BlockConveyorBelt.FACING)));
+	return state.with(BlockGenericMachine.FACING, rot.rotate(state.get(BlockGenericMachine.FACING)));
     }
 
     @Deprecated
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-	return state.rotate(mirrorIn.toRotation(state.get(BlockConveyorBelt.FACING)));
+	return state.rotate(mirrorIn.toRotation(state.get(BlockGenericMachine.FACING)));
     }
 
     @Deprecated
@@ -122,22 +125,22 @@ public class BlockSorterBelt extends Block implements IWrenchable {
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 	if (!(newState.getBlock() instanceof BlockSorterBelt)) {
 	    TileEntity tile = worldIn.getTileEntity(pos);
-	    if (tile instanceof GenericTile
-		    && !(state.getBlock() == newState.getBlock() && state.get(BlockConveyorBelt.FACING) != newState.get(BlockConveyorBelt.FACING))) {
+	    if (tile instanceof GenericTile && !(state.getBlock() == newState.getBlock()
+		    && state.get(BlockGenericMachine.FACING) != newState.get(BlockGenericMachine.FACING))) {
 		InventoryHelper.dropInventoryItems(worldIn, pos, ((GenericTile) tile).getComponent(ComponentType.Inventory));
 	    }
+	    super.onReplaced(state, worldIn, pos, newState, isMoving);
 	}
-	super.onReplaced(state, worldIn, pos, newState, isMoving);
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-	return getDefaultState().with(BlockConveyorBelt.FACING, context.getPlacementHorizontalFacing().getOpposite());
+	return getDefaultState().with(BlockGenericMachine.FACING, context.getPlacementHorizontalFacing().getOpposite());
     }
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-	builder.add(BlockConveyorBelt.FACING);
+	builder.add(BlockGenericMachine.FACING);
     }
 
     @Override

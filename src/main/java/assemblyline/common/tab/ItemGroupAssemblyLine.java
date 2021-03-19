@@ -12,6 +12,6 @@ public class ItemGroupAssemblyLine extends ItemGroup {
 
     @Override
     public ItemStack createIcon() {
-	return new ItemStack(DeferredRegisters.blockConveyorbelt);
+	return new ItemStack(DeferredRegisters.blockConveyorBelt);
     }
 }

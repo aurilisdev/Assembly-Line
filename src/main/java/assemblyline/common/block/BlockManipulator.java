@@ -5,6 +5,7 @@ import java.util.List;
 
 import assemblyline.DeferredRegisters;
 import assemblyline.common.tile.TileManipulator;
+import electrodynamics.common.block.BlockGenericMachine;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -33,7 +34,7 @@ public class BlockManipulator extends Block {
 
     public BlockManipulator(boolean input, boolean running) {
 	super(Properties.create(Material.IRON).hardnessAndResistance(3.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).notSolid());
-	setDefaultState(stateContainer.getBaseState().with(BlockConveyorBelt.FACING, Direction.NORTH));
+	setDefaultState(stateContainer.getBaseState().with(BlockGenericMachine.FACING, Direction.NORTH));
 	this.input = input;
 	this.running = running;
     }
@@ -47,7 +48,7 @@ public class BlockManipulator extends Block {
     @Override
     @Deprecated
     public BlockState rotate(BlockState state, Rotation rot) {
-	return state.with(BlockConveyorBelt.FACING, rot.rotate(state.get(BlockConveyorBelt.FACING)));
+	return state.with(BlockGenericMachine.FACING, rot.rotate(state.get(BlockGenericMachine.FACING)));
     }
 
     @Override
@@ -59,12 +60,12 @@ public class BlockManipulator extends Block {
     @Deprecated
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-	return state.rotate(mirrorIn.toRotation(state.get(BlockConveyorBelt.FACING)));
+	return state.rotate(mirrorIn.toRotation(state.get(BlockGenericMachine.FACING)));
     }
 
     @Override
     public BlockState getStateForPlacement(BlockItemUseContext context) {
-	return getDefaultState().with(BlockConveyorBelt.FACING, context.getPlacementHorizontalFacing().getOpposite());
+	return getDefaultState().with(BlockGenericMachine.FACING, context.getPlacementHorizontalFacing().getOpposite());
     }
 
     @Override
@@ -77,7 +78,7 @@ public class BlockManipulator extends Block {
 
     @Override
     protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-	builder.add(BlockConveyorBelt.FACING);
+	builder.add(BlockGenericMachine.FACING);
     }
 
     @Override

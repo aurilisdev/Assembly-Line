@@ -6,6 +6,7 @@ import java.util.List;
 import assemblyline.common.tile.TileCrate;
 import electrodynamics.api.tile.GenericTile;
 import electrodynamics.api.tile.components.ComponentType;
+import electrodynamics.common.block.BlockGenericMachine;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
@@ -37,7 +38,7 @@ public class BlockCrate extends Block {
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 	TileEntity tile = worldIn.getTileEntity(pos);
 	if (tile instanceof GenericTile
-		&& !(state.getBlock() == newState.getBlock() && state.get(BlockConveyorBelt.FACING) != newState.get(BlockConveyorBelt.FACING))) {
+		&& !(state.getBlock() == newState.getBlock() && state.get(BlockGenericMachine.FACING) != newState.get(BlockGenericMachine.FACING))) {
 	    GenericTile generic = (GenericTile) tile;
 	    if (generic.hasComponent(ComponentType.Inventory)) {
 		InventoryHelper.dropInventoryItems(worldIn, pos, generic.getComponent(ComponentType.Inventory));
