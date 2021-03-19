@@ -19,11 +19,12 @@ public class TileCrate extends GenericTileTicking {
 
     public TileCrate() {
 	super(DeferredRegisters.TILE_CRATE.get());
+	addComponent(new ComponentPacketHandler().addGuiPacketWriter(this::writeCustomPacket).addGuiPacketReader(this::readCustomPacket)
+		.addCustomPacketReader(this::readCustomPacket).addCustomPacketWriter(this::writeCustomPacket));
 	addComponent(new ComponentInventory().setInventorySize(64).setGetSlotsFunction(this::getSlotsForFace)
 		.setItemValidPredicate(this::isItemValidForSlot).addSlotsOnFace(Direction.DOWN, 0).addSlotsOnFace(Direction.SOUTH, 0)
 		.addSlotsOnFace(Direction.UP, 0).addSlotsOnFace(Direction.NORTH, 0).addSlotsOnFace(Direction.EAST, 0)
 		.addSlotsOnFace(Direction.WEST, 0));
-	addComponent(new ComponentPacketHandler().addCustomPacketWriter(this::writeCustomPacket).addCustomPacketReader(this::readCustomPacket));
 	addComponent(new ComponentTickable().addTickServer(this::tickServer));
     }
 
@@ -32,8 +33,7 @@ public class TileCrate extends GenericTileTicking {
 	for (int i = 0; i < this.<ComponentInventory>getComponent(ComponentType.Inventory).getSizeInventory(); i++) {
 	    set.add(i);
 	}
-	Scheduler.schedule(1, () -> this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendCustomPacket());
-	this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendCustomPacket();
+	Scheduler.schedule(1, () -> this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking());
 	return set;
     }
 
@@ -73,8 +73,8 @@ public class TileCrate extends GenericTileTicking {
     }
 
     public void tickServer(ComponentTickable tickable) {
-	if (tickable.getTicks() % 20 == 0) {
-	    this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendCustomPacket();
+	if (tickable.getTicks() % 40 == 0) {
+	    this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
 	    count = lastCheckCount;
 	}
     }
