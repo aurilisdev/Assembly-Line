@@ -80,7 +80,7 @@ public class RenderCrate extends TileEntityRenderer<TileCrate> {
 		    } else {
 			matrixStackIn.scale(0.4f, 0.4f, 0.4f);
 		    }
-		    Minecraft.getInstance().getItemRenderer().renderItem(stack, TransformType.NONE, 0Xffffff, combinedOverlayIn, matrixStackIn,
+		    Minecraft.getInstance().getItemRenderer().renderItem(stack, TransformType.NONE, 0xF000F0, combinedOverlayIn, matrixStackIn,
 			    bufferIn);
 		    matrixStackIn.pop();
 		}
