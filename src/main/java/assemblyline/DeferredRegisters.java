@@ -50,7 +50,7 @@ public class DeferredRegisters {
 	BLOCKS.register("manipulatoroutputrunning", supplier(blockManipulatorOutputRunning));
 	BLOCKS.register("detector", supplier(blockDetector));
 	BLOCKS.register("crate", supplier(blockCrate));
-	ITEMS.register("belt", supplier(new BlockItemDescriptable(blockConveyorBelt, new Properties().group(References.ASSEMBLYLINETAB))));
+	ITEMS.register("conveyorbelt", supplier(new BlockItemDescriptable(blockConveyorBelt, new Properties().group(References.ASSEMBLYLINETAB))));
 	ITEMS.register("sorterbelt", supplier(new BlockItemDescriptable(blockSorterBelt, new Properties().group(References.ASSEMBLYLINETAB))));
 	ITEMS.register("sorterbeltrunning", supplier(new BlockItemDescriptable(blockSorterBeltRunning, new Properties())));
 	ITEMS.register("manipulatorinput",
