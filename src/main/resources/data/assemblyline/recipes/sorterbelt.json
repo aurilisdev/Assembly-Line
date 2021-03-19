@@ -1,6 +1,7 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
+		"www",
 		"csc"
 	],
 	"key": {
@@ -9,6 +10,9 @@
 		},
 		"c": {
 			"item": "minecraft:hopper"
+		},
+		"w": {
+			"tag": "minecraft:planks"
 		}
 	},
 	"result": {
