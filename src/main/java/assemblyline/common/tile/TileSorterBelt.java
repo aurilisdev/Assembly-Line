@@ -29,10 +29,10 @@ public class TileSorterBelt extends GenericTile {
     public TileSorterBelt() {
 	super(DeferredRegisters.TILE_SORTERBELT.get());
 	addComponent(new ComponentDirection());
-	addComponent(new ComponentElectrodynamic(this).setMaxJoules(Constants.CONVEYORBELT_USAGE * 20).addInputDirection(Direction.DOWN));
-	addComponent(new ComponentInventory().setInventorySize(18));
+	addComponent(new ComponentElectrodynamic(this).maxJoules(Constants.CONVEYORBELT_USAGE * 20).input(Direction.DOWN));
+	addComponent(new ComponentInventory(this).size(18));
 	addComponent(new ComponentContainerProvider("container.sorterbelt")
-		.setCreateMenuFunction((id, player) -> new ContainerSorterBelt(id, player, getComponent(ComponentType.Inventory), new IntArray(0))));
+		.createMenu((id, player) -> new ContainerSorterBelt(id, player, getComponent(ComponentType.Inventory), new IntArray(0))));
     }
 
     public void onEntityCollision(Entity entityIn, boolean running) {
@@ -93,7 +93,7 @@ public class TileSorterBelt extends GenericTile {
 		}
 	    } else {
 		if (lastTime != world.getGameTime()) {
-		    electro.setJoules(electro.getJoulesStored() - Constants.SORTERBELT_USAGE);
+		    electro.joules(electro.getJoulesStored() - Constants.SORTERBELT_USAGE);
 		    lastTime = world.getGameTime();
 		    if (!running) {
 			world.setBlockState(pos, DeferredRegisters.blockSorterBeltRunning.getDefaultState().with(BlockGenericMachine.FACING, facing),

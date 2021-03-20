@@ -29,12 +29,12 @@ public class TileConveyorBelt extends GenericTileTicking {
 
     public TileConveyorBelt() {
 	super(DeferredRegisters.TILE_BELT.get());
-	addComponent(new ComponentTickable().addTickCommon(this::tickCommon));
+	addComponent(new ComponentTickable().tickCommon(this::tickCommon));
 	addComponent(new ComponentDirection());
-	addComponent(new ComponentPacketHandler().addGuiPacketReader(this::loadFromNBT).addGuiPacketWriter(this::saveToNBT));
-	addComponent(new ComponentInventory().setInventorySize(2));
-	addComponent(new ComponentElectrodynamic(this).addInputDirection(Direction.DOWN).addRelativeInputDirection(Direction.EAST)
-		.addRelativeInputDirection(Direction.WEST).setMaxJoules(Constants.CONVEYORBELT_USAGE * 100));
+	addComponent(new ComponentPacketHandler().guiPacketReader(this::loadFromNBT).guiPacketWriter(this::saveToNBT));
+	addComponent(new ComponentInventory(this).size(2));
+	addComponent(new ComponentElectrodynamic(this).input(Direction.DOWN).relativeInput(Direction.EAST).relativeInput(Direction.WEST)
+		.maxJoules(Constants.CONVEYORBELT_USAGE * 100));
     }
 
     @Override
@@ -119,7 +119,7 @@ public class TileConveyorBelt extends GenericTileTicking {
 		if (electro.getJoulesStored() < Constants.CONVEYORBELT_USAGE * 20) {
 		    currentSpread = 0;
 		} else {
-		    electro.setJoules(electro.getJoulesStored() - Constants.CONVEYORBELT_USAGE * 20);
+		    electro.joules(electro.getJoulesStored() - Constants.CONVEYORBELT_USAGE * 20);
 		    currentSpread = 16;
 		}
 	    }

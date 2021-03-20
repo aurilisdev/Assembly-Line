@@ -23,8 +23,8 @@ public class TileManipulator extends GenericTileTicking {
     public TileManipulator() {
 	super(DeferredRegisters.TILE_MANIPULATOR.get());
 	addComponent(new ComponentDirection());
-	addComponent(new ComponentTickable().addTickServer(this::tickServer));
-	addComponent(new ComponentElectrodynamic(this).setMaxJoules(Constants.MANIPULATOR_USAGE * 20).addInputDirection(Direction.DOWN));
+	addComponent(new ComponentTickable().tickServer(this::tickServer));
+	addComponent(new ComponentElectrodynamic(this).maxJoules(Constants.MANIPULATOR_USAGE * 20).input(Direction.DOWN));
     }
 
     public void tickServer(ComponentTickable component) {
@@ -77,7 +77,7 @@ public class TileManipulator extends GenericTileTicking {
 		world.setBlockState(pos, next.getDefaultState().with(BlockGenericMachine.FACING, direction.getDirection()), 2 | 16);
 	    }
 	} else {
-	    electro.setJoules(electro.getJoulesStored() - Constants.MANIPULATOR_USAGE);
+	    electro.joules(electro.getJoulesStored() - Constants.MANIPULATOR_USAGE);
 	    if (!running) {
 		Block next = input ? DeferredRegisters.blockManipulatorInputRunning : DeferredRegisters.blockManipulatorOutputRunning;
 		world.setBlockState(pos, next.getDefaultState().with(BlockGenericMachine.FACING, direction.getDirection()), 2 | 16);

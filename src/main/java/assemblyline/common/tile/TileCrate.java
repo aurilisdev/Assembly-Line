@@ -19,13 +19,11 @@ public class TileCrate extends GenericTileTicking {
 
     public TileCrate() {
 	super(DeferredRegisters.TILE_CRATE.get());
-	addComponent(new ComponentPacketHandler().addGuiPacketWriter(this::writeCustomPacket).addGuiPacketReader(this::readCustomPacket)
-		.addCustomPacketReader(this::readCustomPacket).addCustomPacketWriter(this::writeCustomPacket));
-	addComponent(new ComponentInventory().setInventorySize(64).setGetSlotsFunction(this::getSlotsForFace)
-		.setItemValidPredicate(this::isItemValidForSlot).addSlotsOnFace(Direction.DOWN, 0).addSlotsOnFace(Direction.SOUTH, 0)
-		.addSlotsOnFace(Direction.UP, 0).addSlotsOnFace(Direction.NORTH, 0).addSlotsOnFace(Direction.EAST, 0)
-		.addSlotsOnFace(Direction.WEST, 0));
-	addComponent(new ComponentTickable().addTickServer(this::tickServer));
+	addComponent(new ComponentPacketHandler().guiPacketWriter(this::writeCustomPacket).guiPacketReader(this::readCustomPacket)
+		.customPacketReader(this::readCustomPacket).customPacketWriter(this::writeCustomPacket));
+	addComponent(new ComponentInventory(this).size(64).getSlots(this::getSlotsForFace).valid(this::isItemValidForSlot).slotFaces(0,
+		Direction.values()));
+	addComponent(new ComponentTickable().tickServer(this::tickServer));
     }
 
     public HashSet<Integer> getSlotsForFace(Direction side) {

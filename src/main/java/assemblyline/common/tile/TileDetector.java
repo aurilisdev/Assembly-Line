@@ -18,7 +18,7 @@ public class TileDetector extends GenericTileTicking {
     public TileDetector() {
 	super(DeferredRegisters.TILE_DETECTOR.get());
 	addComponent(new ComponentDirection());
-	addComponent(new ComponentTickable().addTickServer(this::tickServer));
+	addComponent(new ComponentTickable().tickServer(this::tickServer));
     }
 
     public void tickServer(ComponentTickable component) {
