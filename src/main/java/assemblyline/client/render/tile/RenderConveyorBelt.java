@@ -19,6 +19,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
 
@@ -45,22 +46,39 @@ public class RenderConveyorBelt extends TileEntityRenderer<TileConveyorBelt> {
 	}
 	boolean up = world.getTileEntity(pos.offset(Direction.UP).offset(direction.getDirection().getOpposite())) instanceof TileConveyorBelt;
 	boolean running = tile.currentSpread > 0;
-	if (isSloped) {
-	    if (up) {
+	if (tile.isManipulator) {
+	    if (tile.isManipulatorOutput) {
 		if (running) {
-		    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYORANIMATED);
+		    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_MANIPULATOROUTPUTRUNNING);
 		} else {
-		    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYOR);
+		    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_MANIPULATOROUTPUT);
 		}
+		matrixStackIn.rotate(new Quaternion(0, 180, 0, true));
 	    } else {
 		if (running) {
-		    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYORDOWNANIMATED);
+		    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_MANIPULATORINPUTRUNNING);
 		} else {
-		    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYORDOWN);
+		    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_MANIPULATORINPUT);
 		}
 	    }
-	} else if (running) {
-	    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORANIMATED);
+	} else {
+	    if (isSloped) {
+		if (up) {
+		    if (running) {
+			model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYORANIMATED);
+		    } else {
+			model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYOR);
+		    }
+		} else {
+		    if (running) {
+			model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYORDOWNANIMATED);
+		    } else {
+			model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYORDOWN);
+		    }
+		}
+	    } else if (running) {
+		model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORANIMATED);
+	    }
 	}
 	UtilitiesRendering.renderModel(model, tile, RenderType.getSolid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 	matrixStackIn.pop();
@@ -73,7 +91,7 @@ public class RenderConveyorBelt extends TileEntityRenderer<TileConveyorBelt> {
 		totalSlotsUsed++;
 	    }
 	}
-	double progressModifier = (tile.progress + (tile.currentSpread <= 0 ? 0 : partialTicks)) / 16.0;
+	double progressModifier = (tile.progress + (tile.currentSpread <= 0 || tile.halted ? 0 : partialTicks)) / 16.0;
 	if (totalSlotsUsed > 0) {
 	    for (int i = 0; i < inv.getSizeInventory(); i++) {
 		ItemStack stack = inv.getStackInSlot(i);

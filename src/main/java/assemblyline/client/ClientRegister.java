@@ -27,6 +27,10 @@ public class ClientRegister {
 	ModelLoader.addSpecialModel(MODEL_SLOPEDCONVEYORANIMATED);
 	ModelLoader.addSpecialModel(MODEL_SLOPEDCONVEYORDOWN);
 	ModelLoader.addSpecialModel(MODEL_SLOPEDCONVEYORDOWNANIMATED);
+	ModelLoader.addSpecialModel(MODEL_MANIPULATORINPUT);
+	ModelLoader.addSpecialModel(MODEL_MANIPULATORINPUTRUNNING);
+	ModelLoader.addSpecialModel(MODEL_MANIPULATOROUTPUT);
+	ModelLoader.addSpecialModel(MODEL_MANIPULATOROUTPUTRUNNING);
     }
 
     public static final ResourceLocation MODEL_CONVEYOR = new ResourceLocation(References.ID + ":block/conveyorbelt");
@@ -36,6 +40,10 @@ public class ClientRegister {
     public static final ResourceLocation MODEL_SLOPEDCONVEYORDOWN = new ResourceLocation(References.ID + ":block/conveyorbeltslopeddown");
     public static final ResourceLocation MODEL_SLOPEDCONVEYORDOWNANIMATED = new ResourceLocation(
 	    References.ID + ":block/conveyorbeltslopeddownrunning");
+    public static final ResourceLocation MODEL_MANIPULATORINPUT = new ResourceLocation(References.ID + ":block/manipulatorinput");
+    public static final ResourceLocation MODEL_MANIPULATORINPUTRUNNING = new ResourceLocation(References.ID + ":block/manipulatorinputrunning");
+    public static final ResourceLocation MODEL_MANIPULATOROUTPUT = new ResourceLocation(References.ID + ":block/manipulatoroutput");
+    public static final ResourceLocation MODEL_MANIPULATOROUTPUTRUNNING = new ResourceLocation(References.ID + ":block/manipulatoroutputrunning");
 
     public static void setup() {
 	ScreenManager.registerFactory(DeferredRegisters.CONTAINER_SORTERBELT.get(), ScreenSorterBelt::new);

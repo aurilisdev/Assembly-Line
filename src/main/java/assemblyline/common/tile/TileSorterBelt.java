@@ -1,7 +1,6 @@
 package assemblyline.common.tile;
 
 import assemblyline.DeferredRegisters;
-import assemblyline.common.block.BlockManipulator;
 import assemblyline.common.inventory.container.ContainerSorterBelt;
 import assemblyline.common.settings.Constants;
 import electrodynamics.api.tile.GenericTile;
@@ -11,12 +10,9 @@ import electrodynamics.api.tile.components.type.ComponentDirection;
 import electrodynamics.api.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.api.tile.components.type.ComponentInventory;
 import electrodynamics.common.block.BlockGenericMachine;
-import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.HopperTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.IntArray;
@@ -41,8 +37,6 @@ public class TileSorterBelt extends GenericTile {
 	Direction facing = getBlockState().get(BlockGenericMachine.FACING);
 	if (running && entityIn.getPosY() > pos.getY() + 4.0 / 16.0) {
 	    Direction dir = facing.getOpposite();
-	    BlockPos next = pos.offset(dir);
-	    BlockState side = world.getBlockState(next);
 	    if (entityIn instanceof ItemEntity) {
 		ItemEntity itemEntity = (ItemEntity) entityIn;
 		boolean hasRight = false;
@@ -67,18 +61,6 @@ public class TileSorterBelt extends GenericTile {
 		    entityIn.addVelocity(dir.rotateY().getXOffset() / 20.0, 0, dir.rotateY().getZOffset() / 20.0);
 		} else {
 		    entityIn.addVelocity(dir.getXOffset() / 20.0, 0, dir.getZOffset() / 20.0);
-		}
-		if (!itemEntity.getItem().isEmpty() && side.getBlock() instanceof BlockManipulator
-			&& side.get(BlockGenericMachine.FACING) == dir.getOpposite()) {
-		    BlockPos chestPos = next.offset(dir);
-		    TileEntity chestTile = world.getTileEntity(chestPos);
-		    if (chestTile instanceof IInventory) {
-			itemEntity.setItem(
-				HopperTileEntity.putStackInInventoryAllSlots(null, (IInventory) chestTile, itemEntity.getItem(), dir.getOpposite()));
-			if (itemEntity.getItem().isEmpty()) {
-			    itemEntity.remove();
-			}
-		    }
 		}
 	    } else {
 		entityIn.addVelocity(dir.getXOffset() / 20.0, 0, dir.getZOffset() / 20.0);
