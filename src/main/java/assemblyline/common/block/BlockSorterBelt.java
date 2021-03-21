@@ -15,7 +15,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -55,7 +54,7 @@ public class BlockSorterBelt extends Block implements IWrenchable {
     @Override
     @Deprecated
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-	return worldIn instanceof ClientWorld ? VoxelShapes.fullCube() : shape;
+	return worldIn instanceof World && ((World) worldIn).isRemote ? VoxelShapes.fullCube() : shape;
     }
 
     @Override
