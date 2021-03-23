@@ -70,7 +70,7 @@ public class BlockCrate extends Block {
 			ItemStack stack = inv.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).resolve().get()
 				.extractItem(i, inv.getInventoryStackLimit(), false);
 			if (!stack.isEmpty()) {
-			    ItemEntity item = new ItemEntity(worldIn, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, stack);
+			    ItemEntity item = new ItemEntity(worldIn, player.getPosX() + 0.5, player.getPosY() + 0.5, player.getPosZ() + 0.5, stack);
 			    worldIn.addEntity(item);
 			    break;
 			}
