@@ -56,7 +56,7 @@ public class BlockSorterBelt extends Block implements IWrenchable {
     public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 	return worldIn instanceof World && ((World) worldIn).isRemote ? VoxelShapes.fullCube() : shape;
     }
-   
+
     @Override
     @Deprecated
     public List<ItemStack> getDrops(BlockState state, Builder builder) {

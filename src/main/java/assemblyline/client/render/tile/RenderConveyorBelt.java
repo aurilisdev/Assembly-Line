@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 
 import assemblyline.client.ClientRegister;
 import assemblyline.common.tile.TileConveyorBelt;
+import assemblyline.common.tile.TileSorterBelt;
 import electrodynamics.api.tile.components.ComponentType;
 import electrodynamics.api.tile.components.type.ComponentDirection;
 import electrodynamics.api.tile.components.type.ComponentInventory;
@@ -17,8 +18,10 @@ import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.world.World;
@@ -80,10 +83,29 @@ public class RenderConveyorBelt extends TileEntityRenderer<TileConveyorBelt> {
 		model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORANIMATED);
 	    }
 	}
+	Direction dir = direction.getDirection();
+	if (model == Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYOR)
+		|| model == Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORANIMATED)) {
+	    TileEntity right = world.getTileEntity(pos.offset(dir.getOpposite().rotateY()));
+	    TileEntity left = world.getTileEntity(pos.offset(dir.getOpposite().rotateYCCW()));
+	    boolean rightClear = right instanceof TileConveyorBelt || right instanceof TileSorterBelt;
+	    boolean leftClear = left instanceof TileConveyorBelt || left instanceof TileSorterBelt;
+	    if (rightClear || leftClear) {
+		if (model == Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYOR)) {
+		    model = rightClear && leftClear ? Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORCLEAR)
+			    : rightClear ? Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORRIGHTCLEAR)
+				    : Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORLEFTCLEAR);
+		} else if (model == Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORANIMATED)) {
+		    model = rightClear && leftClear ? Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORANIMATEDCLEAR)
+			    : rightClear ? Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORANIMATEDRIGHTCLEAR)
+				    : Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORANIMATEDLEFTCLEAR);
+		}
+	    }
+	}
 	UtilitiesRendering.renderModel(model, tile, RenderType.getSolid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 	matrixStackIn.pop();
 	ComponentInventory inv = tile.getComponent(ComponentType.Inventory);
-	Direction dir = direction.getDirection();
+
 	int totalSlotsUsed = 0;
 	for (int i = 0; i < inv.getSizeInventory(); i++) {
 	    ItemStack stack = inv.getStackInSlot(i);
@@ -91,7 +113,31 @@ public class RenderConveyorBelt extends TileEntityRenderer<TileConveyorBelt> {
 		totalSlotsUsed++;
 	    }
 	}
-	double progressModifier = (tile.progress + (tile.currentSpread <= 0 || tile.halted ? 0 : partialTicks)) / 16.0;
+	double progressModifier = (tile.progress + 8.0 + (tile.currentSpread <= 0 || tile.halted ? 0 : partialTicks)) / 16.0;
+	TileEntity next = world.getTileEntity(pos.offset(dir.getOpposite()));
+	if (next instanceof TileConveyorBelt) {
+	    TileConveyorBelt conv = (TileConveyorBelt) next;
+	    Direction direct = conv.<ComponentDirection>getComponent(ComponentType.Direction).getDirection();
+	    boolean nextSloped = false;
+	    if (world.getTileEntity(pos.offset(direct.getOpposite()).offset(Direction.UP).offset(direct.getOpposite())) instanceof TileConveyorBelt
+		    || world.getTileEntity(pos.offset(direct.getOpposite()).offset(Direction.UP).offset(direct)) instanceof TileConveyorBelt) {
+		nextSloped = true;
+	    }
+	    if (nextSloped) {
+		progressModifier = MathHelper.clamp(progressModifier, 0.0, 1.0);
+	    }
+	    if (isSloped) {
+		progressModifier -= 0.5;
+	    }
+	} else {
+	    boolean shouldBeNormal = isSloped || !(world.getTileEntity(pos.offset(dir)) instanceof TileConveyorBelt);
+	    if (shouldBeNormal) {
+		progressModifier -= 0.5;
+	    }
+	    if (tile.isManipulator) {
+		progressModifier = MathHelper.clamp(progressModifier, 0.0, 1.0);
+	    }
+	}
 	if (totalSlotsUsed > 0) {
 	    for (int i = 0; i < inv.getSizeInventory(); i++) {
 		ItemStack stack = inv.getStackInSlot(i);

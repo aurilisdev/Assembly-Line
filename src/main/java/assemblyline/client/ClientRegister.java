@@ -22,7 +22,13 @@ public class ClientRegister {
     @SubscribeEvent
     public static void onModelEvent(ModelRegistryEvent event) {
 	ModelLoader.addSpecialModel(MODEL_CONVEYOR);
+	ModelLoader.addSpecialModel(MODEL_CONVEYORCLEAR);
+	ModelLoader.addSpecialModel(MODEL_CONVEYORRIGHTCLEAR);
+	ModelLoader.addSpecialModel(MODEL_CONVEYORLEFTCLEAR);
 	ModelLoader.addSpecialModel(MODEL_CONVEYORANIMATED);
+	ModelLoader.addSpecialModel(MODEL_CONVEYORANIMATEDCLEAR);
+	ModelLoader.addSpecialModel(MODEL_CONVEYORANIMATEDRIGHTCLEAR);
+	ModelLoader.addSpecialModel(MODEL_CONVEYORANIMATEDLEFTCLEAR);
 	ModelLoader.addSpecialModel(MODEL_SLOPEDCONVEYOR);
 	ModelLoader.addSpecialModel(MODEL_SLOPEDCONVEYORANIMATED);
 	ModelLoader.addSpecialModel(MODEL_SLOPEDCONVEYORDOWN);
@@ -34,7 +40,15 @@ public class ClientRegister {
     }
 
     public static final ResourceLocation MODEL_CONVEYOR = new ResourceLocation(References.ID + ":block/conveyorbelt");
+    public static final ResourceLocation MODEL_CONVEYORCLEAR = new ResourceLocation(References.ID + ":block/conveyorbeltclear");
+    public static final ResourceLocation MODEL_CONVEYORRIGHTCLEAR = new ResourceLocation(References.ID + ":block/conveyorbeltrightclear");
+    public static final ResourceLocation MODEL_CONVEYORLEFTCLEAR = new ResourceLocation(References.ID + ":block/conveyorbeltleftclear");
     public static final ResourceLocation MODEL_CONVEYORANIMATED = new ResourceLocation(References.ID + ":block/conveyorbeltrunning");
+    public static final ResourceLocation MODEL_CONVEYORANIMATEDCLEAR = new ResourceLocation(References.ID + ":block/conveyorbeltrunningclear");
+    public static final ResourceLocation MODEL_CONVEYORANIMATEDRIGHTCLEAR = new ResourceLocation(
+	    References.ID + ":block/conveyorbeltrunningrightclear");
+    public static final ResourceLocation MODEL_CONVEYORANIMATEDLEFTCLEAR = new ResourceLocation(
+	    References.ID + ":block/conveyorbeltrunningleftclear");
     public static final ResourceLocation MODEL_SLOPEDCONVEYOR = new ResourceLocation(References.ID + ":block/conveyorbeltsloped");
     public static final ResourceLocation MODEL_SLOPEDCONVEYORANIMATED = new ResourceLocation(References.ID + ":block/conveyorbeltslopedrunning");
     public static final ResourceLocation MODEL_SLOPEDCONVEYORDOWN = new ResourceLocation(References.ID + ":block/conveyorbeltslopeddown");
