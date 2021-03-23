@@ -6,11 +6,13 @@ import java.util.List;
 import assemblyline.common.tile.TileCrate;
 import electrodynamics.api.tile.GenericTile;
 import electrodynamics.api.tile.components.ComponentType;
+import electrodynamics.api.tile.components.type.ComponentInventory;
 import electrodynamics.common.block.BlockGenericMachine;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.InventoryHelper;
@@ -26,6 +28,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
+import net.minecraftforge.items.CapabilityItemHandler;
 
 public class BlockCrate extends Block {
 
@@ -61,9 +64,23 @@ public class BlockCrate extends Block {
 	if (!worldIn.isRemote) {
 	    TileCrate tile = (TileCrate) worldIn.getTileEntity(pos);
 	    if (tile != null) {
-		player.setItemStackToSlot(handIn == Hand.MAIN_HAND ? EquipmentSlotType.MAINHAND : EquipmentSlotType.OFFHAND,
-			HopperTileEntity.putStackInInventoryAllSlots(player.inventory, tile.getComponent(ComponentType.Inventory),
-				player.getHeldItem(handIn), Direction.EAST));
+		if (player.isSneaking()) {
+		    ComponentInventory inv = tile.getComponent(ComponentType.Inventory);
+		    for (int i = 0; i < inv.getSizeInventory(); i++) {
+			ItemStack stack = inv.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).resolve().get()
+				.extractItem(i, inv.getInventoryStackLimit(), false);
+			if (!stack.isEmpty()) {
+			    ItemEntity item = new ItemEntity(worldIn, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, stack);
+			    worldIn.addEntity(item);
+			    break;
+			}
+		    }
+
+		} else {
+		    player.setItemStackToSlot(handIn == Hand.MAIN_HAND ? EquipmentSlotType.MAINHAND : EquipmentSlotType.OFFHAND,
+			    HopperTileEntity.putStackInInventoryAllSlots(player.inventory, tile.getComponent(ComponentType.Inventory),
+				    player.getHeldItem(handIn), Direction.EAST));
+		}
 	    }
 	}
 	return ActionResultType.SUCCESS;

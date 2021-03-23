@@ -167,7 +167,7 @@ public class TileConveyorBelt extends GenericTileTicking {
 		if (cap.isPresent()) {
 		    IItemHandler handler = cap.resolve().get();
 		    for (int slot = 0; slot < handler.getSlots(); slot++) {
-			ItemStack returned = handler.extractItem(slot, handler.getStackInSlot(slot).getCount(), false);
+			ItemStack returned = handler.extractItem(slot, 64, false);
 			if (!returned.isEmpty()) {
 			    addItemOnBelt(returned);
 			    break;
