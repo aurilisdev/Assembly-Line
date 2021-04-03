@@ -76,7 +76,7 @@ public class TileConveyorBelt extends GenericTileTicking {
 
     protected boolean moveItemsIntoInventory(ComponentInventory inventory, Direction direction, BlockPos pos, boolean check) {
 	TileEntity chestTile = world.getTileEntity(pos);
-	if (chestTile != null) {
+	if (chestTile != null && !(chestTile instanceof TileConveyorBelt)) {
 	    LazyOptional<IItemHandler> handlerOptional = chestTile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction);
 	    if (handlerOptional.isPresent() && !check) {
 		IItemHandler handler = handlerOptional.resolve().get();
@@ -177,13 +177,13 @@ public class TileConveyorBelt extends GenericTileTicking {
 	    }
 	}
 	ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
-	if (!world.isRemote && tickable.getTicks() % 20 == 0) {
+	if (!world.isRemote) {
 	    checkForSpread();
 	    if (currentSpread == 0 || currentSpread == 16) {
-		if (electro.getJoulesStored() < Constants.CONVEYORBELT_USAGE * 20) {
+		if (electro.getJoulesStored() < Constants.CONVEYORBELT_USAGE) {
 		    currentSpread = 0;
 		} else {
-		    electro.joules(electro.getJoulesStored() - Constants.CONVEYORBELT_USAGE * 20);
+		    electro.joules(electro.getJoulesStored() - Constants.CONVEYORBELT_USAGE);
 		    currentSpread = 16;
 		}
 	    }
