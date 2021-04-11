@@ -2,8 +2,8 @@ package assemblyline.common.inventory.container;
 
 import assemblyline.DeferredRegisters;
 import assemblyline.common.tile.TileSorterBelt;
-import electrodynamics.common.inventory.container.slot.GenericSlot;
 import electrodynamics.prefab.inventory.container.GenericContainer;
+import electrodynamics.prefab.inventory.container.slot.GenericSlot;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Inventory;
