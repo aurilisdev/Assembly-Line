@@ -1,7 +1,7 @@
 package assemblyline.client.screen;
 
 import assemblyline.common.inventory.container.ContainerSorterBelt;
-import electrodynamics.api.gui.GenericScreen;
+import electrodynamics.prefab.screen.GenericScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
