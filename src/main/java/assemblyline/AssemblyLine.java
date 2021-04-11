@@ -2,7 +2,7 @@ package assemblyline;
 
 import assemblyline.client.ClientRegister;
 import assemblyline.common.settings.Constants;
-import electrodynamics.api.configuration.ConfigurationHandler;
+import electrodynamics.prefab.configuration.ConfigurationHandler;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.eventbus.api.IEventBus;

@@ -4,10 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import assemblyline.common.tile.TileCrate;
-import electrodynamics.api.tile.GenericTile;
-import electrodynamics.api.tile.components.ComponentType;
-import electrodynamics.api.tile.components.type.ComponentInventory;
 import electrodynamics.common.block.BlockGenericMachine;
+import electrodynamics.prefab.tile.GenericTile;
+import electrodynamics.prefab.tile.components.ComponentType;
+import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SoundType;

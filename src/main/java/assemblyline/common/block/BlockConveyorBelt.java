@@ -5,9 +5,9 @@ import java.util.List;
 
 import assemblyline.DeferredRegisters;
 import assemblyline.common.tile.TileConveyorBelt;
-import electrodynamics.api.tile.GenericTile;
-import electrodynamics.api.tile.components.ComponentType;
 import electrodynamics.common.block.BlockGenericMachine;
+import electrodynamics.prefab.tile.GenericTile;
+import electrodynamics.prefab.tile.components.ComponentType;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;

@@ -3,12 +3,12 @@ package assemblyline.common.tile;
 import java.util.HashSet;
 
 import assemblyline.DeferredRegisters;
-import electrodynamics.api.tile.GenericTileTicking;
-import electrodynamics.api.tile.components.ComponentType;
-import electrodynamics.api.tile.components.type.ComponentInventory;
-import electrodynamics.api.tile.components.type.ComponentPacketHandler;
-import electrodynamics.api.tile.components.type.ComponentTickable;
 import electrodynamics.api.utilities.Scheduler;
+import electrodynamics.prefab.tile.GenericTileTicking;
+import electrodynamics.prefab.tile.components.ComponentType;
+import electrodynamics.prefab.tile.components.type.ComponentInventory;
+import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
+import electrodynamics.prefab.tile.components.type.ComponentTickable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;

@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import assemblyline.DeferredRegisters;
-import electrodynamics.api.tile.GenericTileTicking;
-import electrodynamics.api.tile.components.ComponentType;
-import electrodynamics.api.tile.components.type.ComponentDirection;
-import electrodynamics.api.tile.components.type.ComponentTickable;
+import electrodynamics.prefab.tile.GenericTileTicking;
+import electrodynamics.prefab.tile.components.ComponentType;
+import electrodynamics.prefab.tile.components.type.ComponentDirection;
+import electrodynamics.prefab.tile.components.type.ComponentTickable;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.util.math.AxisAlignedBB;

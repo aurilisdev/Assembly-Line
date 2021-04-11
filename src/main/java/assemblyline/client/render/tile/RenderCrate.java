@@ -3,8 +3,8 @@ package assemblyline.client.render.tile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
 import assemblyline.common.tile.TileCrate;
-import electrodynamics.api.tile.components.ComponentType;
-import electrodynamics.api.tile.components.type.ComponentInventory;
+import electrodynamics.prefab.tile.components.ComponentType;
+import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
