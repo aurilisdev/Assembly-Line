@@ -32,7 +32,9 @@ public class DeferredRegisters {
     public static BlockSorterBelt blockSorterBelt = new BlockSorterBelt(false);
     public static BlockSorterBelt blockSorterBeltRunning = new BlockSorterBelt(true);
     public static BlockDetector blockDetector = new BlockDetector();
-    public static BlockCrate blockCrate = new BlockCrate();
+    public static BlockCrate blockCrate = new BlockCrate(64);
+    public static BlockCrate blockCrateMedium = new BlockCrate(128);
+    public static BlockCrate blockCrateLarge = new BlockCrate(256);
 
     static {
 	BLOCKS.register("conveyorbelt", supplier(blockConveyorBelt));
@@ -40,11 +42,15 @@ public class DeferredRegisters {
 	BLOCKS.register("sorterbeltrunning", supplier(blockSorterBeltRunning));
 	BLOCKS.register("detector", supplier(blockDetector));
 	BLOCKS.register("crate", supplier(blockCrate));
+	BLOCKS.register("cratemedium", supplier(blockCrateMedium));
+	BLOCKS.register("cratelarge", supplier(blockCrateLarge));
 	ITEMS.register("conveyorbelt", supplier(new BlockItemDescriptable(blockConveyorBelt, new Properties().group(References.ASSEMBLYLINETAB))));
 	ITEMS.register("sorterbelt", supplier(new BlockItemDescriptable(blockSorterBelt, new Properties().group(References.ASSEMBLYLINETAB))));
 	ITEMS.register("sorterbeltrunning", supplier(new BlockItemDescriptable(blockSorterBeltRunning, new Properties())));
 	ITEMS.register("detector", supplier(new BlockItemDescriptable(blockDetector, new Properties().group(References.ASSEMBLYLINETAB))));
 	ITEMS.register("crate", supplier(new BlockItemDescriptable(blockCrate, new Properties().group(References.ASSEMBLYLINETAB))));
+	ITEMS.register("cratemedium", supplier(new BlockItemDescriptable(blockCrateMedium, new Properties().group(References.ASSEMBLYLINETAB))));
+	ITEMS.register("cratelarge", supplier(new BlockItemDescriptable(blockCrateLarge, new Properties().group(References.ASSEMBLYLINETAB))));
 	BlockItemDescriptable.addDescription(blockConveyorBelt, "|translate|tooltip.conveyorbelt.powerusage");
 	BlockItemDescriptable.addDescription(blockSorterBelt, "|translate|tooltip.sorterbelt.powerusage");
 	BlockItemDescriptable.addDescription(blockDetector, "|translate|tooltip.detector");
@@ -56,7 +62,7 @@ public class DeferredRegisters {
     public static final RegistryObject<TileEntityType<TileSorterBelt>> TILE_SORTERBELT = TILES.register("sorterbelt",
 	    () -> new TileEntityType<>(TileSorterBelt::new, Sets.newHashSet(blockSorterBelt, blockSorterBeltRunning), null));
     public static final RegistryObject<TileEntityType<TileCrate>> TILE_CRATE = TILES.register("crate",
-	    () -> new TileEntityType<>(TileCrate::new, Sets.newHashSet(blockCrate), null));
+	    () -> new TileEntityType<>(TileCrate::new, Sets.newHashSet(blockCrate, blockCrateMedium, blockCrateLarge), null));
     public static final RegistryObject<ContainerType<ContainerSorterBelt>> CONTAINER_SORTERBELT = CONTAINERS.register("sorterbelt",
 	    () -> new ContainerType<>(ContainerSorterBelt::new));
 

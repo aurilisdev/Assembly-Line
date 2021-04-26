@@ -32,8 +32,11 @@ import net.minecraftforge.items.CapabilityItemHandler;
 
 public class BlockCrate extends Block {
 
-    public BlockCrate() {
+    public final int size;
+
+    public BlockCrate(int size) {
 	super(Properties.create(Material.IRON).hardnessAndResistance(3.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE));
+	this.size = size;
     }
 
     @Deprecated
@@ -93,6 +96,6 @@ public class BlockCrate extends Block {
 
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-	return new TileCrate();
+	return new TileCrate(size);
     }
 }

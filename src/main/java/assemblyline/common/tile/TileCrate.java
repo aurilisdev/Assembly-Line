@@ -18,10 +18,14 @@ public class TileCrate extends GenericTileTicking {
     private int count = 0;
 
     public TileCrate() {
+	this(64);
+    }
+
+    public TileCrate(int size) {
 	super(DeferredRegisters.TILE_CRATE.get());
 	addComponent(new ComponentPacketHandler().guiPacketWriter(this::writeCustomPacket).guiPacketReader(this::readCustomPacket)
 		.customPacketReader(this::readCustomPacket).customPacketWriter(this::writeCustomPacket));
-	addComponent(new ComponentInventory(this).size(64).getSlots(this::getSlotsForFace).valid(this::isItemValidForSlot).slotFaces(0,
+	addComponent(new ComponentInventory(this).size(size).getSlots(this::getSlotsForFace).valid(this::isItemValidForSlot).slotFaces(0,
 		Direction.values()));
 	addComponent(new ComponentTickable().tickServer(this::tickServer));
     }
