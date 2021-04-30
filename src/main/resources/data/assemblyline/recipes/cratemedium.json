@@ -1,13 +1,9 @@
 {
     "type": "minecraft:crafting_shaped",
     "pattern": [
-        " # ",
         "SCS"
     ],
     "key": {
-        "#": {
-           "tag": "forge:circuits/basic"
-        },
         "S": {
             "item": "assemblyline:crate"
         },
