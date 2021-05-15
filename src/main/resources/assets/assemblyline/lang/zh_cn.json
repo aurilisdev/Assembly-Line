@@ -1,13 +1,14 @@
 {
 	"block.assemblyline.conveyorbelt": "输送带",
-	"block.assemblyline.conveyorbeltrunning": "运行中的输送带",
-	"block.assemblyline.manipulatorinput": "操控器",
-	"block.assemblyline.manipulatoroutput": "操控器输出",
-	"block.assemblyline.manipulatorinputrunning": "运行中的操控器",
-	"block.assemblyline.manipulatoroutputrunning": "允许中的输出操控器",
+	"block.assemblyline.sorterbelt": "分类输送带",
+	"block.assemblyline.sorterbeltrunning": "运行中的分类输送带",
 	"block.assemblyline.detector": "探测器",
+	"block.assemblyline.crate": "储物箱",
+	"block.assemblyline.cratemedium": "中型储物箱",
+	"block.assemblyline.cratelarge": "大型储物箱",
+	"container.sorterbelt": "分类输送带",
 	"itemGroup.itemgroupassemblyline": "装配线",
 	"tooltip.conveyorbelt.powerusage": "用电量：10W",
 	"tooltip.manipulator.powerusage": "用电量：10W",
-	"tooltip.detector": "当前方有物品时会发出红石信号。"
+	"tooltip.detector": "当前方有物品时会发出红石信号"
 }
