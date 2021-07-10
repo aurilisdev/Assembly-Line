@@ -1,0 +1,14 @@
+{
+	"block.assemblyline.conveyorbelt": "Conveyor Belt",
+	"block.assemblyline.sorterbelt": "Sorter Belt",
+	"block.assemblyline.sorterbeltrunning": "Sorter Belt Running",
+	"block.assemblyline.detector": "Detector",
+	"block.assemblyline.crate": "Crate",
+	"block.assemblyline.cratemedium": "Medium Crate",
+	"block.assemblyline.cratelarge": "Large Crate",
+	"container.sorterbelt": "Sorter Belt",
+	"itemGroup.itemgroupassemblyline": "Assembly Line",
+	"tooltip.conveyorbelt.powerusage": "Power Usage: 10W",
+	"tooltip.sorterbelt.powerusage": "Power Usage: 10W",
+	"tooltip.detector": "Emits redstone signal when an item is in front of it"
+}

@@ -1,0 +1,20 @@
+{
+	"variants": {
+		"facing=east": {
+			"model": "assemblyline:block/sorterbelt",
+			"y": 0
+		},
+		"facing=north": {
+			"model": "assemblyline:block/sorterbelt",
+			"y": 270
+		},
+		"facing=south": {
+			"model": "assemblyline:block/sorterbelt",
+			"y": 90
+		},
+		"facing=west": {
+			"model": "assemblyline:block/sorterbelt",
+			"y": 180
+		}
+	}
+}
