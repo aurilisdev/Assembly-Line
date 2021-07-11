@@ -151,6 +151,7 @@ task pushTag(type: GitPush, dependsOn: createTag) {
 tasks.curseforge.dependsOn jar
 tasks.curseforge.dependsOn pushTag
 
+/*
 curseforge {
   apiKey = System.getenv("CURSEFORGE_KEY")
   project {
@@ -164,3 +165,4 @@ curseforge {
     }
   }
 }
+*/

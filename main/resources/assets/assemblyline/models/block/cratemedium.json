@@ -1,0 +1,12 @@
+{
+	"parent": "block/cube_all",
+	"textures": {
+		"particle": "assemblyline:block/cratemedium",
+		"north": "assemblyline:block/cratemedium",
+		"south": "assemblyline:block/cratemedium",
+		"east": "assemblyline:block/cratemedium",
+		"west": "assemblyline:block/cratemedium",
+		"up": "assemblyline:block/cratetop",
+		"down": "assemblyline:block/cratetop"
+	}
+}

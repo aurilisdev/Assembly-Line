@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ses",
+		"sbs",
+		"s s"
+	],
+	"key": {
+		"s": {
+			"item": "electrodynamics:ingotsteel"
+		},
+		"e": {
+			"item": "minecraft:ender_eye"
+		},
+		"b": {
+			"item": "electrodynamics:circuitbasic"
+		}
+	},
+	"result": {
+		"item": "assemblyline:detector",
+		"count": 1
+	}
+}
