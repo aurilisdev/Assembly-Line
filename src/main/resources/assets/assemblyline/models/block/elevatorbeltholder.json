@@ -1,0 +1,39 @@
+{
+	"credit": "aurilisdev",
+	"parent": "block/cube_all",
+	"texture_size": [64, 64],
+	"textures": {
+		"0": "assemblyline:model/block/conveyorbelt",
+		"particle": "assemblyline:model/block/conveyorbelt"
+	},
+	"elements": [
+		{
+			"from": [5, 4, 2.75],
+			"to": [9, 5, 13.25],
+			"rotation": {"angle": 0, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [3, 8, 3.5, 8.75], "texture": "#0"},
+				"east": {"uv": [3, 8, 3.5, 8.75], "texture": "#0"},
+				"south": {"uv": [3, 8, 3.5, 8.75], "texture": "#0"},
+				"west": {"uv": [3, 8, 3.5, 8.75], "texture": "#0"},
+				"up": {"uv": [3, 8, 3.5, 8.75], "texture": "#0"},
+				"down": {"uv": [3, 8, 3.5, 8.75], "texture": "#0"}
+			}
+		}
+	],
+	"groups": [
+		{
+			"name": "conveyorbelt",
+			"origin": [8, 8, 8],
+			"color": 0,
+			"children": [
+				{
+					"name": "conveyorbelt",
+					"origin": [8, 8, 8],
+					"color": 0,
+					"children": [0]
+				}
+			]
+		}
+	]
+}

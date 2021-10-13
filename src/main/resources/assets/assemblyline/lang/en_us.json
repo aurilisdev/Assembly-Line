@@ -1,5 +1,6 @@
 {
 	"block.assemblyline.conveyorbelt": "Conveyor Belt",
+	"block.assemblyline.elevatorbelt": "Elevator Belt",
 	"block.assemblyline.sorterbelt": "Sorter Belt",
 	"block.assemblyline.sorterbeltrunning": "Sorter Belt Running",
 	"block.assemblyline.detector": "Detector",

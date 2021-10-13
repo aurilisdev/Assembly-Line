@@ -4,6 +4,7 @@ import assemblyline.DeferredRegisters;
 import assemblyline.References;
 import assemblyline.client.render.tile.RenderConveyorBelt;
 import assemblyline.client.render.tile.RenderCrate;
+import assemblyline.client.render.tile.RenderElevatorBelt;
 import assemblyline.client.screen.ScreenSorterBelt;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.util.ResourceLocation;
@@ -37,6 +38,10 @@ public class ClientRegister {
 	ModelLoader.addSpecialModel(MODEL_MANIPULATORINPUTRUNNING);
 	ModelLoader.addSpecialModel(MODEL_MANIPULATOROUTPUT);
 	ModelLoader.addSpecialModel(MODEL_MANIPULATOROUTPUTRUNNING);
+	ModelLoader.addSpecialModel(MODEL_ELEVATOR);
+	ModelLoader.addSpecialModel(MODEL_ELEVATORRUNNING);
+	ModelLoader.addSpecialModel(MODEL_ELEVATORBOTTOM);
+	ModelLoader.addSpecialModel(MODEL_ELEVATORBOTTOMRUNNING);
     }
 
     public static final ResourceLocation MODEL_CONVEYOR = new ResourceLocation(References.ID + ":block/conveyorbelt");
@@ -58,10 +63,15 @@ public class ClientRegister {
     public static final ResourceLocation MODEL_MANIPULATORINPUTRUNNING = new ResourceLocation(References.ID + ":block/manipulatorinputrunning");
     public static final ResourceLocation MODEL_MANIPULATOROUTPUT = new ResourceLocation(References.ID + ":block/manipulatoroutput");
     public static final ResourceLocation MODEL_MANIPULATOROUTPUTRUNNING = new ResourceLocation(References.ID + ":block/manipulatoroutputrunning");
+    public static final ResourceLocation MODEL_ELEVATOR = new ResourceLocation(References.ID + ":block/elevatorbelt");
+    public static final ResourceLocation MODEL_ELEVATORRUNNING = new ResourceLocation(References.ID + ":block/elevatorbeltrunning");
+    public static final ResourceLocation MODEL_ELEVATORBOTTOM = new ResourceLocation(References.ID + ":block/elevatorbeltbottom");
+    public static final ResourceLocation MODEL_ELEVATORBOTTOMRUNNING = new ResourceLocation(References.ID + ":block/elevatorbeltbottomrunning");
 
     public static void setup() {
 	ScreenManager.registerFactory(DeferredRegisters.CONTAINER_SORTERBELT.get(), ScreenSorterBelt::new);
 	ClientRegistry.bindTileEntityRenderer(DeferredRegisters.TILE_CRATE.get(), RenderCrate::new);
 	ClientRegistry.bindTileEntityRenderer(DeferredRegisters.TILE_BELT.get(), RenderConveyorBelt::new);
+	ClientRegistry.bindTileEntityRenderer(DeferredRegisters.TILE_ELEVATORBELT.get(), RenderElevatorBelt::new);
     }
 }
