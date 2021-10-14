@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+			"item": "assemblyline:elevatorbelt"
+		}
+	],
+	"result": {
+		"item": "assemblyline:conveyorbelt",
+		"count": 1
+	}
+}
