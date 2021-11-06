@@ -17,13 +17,14 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileSorterBelt extends GenericTile {
     public int currentSpread = 0;
     public long lastTime = 0;
 
-    public TileSorterBelt() {
-	super(DeferredRegisters.TILE_SORTERBELT.get());
+    public TileSorterBelt(BlockPos worldPosition, BlockState blockState) {
+	super(DeferredRegisters.TILE_SORTERBELT.get(), worldPosition, blockState);
 	addComponent(new ComponentDirection());
 	addComponent(new ComponentElectrodynamic(this).maxJoules(Constants.CONVEYORBELT_USAGE * 20).input(Direction.DOWN));
 	addComponent(new ComponentInventory(this).size(18));
@@ -37,8 +38,7 @@ public class TileSorterBelt extends GenericTile {
 	Direction facing = getBlockState().getValue(BlockGenericMachine.FACING);
 	if (running && entityIn.getY() > worldPosition.getY() + 4.0 / 16.0) {
 	    Direction dir = facing.getOpposite();
-	    if (entityIn instanceof ItemEntity) {
-		ItemEntity itemEntity = (ItemEntity) entityIn;
+	    if (entityIn instanceof ItemEntity itemEntity) {
 		boolean hasRight = false;
 		boolean hasLeft = false;
 		for (int i = 0; i < 9; i++) {
@@ -102,14 +102,12 @@ public class TileSorterBelt extends GenericTile {
 	    int max = 0;
 	    for (BlockPos po : TileConveyorBelt.offsets) {
 		BlockEntity at = level.getBlockEntity(worldPosition.offset(po));
-		if (at instanceof TileConveyorBelt) {
-		    TileConveyorBelt belt = (TileConveyorBelt) at;
+		if (at instanceof TileConveyorBelt belt) {
 		    int their = belt.currentSpread;
 		    if (their - 1 > max) {
 			max = their - 1;
 		    }
-		} else if (at instanceof TileSorterBelt) {
-		    TileSorterBelt belt = (TileSorterBelt) at;
+		} else if (at instanceof TileSorterBelt belt) {
 		    int their = belt.currentSpread;
 		    if (their - 1 > max) {
 			max = their - 1;

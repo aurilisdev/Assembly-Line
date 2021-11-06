@@ -19,6 +19,7 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -32,8 +33,8 @@ public class TileConveyorBelt extends GenericTileTicking {
     public boolean isManipulator;
     public boolean isManipulatorOutput;
 
-    public TileConveyorBelt() {
-	super(DeferredRegisters.TILE_BELT.get());
+    public TileConveyorBelt(BlockPos worldPosition, BlockState blockState) {
+	super(DeferredRegisters.TILE_BELT.get(), worldPosition, blockState);
 	addComponent(new ComponentTickable().tickCommon(this::tickCommon));
 	addComponent(new ComponentDirection());
 	addComponent(new ComponentPacketHandler().guiPacketReader(this::loadFromNBT).guiPacketWriter(this::saveToNBT));
@@ -50,8 +51,7 @@ public class TileConveyorBelt extends GenericTileTicking {
     protected boolean moveItemsIntoNextBelt(ComponentInventory inventory, ComponentDirection direction, BlockPos pos, boolean check) {
 	BlockEntity next = level.getBlockEntity(pos);
 	if (!check) {
-	    if (next instanceof TileConveyorBelt) {
-		TileConveyorBelt nextBelt = (TileConveyorBelt) next;
+	    if (next instanceof TileConveyorBelt nextBelt) {
 		Direction other = nextBelt.<ComponentDirection>getComponent(ComponentType.Direction).getDirection();
 		if (other != direction.getDirection().getOpposite()) {
 		    for (int indexHere = 0; indexHere < inventory.getContainerSize(); indexHere++) {
@@ -71,8 +71,7 @@ public class TileConveyorBelt extends GenericTileTicking {
 		} else {
 		    updateStatus(true);
 		}
-	    } else if (next instanceof TileElevatorBelt) {
-		TileElevatorBelt nextBelt = (TileElevatorBelt) next;
+	    } else if (next instanceof TileElevatorBelt nextBelt) {
 		Direction other = nextBelt.<ComponentDirection>getComponent(ComponentType.Direction).getDirection();
 		if (other == direction.getDirection()) {
 		    for (int indexHere = 0; indexHere < inventory.getContainerSize(); indexHere++) {
@@ -256,14 +255,12 @@ public class TileConveyorBelt extends GenericTileTicking {
 	int max = 0;
 	for (BlockPos po : TileConveyorBelt.offsets) {
 	    BlockEntity at = level.getBlockEntity(worldPosition.offset(po));
-	    if (at instanceof TileConveyorBelt) {
-		TileConveyorBelt belt = (TileConveyorBelt) at;
+	    if (at instanceof TileConveyorBelt belt) {
 		int their = belt.currentSpread;
 		if (their - 1 > max) {
 		    max = their - 1;
 		}
-	    } else if (at instanceof TileSorterBelt) {
-		TileSorterBelt belt = (TileSorterBelt) at;
+	    } else if (at instanceof TileSorterBelt belt) {
 		int their = belt.currentSpread;
 		if (their - 1 > max) {
 		    max = their - 1;

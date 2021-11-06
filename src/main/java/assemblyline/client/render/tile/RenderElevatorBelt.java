@@ -14,8 +14,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,10 +24,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class RenderElevatorBelt extends BlockEntityRenderer<TileElevatorBelt> {
+public class RenderElevatorBelt implements BlockEntityRenderer<TileElevatorBelt> {
 
-    public RenderElevatorBelt(BlockEntityRenderDispatcher rendererDispatcherIn) {
-	super(rendererDispatcherIn);
+    public RenderElevatorBelt(BlockEntityRendererProvider.Context context) {
     }
 
     @Override
@@ -87,7 +86,7 @@ public class RenderElevatorBelt extends BlockEntityRenderer<TileElevatorBelt> {
 				    : dir == Direction.WEST ? Vector3f.ZN.rotationDegrees(rotate) : Vector3f.ZP.rotationDegrees(-rotate));
 		    matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(-90));
 		    Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.NONE, combinedLightIn, combinedOverlayIn,
-			    matrixStackIn, bufferIn);
+			    matrixStackIn, bufferIn, 0);
 		    matrixStackIn.popPose();
 		} else if (totalSlotsUsed == 2) {
 		    matrixStackIn.pushPose();
@@ -115,7 +114,7 @@ public class RenderElevatorBelt extends BlockEntityRenderer<TileElevatorBelt> {
 				    : dir == Direction.WEST ? Vector3f.ZN.rotationDegrees(rotate) : Vector3f.ZP.rotationDegrees(-rotate));
 		    matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(-90));
 		    Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.NONE, combinedLightIn, combinedOverlayIn,
-			    matrixStackIn, bufferIn);
+			    matrixStackIn, bufferIn, 0);
 		    matrixStackIn.popPose();
 		}
 	    }

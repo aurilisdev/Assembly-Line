@@ -8,8 +8,10 @@ import assemblyline.common.tile.TileSorterBelt;
 import electrodynamics.api.IWrenchItem;
 import electrodynamics.common.block.BlockGenericMachine;
 import electrodynamics.prefab.tile.GenericTile;
+import electrodynamics.prefab.tile.GenericTileTicking;
 import electrodynamics.prefab.tile.IWrenchable;
 import electrodynamics.prefab.tile.components.ComponentType;
+import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.stats.Stats;
@@ -24,12 +26,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Material;
@@ -40,7 +45,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ToolType;
 
-public class BlockSorterBelt extends Block implements IWrenchable {
+public class BlockSorterBelt extends BaseEntityBlock implements IWrenchable {
     private static final VoxelShape shape = Shapes.or(Shapes.box(0, 14.0 / 16.0, 0, 1, 1, 1), Shapes.box(0, 0, 0, 1, 5.0 / 16.0, 1));
     public final boolean running;
 
@@ -124,7 +129,7 @@ public class BlockSorterBelt extends Block implements IWrenchable {
 	    BlockEntity tile = worldIn.getBlockEntity(pos);
 	    if (tile instanceof GenericTile && !(state.getBlock() == newState.getBlock()
 		    && state.getValue(BlockGenericMachine.FACING) != newState.getValue(BlockGenericMachine.FACING))) {
-		Containers.dropContents(worldIn, pos, ((GenericTile) tile).getComponent(ComponentType.Inventory));
+		Containers.dropContents(worldIn, pos, ((GenericTile) tile).<ComponentInventory>getComponent(ComponentType.Inventory));
 	    }
 	    super.onRemove(state, worldIn, pos, newState, isMoving);
 	}
@@ -141,12 +146,18 @@ public class BlockSorterBelt extends Block implements IWrenchable {
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state) {
-	return true;
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+	return new TileSorterBelt(pos, state);
     }
 
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-	return new TileSorterBelt();
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level lvl, BlockState state, BlockEntityType<T> type) {
+	return this::tick;
+    }
+
+    public <T extends BlockEntity> void tick(Level lvl, BlockPos pos, BlockState state, T t) {
+	if (t instanceof GenericTileTicking tick) {
+	    tick.tick();
+	}
     }
 }

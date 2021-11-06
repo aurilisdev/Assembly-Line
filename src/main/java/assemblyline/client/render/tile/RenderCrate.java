@@ -12,17 +12,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 
-public class RenderCrate extends BlockEntityRenderer<TileCrate> {
+public class RenderCrate implements BlockEntityRenderer<TileCrate> {
 
-    public RenderCrate(BlockEntityRenderDispatcher rendererDispatcherIn) {
-	super(rendererDispatcherIn);
+    public RenderCrate(BlockEntityRendererProvider.Context context) {
     }
 
     @Override
@@ -57,7 +56,7 @@ public class RenderCrate extends BlockEntityRenderer<TileCrate> {
 		    float f2 = -fontrenderer.width(displayNameIn) / 2.0f;
 		    fontrenderer.drawInBatch(displayNameIn, f2, 0, 0, false, matrix4f, bufferIn, false, 0, combinedLightIn);
 		    matrixStackIn.popPose();
-		    ItemStack stack = tileCrate.<ComponentInventory>getComponent(ComponentType.Inventory).getItem(0).getStack();
+		    ItemStack stack = tileCrate.<ComponentInventory>getComponent(ComponentType.Inventory).getItem(0).getContainerItem();
 		    matrixStackIn.pushPose();
 		    matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-180));
 		    if (dir == Direction.NORTH) {
@@ -81,7 +80,7 @@ public class RenderCrate extends BlockEntityRenderer<TileCrate> {
 			matrixStackIn.scale(0.4f, 0.4f, 0.4f);
 		    }
 		    Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.NONE, 0xF000F0, combinedOverlayIn, matrixStackIn,
-			    bufferIn);
+			    bufferIn, 0);
 		    matrixStackIn.popPose();
 		}
 	    }

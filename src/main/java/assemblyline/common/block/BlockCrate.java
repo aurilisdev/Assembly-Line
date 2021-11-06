@@ -6,6 +6,7 @@ import java.util.List;
 import assemblyline.common.tile.TileCrate;
 import electrodynamics.common.block.BlockGenericMachine;
 import electrodynamics.prefab.tile.GenericTile;
+import electrodynamics.prefab.tile.GenericTileTicking;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import net.minecraft.core.BlockPos;
@@ -17,11 +18,12 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
@@ -30,7 +32,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class BlockCrate extends Block {
+public class BlockCrate extends BaseEntityBlock {
 
     public final int size;
 
@@ -47,7 +49,7 @@ public class BlockCrate extends Block {
 		&& state.getValue(BlockGenericMachine.FACING) != newState.getValue(BlockGenericMachine.FACING))) {
 	    GenericTile generic = (GenericTile) tile;
 	    if (generic.hasComponent(ComponentType.Inventory)) {
-		Containers.dropContents(worldIn, pos, generic.getComponent(ComponentType.Inventory));
+		Containers.dropContents(worldIn, pos, generic.<ComponentInventory>getComponent(ComponentType.Inventory));
 	    }
 	}
 	super.onRemove(state, worldIn, pos, newState, isMoving);
@@ -79,8 +81,9 @@ public class BlockCrate extends Block {
 		    }
 
 		} else {
-		    player.setItemSlot(handIn == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, HopperBlockEntity
-			    .addItem(player.inventory, tile.getComponent(ComponentType.Inventory), player.getItemInHand(handIn), Direction.EAST));
+		    player.setItemSlot(handIn == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND,
+			    HopperBlockEntity.addItem(player.getInventory(), tile.getComponent(ComponentType.Inventory), player.getItemInHand(handIn),
+				    Direction.EAST));
 		}
 	    }
 	}
@@ -88,12 +91,18 @@ public class BlockCrate extends Block {
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state) {
-	return true;
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+	return new TileCrate(size, pos, state);
     }
 
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-	return new TileCrate(size);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level lvl, BlockState state, BlockEntityType<T> type) {
+	return this::tick;
+    }
+
+    public <T extends BlockEntity> void tick(Level lvl, BlockPos pos, BlockState state, T t) {
+	if (t instanceof GenericTileTicking tick) {
+	    tick.tick();
+	}
     }
 }

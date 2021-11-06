@@ -8,6 +8,7 @@ import assemblyline.common.tile.TileConveyorBelt;
 import assemblyline.common.tile.TileElevatorBelt;
 import electrodynamics.common.block.BlockGenericMachine;
 import electrodynamics.prefab.tile.GenericTile;
+import electrodynamics.prefab.tile.GenericTileTicking;
 import electrodynamics.prefab.tile.components.ComponentType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,21 +17,23 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext.Builder;
 import net.minecraftforge.common.ToolType;
 
-public class BlockElevatorBelt extends Block {
+public class BlockElevatorBelt extends BaseEntityBlock {
 
     public BlockElevatorBelt() {
 	super(Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).noOcclusion());
@@ -97,14 +100,19 @@ public class BlockElevatorBelt extends Block {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 	builder.add(BlockGenericMachine.FACING);
     }
-
     @Override
-    public boolean hasTileEntity(BlockState state) {
-	return true;
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+	return new TileElevatorBelt(pos, state);
     }
 
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-	return new TileElevatorBelt();
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level lvl, BlockState state, BlockEntityType<T> type) {
+	return this::tick;
+    }
+
+    public <T extends BlockEntity> void tick(Level lvl, BlockPos pos, BlockState state, T t) {
+	if (t instanceof GenericTileTicking tick) {
+	    tick.tick();
+	}
     }
 }

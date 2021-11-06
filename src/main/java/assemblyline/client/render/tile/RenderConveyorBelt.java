@@ -15,8 +15,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -26,10 +26,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class RenderConveyorBelt extends BlockEntityRenderer<TileConveyorBelt> {
+public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt> {
 
-    public RenderConveyorBelt(BlockEntityRenderDispatcher rendererDispatcherIn) {
-	super(rendererDispatcherIn);
+    public RenderConveyorBelt(BlockEntityRendererProvider.Context context) {
     }
 
     @Override
@@ -172,7 +171,7 @@ public class RenderConveyorBelt extends BlockEntityRenderer<TileConveyorBelt> {
 					: dir == Direction.WEST ? Vector3f.XN.rotationDegrees(rotate) : Vector3f.XP.rotationDegrees(-rotate));
 		    }
 		    Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.NONE, combinedLightIn, combinedOverlayIn,
-			    matrixStackIn, bufferIn);
+			    matrixStackIn, bufferIn, 0);
 		    matrixStackIn.popPose();
 		} else if (totalSlotsUsed == 2) {
 		    matrixStackIn.pushPose();
@@ -204,7 +203,7 @@ public class RenderConveyorBelt extends BlockEntityRenderer<TileConveyorBelt> {
 			matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(90));
 		    }
 		    Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.NONE, combinedLightIn, combinedOverlayIn,
-			    matrixStackIn, bufferIn);
+			    matrixStackIn, bufferIn, 0);
 		    matrixStackIn.popPose();
 		}
 	    }

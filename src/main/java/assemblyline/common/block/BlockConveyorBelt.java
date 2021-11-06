@@ -7,7 +7,9 @@ import assemblyline.DeferredRegisters;
 import assemblyline.common.tile.TileConveyorBelt;
 import electrodynamics.common.block.BlockGenericMachine;
 import electrodynamics.prefab.tile.GenericTile;
+import electrodynamics.prefab.tile.GenericTileTicking;
 import electrodynamics.prefab.tile.components.ComponentType;
+import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Containers;
@@ -17,12 +19,15 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Material;
@@ -32,7 +37,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ToolType;
 
-public class BlockConveyorBelt extends Block {
+public class BlockConveyorBelt extends BaseEntityBlock {
     private static final VoxelShape shape = Shapes.box(0, 0, 0, 1, 5.0 / 16.0, 1);
 
     public BlockConveyorBelt() {
@@ -84,7 +89,7 @@ public class BlockConveyorBelt extends Block {
 		    && state.getValue(BlockGenericMachine.FACING) != newState.getValue(BlockGenericMachine.FACING)) && tile instanceof GenericTile) {
 		GenericTile generic = (GenericTile) tile;
 		if (generic.hasComponent(ComponentType.Inventory)) {
-		    Containers.dropContents(worldIn, pos, generic.getComponent(ComponentType.Inventory));
+		    Containers.dropContents(worldIn, pos, generic.<ComponentInventory>getComponent(ComponentType.Inventory));
 		}
 	    }
 	    super.onRemove(state, worldIn, pos, newState, isMoving);
@@ -108,12 +113,18 @@ public class BlockConveyorBelt extends Block {
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state) {
-	return true;
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+	return new TileConveyorBelt(pos, state);
     }
 
     @Override
-    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
-	return new TileConveyorBelt();
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level lvl, BlockState state, BlockEntityType<T> type) {
+	return this::tick;
+    }
+
+    public <T extends BlockEntity> void tick(Level lvl, BlockPos pos, BlockState state, T t) {
+	if (t instanceof GenericTileTicking tick) {
+	    tick.tick();
+	}
     }
 }

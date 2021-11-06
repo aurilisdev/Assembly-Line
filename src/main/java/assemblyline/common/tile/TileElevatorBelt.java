@@ -19,6 +19,7 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -30,8 +31,8 @@ public class TileElevatorBelt extends GenericTileTicking {
     public double progress = 0;
     public boolean halted;
 
-    public TileElevatorBelt() {
-	super(DeferredRegisters.TILE_ELEVATORBELT.get());
+    public TileElevatorBelt(BlockPos worldPosition, BlockState blockState) {
+	super(DeferredRegisters.TILE_ELEVATORBELT.get(), worldPosition, blockState);
 	addComponent(new ComponentTickable().tickCommon(this::tickCommon));
 	addComponent(new ComponentDirection());
 	addComponent(new ComponentPacketHandler().guiPacketReader(this::loadFromNBT).guiPacketWriter(this::saveToNBT));
@@ -48,8 +49,7 @@ public class TileElevatorBelt extends GenericTileTicking {
     protected boolean moveItemsIntoNextBelt(ComponentInventory inventory, ComponentDirection direction, BlockPos pos, boolean check) {
 	BlockEntity next = level.getBlockEntity(pos);
 	if (!check) {
-	    if (next instanceof TileConveyorBelt) {
-		TileConveyorBelt nextBelt = (TileConveyorBelt) next;
+	    if (next instanceof TileConveyorBelt nextBelt) {
 		Direction other = nextBelt.<ComponentDirection>getComponent(ComponentType.Direction).getDirection();
 		if (other != direction.getDirection().getOpposite()) {
 		    for (int indexHere = 0; indexHere < inventory.getContainerSize(); indexHere++) {
@@ -69,8 +69,7 @@ public class TileElevatorBelt extends GenericTileTicking {
 		} else {
 		    updateStatus(true);
 		}
-	    } else if (next instanceof TileElevatorBelt) {
-		TileElevatorBelt nextBelt = (TileElevatorBelt) next;
+	    } else if (next instanceof TileElevatorBelt nextBelt) {
 		for (int indexHere = 0; indexHere < inventory.getContainerSize(); indexHere++) {
 		    ItemStack stackHere = inventory.getItem(indexHere);
 		    if (!stackHere.isEmpty()) {
@@ -214,8 +213,7 @@ public class TileElevatorBelt extends GenericTileTicking {
 	int max = 0;
 	for (BlockPos po : TileElevatorBelt.offsets) {
 	    BlockEntity at = level.getBlockEntity(worldPosition.offset(po));
-	    if (at instanceof TileElevatorBelt) {
-		TileElevatorBelt belt = (TileElevatorBelt) at;
+	    if (at instanceof TileElevatorBelt belt) {
 		int their = belt.currentSpread;
 		if (their - 1 > max) {
 		    max = their - 1;

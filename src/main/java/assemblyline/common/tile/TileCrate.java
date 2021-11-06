@@ -9,20 +9,22 @@ import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
 import electrodynamics.prefab.utilities.Scheduler;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class TileCrate extends GenericTileTicking {
     private int lastCheckCount = 0;
     private int count = 0;
 
-    public TileCrate() {
-	this(64);
+    public TileCrate(BlockPos worldPosition, BlockState blockState) {
+	this(64, worldPosition, blockState);
     }
 
-    public TileCrate(int size) {
-	super(DeferredRegisters.TILE_CRATE.get());
+    public TileCrate(int size, BlockPos worldPosition, BlockState blockState) {
+	super(DeferredRegisters.TILE_CRATE.get(), worldPosition, blockState);
 	addComponent(new ComponentPacketHandler().guiPacketWriter(this::writeCustomPacket).guiPacketReader(this::readCustomPacket)
 		.customPacketReader(this::readCustomPacket).customPacketWriter(this::writeCustomPacket));
 	addComponent(new ComponentInventory(this).size(size).getSlots(this::getSlotsForFace).valid(this::isItemValidForSlot).slotFaces(0,

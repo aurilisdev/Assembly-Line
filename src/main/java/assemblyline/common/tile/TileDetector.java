@@ -8,15 +8,17 @@ import electrodynamics.prefab.tile.GenericTileTicking;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentDirection;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 
 public class TileDetector extends GenericTileTicking {
     public boolean isPowered = false;
 
-    public TileDetector() {
-	super(DeferredRegisters.TILE_DETECTOR.get());
+    public TileDetector(BlockPos worldPosition, BlockState blockState) {
+	super(DeferredRegisters.TILE_DETECTOR.get(), worldPosition, blockState);
 	addComponent(new ComponentDirection());
 	addComponent(new ComponentTickable().tickServer(this::tickServer));
     }
