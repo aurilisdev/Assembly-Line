@@ -9,32 +9,34 @@ import assemblyline.common.tile.TileElevatorBelt;
 import electrodynamics.common.block.BlockGenericMachine;
 import electrodynamics.prefab.tile.GenericTile;
 import electrodynamics.prefab.tile.components.ComponentType;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext.Builder;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.Containers;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext.Builder;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ToolType;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class BlockElevatorBelt extends Block {
 
     public BlockElevatorBelt() {
-	super(Properties.create(Material.IRON).hardnessAndResistance(3.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).notSolid());
-	setDefaultState(stateContainer.getBaseState().with(BlockGenericMachine.FACING, Direction.NORTH));
+	super(Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).noOcclusion());
+	registerDefaultState(stateDefinition.any().setValue(BlockGenericMachine.FACING, Direction.NORTH));
     }
 
     @Override
@@ -45,9 +47,9 @@ public class BlockElevatorBelt extends Block {
 
     @Override
     @Deprecated
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entityIn) {
-	TileEntity tile = world.getTileEntity(pos);
-	if (!world.isRemote && tile instanceof TileConveyorBelt && entityIn instanceof ItemEntity && entityIn.ticksExisted > 5) {
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entityIn) {
+	BlockEntity tile = world.getBlockEntity(pos);
+	if (!world.isClientSide && tile instanceof TileConveyorBelt && entityIn instanceof ItemEntity && entityIn.tickCount > 5) {
 	    TileConveyorBelt belt = (TileConveyorBelt) tile;
 	    ItemEntity item = (ItemEntity) entityIn;
 	    item.setItem(belt.addItemOnBelt(item.getItem()));
@@ -57,44 +59,44 @@ public class BlockElevatorBelt extends Block {
     @Override
     @Deprecated
     public BlockState rotate(BlockState state, Rotation rot) {
-	return state.with(BlockGenericMachine.FACING, rot.rotate(state.get(BlockGenericMachine.FACING)));
+	return state.setValue(BlockGenericMachine.FACING, rot.rotate(state.getValue(BlockGenericMachine.FACING)));
     }
 
     @Deprecated
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-	return state.rotate(mirrorIn.toRotation(state.get(BlockGenericMachine.FACING)));
+	return state.rotate(mirrorIn.getRotation(state.getValue(BlockGenericMachine.FACING)));
     }
 
     @Deprecated
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 	if (!(newState.getBlock() instanceof BlockElevatorBelt)) {
-	    TileEntity tile = worldIn.getTileEntity(pos);
-	    if (!(state.getBlock() == newState.getBlock() && state.get(BlockGenericMachine.FACING) != newState.get(BlockGenericMachine.FACING))
+	    BlockEntity tile = worldIn.getBlockEntity(pos);
+	    if (!(state.getBlock() == newState.getBlock() && state.getValue(BlockGenericMachine.FACING) != newState.getValue(BlockGenericMachine.FACING))
 		    && tile instanceof GenericTile) {
 		GenericTile generic = (GenericTile) tile;
 		if (generic.hasComponent(ComponentType.Inventory)) {
-		    InventoryHelper.dropInventoryItems(worldIn, pos, generic.getComponent(ComponentType.Inventory));
+		    Containers.dropContents(worldIn, pos, generic.getComponent(ComponentType.Inventory));
 		}
 	    }
-	    super.onReplaced(state, worldIn, pos, newState, isMoving);
+	    super.onRemove(state, worldIn, pos, newState, isMoving);
 	}
     }
 
     @Override
     @Deprecated
-    public BlockRenderType getRenderType(BlockState state) {
-	return BlockRenderType.INVISIBLE;
+    public RenderShape getRenderShape(BlockState state) {
+	return RenderShape.INVISIBLE;
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-	return getDefaultState().with(BlockGenericMachine.FACING, context.getPlacementHorizontalFacing().getOpposite());
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+	return defaultBlockState().setValue(BlockGenericMachine.FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 	builder.add(BlockGenericMachine.FACING);
     }
 
@@ -104,7 +106,7 @@ public class BlockElevatorBelt extends Block {
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 	return new TileElevatorBelt();
     }
 }

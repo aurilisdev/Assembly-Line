@@ -10,51 +10,53 @@ import electrodynamics.common.block.BlockGenericMachine;
 import electrodynamics.prefab.tile.GenericTile;
 import electrodynamics.prefab.tile.IWrenchable;
 import electrodynamics.prefab.tile.components.ComponentType;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext.Builder;
-import net.minecraft.state.StateContainer;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Containers;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootContext.Builder;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.stats.Stats;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.ToolType;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 public class BlockSorterBelt extends Block implements IWrenchable {
-    private static final VoxelShape shape = VoxelShapes.or(VoxelShapes.create(0, 14.0 / 16.0, 0, 1, 1, 1),
-	    VoxelShapes.create(0, 0, 0, 1, 5.0 / 16.0, 1));
+    private static final VoxelShape shape = Shapes.or(Shapes.box(0, 14.0 / 16.0, 0, 1, 1, 1),
+	    Shapes.box(0, 0, 0, 1, 5.0 / 16.0, 1));
     public final boolean running;
 
     public BlockSorterBelt(boolean running) {
-	super(Properties.create(Material.IRON).hardnessAndResistance(3.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).notSolid());
-	setDefaultState(stateContainer.getBaseState().with(BlockGenericMachine.FACING, Direction.NORTH));
+	super(Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).noOcclusion());
+	registerDefaultState(stateDefinition.any().setValue(BlockGenericMachine.FACING, Direction.NORTH));
 	this.running = running;
     }
 
     @Override
     @Deprecated
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-	return worldIn instanceof World && ((World) worldIn).isRemote ? VoxelShapes.fullCube() : shape;
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+	return worldIn instanceof Level && ((Level) worldIn).isClientSide ? Shapes.block() : shape;
     }
 
     @Override
@@ -65,9 +67,9 @@ public class BlockSorterBelt extends Block implements IWrenchable {
 
     @Override
     @Deprecated
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entityIn) {
-	TileEntity tile = world.getTileEntity(pos);
-	if (!world.isRemote && tile instanceof TileSorterBelt) {
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entityIn) {
+	BlockEntity tile = world.getBlockEntity(pos);
+	if (!world.isClientSide && tile instanceof TileSorterBelt) {
 	    TileSorterBelt belt = (TileSorterBelt) tile;
 	    belt.onEntityCollision(entityIn, running);
 	}
@@ -75,70 +77,70 @@ public class BlockSorterBelt extends Block implements IWrenchable {
 
     @Override
     @Deprecated
-    public void onRotate(ItemStack stack, BlockPos pos, PlayerEntity player) {
-	player.world.setBlockState(pos, rotate(player.world.getBlockState(pos), Rotation.CLOCKWISE_90));
+    public void onRotate(ItemStack stack, BlockPos pos, Player player) {
+	player.level.setBlockAndUpdate(pos, rotate(player.level.getBlockState(pos), Rotation.CLOCKWISE_90));
     }
 
     @Override
-    public void onPickup(ItemStack stack, BlockPos pos, PlayerEntity player) {
-	World world = player.world;
-	TileEntity te = world.getTileEntity(pos);
+    public void onPickup(ItemStack stack, BlockPos pos, Player player) {
+	Level world = player.level;
+	BlockEntity te = world.getBlockEntity(pos);
 	if (te instanceof GenericTile) {
-	    InventoryHelper.dropInventoryItems(player.world, pos, ((GenericTile) te).getComponent(ComponentType.Inventory));
+	    Containers.dropContents(player.level, pos, ((GenericTile) te).getComponent(ComponentType.Inventory));
 	}
-	world.setBlockState(pos, Blocks.AIR.getDefaultState());
-	world.addEntity(new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, new ItemStack(getSelf())));
+	world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+	world.addFreshEntity(new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, new ItemStack(asBlock())));
     }
 
     @Override
     @Deprecated
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn,
-	    BlockRayTraceResult hit) {
-	if (worldIn.isRemote) {
-	    return ActionResultType.SUCCESS;
-	} else if (!(player.getHeldItem(handIn).getItem() instanceof IWrenchItem)) {
-	    TileEntity tileentity = worldIn.getTileEntity(pos);
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+	    BlockHitResult hit) {
+	if (worldIn.isClientSide) {
+	    return InteractionResult.SUCCESS;
+	} else if (!(player.getItemInHand(handIn).getItem() instanceof IWrenchItem)) {
+	    BlockEntity tileentity = worldIn.getBlockEntity(pos);
 	    if (tileentity instanceof GenericTile) {
-		player.openContainer((INamedContainerProvider) ((GenericTile) tileentity).getComponent(ComponentType.ContainerProvider));
+		player.openMenu((MenuProvider) ((GenericTile) tileentity).getComponent(ComponentType.ContainerProvider));
 	    }
-	    player.addStat(Stats.INTERACT_WITH_FURNACE);
-	    return ActionResultType.CONSUME;
+	    player.awardStat(Stats.INTERACT_WITH_FURNACE);
+	    return InteractionResult.CONSUME;
 	}
-	return ActionResultType.FAIL;
+	return InteractionResult.FAIL;
     }
 
     @Override
     @Deprecated
     public BlockState rotate(BlockState state, Rotation rot) {
-	return state.with(BlockGenericMachine.FACING, rot.rotate(state.get(BlockGenericMachine.FACING)));
+	return state.setValue(BlockGenericMachine.FACING, rot.rotate(state.getValue(BlockGenericMachine.FACING)));
     }
 
     @Deprecated
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-	return state.rotate(mirrorIn.toRotation(state.get(BlockGenericMachine.FACING)));
+	return state.rotate(mirrorIn.getRotation(state.getValue(BlockGenericMachine.FACING)));
     }
 
     @Deprecated
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 	if (!(newState.getBlock() instanceof BlockSorterBelt)) {
-	    TileEntity tile = worldIn.getTileEntity(pos);
+	    BlockEntity tile = worldIn.getBlockEntity(pos);
 	    if (tile instanceof GenericTile && !(state.getBlock() == newState.getBlock()
-		    && state.get(BlockGenericMachine.FACING) != newState.get(BlockGenericMachine.FACING))) {
-		InventoryHelper.dropInventoryItems(worldIn, pos, ((GenericTile) tile).getComponent(ComponentType.Inventory));
+		    && state.getValue(BlockGenericMachine.FACING) != newState.getValue(BlockGenericMachine.FACING))) {
+		Containers.dropContents(worldIn, pos, ((GenericTile) tile).getComponent(ComponentType.Inventory));
 	    }
-	    super.onReplaced(state, worldIn, pos, newState, isMoving);
+	    super.onRemove(state, worldIn, pos, newState, isMoving);
 	}
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-	return getDefaultState().with(BlockGenericMachine.FACING, context.getPlacementHorizontalFacing().getOpposite());
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+	return defaultBlockState().setValue(BlockGenericMachine.FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 	builder.add(BlockGenericMachine.FACING);
     }
 
@@ -148,7 +150,7 @@ public class BlockSorterBelt extends Block implements IWrenchable {
     }
 
     @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+    public BlockEntity createTileEntity(BlockState state, BlockGetter world) {
 	return new TileSorterBelt();
     }
 }

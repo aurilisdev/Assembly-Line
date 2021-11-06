@@ -9,9 +9,9 @@ import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
 import electrodynamics.prefab.utilities.Scheduler;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.Direction;
 
 public class TileCrate extends GenericTileTicking {
     private int lastCheckCount = 0;
@@ -32,7 +32,7 @@ public class TileCrate extends GenericTileTicking {
 
     public HashSet<Integer> getSlotsForFace(Direction side) {
 	HashSet<Integer> set = new HashSet<>();
-	for (int i = 0; i < this.<ComponentInventory>getComponent(ComponentType.Inventory).getSizeInventory(); i++) {
+	for (int i = 0; i < this.<ComponentInventory>getComponent(ComponentType.Inventory).getContainerSize(); i++) {
 	    set.add(i);
 	}
 	Scheduler.schedule(1, () -> this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking());
@@ -44,8 +44,8 @@ public class TileCrate extends GenericTileTicking {
 	if (stack.isEmpty()) {
 	    return true;
 	}
-	for (int i = 0; i < inv.getSizeInventory(); i++) {
-	    ItemStack s = inv.getStackInSlot(i);
+	for (int i = 0; i < inv.getContainerSize(); i++) {
+	    ItemStack s = inv.getItem(i);
 	    if (s.isEmpty()) {
 		continue;
 	    }
@@ -56,21 +56,21 @@ public class TileCrate extends GenericTileTicking {
 	return true;
     }
 
-    public void writeCustomPacket(CompoundNBT nbt) {
+    public void writeCustomPacket(CompoundTag nbt) {
 	ComponentInventory inv = getComponent(ComponentType.Inventory);
 	ItemStack stack = ItemStack.EMPTY;
-	for (int i = 0; i < inv.getSizeInventory(); i++) {
-	    if (!inv.getStackInSlot(i).isEmpty()) {
-		stack = inv.getStackInSlot(i);
+	for (int i = 0; i < inv.getContainerSize(); i++) {
+	    if (!inv.getItem(i).isEmpty()) {
+		stack = inv.getItem(i);
 		break;
 	    }
 	}
-	new ItemStack(stack.getItem()).write(nbt);
+	new ItemStack(stack.getItem()).save(nbt);
 	nbt.putInt("acccount", getCount());
     }
 
-    public void readCustomPacket(CompoundNBT nbt) {
-	this.<ComponentInventory>getComponent(ComponentType.Inventory).setInventorySlotContents(0, ItemStack.read(nbt));
+    public void readCustomPacket(CompoundTag nbt) {
+	this.<ComponentInventory>getComponent(ComponentType.Inventory).setItem(0, ItemStack.of(nbt));
 	count = nbt.getInt("acccount");
     }
 
@@ -82,11 +82,11 @@ public class TileCrate extends GenericTileTicking {
     }
 
     public int getCount() {
-	if (!world.isRemote) {
+	if (!level.isClientSide) {
 	    ComponentInventory inv = getComponent(ComponentType.Inventory);
 	    count = 0;
-	    for (int i = 0; i < inv.getSizeInventory(); i++) {
-		ItemStack stack = inv.getStackInSlot(i);
+	    for (int i = 0; i < inv.getContainerSize(); i++) {
+		ItemStack stack = inv.getItem(i);
 		if (!stack.isEmpty()) {
 		    count += stack.getCount();
 		}
