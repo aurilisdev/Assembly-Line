@@ -100,6 +100,7 @@ public class BlockElevatorBelt extends BaseEntityBlock {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 	builder.add(BlockGenericMachine.FACING);
     }
+
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 	return new TileElevatorBelt(pos, state);
