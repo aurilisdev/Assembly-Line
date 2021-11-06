@@ -4,9 +4,9 @@ import assemblyline.DeferredRegisters;
 import assemblyline.common.tile.TileSorterBelt;
 import electrodynamics.prefab.inventory.container.GenericContainer;
 import electrodynamics.prefab.inventory.container.slot.GenericSlot;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 

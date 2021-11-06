@@ -10,13 +10,13 @@ import electrodynamics.prefab.tile.components.type.ComponentContainerProvider;
 import electrodynamics.prefab.tile.components.type.ComponentDirection;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
-import net.minecraft.world.inventory.SimpleContainerData;
-import net.minecraft.core.BlockPos;
 
 public class TileSorterBelt extends GenericTile {
     public int currentSpread = 0;
@@ -70,7 +70,8 @@ public class TileSorterBelt extends GenericTile {
 	if (currentSpread == 0 || currentSpread == 16) {
 	    if (electro.getJoulesStored() < Constants.SORTERBELT_USAGE) {
 		if (running) {
-		    level.setBlock(worldPosition, DeferredRegisters.blockSorterBelt.defaultBlockState().setValue(BlockGenericMachine.FACING, facing), 2 | 16);
+		    level.setBlock(worldPosition, DeferredRegisters.blockSorterBelt.defaultBlockState().setValue(BlockGenericMachine.FACING, facing),
+			    2 | 16);
 		    currentSpread = 0;
 		}
 	    } else {
@@ -78,15 +79,16 @@ public class TileSorterBelt extends GenericTile {
 		    electro.joules(electro.getJoulesStored() - Constants.SORTERBELT_USAGE);
 		    lastTime = level.getGameTime();
 		    if (!running) {
-			level.setBlock(worldPosition, DeferredRegisters.blockSorterBeltRunning.defaultBlockState().setValue(BlockGenericMachine.FACING, facing),
-				2 | 16);
+			level.setBlock(worldPosition,
+				DeferredRegisters.blockSorterBeltRunning.defaultBlockState().setValue(BlockGenericMachine.FACING, facing), 2 | 16);
 		    }
 		    currentSpread = 16;
 		}
 	    }
 	} else {
 	    if (currentSpread > 0 && !running) {
-		level.setBlock(worldPosition, DeferredRegisters.blockSorterBeltRunning.defaultBlockState().setValue(BlockGenericMachine.FACING, facing), 2 | 16);
+		level.setBlock(worldPosition,
+			DeferredRegisters.blockSorterBeltRunning.defaultBlockState().setValue(BlockGenericMachine.FACING, facing), 2 | 16);
 	    }
 	}
     }

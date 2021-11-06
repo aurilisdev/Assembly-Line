@@ -13,9 +13,9 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
+import net.minecraftforge.fmlclient.registry.ClientRegistry;
 
 @OnlyIn(Dist.CLIENT)
 @EventBusSubscriber(modid = References.ID, bus = Bus.MOD, value = { Dist.CLIENT })

@@ -8,29 +8,27 @@ import electrodynamics.common.block.BlockGenericMachine;
 import electrodynamics.prefab.tile.GenericTile;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.Containers;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.storage.loot.LootContext.Builder;
-import net.minecraft.world.level.block.entity.HopperBlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.HopperBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.storage.loot.LootContext.Builder;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.items.CapabilityItemHandler;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class BlockCrate extends Block {
 
@@ -45,8 +43,8 @@ public class BlockCrate extends Block {
     @Override
     public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 	BlockEntity tile = worldIn.getBlockEntity(pos);
-	if (tile instanceof GenericTile
-		&& !(state.getBlock() == newState.getBlock() && state.getValue(BlockGenericMachine.FACING) != newState.getValue(BlockGenericMachine.FACING))) {
+	if (tile instanceof GenericTile && !(state.getBlock() == newState.getBlock()
+		&& state.getValue(BlockGenericMachine.FACING) != newState.getValue(BlockGenericMachine.FACING))) {
 	    GenericTile generic = (GenericTile) tile;
 	    if (generic.hasComponent(ComponentType.Inventory)) {
 		Containers.dropContents(worldIn, pos, generic.getComponent(ComponentType.Inventory));
@@ -64,8 +62,7 @@ public class BlockCrate extends Block {
 
     @Override
     @Deprecated
-    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-	    BlockHitResult hit) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
 	if (!worldIn.isClientSide) {
 	    TileCrate tile = (TileCrate) worldIn.getBlockEntity(pos);
 	    if (tile != null) {
@@ -82,9 +79,8 @@ public class BlockCrate extends Block {
 		    }
 
 		} else {
-		    player.setItemSlot(handIn == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND,
-			    HopperBlockEntity.addItem(player.inventory, tile.getComponent(ComponentType.Inventory),
-				    player.getItemInHand(handIn), Direction.EAST));
+		    player.setItemSlot(handIn == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, HopperBlockEntity
+			    .addItem(player.inventory, tile.getComponent(ComponentType.Inventory), player.getItemInHand(handIn), Direction.EAST));
 		}
 	    }
 	}

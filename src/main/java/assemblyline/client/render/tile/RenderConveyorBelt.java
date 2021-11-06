@@ -1,6 +1,8 @@
 package assemblyline.client.render.tile;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 
 import assemblyline.client.ClientRegister;
 import assemblyline.common.tile.TileConveyorBelt;
@@ -12,19 +14,17 @@ import electrodynamics.prefab.utilities.UtilitiesRendering;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class RenderConveyorBelt extends BlockEntityRenderer<TileConveyorBelt> {
 
@@ -119,7 +119,8 @@ public class RenderConveyorBelt extends BlockEntityRenderer<TileConveyorBelt> {
 	    TileConveyorBelt conv = (TileConveyorBelt) next;
 	    Direction direct = conv.<ComponentDirection>getComponent(ComponentType.Direction).getDirection();
 	    boolean nextSloped = false;
-	    if (world.getBlockEntity(pos.relative(direct.getOpposite()).relative(Direction.UP).relative(direct.getOpposite())) instanceof TileConveyorBelt
+	    if (world.getBlockEntity(
+		    pos.relative(direct.getOpposite()).relative(Direction.UP).relative(direct.getOpposite())) instanceof TileConveyorBelt
 		    || world.getBlockEntity(pos.relative(direct.getOpposite()).relative(Direction.UP).relative(direct)) instanceof TileConveyorBelt) {
 		nextSloped = true;
 	    }
@@ -170,8 +171,8 @@ public class RenderConveyorBelt extends BlockEntityRenderer<TileConveyorBelt> {
 				: dir == Direction.SOUTH ? Vector3f.XP.rotationDegrees(-rotate)
 					: dir == Direction.WEST ? Vector3f.XN.rotationDegrees(rotate) : Vector3f.XP.rotationDegrees(-rotate));
 		    }
-		    Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.NONE, combinedLightIn, combinedOverlayIn, matrixStackIn,
-			    bufferIn);
+		    Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.NONE, combinedLightIn, combinedOverlayIn,
+			    matrixStackIn, bufferIn);
 		    matrixStackIn.popPose();
 		} else if (totalSlotsUsed == 2) {
 		    matrixStackIn.pushPose();
@@ -202,8 +203,8 @@ public class RenderConveyorBelt extends BlockEntityRenderer<TileConveyorBelt> {
 		    if (!(stack.getItem() instanceof BlockItem)) {
 			matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(90));
 		    }
-		    Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.NONE, combinedLightIn, combinedOverlayIn, matrixStackIn,
-			    bufferIn);
+		    Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.NONE, combinedLightIn, combinedOverlayIn,
+			    matrixStackIn, bufferIn);
 		    matrixStackIn.popPose();
 		}
 	    }

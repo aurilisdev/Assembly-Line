@@ -1,6 +1,7 @@
 package assemblyline.client.render.tile;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 
 import assemblyline.client.ClientRegister;
 import assemblyline.common.tile.TileConveyorBelt;
@@ -12,17 +13,16 @@ import electrodynamics.prefab.utilities.UtilitiesRendering;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
-import com.mojang.math.Vector3f;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 public class RenderElevatorBelt extends BlockEntityRenderer<TileElevatorBelt> {
 
@@ -69,8 +69,7 @@ public class RenderElevatorBelt extends BlockEntityRenderer<TileElevatorBelt> {
 		if (totalSlotsUsed == 1) {
 		    matrixStackIn.pushPose();
 		    matrixStackIn.translate(0, stack.getItem() instanceof BlockItem ? 0.48 : 0.33, 0);
-		    matrixStackIn.translate(0.5 + dir.getOpposite().getStepX() * 0.05, progressModifier,
-			    0.5 + dir.getOpposite().getStepZ() * 0.05);
+		    matrixStackIn.translate(0.5 + dir.getOpposite().getStepX() * 0.05, progressModifier, 0.5 + dir.getOpposite().getStepZ() * 0.05);
 		    if (dir == Direction.NORTH) {
 			matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(180));
 		    } else if (dir == Direction.EAST) {
@@ -87,14 +86,13 @@ public class RenderElevatorBelt extends BlockEntityRenderer<TileElevatorBelt> {
 			    : dir == Direction.SOUTH ? Vector3f.ZP.rotationDegrees(-rotate)
 				    : dir == Direction.WEST ? Vector3f.ZN.rotationDegrees(rotate) : Vector3f.ZP.rotationDegrees(-rotate));
 		    matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(-90));
-		    Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.NONE, combinedLightIn, combinedOverlayIn, matrixStackIn,
-			    bufferIn);
+		    Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.NONE, combinedLightIn, combinedOverlayIn,
+			    matrixStackIn, bufferIn);
 		    matrixStackIn.popPose();
 		} else if (totalSlotsUsed == 2) {
 		    matrixStackIn.pushPose();
 		    matrixStackIn.translate(0, stack.getItem() instanceof BlockItem ? 0.48 : 0.33, 0);
-		    matrixStackIn.translate(0.5 + dir.getOpposite().getStepX() * 0.05, progressModifier,
-			    0.5 + dir.getOpposite().getStepZ() * 0.05);
+		    matrixStackIn.translate(0.5 + dir.getOpposite().getStepX() * 0.05, progressModifier, 0.5 + dir.getOpposite().getStepZ() * 0.05);
 		    if (dir == Direction.NORTH) {
 			matrixStackIn.translate((i == 0 ? 0.25 : 0.75) - 0.5, 0, 0);
 			matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(180));
@@ -116,8 +114,8 @@ public class RenderElevatorBelt extends BlockEntityRenderer<TileElevatorBelt> {
 			    : dir == Direction.SOUTH ? Vector3f.ZP.rotationDegrees(-rotate)
 				    : dir == Direction.WEST ? Vector3f.ZN.rotationDegrees(rotate) : Vector3f.ZP.rotationDegrees(-rotate));
 		    matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(-90));
-		    Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.NONE, combinedLightIn, combinedOverlayIn, matrixStackIn,
-			    bufferIn);
+		    Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.NONE, combinedLightIn, combinedOverlayIn,
+			    matrixStackIn, bufferIn);
 		    matrixStackIn.popPose();
 		}
 	    }

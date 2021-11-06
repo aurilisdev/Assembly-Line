@@ -8,31 +8,29 @@ import assemblyline.common.tile.TileConveyorBelt;
 import electrodynamics.common.block.BlockGenericMachine;
 import electrodynamics.prefab.tile.GenericTile;
 import electrodynamics.prefab.tile.components.ComponentType;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.Containers;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.Containers;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.storage.loot.LootContext.Builder;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.storage.loot.LootContext.Builder;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ToolType;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class BlockConveyorBelt extends Block {
     private static final VoxelShape shape = Shapes.box(0, 0, 0, 1, 5.0 / 16.0, 1);
@@ -82,8 +80,8 @@ public class BlockConveyorBelt extends Block {
     public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 	if (!(newState.getBlock() instanceof BlockConveyorBelt)) {
 	    BlockEntity tile = worldIn.getBlockEntity(pos);
-	    if (!(state.getBlock() == newState.getBlock() && state.getValue(BlockGenericMachine.FACING) != newState.getValue(BlockGenericMachine.FACING))
-		    && tile instanceof GenericTile) {
+	    if (!(state.getBlock() == newState.getBlock()
+		    && state.getValue(BlockGenericMachine.FACING) != newState.getValue(BlockGenericMachine.FACING)) && tile instanceof GenericTile) {
 		GenericTile generic = (GenericTile) tile;
 		if (generic.hasComponent(ComponentType.Inventory)) {
 		    Containers.dropContents(worldIn, pos, generic.getComponent(ComponentType.Inventory));

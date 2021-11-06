@@ -1,6 +1,9 @@
 package assemblyline.client.render.tile;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 
 import assemblyline.common.tile.TileCrate;
 import electrodynamics.prefab.tile.components.ComponentType;
@@ -9,15 +12,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.Direction;
-import com.mojang.math.Matrix4f;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
-import net.minecraft.network.chat.TextComponent;
 
 public class RenderCrate extends BlockEntityRenderer<TileCrate> {
 

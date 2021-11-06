@@ -11,15 +11,15 @@ import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
-import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -155,12 +155,16 @@ public class TileConveyorBelt extends GenericTileTicking {
 	}
 	if (progress >= 15) {
 	    flag = moveItemsIntoNextBelt(inventory, direction, worldPosition.relative(direction.getDirection().getOpposite()), false)
-		    || moveItemsIntoNextBelt(inventory, direction, worldPosition.relative(Direction.UP).relative(direction.getDirection().getOpposite()), false)
-		    || moveItemsIntoNextBelt(inventory, direction, worldPosition.relative(Direction.DOWN).relative(direction.getDirection().getOpposite()), false);
+		    || moveItemsIntoNextBelt(inventory, direction,
+			    worldPosition.relative(Direction.UP).relative(direction.getDirection().getOpposite()), false)
+		    || moveItemsIntoNextBelt(inventory, direction,
+			    worldPosition.relative(Direction.DOWN).relative(direction.getDirection().getOpposite()), false);
 	    if (!flag) {
-		flag = moveItemsIntoInventory(inventory, direction.getDirection(), worldPosition.relative(direction.getDirection().getOpposite()), false);
+		flag = moveItemsIntoInventory(inventory, direction.getDirection(), worldPosition.relative(direction.getDirection().getOpposite()),
+			false);
 		if (!flag) {
-		    moveItemsIntoInventory(inventory, direction.getDirection().getOpposite(), worldPosition.relative(direction.getDirection()), false);
+		    moveItemsIntoInventory(inventory, direction.getDirection().getOpposite(), worldPosition.relative(direction.getDirection()),
+			    false);
 		    for (int i = 0; i < inventory.getContainerSize(); i++) {
 			ItemStack stack = inventory.getItem(i);
 			Direction proper = direction.getDirection().getOpposite();
