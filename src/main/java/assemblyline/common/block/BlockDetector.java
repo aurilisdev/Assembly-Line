@@ -40,52 +40,53 @@ public class BlockDetector extends BaseEntityBlock {
     }
 
     @Override
+    @Deprecated(since = "since overriden method is", forRemoval = false)
     public RenderShape getRenderShape(BlockState state) {
 	return RenderShape.MODEL;
     }
 
     @Override
-    @Deprecated
+    @Deprecated(since = "since overriden method is", forRemoval = false)
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 	return shape;
     }
 
     @Override
-    @Deprecated
+    @Deprecated(since = "since overriden method is", forRemoval = false)
     public List<ItemStack> getDrops(BlockState state, Builder builder) {
 	return Arrays.asList(new ItemStack(this));
     }
 
     @Override
-    @Deprecated
+    @Deprecated(since = "since overriden method is", forRemoval = false)
     public BlockState rotate(BlockState state, Rotation rot) {
 	return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     @Override
-    @Deprecated
+    @Deprecated(since = "since overriden method is", forRemoval = false)
     public boolean isSignalSource(BlockState state) {
 	return true;
     }
 
     @Override
-    @Deprecated
+    @Deprecated(since = "since overriden method is", forRemoval = false)
     public int getDirectSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
 	return blockState.getSignal(blockAccess, pos, side);
     }
 
     @Override
-    @Deprecated
+    @Deprecated(since = "since overriden method is", forRemoval = false)
     public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
 	BlockEntity tile = blockAccess.getBlockEntity(pos);
-	if (tile instanceof TileDetector) {
-	    return ((TileDetector) tile).isPowered ? 15 : 0;
+	if (tile instanceof TileDetector det) {
+	    return det.isPowered ? 15 : 0;
 	}
 	return 0;
     }
 
-    @Deprecated
     @Override
+    @Deprecated(since = "since overriden method is", forRemoval = false)
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
 	return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }

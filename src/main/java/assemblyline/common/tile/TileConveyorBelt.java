@@ -260,8 +260,8 @@ public class TileConveyorBelt extends GenericTileTicking {
 		if (their - 1 > max) {
 		    max = their - 1;
 		}
-	    } else if (at instanceof TileSorterBelt belt) {
-		int their = belt.currentSpread;
+	    } else if (at instanceof TileSorterBelt sbelt) {
+		int their = sbelt.currentSpread;
 		if (their - 1 > max) {
 		    max = their - 1;
 		}

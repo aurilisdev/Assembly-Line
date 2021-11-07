@@ -41,42 +41,40 @@ public class BlockElevatorBelt extends BaseEntityBlock {
     }
 
     @Override
-    @Deprecated
+    @Deprecated(since = "since overriden method is", forRemoval = false)
     public List<ItemStack> getDrops(BlockState state, Builder builder) {
 	return Arrays.asList(new ItemStack(DeferredRegisters.blockConveyorBelt));
     }
 
     @Override
-    @Deprecated
+    @Deprecated(since = "since overriden method is", forRemoval = false)
     public void entityInside(BlockState state, Level world, BlockPos pos, Entity entityIn) {
 	BlockEntity tile = world.getBlockEntity(pos);
-	if (!world.isClientSide && tile instanceof TileConveyorBelt && entityIn instanceof ItemEntity && entityIn.tickCount > 5) {
-	    TileConveyorBelt belt = (TileConveyorBelt) tile;
-	    ItemEntity item = (ItemEntity) entityIn;
+	if (!world.isClientSide && tile instanceof TileConveyorBelt belt && entityIn instanceof ItemEntity item && entityIn.tickCount > 5) {
 	    item.setItem(belt.addItemOnBelt(item.getItem()));
 	}
     }
 
     @Override
-    @Deprecated
+    @Deprecated(since = "since overriden method is", forRemoval = false)
     public BlockState rotate(BlockState state, Rotation rot) {
 	return state.setValue(BlockGenericMachine.FACING, rot.rotate(state.getValue(BlockGenericMachine.FACING)));
     }
 
-    @Deprecated
     @Override
+    @Deprecated(since = "since overriden method is", forRemoval = false)
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
 	return state.rotate(mirrorIn.getRotation(state.getValue(BlockGenericMachine.FACING)));
     }
 
-    @Deprecated
     @Override
+    @Deprecated(since = "since overriden method is", forRemoval = false)
     public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 	if (!(newState.getBlock() instanceof BlockElevatorBelt)) {
 	    BlockEntity tile = worldIn.getBlockEntity(pos);
 	    if (!(state.getBlock() == newState.getBlock()
-		    && state.getValue(BlockGenericMachine.FACING) != newState.getValue(BlockGenericMachine.FACING)) && tile instanceof GenericTile) {
-		GenericTile generic = (GenericTile) tile;
+		    && state.getValue(BlockGenericMachine.FACING) != newState.getValue(BlockGenericMachine.FACING))
+		    && tile instanceof GenericTile generic) {
 		if (generic.hasComponent(ComponentType.Inventory)) {
 		    Containers.dropContents(worldIn, pos, generic.<ComponentInventory>getComponent(ComponentType.Inventory));
 		}
@@ -86,7 +84,7 @@ public class BlockElevatorBelt extends BaseEntityBlock {
     }
 
     @Override
-    @Deprecated
+    @Deprecated(since = "since overriden method is", forRemoval = false)
     public RenderShape getRenderShape(BlockState state) {
 	return RenderShape.INVISIBLE;
     }
