@@ -1,0 +1,14 @@
+{
+	"replace":false,
+	"values":[
+		"assemblyline:conveyorbelt",
+		"assemblyline:crate",
+		"assemblyline:cratelarge",
+		"assemblyline:cratemedium",
+		"assemblyline:detector",
+		"assemblyline:elevatorbelt",
+		"assemblyline:sorterbelt",
+		"assemblyline:sorterbeltrunning"
+
+	]
+}

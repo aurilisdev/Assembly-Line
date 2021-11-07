@@ -43,14 +43,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.ToolType;
 
 public class BlockSorterBelt extends BaseEntityBlock implements IWrenchable {
     private static final VoxelShape shape = Shapes.or(Shapes.box(0, 14.0 / 16.0, 0, 1, 1, 1), Shapes.box(0, 0, 0, 1, 5.0 / 16.0, 1));
     public final boolean running;
 
     public BlockSorterBelt(boolean running) {
-	super(Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).noOcclusion());
+	super(Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion());
 	registerDefaultState(stateDefinition.any().setValue(BlockGenericMachine.FACING, Direction.NORTH));
 	this.running = running;
     }
@@ -87,8 +86,8 @@ public class BlockSorterBelt extends BaseEntityBlock implements IWrenchable {
     public void onPickup(ItemStack stack, BlockPos pos, Player player) {
 	Level world = player.level;
 	BlockEntity te = world.getBlockEntity(pos);
-	if (te instanceof GenericTile) {
-	    Containers.dropContents(player.level, pos, ((GenericTile) te).getComponent(ComponentType.Inventory));
+	if (te instanceof GenericTile t) {
+	    Containers.dropContents(player.level, pos, t.<ComponentInventory>getComponent(ComponentType.Inventory));
 	}
 	world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
 	world.addFreshEntity(new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, new ItemStack(asBlock())));

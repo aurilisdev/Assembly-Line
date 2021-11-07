@@ -29,7 +29,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext.Builder;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.ToolType;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 public class BlockCrate extends BaseEntityBlock {
@@ -37,7 +36,7 @@ public class BlockCrate extends BaseEntityBlock {
     public final int size;
 
     public BlockCrate(int size) {
-	super(Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE));
+	super(Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL).requiresCorrectToolForDrops());
 	this.size = size;
     }
 

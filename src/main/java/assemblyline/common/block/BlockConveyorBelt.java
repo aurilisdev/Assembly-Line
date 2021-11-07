@@ -35,13 +35,12 @@ import net.minecraft.world.level.storage.loot.LootContext.Builder;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.ToolType;
 
 public class BlockConveyorBelt extends BaseEntityBlock {
     private static final VoxelShape shape = Shapes.box(0, 0, 0, 1, 5.0 / 16.0, 1);
 
     public BlockConveyorBelt() {
-	super(Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).noOcclusion());
+	super(Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion());
 	registerDefaultState(stateDefinition.any().setValue(BlockGenericMachine.FACING, Direction.NORTH));
     }
 

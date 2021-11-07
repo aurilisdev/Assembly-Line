@@ -10,6 +10,7 @@ import electrodynamics.common.block.BlockGenericMachine;
 import electrodynamics.prefab.tile.GenericTile;
 import electrodynamics.prefab.tile.GenericTileTicking;
 import electrodynamics.prefab.tile.components.ComponentType;
+import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Containers;
@@ -31,12 +32,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext.Builder;
-import net.minecraftforge.common.ToolType;
 
 public class BlockElevatorBelt extends BaseEntityBlock {
 
     public BlockElevatorBelt() {
-	super(Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).noOcclusion());
+	super(Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion());
 	registerDefaultState(stateDefinition.any().setValue(BlockGenericMachine.FACING, Direction.NORTH));
     }
 
@@ -78,7 +78,7 @@ public class BlockElevatorBelt extends BaseEntityBlock {
 		    && state.getValue(BlockGenericMachine.FACING) != newState.getValue(BlockGenericMachine.FACING)) && tile instanceof GenericTile) {
 		GenericTile generic = (GenericTile) tile;
 		if (generic.hasComponent(ComponentType.Inventory)) {
-		    Containers.dropContents(worldIn, pos, generic.getComponent(ComponentType.Inventory));
+		    Containers.dropContents(worldIn, pos, generic.<ComponentInventory>getComponent(ComponentType.Inventory));
 		}
 	    }
 	    super.onRemove(state, worldIn, pos, newState, isMoving);
