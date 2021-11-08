@@ -114,8 +114,7 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 	}
 	double progressModifier = (tile.progress + 8.0 + (tile.currentSpread <= 0 || tile.halted ? 0 : partialTicks)) / 16.0;
 	BlockEntity next = world.getBlockEntity(pos.relative(dir.getOpposite()));
-	if (next instanceof TileConveyorBelt) {
-	    TileConveyorBelt conv = (TileConveyorBelt) next;
+	if (next instanceof TileConveyorBelt conv) {
 	    Direction direct = conv.<ComponentDirection>getComponent(ComponentType.Direction).getDirection();
 	    boolean nextSloped = false;
 	    if (world.getBlockEntity(

@@ -41,7 +41,6 @@ public class BlockCrate extends BaseEntityBlock {
     }
 
     @Override
-    @Deprecated(since = "since overriden method is", forRemoval = false)
     public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 	BlockEntity tile = worldIn.getBlockEntity(pos);
 	if (tile instanceof GenericTile generic && !(state.getBlock() == newState.getBlock()
@@ -55,13 +54,11 @@ public class BlockCrate extends BaseEntityBlock {
     }
 
     @Override
-    @Deprecated(since = "since overriden method is", forRemoval = false)
     public List<ItemStack> getDrops(BlockState state, Builder builder) {
 	return Arrays.asList(new ItemStack(this));
     }
 
     @Override
-    @Deprecated(since = "since overriden method is", forRemoval = false)
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
 	if (!worldIn.isClientSide) {
 	    TileCrate tile = (TileCrate) worldIn.getBlockEntity(pos);

@@ -55,19 +55,16 @@ public class BlockSorterBelt extends BaseEntityBlock implements IWrenchable {
     }
 
     @Override
-    @Deprecated(since = "since overriden method is", forRemoval = false)
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 	return worldIn instanceof Level lvl && lvl.isClientSide ? Shapes.block() : shape;
     }
 
     @Override
-    @Deprecated(since = "since overriden method is", forRemoval = false)
     public List<ItemStack> getDrops(BlockState state, Builder builder) {
 	return Arrays.asList(new ItemStack(DeferredRegisters.blockSorterBelt));
     }
 
     @Override
-    @Deprecated(since = "since overriden method is", forRemoval = false)
     public void entityInside(BlockState state, Level world, BlockPos pos, Entity entityIn) {
 	BlockEntity tile = world.getBlockEntity(pos);
 	if (!world.isClientSide && tile instanceof TileSorterBelt belt) {
@@ -76,7 +73,6 @@ public class BlockSorterBelt extends BaseEntityBlock implements IWrenchable {
     }
 
     @Override
-    @Deprecated(since = "since overriden method is", forRemoval = false)
     public void onRotate(ItemStack stack, BlockPos pos, Player player) {
 	player.level.setBlockAndUpdate(pos, rotate(player.level.getBlockState(pos), Rotation.CLOCKWISE_90));
     }
@@ -93,7 +89,6 @@ public class BlockSorterBelt extends BaseEntityBlock implements IWrenchable {
     }
 
     @Override
-    @Deprecated(since = "since overriden method is", forRemoval = false)
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
 	if (worldIn.isClientSide) {
 	    return InteractionResult.SUCCESS;
@@ -109,19 +104,16 @@ public class BlockSorterBelt extends BaseEntityBlock implements IWrenchable {
     }
 
     @Override
-    @Deprecated(since = "since overriden method is", forRemoval = false)
     public BlockState rotate(BlockState state, Rotation rot) {
 	return state.setValue(BlockGenericMachine.FACING, rot.rotate(state.getValue(BlockGenericMachine.FACING)));
     }
 
     @Override
-    @Deprecated(since = "since overriden method is", forRemoval = false)
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
 	return state.rotate(mirrorIn.getRotation(state.getValue(BlockGenericMachine.FACING)));
     }
 
     @Override
-    @Deprecated(since = "since overriden method is", forRemoval = false)
     public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 	if (!(newState.getBlock() instanceof BlockSorterBelt)) {
 	    BlockEntity tile = worldIn.getBlockEntity(pos);
