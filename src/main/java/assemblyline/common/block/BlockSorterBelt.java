@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -75,6 +76,11 @@ public class BlockSorterBelt extends BaseEntityBlock implements IWrenchable {
     @Override
     public void onRotate(ItemStack stack, BlockPos pos, Player player) {
 	player.level.setBlockAndUpdate(pos, rotate(player.level.getBlockState(pos), Rotation.CLOCKWISE_90));
+    }
+
+    @Override
+    public RenderShape getRenderShape(BlockState state) {
+	return RenderShape.MODEL;
     }
 
     @Override
