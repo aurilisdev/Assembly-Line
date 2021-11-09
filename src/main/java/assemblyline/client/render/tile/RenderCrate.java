@@ -79,9 +79,10 @@ public class RenderCrate implements BlockEntityRenderer<TileCrate> {
 		    } else {
 			matrixStackIn.scale(0.4f, 0.4f, 0.4f);
 		    }
-		    Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.NONE, 0xF000F0, combinedOverlayIn, matrixStackIn,
-			    bufferIn, 0);
+		    Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.NONE, combinedLightIn, combinedOverlayIn,
+			    matrixStackIn, bufferIn, 0);
 		    matrixStackIn.popPose();
+		    //TODO: Item doesnt render anymore
 		}
 	    }
 	}
