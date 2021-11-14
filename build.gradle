@@ -162,6 +162,9 @@ curseforge {
     requiredDependency 'Electrodynamics'
 
     mainArtifact(jar) {
+      relations {
+        requiredDependency 'electrodynamics'
+      }
       displayName=project.name+' ' + project.version
     }
   }
