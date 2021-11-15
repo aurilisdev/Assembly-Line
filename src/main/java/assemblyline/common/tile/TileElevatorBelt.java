@@ -36,7 +36,7 @@ public class TileElevatorBelt extends GenericTileTicking {
 	addComponent(new ComponentTickable().tickCommon(this::tickCommon));
 	addComponent(new ComponentDirection());
 	addComponent(new ComponentPacketHandler().guiPacketReader(this::loadFromNBT).guiPacketWriter(this::saveToNBT));
-	addComponent(new ComponentInventory(this).size(2));
+	addComponent(new ComponentInventory(this).size(1));
 	addComponent(new ComponentElectrodynamic(this).relativeInput(Direction.NORTH).relativeInput(Direction.EAST).relativeInput(Direction.WEST)
 		.maxJoules(Constants.CONVEYORBELT_USAGE * 100));
     }

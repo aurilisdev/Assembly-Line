@@ -38,7 +38,7 @@ public class TileConveyorBelt extends GenericTileTicking {
 	addComponent(new ComponentTickable().tickCommon(this::tickCommon));
 	addComponent(new ComponentDirection());
 	addComponent(new ComponentPacketHandler().guiPacketReader(this::loadFromNBT).guiPacketWriter(this::saveToNBT));
-	addComponent(new ComponentInventory(this).size(2));
+	addComponent(new ComponentInventory(this).size(1));
 	addComponent(new ComponentElectrodynamic(this).input(Direction.DOWN).relativeInput(Direction.EAST).relativeInput(Direction.WEST)
 		.maxJoules(Constants.CONVEYORBELT_USAGE * 100));
     }
@@ -229,6 +229,7 @@ public class TileConveyorBelt extends GenericTileTicking {
 	if (!add.isEmpty()) {
 	    ComponentInventory inventory = getComponent(ComponentType.Inventory);
 	    for (int i = 0; i < inventory.getContainerSize(); i++) {
+		// Remnants from multiple item slot support
 		ItemStack returner = new InvWrapper(inventory).insertItem(i, add, false);
 		if (returner.getCount() != add.getCount()) {
 		    this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();

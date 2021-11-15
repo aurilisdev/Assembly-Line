@@ -182,39 +182,40 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 		    Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.NONE, combinedLightIn, combinedOverlayIn,
 			    matrixStackIn, bufferIn, 0);
 		    matrixStackIn.popPose();
-		} else if (totalSlotsUsed == 2) {
-		    matrixStackIn.pushPose();
-		    matrixStackIn.translate(0,
-			    (stack.getItem() instanceof BlockItem ? 0.48 : 0.33)
-				    + (isSloped ? up ? progressModifier : progressModifier - 1 : 0) * (up ? 1 : -1)
-				    + (isSloped ? up ? 2.5 / 16.0 : 1 / 16.0 : 0),
-			    0);
-		    if (dir == Direction.NORTH) {
-			matrixStackIn.translate(i == 0 ? 0.25 : 0.75, 0, progressModifier);
-		    } else if (dir == Direction.EAST) {
-			matrixStackIn.translate(1 - progressModifier, 0, i == 0 ? 0.25 : 0.75);
-		    } else if (dir == Direction.WEST) {
-			matrixStackIn.translate(progressModifier, 0, i == 0 ? 0.25 : 0.75);
-		    } else if (dir == Direction.SOUTH) {
-			matrixStackIn.translate(i == 0 ? 0.25 : 0.75, 0, 1 - progressModifier);
-		    }
-		    if (isSloped) {
-			int rotate = 45;
-			if (up) {
-			    rotate = -45;
-			}
-			matrixStackIn.mulPose(dir == Direction.NORTH ? Vector3f.XN.rotationDegrees(rotate)
-				: dir == Direction.SOUTH ? Vector3f.XP.rotationDegrees(-rotate)
-					: dir == Direction.WEST ? Vector3f.XN.rotationDegrees(rotate) : Vector3f.XP.rotationDegrees(-rotate));
-		    }
-		    matrixStackIn.scale(0.35f, 0.35f, 0.35f);
-		    if (!(stack.getItem() instanceof BlockItem)) {
-			matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(90));
-		    }
-		    Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.NONE, combinedLightIn, combinedOverlayIn,
-			    matrixStackIn, bufferIn, 0);
-		    matrixStackIn.popPose();
-		}
+		} 
+//		    else if (totalSlotsUsed == 2) {
+//		    matrixStackIn.pushPose();
+//		    matrixStackIn.translate(0,
+//			    (stack.getItem() instanceof BlockItem ? 0.48 : 0.33)
+//				    + (isSloped ? up ? progressModifier : progressModifier - 1 : 0) * (up ? 1 : -1)
+//				    + (isSloped ? up ? 2.5 / 16.0 : 1 / 16.0 : 0),
+//			    0);
+//		    if (dir == Direction.NORTH) {
+//			matrixStackIn.translate(i == 0 ? 0.25 : 0.75, 0, progressModifier);
+//		    } else if (dir == Direction.EAST) {
+//			matrixStackIn.translate(1 - progressModifier, 0, i == 0 ? 0.25 : 0.75);
+//		    } else if (dir == Direction.WEST) {
+//			matrixStackIn.translate(progressModifier, 0, i == 0 ? 0.25 : 0.75);
+//		    } else if (dir == Direction.SOUTH) {
+//			matrixStackIn.translate(i == 0 ? 0.25 : 0.75, 0, 1 - progressModifier);
+//		    }
+//		    if (isSloped) {
+//			int rotate = 45;
+//			if (up) {
+//			    rotate = -45;
+//			}
+//			matrixStackIn.mulPose(dir == Direction.NORTH ? Vector3f.XN.rotationDegrees(rotate)
+//				: dir == Direction.SOUTH ? Vector3f.XP.rotationDegrees(-rotate)
+//					: dir == Direction.WEST ? Vector3f.XN.rotationDegrees(rotate) : Vector3f.XP.rotationDegrees(-rotate));
+//		    }
+//		    matrixStackIn.scale(0.35f, 0.35f, 0.35f);
+//		    if (!(stack.getItem() instanceof BlockItem)) {
+//			matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(90));
+//		    }
+//		    Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.NONE, combinedLightIn, combinedOverlayIn,
+//			    matrixStackIn, bufferIn, 0);
+//		    matrixStackIn.popPose();
+//		}
 	    }
 	}
     }
