@@ -57,6 +57,12 @@ public class TileConveyorBelt extends GenericTileTicking {
 		    for (int indexHere = 0; indexHere < inventory.getContainerSize(); indexHere++) {
 			ItemStack stackHere = inventory.getItem(indexHere);
 			if (!stackHere.isEmpty()) {
+			    if (pos.getY() > getBlockPos().getY()) {
+				BlockEntity testBlockEntity = level.getBlockEntity(pos.relative(other.getOpposite()));
+				if (!(testBlockEntity instanceof TileConveyorBelt || testBlockEntity instanceof TileSorterBelt)) {
+				    nextBelt.progress = 8;
+				}
+			    }
 			    inventory.setItem(indexHere, nextBelt.addItemOnBelt(stackHere));
 			}
 		    }

@@ -86,9 +86,12 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 	if (model == Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYOR)
 		|| model == Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORANIMATED)) {
 	    BlockEntity right = world.getBlockEntity(pos.relative(dir.getOpposite().getClockWise()));
+	    BlockEntity rightdown = world.getBlockEntity(pos.relative(dir.getOpposite().getClockWise()).below());
 	    BlockEntity left = world.getBlockEntity(pos.relative(dir.getOpposite().getCounterClockWise()));
-	    boolean rightClear = right instanceof TileConveyorBelt || right instanceof TileSorterBelt;
-	    boolean leftClear = left instanceof TileConveyorBelt || left instanceof TileSorterBelt;
+	    BlockEntity leftdown = world.getBlockEntity(pos.relative(dir.getOpposite().getCounterClockWise()).below());
+	    boolean rightClear = right instanceof TileConveyorBelt || right instanceof TileSorterBelt || rightdown instanceof TileConveyorBelt
+		    || rightdown instanceof TileSorterBelt;
+	    boolean leftClear = left instanceof TileConveyorBelt || left instanceof TileSorterBelt ||  leftdown instanceof TileConveyorBelt || leftdown instanceof TileSorterBelt;
 	    if (rightClear || leftClear) {
 		if (model == Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYOR)) {
 		    model = rightClear && leftClear ? Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORCLEAR)
@@ -123,10 +126,10 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 		nextSloped = true;
 	    }
 	    if (nextSloped) {
-		progressModifier = Mth.clamp(progressModifier, 0.0, 1.0);
+		progressModifier = Mth.clampedLerp(0.25f, 1f, progressModifier / 1.5f);
 	    }
 	    if (isSloped) {
-		progressModifier -= 0.5;
+		progressModifier -= 0.1;
 	    }
 	} else {
 	    boolean shouldBeNormal = isSloped || !(world.getBlockEntity(pos.relative(dir)) instanceof TileConveyorBelt);
