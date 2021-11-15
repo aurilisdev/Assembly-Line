@@ -8,6 +8,7 @@ import assemblyline.common.tile.TileConveyorBelt;
 import electrodynamics.common.block.BlockGenericMachine;
 import electrodynamics.prefab.tile.GenericTile;
 import electrodynamics.prefab.tile.GenericTileTicking;
+import electrodynamics.prefab.tile.IWrenchable;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import net.minecraft.core.BlockPos;
@@ -15,6 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -36,7 +38,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class BlockConveyorBelt extends BaseEntityBlock {
+public class BlockConveyorBelt extends BaseEntityBlock implements IWrenchable {
     private static final VoxelShape shape = Shapes.box(0, 0, 0, 1, 5.0 / 16.0, 1);
 
     public BlockConveyorBelt() {
@@ -116,5 +118,20 @@ public class BlockConveyorBelt extends BaseEntityBlock {
 	if (t instanceof GenericTileTicking tick) {
 	    tick.tick();
 	}
+    }
+
+    @Override
+    public void onRotate(ItemStack stack, BlockPos pos, Player player) {
+	player.level.setBlockAndUpdate(pos, rotate(player.level.getBlockState(pos), Rotation.CLOCKWISE_90));
+    }
+
+    @Override
+    public void onPickup(ItemStack stack, BlockPos pos, Player player) {
+	Level world = player.level;
+	BlockEntity tile = world.getBlockEntity(pos);
+	if (tile instanceof GenericTile generic && generic.hasComponent(ComponentType.Inventory)) {
+	    Containers.dropContents(world, pos, generic.<ComponentInventory>getComponent(ComponentType.Inventory));
+	}
+	world.destroyBlock(pos, true, player);
     }
 }

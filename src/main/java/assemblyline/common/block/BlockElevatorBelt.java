@@ -9,6 +9,7 @@ import assemblyline.common.tile.TileElevatorBelt;
 import electrodynamics.common.block.BlockGenericMachine;
 import electrodynamics.prefab.tile.GenericTile;
 import electrodynamics.prefab.tile.GenericTileTicking;
+import electrodynamics.prefab.tile.IWrenchable;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import net.minecraft.core.BlockPos;
@@ -16,6 +17,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -33,7 +35,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext.Builder;
 
-public class BlockElevatorBelt extends BaseEntityBlock {
+public class BlockElevatorBelt extends BaseEntityBlock implements IWrenchable {
 
     public BlockElevatorBelt() {
 	super(Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion());
@@ -107,5 +109,20 @@ public class BlockElevatorBelt extends BaseEntityBlock {
 	if (t instanceof GenericTileTicking tick) {
 	    tick.tick();
 	}
+    }
+
+    @Override
+    public void onRotate(ItemStack stack, BlockPos pos, Player player) {
+	player.level.setBlockAndUpdate(pos, rotate(player.level.getBlockState(pos), Rotation.CLOCKWISE_90));
+    }
+
+    @Override
+    public void onPickup(ItemStack stack, BlockPos pos, Player player) {
+	Level world = player.level;
+	BlockEntity tile = world.getBlockEntity(pos);
+	if (tile instanceof GenericTile generic && generic.hasComponent(ComponentType.Inventory)) {
+	    Containers.dropContents(world, pos, generic.<ComponentInventory>getComponent(ComponentType.Inventory));
+	}
+	world.destroyBlock(pos, true, player);
     }
 }

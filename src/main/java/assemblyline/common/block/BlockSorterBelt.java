@@ -20,7 +20,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -28,7 +27,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
@@ -79,19 +77,18 @@ public class BlockSorterBelt extends BaseEntityBlock implements IWrenchable {
     }
 
     @Override
-    public RenderShape getRenderShape(BlockState state) {
-	return RenderShape.MODEL;
+    public void onPickup(ItemStack stack, BlockPos pos, Player player) {
+	Level world = player.level;
+	BlockEntity tile = world.getBlockEntity(pos);
+	if (tile instanceof GenericTile generic && generic.hasComponent(ComponentType.Inventory)) {
+	    Containers.dropContents(world, pos, generic.<ComponentInventory>getComponent(ComponentType.Inventory));
+	}
+	world.destroyBlock(pos, true, player);
     }
 
     @Override
-    public void onPickup(ItemStack stack, BlockPos pos, Player player) {
-	Level world = player.level;
-	BlockEntity te = world.getBlockEntity(pos);
-	if (te instanceof GenericTile t) {
-	    Containers.dropContents(player.level, pos, t.<ComponentInventory>getComponent(ComponentType.Inventory));
-	}
-	world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-	world.addFreshEntity(new ItemEntity(world, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, new ItemStack(asBlock())));
+    public RenderShape getRenderShape(BlockState state) {
+	return RenderShape.MODEL;
     }
 
     @Override
