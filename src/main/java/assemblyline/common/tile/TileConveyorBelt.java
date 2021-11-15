@@ -217,9 +217,11 @@ public class TileConveyorBelt extends GenericTileTicking {
 	    if (currentSpread == 0 || currentSpread == 16) {
 		if (electro.getJoulesStored() < Constants.CONVEYORBELT_USAGE) {
 		    currentSpread = 0;
+		    this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
 		} else {
 		    electro.joules(electro.getJoulesStored() - Constants.CONVEYORBELT_USAGE);
 		    currentSpread = 16;
+		    this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
 		}
 	    }
 	}
