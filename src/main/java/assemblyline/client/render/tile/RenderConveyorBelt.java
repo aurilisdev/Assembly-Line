@@ -91,7 +91,8 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 	    BlockEntity leftdown = world.getBlockEntity(pos.relative(dir.getOpposite().getCounterClockWise()).below());
 	    boolean rightClear = right instanceof TileConveyorBelt || right instanceof TileSorterBelt || rightdown instanceof TileConveyorBelt
 		    || rightdown instanceof TileSorterBelt;
-	    boolean leftClear = left instanceof TileConveyorBelt || left instanceof TileSorterBelt ||  leftdown instanceof TileConveyorBelt || leftdown instanceof TileSorterBelt;
+	    boolean leftClear = left instanceof TileConveyorBelt || left instanceof TileSorterBelt || leftdown instanceof TileConveyorBelt
+		    || leftdown instanceof TileSorterBelt;
 	    if (rightClear || leftClear) {
 		if (model == Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYOR)) {
 		    model = rightClear && leftClear ? Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORCLEAR)
@@ -137,7 +138,7 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 		progressModifier -= 0.5;
 	    }
 	    if (tile.isManipulator) {
-		progressModifier = Mth.clamp(progressModifier, 0.0, 1.0);
+		progressModifier = Mth.clampedLerp(0.25f, 1f, progressModifier / 1.5f);
 	    }
 	}
 	if (totalSlotsUsed > 0) {
@@ -145,8 +146,11 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 		ItemStack stack = inv.getItem(i);
 		if (totalSlotsUsed == 1) {
 		    matrixStackIn.pushPose();
-		    matrixStackIn.translate(0, (stack.getItem() instanceof BlockItem ? 0.48 : 0.33)
-			    + (isSloped ? up ? progressModifier : progressModifier - 1 : 0) * (up ? 1 : -1) + (isSloped ? 1 / 16.0 : 0), 0);
+		    matrixStackIn.translate(0,
+			    (stack.getItem() instanceof BlockItem ? 0.48 : 0.33)
+				    + (isSloped ? up ? progressModifier : progressModifier - 1 : 0) * (up ? 1 : -1)
+				    + (isSloped ? up ? 2.5 / 16.0 : 1 / 16.0 : 0),
+			    0);
 		    if (dir == Direction.NORTH) {
 			matrixStackIn.translate(0.5, 0, progressModifier);
 			matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(180));
@@ -177,8 +181,11 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 		    matrixStackIn.popPose();
 		} else if (totalSlotsUsed == 2) {
 		    matrixStackIn.pushPose();
-		    matrixStackIn.translate(0, (stack.getItem() instanceof BlockItem ? 0.48 : 0.33)
-			    + (isSloped ? up ? progressModifier : progressModifier - 1 : 0) * (up ? 1 : -1) + (isSloped ? 1 / 16.0 : 0), 0);
+		    matrixStackIn.translate(0,
+			    (stack.getItem() instanceof BlockItem ? 0.48 : 0.33)
+				    + (isSloped ? up ? progressModifier : progressModifier - 1 : 0) * (up ? 1 : -1)
+				    + (isSloped ? up ? 2.5 / 16.0 : 1 / 16.0 : 0),
+			    0);
 		    if (dir == Direction.NORTH) {
 			matrixStackIn.translate(i == 0 ? 0.25 : 0.75, 0, progressModifier);
 			matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(180));
