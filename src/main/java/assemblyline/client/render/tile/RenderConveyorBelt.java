@@ -26,6 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
+//TODO: Improve this shitty billion check code...
 public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt> {
 
     public RenderConveyorBelt(BlockEntityRendererProvider.Context context) {
@@ -42,11 +43,11 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 	BlockPos pos = tile.getBlockPos();
 	Level world = tile.getLevel();
 	boolean isSloped = false;
-	if (world.getBlockEntity(pos.relative(Direction.UP).relative(direction.getDirection().getOpposite())) instanceof TileConveyorBelt
-		|| world.getBlockEntity(pos.relative(Direction.UP).relative(direction.getDirection())) instanceof TileConveyorBelt) {
+	if (world.getBlockEntity(pos.above().relative(direction.getDirection().getOpposite())) instanceof TileConveyorBelt
+		|| world.getBlockEntity(pos.above().relative(direction.getDirection())) instanceof TileConveyorBelt) {
 	    isSloped = true;
 	}
-	boolean up = world.getBlockEntity(pos.relative(Direction.UP).relative(direction.getDirection().getOpposite())) instanceof TileConveyorBelt;
+	boolean up = world.getBlockEntity(pos.above().relative(direction.getDirection().getOpposite())) instanceof TileConveyorBelt;
 	boolean running = tile.currentSpread > 0;
 	if (tile.isManipulator) {
 	    if (tile.isManipulatorOutput) {
@@ -122,8 +123,8 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 	    Direction direct = conv.<ComponentDirection>getComponent(ComponentType.Direction).getDirection();
 	    boolean nextSloped = false;
 	    if (world.getBlockEntity(
-		    pos.relative(direct.getOpposite()).relative(Direction.UP).relative(direct.getOpposite())) instanceof TileConveyorBelt
-		    || world.getBlockEntity(pos.relative(direct.getOpposite()).relative(Direction.UP).relative(direct)) instanceof TileConveyorBelt) {
+		    pos.relative(direct.getOpposite()).above().relative(direct.getOpposite())) instanceof TileConveyorBelt
+		    || world.getBlockEntity(pos.relative(direct.getOpposite()).above().relative(direct)) instanceof TileConveyorBelt) {
 		nextSloped = true;
 	    }
 	    if (nextSloped) {
@@ -135,7 +136,12 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 	} else {
 	    boolean shouldBeNormal = isSloped || !(world.getBlockEntity(pos.relative(dir)) instanceof TileConveyorBelt);
 	    if (shouldBeNormal) {
-		progressModifier -= 0.5;
+		if (world.getBlockEntity(pos.relative(dir.getOpposite()).above()) instanceof TileConveyorBelt && !(world
+			.getBlockEntity(pos.relative(dir.getOpposite()).relative(dir.getOpposite()).above().above()) instanceof TileConveyorBelt)) {
+		    progressModifier = Mth.clampedLerp(0.25, 0.95, (progressModifier -3 / 16.0) / 1.5f);
+		} else {
+		    progressModifier -= 0.1;
+		}
 	    }
 	    if (tile.isManipulator) {
 		progressModifier = Mth.clampedLerp(0.25f, 1f, progressModifier / 1.5f);
@@ -153,13 +159,10 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 			    0);
 		    if (dir == Direction.NORTH) {
 			matrixStackIn.translate(0.5, 0, progressModifier);
-			matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(180));
 		    } else if (dir == Direction.EAST) {
 			matrixStackIn.translate(1 - progressModifier, 0, 0.5);
-			matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90));
 		    } else if (dir == Direction.WEST) {
 			matrixStackIn.translate(progressModifier, 0, 0.5);
-			matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-90));
 		    } else if (dir == Direction.SOUTH) {
 			matrixStackIn.translate(0.5, 0, 1 - progressModifier);
 		    }
@@ -188,13 +191,10 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 			    0);
 		    if (dir == Direction.NORTH) {
 			matrixStackIn.translate(i == 0 ? 0.25 : 0.75, 0, progressModifier);
-			matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(180));
 		    } else if (dir == Direction.EAST) {
 			matrixStackIn.translate(1 - progressModifier, 0, i == 0 ? 0.25 : 0.75);
-			matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90));
 		    } else if (dir == Direction.WEST) {
 			matrixStackIn.translate(progressModifier, 0, i == 0 ? 0.25 : 0.75);
-			matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-90));
 		    } else if (dir == Direction.SOUTH) {
 			matrixStackIn.translate(i == 0 ? 0.25 : 0.75, 0, 1 - progressModifier);
 		    }

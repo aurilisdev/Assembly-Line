@@ -190,7 +190,7 @@ public class TileConveyorBelt extends GenericTileTicking {
 		}
 	    }
 	    if (!halted) {
-		progress = -1;
+		progress = 0;
 		this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
 	    }
 	}
@@ -232,6 +232,7 @@ public class TileConveyorBelt extends GenericTileTicking {
 		ItemStack returner = new InvWrapper(inventory).insertItem(i, add, false);
 		if (returner.getCount() != add.getCount()) {
 		    this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
+		    progress = -1;
 		    return returner;
 		}
 	    }
