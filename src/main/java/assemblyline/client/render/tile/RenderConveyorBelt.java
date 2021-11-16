@@ -122,8 +122,7 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 	if (next instanceof TileConveyorBelt conv) {
 	    Direction direct = conv.<ComponentDirection>getComponent(ComponentType.Direction).getDirection();
 	    boolean nextSloped = false;
-	    if (world.getBlockEntity(
-		    pos.relative(direct.getOpposite()).above().relative(direct.getOpposite())) instanceof TileConveyorBelt
+	    if (world.getBlockEntity(pos.relative(direct.getOpposite()).above().relative(direct.getOpposite())) instanceof TileConveyorBelt
 		    || world.getBlockEntity(pos.relative(direct.getOpposite()).above().relative(direct)) instanceof TileConveyorBelt) {
 		nextSloped = true;
 	    }
@@ -138,7 +137,7 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 	    if (shouldBeNormal) {
 		if (world.getBlockEntity(pos.relative(dir.getOpposite()).above()) instanceof TileConveyorBelt && !(world
 			.getBlockEntity(pos.relative(dir.getOpposite()).relative(dir.getOpposite()).above().above()) instanceof TileConveyorBelt)) {
-		    progressModifier = Mth.clampedLerp(0.25, 0.95, (progressModifier -3 / 16.0) / 1.5f);
+		    progressModifier = Mth.clampedLerp(0.25, 0.95, (progressModifier - 3 / 16.0) / 1.5f);
 		} else {
 		    progressModifier -= 0.1;
 		}
@@ -182,7 +181,7 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 		    Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.NONE, combinedLightIn, combinedOverlayIn,
 			    matrixStackIn, bufferIn, 0);
 		    matrixStackIn.popPose();
-		} 
+		}
 //		    else if (totalSlotsUsed == 2) {
 //		    matrixStackIn.pushPose();
 //		    matrixStackIn.translate(0,

@@ -3,7 +3,7 @@ package assemblyline.common.tile;
 import assemblyline.DeferredRegisters;
 import assemblyline.common.inventory.container.ContainerSorterBelt;
 import assemblyline.common.settings.Constants;
-import electrodynamics.common.block.BlockGenericMachine;
+import electrodynamics.prefab.block.GenericEntityBlock;
 import electrodynamics.prefab.tile.GenericTile;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentContainerProvider;
@@ -35,7 +35,7 @@ public class TileSorterBelt extends GenericTile {
     public void onEntityCollision(Entity entityIn, boolean running) {
 	ComponentInventory inv = getComponent(ComponentType.Inventory);
 	ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
-	Direction facing = getBlockState().getValue(BlockGenericMachine.FACING);
+	Direction facing = getBlockState().getValue(GenericEntityBlock.FACING);
 	if (running && entityIn.getY() > worldPosition.getY() + 4.0 / 16.0) {
 	    Direction dir = facing.getOpposite();
 	    if (entityIn instanceof ItemEntity itemEntity) {
@@ -70,7 +70,7 @@ public class TileSorterBelt extends GenericTile {
 	if (currentSpread == 0 || currentSpread == 16) {
 	    if (electro.getJoulesStored() < Constants.SORTERBELT_USAGE) {
 		if (running) {
-		    level.setBlock(worldPosition, DeferredRegisters.blockSorterBelt.defaultBlockState().setValue(BlockGenericMachine.FACING, facing),
+		    level.setBlock(worldPosition, DeferredRegisters.blockSorterBelt.defaultBlockState().setValue(GenericEntityBlock.FACING, facing),
 			    2 | 16);
 		    currentSpread = 0;
 		}
@@ -80,7 +80,7 @@ public class TileSorterBelt extends GenericTile {
 		    lastTime = level.getGameTime();
 		    if (!running) {
 			level.setBlock(worldPosition,
-				DeferredRegisters.blockSorterBeltRunning.defaultBlockState().setValue(BlockGenericMachine.FACING, facing), 2 | 16);
+				DeferredRegisters.blockSorterBeltRunning.defaultBlockState().setValue(GenericEntityBlock.FACING, facing), 2 | 16);
 		    }
 		    currentSpread = 16;
 		}
@@ -88,7 +88,7 @@ public class TileSorterBelt extends GenericTile {
 	} else {
 	    if (currentSpread > 0 && !running) {
 		level.setBlock(worldPosition,
-			DeferredRegisters.blockSorterBeltRunning.defaultBlockState().setValue(BlockGenericMachine.FACING, facing), 2 | 16);
+			DeferredRegisters.blockSorterBeltRunning.defaultBlockState().setValue(GenericEntityBlock.FACING, facing), 2 | 16);
 	    }
 	}
     }

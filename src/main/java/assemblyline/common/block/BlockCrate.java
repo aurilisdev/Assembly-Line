@@ -1,12 +1,8 @@
 package assemblyline.common.block;
 
-import java.util.Arrays;
-import java.util.List;
-
 import assemblyline.common.tile.TileCrate;
-import electrodynamics.common.block.BlockGenericMachine;
+import electrodynamics.prefab.block.GenericEntityBlock;
 import electrodynamics.prefab.tile.GenericTile;
-import electrodynamics.prefab.tile.GenericTileTicking;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import net.minecraft.core.BlockPos;
@@ -19,20 +15,15 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.storage.loot.LootContext.Builder;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.items.CapabilityItemHandler;
 
-public class BlockCrate extends BaseEntityBlock {
+public class BlockCrate extends GenericEntityBlock {
 
     public final int size;
 
@@ -45,23 +36,13 @@ public class BlockCrate extends BaseEntityBlock {
     public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 	BlockEntity tile = worldIn.getBlockEntity(pos);
 	if (tile instanceof GenericTile generic && !(state.getBlock() == newState.getBlock()
-		&& state.getValue(BlockGenericMachine.FACING) != newState.getValue(BlockGenericMachine.FACING))) {
+		&& state.getValue(GenericEntityBlock.FACING) != newState.getValue(GenericEntityBlock.FACING))) {
 	    if (generic.hasComponent(ComponentType.Inventory)) {
 		Containers.dropContents(worldIn, pos, generic.<ComponentInventory>getComponent(ComponentType.Inventory));
 	    }
 	}
 	super.onRemove(state, worldIn, pos, newState, isMoving);
 
-    }
-
-    @Override
-    public RenderShape getRenderShape(BlockState state) {
-	return RenderShape.MODEL;
-    }
-
-    @Override
-    public List<ItemStack> getDrops(BlockState state, Builder builder) {
-	return Arrays.asList(new ItemStack(this));
     }
 
     @Override
@@ -94,16 +75,5 @@ public class BlockCrate extends BaseEntityBlock {
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 	return new TileCrate(size, pos, state);
-    }
-
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level lvl, BlockState state, BlockEntityType<T> type) {
-	return this::tick;
-    }
-
-    public <T extends BlockEntity> void tick(Level lvl, BlockPos pos, BlockState state, T t) {
-	if (t instanceof GenericTileTicking tick) {
-	    tick.tick();
-	}
     }
 }
