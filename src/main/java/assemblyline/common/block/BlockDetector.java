@@ -53,7 +53,7 @@ public class BlockDetector extends GenericEntityBlockWaterloggable {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-	return defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite());
+	return super.getStateForPlacement(context).setValue(FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
