@@ -64,24 +64,22 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 		    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_MANIPULATORINPUT);
 		}
 	    }
-	} else {
-	    if (isSloped) {
-		if (up) {
-		    if (running) {
-			model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYORANIMATED);
-		    } else {
-			model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYOR);
-		    }
+	} else if (isSloped) {
+	    if (up) {
+		if (running) {
+		    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYORANIMATED);
 		} else {
-		    if (running) {
-			model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYORDOWNANIMATED);
-		    } else {
-			model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYORDOWN);
-		    }
+		    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYOR);
 		}
-	    } else if (running) {
-		model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORANIMATED);
+	    } else {
+		if (running) {
+		    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYORDOWNANIMATED);
+		} else {
+		    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYORDOWN);
+		}
 	    }
+	} else if (running) {
+	    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORANIMATED);
 	}
 	Direction dir = direction.getDirection();
 	if (model == Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYOR)
