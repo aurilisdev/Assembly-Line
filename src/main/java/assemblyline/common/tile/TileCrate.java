@@ -3,7 +3,7 @@ package assemblyline.common.tile;
 import java.util.HashSet;
 
 import assemblyline.DeferredRegisters;
-import electrodynamics.prefab.tile.GenericTileTicking;
+import electrodynamics.prefab.tile.GenericTile;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
@@ -15,7 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class TileCrate extends GenericTileTicking {
+public class TileCrate extends GenericTile {
     private int lastCheckCount = 0;
     private int count = 0;
 

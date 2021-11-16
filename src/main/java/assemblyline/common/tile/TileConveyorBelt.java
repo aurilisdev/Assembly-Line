@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import assemblyline.DeferredRegisters;
 import assemblyline.common.settings.Constants;
-import electrodynamics.prefab.tile.GenericTileTicking;
+import electrodynamics.prefab.tile.GenericTile;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentDirection;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
@@ -26,7 +26,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
-public class TileConveyorBelt extends GenericTileTicking {
+public class TileConveyorBelt extends GenericTile {
     public int currentSpread = 0;
     public double progress = 0;
     public boolean halted;
