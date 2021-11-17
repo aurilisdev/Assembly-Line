@@ -135,8 +135,8 @@ public class TileConveyorBelt extends GenericTile {
     }
 
     protected void tickCommon(ComponentTickable tickable) {
-	if (progress < 15 && !halted && currentSpread > 0) {
-	    progress += 17.0 / 14.0;
+	if (progress < (18.0 / 16.0) * 15 && !halted && currentSpread > 0) {
+	    progress += 18.0 / 16.0;
 	}
 	boolean flag = true;
 	ComponentInventory inventory = getComponent(ComponentType.Inventory);
@@ -147,7 +147,7 @@ public class TileConveyorBelt extends GenericTile {
 	    }
 	}
 	if (flag) {
-	    progress = -1;
+	    progress = 0 - (18.0 / 16.0);
 	} else {
 	    halted = false;
 	}
@@ -161,7 +161,7 @@ public class TileConveyorBelt extends GenericTile {
 	    isManipulator = true;
 	    isManipulatorOutput = false;
 	}
-	if (progress >= 15) {
+	if (progress >= (18.0 / 16.0) * 15) {
 	    flag = moveItemsIntoNextBelt(inventory, direction, worldPosition.relative(direction.getDirection().getOpposite()), false)
 		    || moveItemsIntoNextBelt(inventory, direction,
 			    worldPosition.relative(Direction.UP).relative(direction.getDirection().getOpposite()), false)
@@ -185,7 +185,7 @@ public class TileConveyorBelt extends GenericTile {
 		    }
 		    updateStatus(false);
 		} else {
-		    progress -= 1;
+		    progress -= (18.0 / 16.0);
 		    updateStatus(true);
 		}
 	    }
@@ -194,7 +194,7 @@ public class TileConveyorBelt extends GenericTile {
 		this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
 	    }
 	}
-	if (progress == -1 && isManipulatorOutput && isManipulator && currentSpread > 0) {
+	if (progress == 0 && isManipulatorOutput && isManipulator && currentSpread > 0) {
 	    BlockEntity from = level.getBlockEntity(worldPosition.relative(direction.getDirection()));
 	    if (from != null) {
 		LazyOptional<IItemHandler> cap = from.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,

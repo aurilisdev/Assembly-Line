@@ -74,16 +74,14 @@ public class TileSorterBelt extends GenericTile {
 			    2 | 16);
 		    currentSpread = 0;
 		}
-	    } else {
-		if (lastTime != level.getGameTime()) {
-		    electro.joules(electro.getJoulesStored() - Constants.SORTERBELT_USAGE);
-		    lastTime = level.getGameTime();
-		    if (!running) {
-			level.setBlock(worldPosition,
-				DeferredRegisters.blockSorterBeltRunning.defaultBlockState().setValue(GenericEntityBlock.FACING, facing), 2 | 16);
-		    }
-		    currentSpread = 16;
+	    } else if (lastTime != level.getGameTime()) {
+		electro.joules(electro.getJoulesStored() - Constants.SORTERBELT_USAGE);
+		lastTime = level.getGameTime();
+		if (!running) {
+		    level.setBlock(worldPosition,
+			    DeferredRegisters.blockSorterBeltRunning.defaultBlockState().setValue(GenericEntityBlock.FACING, facing), 2 | 16);
 		}
+		currentSpread = 16;
 	    }
 	} else if (currentSpread > 0 && !running) {
 	    level.setBlock(worldPosition, DeferredRegisters.blockSorterBeltRunning.defaultBlockState().setValue(GenericEntityBlock.FACING, facing),
