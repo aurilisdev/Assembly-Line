@@ -42,11 +42,8 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 	ComponentDirection direction = tile.getComponent(ComponentType.Direction);
 	BlockPos pos = tile.getBlockPos();
 	Level world = tile.getLevel();
-	boolean isSloped = false;
-	if (world.getBlockEntity(pos.above().relative(direction.getDirection().getOpposite())) instanceof TileConveyorBelt
-		|| world.getBlockEntity(pos.above().relative(direction.getDirection())) instanceof TileConveyorBelt) {
-	    isSloped = true;
-	}
+	boolean isSloped = world.getBlockEntity(pos.above().relative(direction.getDirection().getOpposite())) instanceof TileConveyorBelt
+		|| world.getBlockEntity(pos.above().relative(direction.getDirection())) instanceof TileConveyorBelt;
 	boolean up = world.getBlockEntity(pos.above().relative(direction.getDirection().getOpposite())) instanceof TileConveyorBelt;
 	boolean running = tile.currentSpread > 0;
 	if (tile.isManipulator) {
@@ -111,7 +108,7 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 		totalSlotsUsed++;
 	    }
 	}
-	double progressModifier = (tile.progress + 8.0 + (tile.currentSpread <= 0 || tile.halted ? 0 : partialTicks)) / 16.0;
+	double progressModifier = (tile.progress + 8 + (tile.currentSpread <= 0 || tile.halted ? 0 : partialTicks)) / 16.0;
 	BlockEntity next = world.getBlockEntity(pos.relative(dir.getOpposite()));
 	if (next instanceof TileConveyorBelt conv) {
 	    Direction direct = conv.<ComponentDirection>getComponent(ComponentType.Direction).getDirection();
@@ -131,7 +128,7 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 	    if (shouldBeNormal) {
 		if (world.getBlockEntity(pos.relative(dir.getOpposite()).above()) instanceof TileConveyorBelt && !(world
 			.getBlockEntity(pos.relative(dir.getOpposite()).relative(dir.getOpposite()).above().above()) instanceof TileConveyorBelt)) {
-		    progressModifier = Mth.clampedLerp(0.25, 0.95, (progressModifier - 3 / 16.0) / 1.5f);
+		    progressModifier = Mth.clampedLerp(0.0, 0.95, (progressModifier - 0 / 16.0) / 1.5f);
 		} else {
 		    progressModifier -= 0.1;
 		}
@@ -152,10 +149,13 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 			    0);
 		    if (dir == Direction.NORTH) {
 			matrixStackIn.translate(0.5, 0, progressModifier);
+			matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(180));
 		    } else if (dir == Direction.EAST) {
 			matrixStackIn.translate(1 - progressModifier, 0, 0.5);
+			matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90));
 		    } else if (dir == Direction.WEST) {
 			matrixStackIn.translate(progressModifier, 0, 0.5);
+			matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-90));
 		    } else if (dir == Direction.SOUTH) {
 			matrixStackIn.translate(0.5, 0, 1 - progressModifier);
 		    }
