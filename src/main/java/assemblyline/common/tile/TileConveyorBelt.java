@@ -234,7 +234,7 @@ public class TileConveyorBelt extends GenericTile {
 		ItemStack returner = new InvWrapper(inventory).insertItem(i, add, false);
 		if (returner.getCount() != add.getCount()) {
 		    this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
-		    progress = 0;
+		    progress = -1;
 		    return returner;
 		}
 	    }
