@@ -54,12 +54,10 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 		    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_MANIPULATOROUTPUT);
 		}
 		matrixStackIn.mulPose(new Quaternion(0, 180, 0, true));
+	    } else if (running) {
+		model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_MANIPULATORINPUTRUNNING);
 	    } else {
-		if (running) {
-		    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_MANIPULATORINPUTRUNNING);
-		} else {
-		    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_MANIPULATORINPUT);
-		}
+		model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_MANIPULATORINPUT);
 	    }
 	} else if (isSloped) {
 	    if (up) {
@@ -68,12 +66,10 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 		} else {
 		    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYOR);
 		}
+	    } else if (running) {
+		model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYORDOWNANIMATED);
 	    } else {
-		if (running) {
-		    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYORDOWNANIMATED);
-		} else {
-		    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYORDOWN);
-		}
+		model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYORDOWN);
 	    }
 	} else if (running) {
 	    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORANIMATED);
