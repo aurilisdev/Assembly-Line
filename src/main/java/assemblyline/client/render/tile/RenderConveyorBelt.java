@@ -20,6 +20,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -38,7 +39,7 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 	matrixStackIn.pushPose();
 	matrixStackIn.translate(0, 1 / 16.0, 0);
 	UtilitiesRendering.prepareRotationalTileModel(tile, matrixStackIn);
-	BakedModel model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYOR);
+	ResourceLocation model = ClientRegister.MODEL_CONVEYOR;
 	ComponentDirection direction = tile.getComponent(ComponentType.Direction);
 	BlockPos pos = tile.getBlockPos();
 	Level world = tile.getLevel();
@@ -49,34 +50,33 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 	if (tile.isManipulator) {
 	    if (tile.isManipulatorOutput) {
 		if (running) {
-		    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_MANIPULATOROUTPUTRUNNING);
+		    model = ClientRegister.MODEL_MANIPULATOROUTPUTRUNNING;
 		} else {
-		    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_MANIPULATOROUTPUT);
+		    model = ClientRegister.MODEL_MANIPULATOROUTPUT;
 		}
 		matrixStackIn.mulPose(new Quaternion(0, 180, 0, true));
 	    } else if (running) {
-		model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_MANIPULATORINPUTRUNNING);
+		model = ClientRegister.MODEL_MANIPULATORINPUTRUNNING;
 	    } else {
-		model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_MANIPULATORINPUT);
+		model = ClientRegister.MODEL_MANIPULATORINPUT;
 	    }
 	} else if (isSloped) {
 	    if (up) {
 		if (running) {
-		    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYORANIMATED);
+		    model = ClientRegister.MODEL_SLOPEDCONVEYORANIMATED;
 		} else {
-		    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYOR);
+		    model = ClientRegister.MODEL_SLOPEDCONVEYOR;
 		}
 	    } else if (running) {
-		model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYORDOWNANIMATED);
+		model = ClientRegister.MODEL_SLOPEDCONVEYORDOWNANIMATED;
 	    } else {
-		model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_SLOPEDCONVEYORDOWN);
+		model = ClientRegister.MODEL_SLOPEDCONVEYORDOWN;
 	    }
 	} else if (running) {
-	    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORANIMATED);
+	    model = ClientRegister.MODEL_CONVEYORANIMATED;
 	}
 	Direction dir = direction.getDirection();
-	if (model == Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYOR)
-		|| model == Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORANIMATED)) {
+	if (model == ClientRegister.MODEL_CONVEYOR || model == ClientRegister.MODEL_CONVEYORANIMATED) {
 	    BlockEntity right = world.getBlockEntity(pos.relative(dir.getOpposite().getClockWise()));
 	    BlockEntity rightdown = world.getBlockEntity(pos.relative(dir.getOpposite().getClockWise()).below());
 	    BlockEntity left = world.getBlockEntity(pos.relative(dir.getOpposite().getCounterClockWise()));
@@ -86,18 +86,17 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 	    boolean leftClear = left instanceof TileConveyorBelt || left instanceof TileSorterBelt || leftdown instanceof TileConveyorBelt
 		    || leftdown instanceof TileSorterBelt;
 	    if (rightClear || leftClear) {
-		if (model == Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYOR)) {
-		    model = rightClear && leftClear ? Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORCLEAR)
-			    : rightClear ? Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORRIGHTCLEAR)
-				    : Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORLEFTCLEAR);
-		} else if (model == Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORANIMATED)) {
-		    model = rightClear && leftClear ? Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORANIMATEDCLEAR)
-			    : rightClear ? Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORANIMATEDRIGHTCLEAR)
-				    : Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_CONVEYORANIMATEDLEFTCLEAR);
+		if (model == ClientRegister.MODEL_CONVEYOR) {
+		    model = rightClear && leftClear ? ClientRegister.MODEL_CONVEYORCLEAR
+			    : rightClear ? ClientRegister.MODEL_CONVEYORRIGHTCLEAR : ClientRegister.MODEL_CONVEYORLEFTCLEAR;
+		} else if (model == ClientRegister.MODEL_CONVEYORANIMATED) {
+		    model = rightClear && leftClear ? ClientRegister.MODEL_CONVEYORANIMATEDCLEAR
+			    : rightClear ? ClientRegister.MODEL_CONVEYORANIMATEDRIGHTCLEAR : ClientRegister.MODEL_CONVEYORANIMATEDLEFTCLEAR;
 		}
 	    }
 	}
-	UtilitiesRendering.renderModel(model, tile, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+	BakedModel renderModel = Minecraft.getInstance().getModelManager().getModel(model);
+	UtilitiesRendering.renderModel(renderModel, tile, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 	matrixStackIn.popPose();
 	ComponentInventory inv = tile.getComponent(ComponentType.Inventory);
 
@@ -176,39 +175,6 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 			    matrixStackIn, bufferIn, 0);
 		    matrixStackIn.popPose();
 		}
-//		    else if (totalSlotsUsed == 2) {
-//		    matrixStackIn.pushPose();
-//		    matrixStackIn.translate(0,
-//			    (stack.getItem() instanceof BlockItem ? 0.48 : 0.33)
-//				    + (isSloped ? up ? progressModifier : progressModifier - 1 : 0) * (up ? 1 : -1)
-//				    + (isSloped ? up ? 2.5 / 16.0 : 1 / 16.0 : 0),
-//			    0);
-//		    if (dir == Direction.NORTH) {
-//			matrixStackIn.translate(i == 0 ? 0.25 : 0.75, 0, progressModifier);
-//		    } else if (dir == Direction.EAST) {
-//			matrixStackIn.translate(1 - progressModifier, 0, i == 0 ? 0.25 : 0.75);
-//		    } else if (dir == Direction.WEST) {
-//			matrixStackIn.translate(progressModifier, 0, i == 0 ? 0.25 : 0.75);
-//		    } else if (dir == Direction.SOUTH) {
-//			matrixStackIn.translate(i == 0 ? 0.25 : 0.75, 0, 1 - progressModifier);
-//		    }
-//		    if (isSloped) {
-//			int rotate = 45;
-//			if (up) {
-//			    rotate = -45;
-//			}
-//			matrixStackIn.mulPose(dir == Direction.NORTH ? Vector3f.XN.rotationDegrees(rotate)
-//				: dir == Direction.SOUTH ? Vector3f.XP.rotationDegrees(-rotate)
-//					: dir == Direction.WEST ? Vector3f.XN.rotationDegrees(rotate) : Vector3f.XP.rotationDegrees(-rotate));
-//		    }
-//		    matrixStackIn.scale(0.35f, 0.35f, 0.35f);
-//		    if (!(stack.getItem() instanceof BlockItem)) {
-//			matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(90));
-//		    }
-//		    Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.NONE, combinedLightIn, combinedOverlayIn,
-//			    matrixStackIn, bufferIn, 0);
-//		    matrixStackIn.popPose();
-//		}
 	    }
 	}
     }
