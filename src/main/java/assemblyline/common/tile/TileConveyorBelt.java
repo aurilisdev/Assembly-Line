@@ -115,7 +115,9 @@ public class TileConveyorBelt extends GenericTile {
 		    ItemStack stackHere = inventory.getItem(indexHere);
 		    if (!stackHere.isEmpty()) {
 			for (int indexThere = 0; indexThere < handler.getSlots(); indexThere++) {
-			    inventory.setItem(indexHere, handler.insertItem(indexThere, stackHere, false));
+			    ItemStack set = handler.insertItem(indexThere, stackHere, false);
+			    inventory.setItem(indexHere, set);
+			    stackHere = set;
 			    if (inventory.getItem(indexHere).isEmpty()) {
 				break;
 			    }
