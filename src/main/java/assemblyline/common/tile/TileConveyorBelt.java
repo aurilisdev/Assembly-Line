@@ -192,7 +192,7 @@ public class TileConveyorBelt extends GenericTile {
 		}
 	    }
 	    if (!halted) {
-		progress = 0;
+		progress = 1;
 		this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
 	    }
 	}

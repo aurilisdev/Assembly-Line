@@ -27,7 +27,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
-//TODO: Improve this shitty billion check code...
 public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt> {
 
     public RenderConveyorBelt(BlockEntityRendererProvider.Context context) {
