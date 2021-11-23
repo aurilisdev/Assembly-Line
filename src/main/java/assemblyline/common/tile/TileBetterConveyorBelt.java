@@ -18,6 +18,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -136,6 +137,7 @@ public class TileBetterConveyorBelt extends GenericTile {
     }
 
     public void attemptMove() {
+	Vector3f move = getDirectionAsVector();
 	ItemStack stackOnBelt = getStackOnBelt();
 	if (!stackOnBelt.isEmpty()) {
 	    if (shouldTransfer()) {
@@ -153,10 +155,14 @@ public class TileBetterConveyorBelt extends GenericTile {
 			waiting = true;
 		    }
 		} else {
-		    // drop item
+		    ItemEntity entity = new ItemEntity(level, worldPosition.getX() + 0.5 + move.x() / 2.0f, worldPosition.getY() + 0.4,
+			    worldPosition.getZ() + 0.5 + move.y() / 2.0f, stackOnBelt);
+		    entity.setDeltaMovement(move.y() / 16.0, 1 / 16.0, move.z() / 16.0);
+		    entity.setPickUpDelay(20);
+		    level.addFreshEntity(entity);
+		    this.<ComponentInventory>getComponent(ComponentType.Inventory).setItem(0, ItemStack.EMPTY);
 		}
 	    } else {
-		Vector3f move = getDirectionAsVector();
 		move.mul(1 / 16.0f);
 		object.pos.add(move);
 	    }
