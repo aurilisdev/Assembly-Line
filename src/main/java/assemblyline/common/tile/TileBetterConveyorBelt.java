@@ -22,6 +22,9 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class TileBetterConveyorBelt extends GenericTile {
@@ -31,6 +34,8 @@ public class TileBetterConveyorBelt extends GenericTile {
     public ArrayList<TileBetterConveyorBelt> inQueue = new ArrayList<>();
     public boolean isQueueReady = false;
     public boolean waiting = false;
+    public boolean isPusher = false;
+    public boolean isPuller = false;
     public ConveyorObject object = new ConveyorObject();
 
     public TileBetterConveyorBelt(BlockPos worldPosition, BlockState blockState) {
@@ -85,18 +90,45 @@ public class TileBetterConveyorBelt extends GenericTile {
 	ItemStack stackOnBelt = getStackOnBelt();
 	isQueueReady = stackOnBelt.isEmpty();
 	running = currentSpread > 0 && isQueueReady;
+	BlockEntity nextBlockEntity = getNextEntity();
+	Direction direction = this.<ComponentDirection>getComponent(ComponentType.Direction).getDirection();
+	isPusher = false;
+	if (nextBlockEntity != null && !(nextBlockEntity instanceof TileBetterConveyorBelt)) {
+	    LazyOptional<IItemHandler> handlerOptional = nextBlockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction);
+	    isPusher = handlerOptional.isPresent();
+	}
 	if (currentSpread > 0) {
 	    attemptMove();
 	}
-	if (isQueueReady && !inQueue.isEmpty()) {
-	    while (true) {
-		TileBetterConveyorBelt queue = inQueue.get(0);
-		if (!queue.isRemoved() && queue.waiting) {
-		    break;
+	BlockEntity lastBlockEntity = level.getBlockEntity(worldPosition.offset(direction.getNormal()));
+	isPuller = false;
+	if (lastBlockEntity != null && !(lastBlockEntity instanceof TileBetterConveyorBelt)) {
+	    LazyOptional<IItemHandler> handlerOptional = lastBlockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction);
+	    isPuller = handlerOptional.isPresent();
+	}
+	if (isQueueReady) {
+	    if (!inQueue.isEmpty()) {
+		while (true) {
+		    TileBetterConveyorBelt queue = inQueue.get(0);
+		    if (!queue.isRemoved() && queue.waiting) {
+			break;
+		    }
+		    inQueue.remove(0);
+		    if (inQueue.isEmpty()) {
+			break;
+		    }
 		}
-		inQueue.remove(0);
-		if (inQueue.isEmpty()) {
-		    break;
+	    } else if (lastBlockEntity != null && isPuller) {
+		LazyOptional<IItemHandler> cap = lastBlockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction);
+		if (cap.isPresent()) {
+		    IItemHandler handler = cap.resolve().get();
+		    for (int slot = 0; slot < handler.getSlots(); slot++) {
+			ItemStack returned = handler.extractItem(slot, 64, false);
+			if (!returned.isEmpty()) {
+			    addItemOnBelt(returned);
+			    break;
+			}
+		    }
 		}
 	    }
 	}
@@ -140,9 +172,10 @@ public class TileBetterConveyorBelt extends GenericTile {
 	Vector3f move = getDirectionAsVector();
 	ItemStack stackOnBelt = getStackOnBelt();
 	if (!stackOnBelt.isEmpty()) {
-	    if (shouldTransfer()) {
-		TileBetterConveyorBelt belt = getNextConveyor();
-		if (belt != null) {
+	    boolean shouldTransfer = shouldTransfer();
+	    BlockEntity nextBlockEntity = getNextEntity();
+	    if (nextBlockEntity instanceof TileBetterConveyorBelt belt) {
+		if (shouldTransfer) {
 		    if (!belt.inQueue.contains(this)) {
 			belt.inQueue.add(this);
 		    }
@@ -154,15 +187,25 @@ public class TileBetterConveyorBelt extends GenericTile {
 		    } else {
 			waiting = true;
 		    }
-		} else {
-		    ItemEntity entity = new ItemEntity(level, worldPosition.getX() + 0.5 + move.x() / 2.0f, worldPosition.getY() + 0.4,
-			    worldPosition.getZ() + 0.5 + move.y() / 2.0f, stackOnBelt);
-		    entity.setDeltaMovement(move.y() / 16.0, 1 / 16.0, move.z() / 16.0);
-		    entity.setPickUpDelay(20);
-		    level.addFreshEntity(entity);
-		    this.<ComponentInventory>getComponent(ComponentType.Inventory).setItem(0, ItemStack.EMPTY);
+		}
+	    } else if (nextBlockEntity != null) {
+		if (shouldTransfer) {
+		    Direction direction = this.<ComponentDirection>getComponent(ComponentType.Direction).getDirection();
+		    LazyOptional<IItemHandler> handlerOptional = nextBlockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
+			    direction);
+		    ComponentInventory inventory = getComponent(ComponentType.Inventory);
+		    if (handlerOptional.isPresent()) {
+			putItemsIntoInventory(handlerOptional, inventory);
+		    } else {
+			dropItem(stackOnBelt, move);
+			this.<ComponentInventory>getComponent(ComponentType.Inventory).setItem(0, ItemStack.EMPTY);
+		    }
 		}
 	    } else {
+		dropItem(stackOnBelt, move);
+		this.<ComponentInventory>getComponent(ComponentType.Inventory).setItem(0, ItemStack.EMPTY);
+	    }
+	    if (!shouldTransfer) {
 		move.mul(1 / 16.0f);
 		object.pos.add(move);
 	    }
@@ -171,20 +214,53 @@ public class TileBetterConveyorBelt extends GenericTile {
 	running = currentSpread > 0 && (!waiting || isQueueReady);
     }
 
-    protected TileBetterConveyorBelt getNextConveyor() {
-	TileBetterConveyorBelt nextBlockEntity = null;
+    public void dropItem(ItemStack stackOnBelt, Vector3f move) {
+	ItemEntity entity = new ItemEntity(level, worldPosition.getX() + 0.5 + move.x() / 2.0f, worldPosition.getY() + 0.4,
+		worldPosition.getZ() + 0.5 + move.z() / 2.0f, stackOnBelt);
+	entity.setDeltaMovement(move.x() / 12.0, 1.5 / 16.0, move.z() / 12.0);
+	entity.setPickUpDelay(20);
+	level.addFreshEntity(entity);
+    }
+
+    private static void putItemsIntoInventory(LazyOptional<IItemHandler> handlerOptional, ComponentInventory inventory) {
+	IItemHandler handler = handlerOptional.resolve().get();
+	for (int indexHere = 0; indexHere < inventory.getContainerSize(); indexHere++) {
+	    ItemStack stackHere = inventory.getItem(indexHere);
+	    if (!stackHere.isEmpty()) {
+		for (int indexThere = 0; indexThere < handler.getSlots(); indexThere++) {
+		    ItemStack set = handler.insertItem(indexThere, stackHere, false);
+		    inventory.setItem(indexHere, set);
+		    stackHere = set;
+		    if (inventory.getItem(indexHere).isEmpty()) {
+			break;
+		    }
+		}
+	    }
+	}
+    }
+
+    public BlockPos getNextPos() {
 	Direction direction = this.<ComponentDirection>getComponent(ComponentType.Direction).getDirection().getOpposite();
-	BlockPos nextBlockPos = switch (type) {
+	return switch (type) {
 	case Horizontal -> worldPosition.relative(direction);
 	case SlopedDown -> worldPosition.relative(direction).below();
 	case SlopedUp -> worldPosition.relative(direction).above();
 	case Vertical -> worldPosition.relative(Direction.UP);
 	default -> null;
 	};
+    }
+
+    protected BlockEntity getNextEntity() {
+	BlockEntity nextBlockEntity = null;
+	BlockPos nextBlockPos = getNextPos();
 	if (nextBlockPos != null) {
-	    nextBlockEntity = level.getBlockEntity(nextBlockPos)instanceof TileBetterConveyorBelt belt ? belt : null;
+	    nextBlockEntity = level.getBlockEntity(nextBlockPos);
 	}
 	return nextBlockEntity;
+    }
+
+    protected TileBetterConveyorBelt getNextConveyor() {
+	return getNextEntity()instanceof TileBetterConveyorBelt belt ? belt : null;
     }
 
     protected void loadFromNBT(CompoundTag nbt) {
@@ -196,7 +272,7 @@ public class TileBetterConveyorBelt extends GenericTile {
 	type = ConveyorType.values()[nbt.getInt("type")];
 	isQueueReady = nbt.getBoolean("isQueueReady");
 	waiting = nbt.getBoolean("waiting");
-	object.pos = new Vector3f(nbt.getFloat("convX"), nbt.getFloat("convY"), nbt.getFloat("convZ"));
+	object.pos = new Vector3f(nbt.getFloat("convX"), 0, nbt.getFloat("convZ"));
     }
 
     protected void saveToNBT(CompoundTag nbt) {
@@ -207,7 +283,6 @@ public class TileBetterConveyorBelt extends GenericTile {
 	nbt.putBoolean("isQueueReady", isQueueReady);
 	nbt.putBoolean("waiting", waiting);
 	nbt.putFloat("convX", object.pos.x());
-	nbt.putFloat("convY", object.pos.y());
 	nbt.putFloat("convZ", object.pos.z());
     }
 

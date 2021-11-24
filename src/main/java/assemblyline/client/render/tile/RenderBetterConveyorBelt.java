@@ -1,6 +1,7 @@
 package assemblyline.client.render.tile;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 
 import assemblyline.client.ClientRegister;
@@ -15,6 +16,7 @@ import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -27,23 +29,13 @@ public class RenderBetterConveyorBelt implements BlockEntityRenderer<TileBetterC
     @Override
     public void render(TileBetterConveyorBelt tile, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
 	    int combinedOverlayIn) {
-	ResourceLocation location = ClientRegister.MODEL_CONVEYOR;
-	if (tile.running) {
-	    location = ClientRegister.MODEL_CONVEYORANIMATED;
-	}
-	BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
+	matrixStackIn.pushPose();
 	ComponentInventory inv = tile.getComponent(ComponentType.Inventory);
 	ItemStack stack = inv.getItem(0);
-	matrixStackIn.pushPose();
-	matrixStackIn.translate(0, 1 / 16.0, 0);
-	UtilitiesRendering.prepareRotationalTileModel(tile, matrixStackIn);
-	UtilitiesRendering.renderModel(model, tile, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
-	matrixStackIn.popPose();
-
 	Vector3f itemVec = tile.getObjectLocal();
 	Vector3f move = tile.getDirectionAsVector();
 	move.mul(partialTicks / 16.0f);
-	if (!tile.waiting) {
+	if (tile.running) {
 	    itemVec.add(move);
 	}
 	matrixStackIn.pushPose();
@@ -64,9 +56,42 @@ public class RenderBetterConveyorBelt implements BlockEntityRenderer<TileBetterC
 	default:
 	    break;
 	}
-
 	Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.NONE, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn,
 		0);
 	matrixStackIn.popPose();
+	ResourceLocation location = ClientRegister.MODEL_CONVEYOR;
+	if (tile.running) {
+	    location = ClientRegister.MODEL_CONVEYORANIMATED;
+	}
+	BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
+
+	matrixStackIn.pushPose();
+	matrixStackIn.translate(0, 1 / 16.0, 0);
+	UtilitiesRendering.prepareRotationalTileModel(tile, matrixStackIn);
+	UtilitiesRendering.renderModel(model, tile, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+	matrixStackIn.popPose();
+	if (tile.isPusher || tile.isPuller) {
+	    model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_MANIPULATOR);
+	    move = tile.getDirectionAsVector();
+	    if (tile.isPusher) {
+		BlockPos nextBlockPos = tile.getNextPos().subtract(tile.getBlockPos());
+		matrixStackIn.pushPose();
+		matrixStackIn.translate(0, 1 / 16.0, 0);
+		matrixStackIn.translate(nextBlockPos.getX() - move.x(), nextBlockPos.getY() - move.y(), nextBlockPos.getZ() - move.z());
+		UtilitiesRendering.prepareRotationalTileModel(tile, matrixStackIn);
+		UtilitiesRendering.renderModel(model, tile, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+		matrixStackIn.popPose();
+	    }
+	    if (tile.isPuller) {
+		matrixStackIn.pushPose();
+		matrixStackIn.translate(0, 1 / 16.0, 0);
+		UtilitiesRendering.prepareRotationalTileModel(tile, matrixStackIn);
+		matrixStackIn.mulPose(new Quaternion(0, 180, 0, true));
+		UtilitiesRendering.renderModel(model, tile, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+		matrixStackIn.popPose();
+	    }
+	}
+	matrixStackIn.popPose();
+
     }
 }

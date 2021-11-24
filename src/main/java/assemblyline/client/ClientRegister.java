@@ -43,6 +43,7 @@ public class ClientRegister {
 	ModelLoader.addSpecialModel(MODEL_ELEVATORRUNNING);
 	ModelLoader.addSpecialModel(MODEL_ELEVATORBOTTOM);
 	ModelLoader.addSpecialModel(MODEL_ELEVATORBOTTOMRUNNING);
+	ModelLoader.addSpecialModel(MODEL_MANIPULATOR);
     }
 
     public static final ResourceLocation MODEL_CONVEYOR = new ResourceLocation(References.ID + ":block/conveyorbelt");
@@ -68,6 +69,7 @@ public class ClientRegister {
     public static final ResourceLocation MODEL_ELEVATORRUNNING = new ResourceLocation(References.ID + ":block/elevatorbeltrunning");
     public static final ResourceLocation MODEL_ELEVATORBOTTOM = new ResourceLocation(References.ID + ":block/elevatorbeltbottom");
     public static final ResourceLocation MODEL_ELEVATORBOTTOMRUNNING = new ResourceLocation(References.ID + ":block/elevatorbeltbottomrunning");
+    public static final ResourceLocation MODEL_MANIPULATOR = new ResourceLocation(References.ID + ":block/manipulator");
 
     public static void setup() {
 	MenuScreens.register(DeferredRegisters.CONTAINER_SORTERBELT.get(), ScreenSorterBelt::new);
