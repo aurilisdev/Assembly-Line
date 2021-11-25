@@ -45,6 +45,8 @@ public class RenderBetterConveyorBelt implements BlockEntityRenderer<TileBetterC
 	if (tile.running) {
 	    location = ClientRegister.MODEL_CONVEYORANIMATED;
 	}
+	Vector3f move2 = tile.getDirectionAsVector();
+	Vector3f dir = new Vector3f(Math.abs(move2.x()), Math.abs(move2.y()), Math.abs(move2.z()));
 	switch (tile.type) {
 	case Horizontal:
 	    matrixStackIn.translate(itemVec.x(), stack.getItem() instanceof BlockItem ? 0.48 : 0.33, itemVec.z());
@@ -54,14 +56,25 @@ public class RenderBetterConveyorBelt implements BlockEntityRenderer<TileBetterC
 	    }
 	    break;
 	case SlopedDown:
-	    location = tile.running ? ClientRegister.MODEL_SLOPEDCONVEYORDOWNANIMATED : ClientRegister.MODEL_SLOPEDCONVEYORDOWN;
+	    double verticalComponent2 = 0;
+	    if (move2.x() + move2.y() + move2.z() < 0) {
+		verticalComponent2 = 1 - Mth.clampedLerp(0, 1, itemVec.dot(dir));
+	    } else {
+		verticalComponent2 = Mth.clampedLerp(0, 1, itemVec.dot(dir));
+	    }
+	    matrixStackIn.translate(itemVec.x(), (stack.getItem() instanceof BlockItem ? 0.48 : 0.33) - verticalComponent2 + 2 / 16.0, itemVec.z());
+	    matrixStackIn.scale(0.35f, 0.35f, 0.35f);
+	    if (!(stack.getItem() instanceof BlockItem)) {
+		matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(90));
+	    }
+	    location = tile.running ? ClientRegister.MODEL_SLOPEDCONVEYORUPANIMATED : ClientRegister.MODEL_SLOPEDCONVEYORUP;
 	    break;
 	case SlopedUp:
-	    double verticalComponent = Math.sqrt(itemVec.dot(itemVec));
-	    Vector3f direction = tile.getDirectionAsVector();
-	    verticalComponent = Mth.clampedLerp(-5 / 16.0, 1, verticalComponent) * (direction.x() + direction.y() + direction.z() > 0 ? 1 : -1);
-	    if (direction.x() + direction.y() + direction.z() < 0) {
-		verticalComponent += 1 + 5 / 16.0;
+	    double verticalComponent = 0;
+	    if (move2.x() + move2.y() + move2.z() < 0) {
+		verticalComponent = 1 - Mth.clampedLerp(0, 1, itemVec.dot(dir));
+	    } else {
+		verticalComponent = Mth.clampedLerp(0, 1, itemVec.dot(dir));
 	    }
 	    matrixStackIn.translate(itemVec.x(), (stack.getItem() instanceof BlockItem ? 0.48 : 0.33) + verticalComponent, itemVec.z());
 	    matrixStackIn.scale(0.35f, 0.35f, 0.35f);
