@@ -67,7 +67,7 @@ public class RenderBetterConveyorBelt implements BlockEntityRenderer<TileBetterC
 	    if (!(stack.getItem() instanceof BlockItem)) {
 		matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(90));
 	    }
-	    location = tile.running ? ClientRegister.MODEL_SLOPEDCONVEYORUPANIMATED : ClientRegister.MODEL_SLOPEDCONVEYORUP;
+	    location = tile.running ? ClientRegister.MODEL_SLOPEDCONVEYORDOWNANIMATED : ClientRegister.MODEL_SLOPEDCONVEYORDOWN;
 	    break;
 	case SlopedUp:
 	    double verticalComponent = 0;
