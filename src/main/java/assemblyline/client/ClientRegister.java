@@ -33,6 +33,8 @@ public class ClientRegister {
 	ModelLoader.addSpecialModel(MODEL_CONVEYORANIMATEDLEFTCLEAR);
 	ModelLoader.addSpecialModel(MODEL_SLOPEDCONVEYOR);
 	ModelLoader.addSpecialModel(MODEL_SLOPEDCONVEYORANIMATED);
+	ModelLoader.addSpecialModel(MODEL_SLOPEDCONVEYORUP);
+	ModelLoader.addSpecialModel(MODEL_SLOPEDCONVEYORUPANIMATED);
 	ModelLoader.addSpecialModel(MODEL_SLOPEDCONVEYORDOWN);
 	ModelLoader.addSpecialModel(MODEL_SLOPEDCONVEYORDOWNANIMATED);
 	ModelLoader.addSpecialModel(MODEL_MANIPULATORINPUT);
@@ -58,6 +60,8 @@ public class ClientRegister {
 	    References.ID + ":block/conveyorbeltrunningleftclear");
     public static final ResourceLocation MODEL_SLOPEDCONVEYOR = new ResourceLocation(References.ID + ":block/conveyorbeltsloped");
     public static final ResourceLocation MODEL_SLOPEDCONVEYORANIMATED = new ResourceLocation(References.ID + ":block/conveyorbeltslopedrunning");
+    public static final ResourceLocation MODEL_SLOPEDCONVEYORUP = new ResourceLocation(References.ID + ":block/conveyorbeltslopedup");
+    public static final ResourceLocation MODEL_SLOPEDCONVEYORUPANIMATED = new ResourceLocation(References.ID + ":block/conveyorbeltslopeduprunning");
     public static final ResourceLocation MODEL_SLOPEDCONVEYORDOWN = new ResourceLocation(References.ID + ":block/conveyorbeltslopeddown");
     public static final ResourceLocation MODEL_SLOPEDCONVEYORDOWNANIMATED = new ResourceLocation(
 	    References.ID + ":block/conveyorbeltslopeddownrunning");
