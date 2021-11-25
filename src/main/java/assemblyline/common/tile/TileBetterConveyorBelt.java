@@ -161,7 +161,7 @@ public class TileBetterConveyorBelt extends GenericTile {
 	Vector3f local = getObjectLocal();
 	Vector3f direction = getDirectionAsVector();
 	float coordComponent = local.dot(direction);
-	float value = belt != null && ((belt.inQueue.isEmpty() || belt.inQueue.get(0) == this) && belt.isQueueReady)
+	float value = belt != null && (belt.inQueue.isEmpty() || belt.inQueue.get(0) == this) && belt.isQueueReady
 		? belt.type == ConveyorType.SlopedUp ? 1 : 1.25f
 		: 1;
 	if (direction.x() + direction.y() + direction.z() > 0) {

@@ -47,7 +47,7 @@ public class RenderBetterConveyorBelt implements BlockEntityRenderer<TileBetterC
 	}
 	switch (tile.type) {
 	case Horizontal:
-	    matrixStackIn.translate(itemVec.x(), (stack.getItem() instanceof BlockItem ? 0.48 : 0.33), itemVec.z());
+	    matrixStackIn.translate(itemVec.x(), stack.getItem() instanceof BlockItem ? 0.48 : 0.33, itemVec.z());
 	    matrixStackIn.scale(0.35f, 0.35f, 0.35f);
 	    if (!(stack.getItem() instanceof BlockItem)) {
 		matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(90));

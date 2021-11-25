@@ -53,7 +53,8 @@ public class DeferredRegisters {
 	BLOCKS.register("cratemedium", supplier(blockCrateMedium));
 	BLOCKS.register("cratelarge", supplier(blockCrateLarge));
 	ITEMS.register("conveyorbelt", supplier(new BlockItemDescriptable(blockConveyorBelt, new Properties().tab(References.ASSEMBLYLINETAB))));
-	ITEMS.register("betterconveyorbelt", supplier(new BlockItemDescriptable(blockBetterConveyorBelt, new Properties().tab(References.ASSEMBLYLINETAB))));
+	ITEMS.register("betterconveyorbelt",
+		supplier(new BlockItemDescriptable(blockBetterConveyorBelt, new Properties().tab(References.ASSEMBLYLINETAB))));
 	ITEMS.register("sorterbelt", supplier(new BlockItemDescriptable(blockSorterBelt, new Properties().tab(References.ASSEMBLYLINETAB))));
 	ITEMS.register("sorterbeltrunning", supplier(new BlockItemDescriptable(blockSorterBeltRunning, new Properties())));
 	ITEMS.register("elevatorbelt", supplier(new BlockItemDescriptable(blockElevatorBelt, new Properties().tab(References.ASSEMBLYLINETAB))));
