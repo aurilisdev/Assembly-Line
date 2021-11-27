@@ -84,6 +84,23 @@ public class RenderBetterConveyorBelt implements BlockEntityRenderer<TileBetterC
 	    location = tile.running ? ClientRegister.MODEL_SLOPEDCONVEYORUPANIMATED : ClientRegister.MODEL_SLOPEDCONVEYORUP;
 	    break;
 	case Vertical:
+	    double verticalComponent3 = 0;
+	    if (tile.getLevel().getBlockEntity(tile.getBlockPos().below())instanceof TileBetterConveyorBelt belt
+		    && belt.type == ConveyorType.Vertical) {
+		location = tile.running ? ClientRegister.MODEL_ELEVATORRUNNING : ClientRegister.MODEL_ELEVATOR;
+	    } else {
+		location = tile.running ? ClientRegister.MODEL_ELEVATORBOTTOMRUNNING : ClientRegister.MODEL_ELEVATORBOTTOM;
+	    }
+	    if (move2.x() + move2.y() + move2.z() < 0) {
+		verticalComponent3 = 1 - Mth.clampedLerp(0, 1, itemVec.dot(dir));
+	    } else {
+		verticalComponent3 = Mth.clampedLerp(0, 1, itemVec.dot(dir));
+	    }
+	    matrixStackIn.translate(0.5, (stack.getItem() instanceof BlockItem ? 0.48 : 0.33) + verticalComponent3, 0.5);
+	    matrixStackIn.scale(0.35f, 0.35f, 0.35f);
+	    if (!(stack.getItem() instanceof BlockItem)) {
+		matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(90));
+	    }
 	    break;
 	default:
 	    break;

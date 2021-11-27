@@ -77,6 +77,9 @@ public class TileBetterConveyorBelt extends GenericTile {
 	    ComponentInventory inventory = getComponent(ComponentType.Inventory);
 	    ItemStack returner = new InvWrapper(inventory).insertItem(0, add, false);
 	    this.object.pos = object.pos.copy();
+	    if (type == ConveyorType.Vertical) {
+		this.object.pos.sub(getDirectionAsVector());
+	    }
 	    if (returner.getCount() != add.getCount()) {
 		this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
 		return returner;
@@ -162,7 +165,7 @@ public class TileBetterConveyorBelt extends GenericTile {
 	Vector3f direction = getDirectionAsVector();
 	float coordComponent = local.dot(direction);
 	float value = belt != null && (belt.inQueue.isEmpty() || belt.inQueue.get(0) == this) && belt.isQueueReady
-		? belt.type == ConveyorType.SlopedUp ? 1 : 1.25f
+		? belt.type == ConveyorType.SlopedUp || type == ConveyorType.Vertical ? 1 : 1.25f
 		: 1;
 	if (direction.x() + direction.y() + direction.z() > 0) {
 	    return !pos.equals(worldPosition) && coordComponent > value;
@@ -247,7 +250,8 @@ public class TileBetterConveyorBelt extends GenericTile {
 	case Horizontal -> worldPosition.relative(direction);
 	case SlopedDown -> worldPosition.relative(direction).below();
 	case SlopedUp -> worldPosition.relative(direction).above();
-	case Vertical -> worldPosition.relative(Direction.UP);
+	case Vertical -> level.getBlockEntity(worldPosition.relative(Direction.UP))instanceof TileBetterConveyorBelt belt
+		&& belt.type == ConveyorType.Vertical ? worldPosition.relative(Direction.UP) : worldPosition.relative(direction).above();
 	default -> null;
 	};
     }
@@ -280,12 +284,12 @@ public class TileBetterConveyorBelt extends GenericTile {
     @Override
     public void load(CompoundTag compound) {
 	super.load(compound);
-	type = ConveyorType.values()[compound.getInt("type")];
+	loadFromNBT(compound);
     }
 
     @Override
     public CompoundTag save(CompoundTag compound) {
-	compound.putInt("type", type.ordinal());
+	saveToNBT(compound);
 	return super.save(compound);
     }
 
