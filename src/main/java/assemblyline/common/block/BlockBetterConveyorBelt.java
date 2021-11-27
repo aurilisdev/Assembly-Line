@@ -63,10 +63,10 @@ public class BlockBetterConveyorBelt extends GenericEntityBlockWaterloggable {
     @Override
     public void onRotate(ItemStack stack, BlockPos pos, Player player) {
 	if (player.level.getBlockEntity(pos)instanceof TileBetterConveyorBelt belt) {
-	    if (belt.type.ordinal() + 1 <= ConveyorType.values().length - 1) {
-		belt.type = ConveyorType.values()[belt.type.ordinal() + 1];
+	    if (belt.conveyorType.ordinal() + 1 <= ConveyorType.values().length - 1) {
+		belt.conveyorType = ConveyorType.values()[belt.conveyorType.ordinal() + 1];
 	    } else {
-		belt.type = ConveyorType.values()[0];
+		belt.conveyorType = ConveyorType.values()[0];
 	    }
 	    belt.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
 	}

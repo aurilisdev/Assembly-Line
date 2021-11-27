@@ -22,6 +22,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -30,7 +31,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 public class TileBetterConveyorBelt extends GenericTile {
     public int currentSpread = 0;
     public boolean running;
-    public ConveyorType type = ConveyorType.Horizontal;
+    public ConveyorType conveyorType = ConveyorType.Horizontal;
     public ArrayList<TileBetterConveyorBelt> inQueue = new ArrayList<>();
     public boolean isQueueReady = false;
     public boolean waiting = false;
@@ -77,7 +78,7 @@ public class TileBetterConveyorBelt extends GenericTile {
 	    ComponentInventory inventory = getComponent(ComponentType.Inventory);
 	    ItemStack returner = new InvWrapper(inventory).insertItem(0, add, false);
 	    this.object.pos = object.pos.copy();
-	    if (type == ConveyorType.Vertical) {
+	    if (conveyorType == ConveyorType.Vertical) {
 		this.object.pos.sub(getDirectionAsVector());
 	    }
 	    if (returner.getCount() != add.getCount()) {
@@ -146,6 +147,10 @@ public class TileBetterConveyorBelt extends GenericTile {
 		}
 		sync();
 	    }
+	    if(level.getDayTime() % 20 == 0)
+	    {
+		sync();
+	    }
 	}
     }
 
@@ -165,7 +170,7 @@ public class TileBetterConveyorBelt extends GenericTile {
 	Vector3f direction = getDirectionAsVector();
 	float coordComponent = local.dot(direction);
 	float value = belt != null && (belt.inQueue.isEmpty() || belt.inQueue.get(0) == this) && belt.isQueueReady
-		? belt.type == ConveyorType.SlopedUp || type == ConveyorType.Vertical ? 1 : 1.25f
+		? belt.conveyorType == ConveyorType.SlopedUp || conveyorType == ConveyorType.Vertical ? 1 : 1.25f
 		: 1;
 	if (direction.x() + direction.y() + direction.z() > 0) {
 	    return !pos.equals(worldPosition) && coordComponent > value;
@@ -246,12 +251,12 @@ public class TileBetterConveyorBelt extends GenericTile {
 
     public BlockPos getNextPos() {
 	Direction direction = this.<ComponentDirection>getComponent(ComponentType.Direction).getDirection().getOpposite();
-	return switch (type) {
+	return switch (conveyorType) {
 	case Horizontal -> worldPosition.relative(direction);
 	case SlopedDown -> worldPosition.relative(direction).below();
 	case SlopedUp -> worldPosition.relative(direction).above();
 	case Vertical -> level.getBlockEntity(worldPosition.relative(Direction.UP))instanceof TileBetterConveyorBelt belt
-		&& belt.type == ConveyorType.Vertical ? worldPosition.relative(Direction.UP) : worldPosition.relative(direction).above();
+		&& belt.conveyorType == ConveyorType.Vertical ? worldPosition.relative(Direction.UP) : worldPosition.relative(direction).above();
 	default -> null;
 	};
     }
@@ -275,21 +280,26 @@ public class TileBetterConveyorBelt extends GenericTile {
 	ContainerHelper.loadAllItems(nbt, obj);
 	currentSpread = nbt.getInt("currentSpread");
 	running = nbt.getBoolean("running");
-	type = ConveyorType.values()[nbt.getInt("type")];
+	conveyorType = ConveyorType.values()[nbt.getInt("conveyorType")];
 	isQueueReady = nbt.getBoolean("isQueueReady");
 	waiting = nbt.getBoolean("waiting");
 	object.pos = new Vector3f(nbt.getFloat("convX"), 0, nbt.getFloat("convZ"));
     }
 
     @Override
-    public void load(CompoundTag compound) {
-	super.load(compound);
-	loadFromNBT(compound);
+    public void load(CompoundTag nbt) {
+	super.load(nbt);
+	conveyorType = ConveyorType.values()[nbt.getInt("conveyorType")];
+    }
+
+    @Override
+    public AABB getRenderBoundingBox() {
+	return super.getRenderBoundingBox().inflate(3);
     }
 
     @Override
     public CompoundTag save(CompoundTag compound) {
-	saveToNBT(compound);
+	compound.putInt("conveyorType", conveyorType.ordinal());
 	return super.save(compound);
     }
 
@@ -297,7 +307,7 @@ public class TileBetterConveyorBelt extends GenericTile {
 	ContainerHelper.saveAllItems(nbt, this.<ComponentInventory>getComponent(ComponentType.Inventory).getItems());
 	nbt.putInt("currentSpread", currentSpread);
 	nbt.putBoolean("running", running);
-	nbt.putInt("type", type.ordinal());
+	nbt.putInt("conveyorType", conveyorType.ordinal());
 	nbt.putBoolean("isQueueReady", isQueueReady);
 	nbt.putBoolean("waiting", waiting);
 	nbt.putFloat("convX", object.pos.x());

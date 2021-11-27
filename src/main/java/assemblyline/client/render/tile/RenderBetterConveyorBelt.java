@@ -47,7 +47,7 @@ public class RenderBetterConveyorBelt implements BlockEntityRenderer<TileBetterC
 	}
 	Vector3f move2 = tile.getDirectionAsVector();
 	Vector3f dir = new Vector3f(Math.abs(move2.x()), Math.abs(move2.y()), Math.abs(move2.z()));
-	switch (tile.type) {
+	switch (tile.conveyorType) {
 	case Horizontal:
 	    matrixStackIn.translate(itemVec.x(), stack.getItem() instanceof BlockItem ? 0.48 : 0.33, itemVec.z());
 	    matrixStackIn.scale(0.35f, 0.35f, 0.35f);
@@ -86,7 +86,7 @@ public class RenderBetterConveyorBelt implements BlockEntityRenderer<TileBetterC
 	case Vertical:
 	    double verticalComponent3 = 0;
 	    if (tile.getLevel().getBlockEntity(tile.getBlockPos().below())instanceof TileBetterConveyorBelt belt
-		    && belt.type == ConveyorType.Vertical) {
+		    && belt.conveyorType == ConveyorType.Vertical) {
 		location = tile.running ? ClientRegister.MODEL_ELEVATORRUNNING : ClientRegister.MODEL_ELEVATOR;
 	    } else {
 		location = tile.running ? ClientRegister.MODEL_ELEVATORBOTTOMRUNNING : ClientRegister.MODEL_ELEVATORBOTTOM;
@@ -114,7 +114,7 @@ public class RenderBetterConveyorBelt implements BlockEntityRenderer<TileBetterC
 	matrixStackIn.pushPose();
 	matrixStackIn.translate(0, 1 / 16.0, 0);
 	UtilitiesRendering.prepareRotationalTileModel(tile, matrixStackIn);
-	if (tile.type == ConveyorType.SlopedDown) {
+	if (tile.conveyorType == ConveyorType.SlopedDown) {
 	    matrixStackIn.translate(0, -1, 0);
 	    matrixStackIn.mulPose(new Quaternion(0, 180, 0, true));
 	}
@@ -137,7 +137,7 @@ public class RenderBetterConveyorBelt implements BlockEntityRenderer<TileBetterC
 		matrixStackIn.pushPose();
 		matrixStackIn.translate(0, 1 / 16.0, 0);
 		UtilitiesRendering.prepareRotationalTileModel(tile, matrixStackIn);
-		if (tile.type == ConveyorType.SlopedUp) {
+		if (tile.conveyorType == ConveyorType.SlopedUp) {
 		    matrixStackIn.translate(0, 0.4, 0);
 		}
 		matrixStackIn.mulPose(new Quaternion(0, 180, 0, true));
