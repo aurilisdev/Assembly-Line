@@ -5,16 +5,19 @@ import java.util.List;
 
 import assemblyline.DeferredRegisters;
 import assemblyline.common.tile.TileConveyorBelt;
+import assemblyline.common.tile.TileConveyorBelt.ConveyorType;
 import electrodynamics.prefab.block.GenericEntityBlock;
 import electrodynamics.prefab.block.GenericEntityBlockWaterloggable;
 import electrodynamics.prefab.tile.GenericTile;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
+import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -54,6 +57,18 @@ public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
 	BlockEntity tile = world.getBlockEntity(pos);
 	if (!world.isClientSide && tile instanceof TileConveyorBelt belt && entityIn instanceof ItemEntity item && entityIn.tickCount > 5) {
 	    item.setItem(belt.addItemOnBelt(item.getItem()));
+	}
+    }
+
+    @Override
+    public void onRotate(ItemStack stack, BlockPos pos, Player player) {
+	if (player.level.getBlockEntity(pos)instanceof TileConveyorBelt belt) {
+	    if (belt.conveyorType.ordinal() + 1 <= ConveyorType.values().length - 1) {
+		belt.conveyorType = ConveyorType.values()[belt.conveyorType.ordinal() + 1];
+	    } else {
+		belt.conveyorType = ConveyorType.values()[0];
+	    }
+	    belt.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
 	}
     }
 

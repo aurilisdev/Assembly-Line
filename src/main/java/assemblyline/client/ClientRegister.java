@@ -2,10 +2,8 @@ package assemblyline.client;
 
 import assemblyline.DeferredRegisters;
 import assemblyline.References;
-import assemblyline.client.render.tile.RenderBetterConveyorBelt;
 import assemblyline.client.render.tile.RenderConveyorBelt;
 import assemblyline.client.render.tile.RenderCrate;
-import assemblyline.client.render.tile.RenderElevatorBelt;
 import assemblyline.client.screen.ScreenSorterBelt;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;
@@ -83,8 +81,6 @@ public class ClientRegister {
     public static void registerEntities(EntityRenderersEvent.RegisterRenderers event) {
 	event.registerBlockEntityRenderer(DeferredRegisters.TILE_CRATE.get(), RenderCrate::new);
 	event.registerBlockEntityRenderer(DeferredRegisters.TILE_BELT.get(), RenderConveyorBelt::new);
-	event.registerBlockEntityRenderer(DeferredRegisters.TILE_BETTERBELT.get(), RenderBetterConveyorBelt::new);
-	event.registerBlockEntityRenderer(DeferredRegisters.TILE_ELEVATORBELT.get(), RenderElevatorBelt::new);
 
     }
 }

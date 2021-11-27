@@ -3,18 +3,14 @@ package assemblyline;
 import com.google.common.base.Supplier;
 import com.google.common.collect.Sets;
 
-import assemblyline.common.block.BlockBetterConveyorBelt;
 import assemblyline.common.block.BlockConveyorBelt;
 import assemblyline.common.block.BlockCrate;
 import assemblyline.common.block.BlockDetector;
-import assemblyline.common.block.BlockElevatorBelt;
 import assemblyline.common.block.BlockSorterBelt;
 import assemblyline.common.inventory.container.ContainerSorterBelt;
-import assemblyline.common.tile.TileBetterConveyorBelt;
 import assemblyline.common.tile.TileConveyorBelt;
 import assemblyline.common.tile.TileCrate;
 import assemblyline.common.tile.TileDetector;
-import assemblyline.common.tile.TileElevatorBelt;
 import assemblyline.common.tile.TileSorterBelt;
 import electrodynamics.common.blockitem.BlockItemDescriptable;
 import net.minecraft.world.inventory.MenuType;
@@ -33,10 +29,8 @@ public class DeferredRegisters {
     public static final DeferredRegister<BlockEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, References.ID);
     public static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, References.ID);
     public static BlockConveyorBelt blockConveyorBelt = new BlockConveyorBelt();
-    public static BlockBetterConveyorBelt blockBetterConveyorBelt = new BlockBetterConveyorBelt();
     public static BlockSorterBelt blockSorterBelt = new BlockSorterBelt(false);
     public static BlockSorterBelt blockSorterBeltRunning = new BlockSorterBelt(true);
-    public static BlockElevatorBelt blockElevatorBelt = new BlockElevatorBelt();
     public static BlockDetector blockDetector = new BlockDetector();
     public static BlockCrate blockCrate = new BlockCrate(64);
     public static BlockCrate blockCrateMedium = new BlockCrate(128);
@@ -44,20 +38,15 @@ public class DeferredRegisters {
 
     static {
 	BLOCKS.register("conveyorbelt", supplier(blockConveyorBelt));
-	BLOCKS.register("betterconveyorbelt", supplier(blockBetterConveyorBelt));
 	BLOCKS.register("sorterbelt", supplier(blockSorterBelt));
 	BLOCKS.register("sorterbeltrunning", supplier(blockSorterBeltRunning));
-	BLOCKS.register("elevatorbelt", supplier(blockElevatorBelt));
 	BLOCKS.register("detector", supplier(blockDetector));
 	BLOCKS.register("crate", supplier(blockCrate));
 	BLOCKS.register("cratemedium", supplier(blockCrateMedium));
 	BLOCKS.register("cratelarge", supplier(blockCrateLarge));
 	ITEMS.register("conveyorbelt", supplier(new BlockItemDescriptable(blockConveyorBelt, new Properties().tab(References.ASSEMBLYLINETAB))));
-	ITEMS.register("betterconveyorbelt",
-		supplier(new BlockItemDescriptable(blockBetterConveyorBelt, new Properties().tab(References.ASSEMBLYLINETAB))));
 	ITEMS.register("sorterbelt", supplier(new BlockItemDescriptable(blockSorterBelt, new Properties().tab(References.ASSEMBLYLINETAB))));
 	ITEMS.register("sorterbeltrunning", supplier(new BlockItemDescriptable(blockSorterBeltRunning, new Properties())));
-	ITEMS.register("elevatorbelt", supplier(new BlockItemDescriptable(blockElevatorBelt, new Properties().tab(References.ASSEMBLYLINETAB))));
 	ITEMS.register("detector", supplier(new BlockItemDescriptable(blockDetector, new Properties().tab(References.ASSEMBLYLINETAB))));
 	ITEMS.register("crate", supplier(new BlockItemDescriptable(blockCrate, new Properties().tab(References.ASSEMBLYLINETAB))));
 	ITEMS.register("cratemedium", supplier(new BlockItemDescriptable(blockCrateMedium, new Properties().tab(References.ASSEMBLYLINETAB))));
@@ -68,10 +57,6 @@ public class DeferredRegisters {
     }
     public static final RegistryObject<BlockEntityType<TileConveyorBelt>> TILE_BELT = TILES.register("belt",
 	    () -> new BlockEntityType<>(TileConveyorBelt::new, Sets.newHashSet(blockConveyorBelt), null));
-    public static final RegistryObject<BlockEntityType<TileBetterConveyorBelt>> TILE_BETTERBELT = TILES.register("betterbelt",
-	    () -> new BlockEntityType<>(TileBetterConveyorBelt::new, Sets.newHashSet(blockBetterConveyorBelt), null));
-    public static final RegistryObject<BlockEntityType<TileElevatorBelt>> TILE_ELEVATORBELT = TILES.register("elevatorbelt",
-	    () -> new BlockEntityType<>(TileElevatorBelt::new, Sets.newHashSet(blockElevatorBelt), null));
     public static final RegistryObject<BlockEntityType<TileDetector>> TILE_DETECTOR = TILES.register("detector",
 	    () -> new BlockEntityType<>(TileDetector::new, Sets.newHashSet(blockDetector), null));
     public static final RegistryObject<BlockEntityType<TileSorterBelt>> TILE_SORTERBELT = TILES.register("sorterbelt",
