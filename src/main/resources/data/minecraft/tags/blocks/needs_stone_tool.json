@@ -6,7 +6,6 @@
 		"assemblyline:cratelarge",
 		"assemblyline:cratemedium",
 		"assemblyline:detector",
-		"assemblyline:elevatorbelt",
 		"assemblyline:sorterbelt",
 		"assemblyline:sorterbeltrunning"
 	]
