@@ -277,6 +277,18 @@ public class TileBetterConveyorBelt extends GenericTile {
 	object.pos = new Vector3f(nbt.getFloat("convX"), 0, nbt.getFloat("convZ"));
     }
 
+    @Override
+    public void load(CompoundTag compound) {
+	super.load(compound);
+	type = ConveyorType.values()[compound.getInt("type")];
+    }
+
+    @Override
+    public CompoundTag save(CompoundTag compound) {
+	compound.putInt("type", type.ordinal());
+	return super.save(compound);
+    }
+
     protected void saveToNBT(CompoundTag nbt) {
 	ContainerHelper.saveAllItems(nbt, this.<ComponentInventory>getComponent(ComponentType.Inventory).getItems());
 	nbt.putInt("currentSpread", currentSpread);
