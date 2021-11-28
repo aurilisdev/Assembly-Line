@@ -8,11 +8,13 @@ import assemblyline.common.block.BlockCrate;
 import assemblyline.common.block.BlockDetector;
 import assemblyline.common.block.BlockSorterBelt;
 import assemblyline.common.inventory.container.ContainerSorterBelt;
+import assemblyline.common.tile.TileAutocrafter;
 import assemblyline.common.tile.TileConveyorBelt;
 import assemblyline.common.tile.TileCrate;
 import assemblyline.common.tile.TileDetector;
 import assemblyline.common.tile.TileSorterBelt;
 import electrodynamics.common.blockitem.BlockItemDescriptable;
+import electrodynamics.prefab.block.GenericMachineBlock;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Item.Properties;
@@ -35,6 +37,7 @@ public class DeferredRegisters {
     public static BlockCrate blockCrate = new BlockCrate(64);
     public static BlockCrate blockCrateMedium = new BlockCrate(128);
     public static BlockCrate blockCrateLarge = new BlockCrate(256);
+    public static GenericMachineBlock blockAutocrafter;
 
     static {
 	BLOCKS.register("conveyorbelt", supplier(blockConveyorBelt));
@@ -44,6 +47,7 @@ public class DeferredRegisters {
 	BLOCKS.register("crate", supplier(blockCrate));
 	BLOCKS.register("cratemedium", supplier(blockCrateMedium));
 	BLOCKS.register("cratelarge", supplier(blockCrateLarge));
+	BLOCKS.register("autocrafter", supplier(blockAutocrafter = new GenericMachineBlock(TileAutocrafter::new)));
 	ITEMS.register("conveyorbelt", supplier(new BlockItemDescriptable(blockConveyorBelt, new Properties().tab(References.ASSEMBLYLINETAB))));
 	ITEMS.register("sorterbelt", supplier(new BlockItemDescriptable(blockSorterBelt, new Properties().tab(References.ASSEMBLYLINETAB))));
 	ITEMS.register("sorterbeltrunning", supplier(new BlockItemDescriptable(blockSorterBeltRunning, new Properties())));
@@ -51,6 +55,7 @@ public class DeferredRegisters {
 	ITEMS.register("crate", supplier(new BlockItemDescriptable(blockCrate, new Properties().tab(References.ASSEMBLYLINETAB))));
 	ITEMS.register("cratemedium", supplier(new BlockItemDescriptable(blockCrateMedium, new Properties().tab(References.ASSEMBLYLINETAB))));
 	ITEMS.register("cratelarge", supplier(new BlockItemDescriptable(blockCrateLarge, new Properties().tab(References.ASSEMBLYLINETAB))));
+	ITEMS.register("autocrafter", supplier(new BlockItemDescriptable(blockAutocrafter, new Properties().tab(References.ASSEMBLYLINETAB))));
 	BlockItemDescriptable.addDescription(blockConveyorBelt, "|translate|tooltip.conveyorbelt.powerusage");
 	BlockItemDescriptable.addDescription(blockSorterBelt, "|translate|tooltip.sorterbelt.powerusage");
 	BlockItemDescriptable.addDescription(blockDetector, "|translate|tooltip.detector");
@@ -63,6 +68,8 @@ public class DeferredRegisters {
 	    () -> new BlockEntityType<>(TileSorterBelt::new, Sets.newHashSet(blockSorterBelt, blockSorterBeltRunning), null));
     public static final RegistryObject<BlockEntityType<TileCrate>> TILE_CRATE = TILES.register("crate",
 	    () -> new BlockEntityType<>(TileCrate::new, Sets.newHashSet(blockCrate, blockCrateMedium, blockCrateLarge), null));
+    public static final RegistryObject<BlockEntityType<TileAutocrafter>> TILE_AUTOCRAFTER = TILES.register("autocrafter",
+	    () -> new BlockEntityType<>(TileAutocrafter::new, Sets.newHashSet(blockAutocrafter), null));
     public static final RegistryObject<MenuType<ContainerSorterBelt>> CONTAINER_SORTERBELT = CONTAINERS.register("sorterbelt",
 	    () -> new MenuType<>(ContainerSorterBelt::new));
 

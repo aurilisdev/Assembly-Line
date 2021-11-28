@@ -1,0 +1,20 @@
+{
+	"variants": {
+		"facing=east": {
+			"model": "assemblyline:block/autocrafter",
+			"y": 0
+		},
+		"facing=north": {
+			"model": "assemblyline:block/autocrafter",
+			"y": 270
+		},
+		"facing=south": {
+			"model": "assemblyline:block/autocrafter",
+			"y": 90
+		},
+		"facing=west": {
+			"model": "assemblyline:block/autocrafter",
+			"y": 180
+		}
+	}
+}
