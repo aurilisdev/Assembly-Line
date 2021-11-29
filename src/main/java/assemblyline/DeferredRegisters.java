@@ -7,6 +7,7 @@ import assemblyline.common.block.BlockConveyorBelt;
 import assemblyline.common.block.BlockCrate;
 import assemblyline.common.block.BlockDetector;
 import assemblyline.common.block.BlockSorterBelt;
+import assemblyline.common.inventory.container.ContainerAutocrafter;
 import assemblyline.common.inventory.container.ContainerSorterBelt;
 import assemblyline.common.tile.TileAutocrafter;
 import assemblyline.common.tile.TileConveyorBelt;
@@ -72,6 +73,8 @@ public class DeferredRegisters {
 	    () -> new BlockEntityType<>(TileAutocrafter::new, Sets.newHashSet(blockAutocrafter), null));
     public static final RegistryObject<MenuType<ContainerSorterBelt>> CONTAINER_SORTERBELT = CONTAINERS.register("sorterbelt",
 	    () -> new MenuType<>(ContainerSorterBelt::new));
+    public static final RegistryObject<MenuType<ContainerAutocrafter>> CONTAINER_AUTOCRAFTER = CONTAINERS.register("autocrafter",
+	    () -> new MenuType<>(ContainerAutocrafter::new));
 
     private static <T extends IForgeRegistryEntry<T>> Supplier<? extends T> supplier(T entry) {
 	return () -> entry;

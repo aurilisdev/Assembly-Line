@@ -60,7 +60,11 @@ public class TileConveyorBelt extends GenericTile {
     public ItemStack addItemOnBelt(ItemStack add) {
 	ItemStack onBelt = getStackOnBelt();
 	if (onBelt.isEmpty()) {
-	    object.pos = new Vector3f(0.5f + worldPosition.getX(), 0, 0.5f + worldPosition.getZ());
+	    float off = 0;
+	    if (conveyorType != ConveyorType.Horizontal) {
+		off = (conveyorType == ConveyorType.SlopedDown ? 6 : 10) / 16.0f * (conveyorType == ConveyorType.SlopedDown ? -1 : 1);
+	    }
+	    object.pos = new Vector3f(0.5f + worldPosition.getX(), off + 0.33f + worldPosition.getY(), 0.5f + worldPosition.getZ());
 	}
 	if (!add.isEmpty()) {
 	    ComponentInventory inventory = getComponent(ComponentType.Inventory);
@@ -73,13 +77,43 @@ public class TileConveyorBelt extends GenericTile {
 	return add;
     }
 
-    public ItemStack addItemOnBelt(ItemStack add, ConveyorObject object) {
+    public ItemStack addItemOnBelt(ItemStack add, ConveyorObject object, ConveyorType type) {
 	if (!add.isEmpty()) {
 	    ComponentInventory inventory = getComponent(ComponentType.Inventory);
 	    ItemStack returner = new InvWrapper(inventory).insertItem(0, add, false);
 	    this.object.pos = object.pos.copy();
 	    if (conveyorType == ConveyorType.Vertical) {
 		this.object.pos.sub(getDirectionAsVector());
+	    }
+	    if (type == ConveyorType.Horizontal) {
+		if (this.conveyorType != ConveyorType.Horizontal) {
+		    if (this.conveyorType != ConveyorType.Vertical) {
+			if (this.conveyorType == ConveyorType.SlopedDown) {
+			    this.object.pos.add(0, -2 / 16.0f, 0);
+			} else {
+			    this.object.pos.add(0, 2 / 16.0f, 0);
+			}
+
+		    } else {
+			this.object.pos = new Vector3f(0.5f + worldPosition.getX(), 0.33f + worldPosition.getY(), 0.5f + worldPosition.getZ());
+		    }
+		}
+	    } else if (type == ConveyorType.Vertical) {
+		if (this.conveyorType == ConveyorType.Horizontal) {
+		    this.object.pos = new Vector3f(0.5f + worldPosition.getX(), 0.33f + worldPosition.getY(), 0.5f + worldPosition.getZ());
+		}
+	    } else if (type == ConveyorType.SlopedDown) {
+		if (this.conveyorType == ConveyorType.Horizontal) {
+		    this.object.pos.add(0, 2 / 16.0f, 0);
+		} else if (this.conveyorType == ConveyorType.SlopedUp) {
+		    this.object.pos.add(0, 1 / 16.0f, 0);
+		}
+	    } else {
+		if (this.conveyorType == ConveyorType.Horizontal) {
+		    this.object.pos.add(0, -6 / 16.0f, 0);
+		} else if (this.conveyorType == ConveyorType.SlopedDown) {
+		    this.object.pos.add(0, -7 / 16.0f, 0);
+		}
 	    }
 	    if (returner.getCount() != add.getCount()) {
 		this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
@@ -154,7 +188,7 @@ public class TileConveyorBelt extends GenericTile {
     }
 
     public Vector3f getObjectLocal() {
-	return new Vector3f(object.pos.x() - worldPosition.getX(), 0, object.pos.z() - worldPosition.getZ());
+	return new Vector3f(object.pos.x() - worldPosition.getX(), object.pos.y() - worldPosition.getY(), object.pos.z() - worldPosition.getZ());
     }
 
     public Vector3f getDirectionAsVector() {
@@ -172,9 +206,9 @@ public class TileConveyorBelt extends GenericTile {
 		? belt.conveyorType == ConveyorType.SlopedUp || conveyorType == ConveyorType.Vertical ? 1 : 1.25f
 		: 1;
 	if (direction.x() + direction.y() + direction.z() > 0) {
-	    return !pos.equals(worldPosition) && coordComponent > value;
+	    return !pos.equals(worldPosition) && coordComponent >= value;
 	}
-	return !pos.equals(worldPosition) && coordComponent > value - 1;
+	return !pos.equals(worldPosition) && coordComponent >= value - 1;
     }
 
     public void attemptMove() {
@@ -191,7 +225,7 @@ public class TileConveyorBelt extends GenericTile {
 		    if (belt.inQueue.get(0) == this && belt.isQueueReady) {
 			waiting = false;
 			belt.inQueue.remove(0);
-			belt.addItemOnBelt(getStackOnBelt(), object);
+			belt.addItemOnBelt(getStackOnBelt(), object, conveyorType);
 			this.<ComponentInventory>getComponent(ComponentType.Inventory).setItem(0, ItemStack.EMPTY);
 		    } else {
 			waiting = true;
@@ -217,6 +251,9 @@ public class TileConveyorBelt extends GenericTile {
 	    if (!shouldTransfer) {
 		move.mul(1 / 16.0f);
 		object.pos.add(move);
+		if (conveyorType != ConveyorType.Horizontal) {
+		    object.pos.add(0, 1 / 16.0f * (conveyorType == ConveyorType.SlopedDown ? -1 : 1), 0);
+		}
 	    }
 	}
 	isQueueReady = stackOnBelt.isEmpty();
@@ -282,7 +319,7 @@ public class TileConveyorBelt extends GenericTile {
 	conveyorType = ConveyorType.values()[nbt.getInt("conveyorType")];
 	isQueueReady = nbt.getBoolean("isQueueReady");
 	waiting = nbt.getBoolean("waiting");
-	object.pos = new Vector3f(nbt.getFloat("convX"), 0, nbt.getFloat("convZ"));
+	object.pos = new Vector3f(nbt.getFloat("convX"), nbt.getFloat("convY"), nbt.getFloat("convZ"));
     }
 
     @Override
@@ -310,6 +347,7 @@ public class TileConveyorBelt extends GenericTile {
 	nbt.putBoolean("isQueueReady", isQueueReady);
 	nbt.putBoolean("waiting", waiting);
 	nbt.putFloat("convX", object.pos.x());
+	nbt.putFloat("convY", object.pos.y());
 	nbt.putFloat("convZ", object.pos.z());
     }
 
