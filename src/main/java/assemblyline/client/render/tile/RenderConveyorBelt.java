@@ -39,7 +39,7 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 	Vector3f move = tile.getDirectionAsVector();
 	Direction direct = tile.<ComponentDirection>getComponent(ComponentType.Direction).getDirection().getOpposite();
 	if (tile.conveyorType != ConveyorType.Horizontal) {
-	    move.add(0, (tile.conveyorType == ConveyorType.SlopedDown ? -1 : 1), 0);
+	    move.add(0, tile.conveyorType == ConveyorType.SlopedDown ? -1 : 1, 0);
 	}
 	move.mul(partialTicks / 16.0f);
 	if (tile.running) {

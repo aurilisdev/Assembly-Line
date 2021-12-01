@@ -41,11 +41,7 @@ public class TileAutocrafter extends GenericTile {
     public static boolean shapedMatches(ComponentInventory inv, ShapedRecipe shaped) {
 	for (int i = 0; i <= 3 - shaped.getWidth(); ++i) {
 	    for (int j = 0; j <= 3 - shaped.getHeight(); ++j) {
-		if (TileAutocrafter.shapedMatches(inv, shaped, i, j, true)) {
-		    return true;
-		}
-
-		if (TileAutocrafter.shapedMatches(inv, shaped, i, j, false)) {
+		if (TileAutocrafter.shapedMatches(inv, shaped, i, j, true) || TileAutocrafter.shapedMatches(inv, shaped, i, j, false)) {
 		    return true;
 		}
 	    }
