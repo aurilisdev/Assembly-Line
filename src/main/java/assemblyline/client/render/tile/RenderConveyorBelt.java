@@ -52,14 +52,15 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 	}
 	switch (tile.conveyorType) {
 	case Horizontal:
-	    matrixStackIn.translate(itemVec.x(), itemVec.y() + (stack.getItem() instanceof BlockItem ? 0.15 : 0.0) + move.y(), itemVec.z());
+	    matrixStackIn.translate(itemVec.x(), itemVec.y() + (stack.getItem() instanceof BlockItem ? 0.167 : 5.0f / 16.0f) + move.y(), itemVec.z());
 	    matrixStackIn.scale(0.35f, 0.35f, 0.35f);
 	    if (!(stack.getItem() instanceof BlockItem)) {
 		matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(90));
 	    }
+	    matrixStackIn.translate(0, 5.0f / (16.0f * 0.35f), 0);
 	    break;
 	case SlopedDown:
-	    matrixStackIn.translate(itemVec.x(), itemVec.y() + (stack.getItem() instanceof BlockItem ? 0.15 : 0.0), itemVec.z());
+	    matrixStackIn.translate(itemVec.x(), itemVec.y() + (stack.getItem() instanceof BlockItem ? 0.167 : 2.0f / 16.0f), itemVec.z());
 	    matrixStackIn.scale(0.35f, 0.35f, 0.35f);
 	    if (!(stack.getItem() instanceof BlockItem)) {
 		matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(90));
@@ -75,10 +76,11 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 	    matrixStackIn.mulPose(direct == Direction.NORTH ? Vector3f.XN.rotationDegrees(rotate)
 		    : direct == Direction.SOUTH ? Vector3f.XP.rotationDegrees(-rotate)
 			    : direct == Direction.WEST ? Vector3f.XN.rotationDegrees(rotate) : Vector3f.XP.rotationDegrees(-rotate));
+	    matrixStackIn.translate(0, 2.0f / (16.0f * 0.35f), 0);
 	    location = tile.running ? ClientRegister.MODEL_SLOPEDCONVEYORDOWNANIMATED : ClientRegister.MODEL_SLOPEDCONVEYORDOWN;
 	    break;
 	case SlopedUp:
-	    matrixStackIn.translate(itemVec.x(), itemVec.y() + (stack.getItem() instanceof BlockItem ? 0.15 : 0.0), itemVec.z());
+	    matrixStackIn.translate(itemVec.x(), itemVec.y() + (stack.getItem() instanceof BlockItem ? 0.167 : 7.0f / 16.0f), itemVec.z());
 	    matrixStackIn.scale(0.35f, 0.35f, 0.35f);
 	    if (!(stack.getItem() instanceof BlockItem)) {
 		matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(90));
@@ -94,7 +96,7 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 	    matrixStackIn.mulPose(direct == Direction.NORTH ? Vector3f.XN.rotationDegrees(rotate)
 		    : direct == Direction.SOUTH ? Vector3f.XP.rotationDegrees(-rotate)
 			    : direct == Direction.WEST ? Vector3f.XN.rotationDegrees(rotate) : Vector3f.XP.rotationDegrees(-rotate));
-
+	    matrixStackIn.translate(0, 5.0f / (16.0f * 0.35f), 0);
 	    location = tile.running ? ClientRegister.MODEL_SLOPEDCONVEYORUPANIMATED : ClientRegister.MODEL_SLOPEDCONVEYORUP;
 	    break;
 	case Vertical:
@@ -104,7 +106,7 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 	    } else {
 		location = tile.running ? ClientRegister.MODEL_ELEVATORBOTTOMRUNNING : ClientRegister.MODEL_ELEVATORBOTTOM;
 	    }
-	    matrixStackIn.translate(0.5, itemVec.y() + (stack.getItem() instanceof BlockItem ? 0.15 : 0.0), 0.5);
+	    matrixStackIn.translate(0.5, itemVec.y() + (stack.getItem() instanceof BlockItem ? 0.167 : 5.0f / 16.0f) + 5.0f / 16.0f, 0.5);
 	    matrixStackIn.scale(0.35f, 0.35f, 0.35f);
 	    if (!(stack.getItem() instanceof BlockItem)) {
 		matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(90));
