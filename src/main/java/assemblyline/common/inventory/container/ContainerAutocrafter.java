@@ -8,6 +8,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.FurnaceResultSlot;
 import net.minecraft.world.inventory.SimpleContainerData;
 
 public class ContainerAutocrafter extends GenericContainer<TileAutocrafter> {
@@ -31,6 +32,6 @@ public class ContainerAutocrafter extends GenericContainer<TileAutocrafter> {
 		addSlot(new GenericSlot(inv, nextIndex(), 8 + j * 18, 17 + i * 18));
 	    }
 	}
-	addSlot(new GenericSlot(inv, nextIndex(), 8 + 18, 17 + 18));
+	addSlot(new FurnaceResultSlot(playerinv.player, inv, nextIndex(), 120, 35));
     }
 }

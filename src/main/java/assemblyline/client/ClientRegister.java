@@ -4,6 +4,7 @@ import assemblyline.DeferredRegisters;
 import assemblyline.References;
 import assemblyline.client.render.tile.RenderConveyorBelt;
 import assemblyline.client.render.tile.RenderCrate;
+import assemblyline.client.screen.ScreenAutocrafter;
 import assemblyline.client.screen.ScreenSorterBelt;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;
@@ -75,6 +76,7 @@ public class ClientRegister {
 
     public static void setup() {
 	MenuScreens.register(DeferredRegisters.CONTAINER_SORTERBELT.get(), ScreenSorterBelt::new);
+	MenuScreens.register(DeferredRegisters.CONTAINER_AUTOCRAFTER.get(), ScreenAutocrafter::new);
     }
 
     @SubscribeEvent

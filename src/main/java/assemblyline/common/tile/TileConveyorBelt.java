@@ -61,7 +61,9 @@ public class TileConveyorBelt extends GenericTile {
 	ItemStack onBelt = getStackOnBelt();
 	if (onBelt.isEmpty()) {
 	    object.pos = new Vector3f(0.5f + worldPosition.getX(),
-		    worldPosition.getY() + (conveyorType == ConveyorType.SlopedDown ? -4.0f / 16.0f : 8.0f / 16.0f), 0.5f + worldPosition.getZ());
+		    worldPosition.getY()
+			    + (conveyorType == ConveyorType.SlopedDown ? -4.0f / 16.0f : conveyorType == ConveyorType.SlopedUp ? 8.0f / 16.0f : 0),
+		    0.5f + worldPosition.getZ());
 	}
 	if (!add.isEmpty()) {
 	    ComponentInventory inventory = getComponent(ComponentType.Inventory);
