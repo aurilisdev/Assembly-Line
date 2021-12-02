@@ -9,6 +9,7 @@
 	"block.assemblyline.cratelarge": "Large Crate",
 	"block.assemblyline.autocrafter": "Autocrafter",
 	"container.sorterbelt": "Sorter Belt",
+	"container.autocrafter": "Autocrafter",
 	"itemGroup.itemgroupassemblyline": "Assembly Line",
 	"tooltip.conveyorbelt.powerusage": "Power Usage: 10W",
 	"tooltip.sorterbelt.powerusage": "Power Usage: 10W",
