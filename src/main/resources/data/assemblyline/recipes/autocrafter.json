@@ -1,0 +1,29 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"gbg",
+		"cCc",
+		"gwg"
+	],
+	"key": {
+		"g": {
+			"tag": "forge:gears/steel"
+		},
+		"b": {
+			"tag": "forge:circuits/basic"
+		},
+		"c": {
+			"item": "minecraft:chest"
+		},
+		"C": {
+			"item": "minecraft:crafting_table"
+		},
+		"w": {
+			"item": "electrodynamics:wirecopper"
+		}
+	},
+	"result": {
+		"item": "assemblyline:autocrafter",
+		"count": 1
+	}
+}

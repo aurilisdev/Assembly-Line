@@ -6,7 +6,7 @@
 	],
 	"key": {
 		"s": {
-			"item": "electrodynamics:ingotsteel"
+			"tag": "forge:ingots/steel"
 		},
 		"w": {
 			"tag": "minecraft:planks"
