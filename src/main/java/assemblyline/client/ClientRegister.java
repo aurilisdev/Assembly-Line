@@ -4,7 +4,6 @@ import assemblyline.DeferredRegisters;
 import assemblyline.References;
 import assemblyline.client.render.tile.RenderConveyorBelt;
 import assemblyline.client.render.tile.RenderCrate;
-import assemblyline.client.render.tile.RenderElevatorBelt;
 import assemblyline.client.screen.ScreenSorterBelt;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;
@@ -32,6 +31,8 @@ public class ClientRegister {
 	ModelLoader.addSpecialModel(MODEL_CONVEYORANIMATEDLEFTCLEAR);
 	ModelLoader.addSpecialModel(MODEL_SLOPEDCONVEYOR);
 	ModelLoader.addSpecialModel(MODEL_SLOPEDCONVEYORANIMATED);
+	ModelLoader.addSpecialModel(MODEL_SLOPEDCONVEYORUP);
+	ModelLoader.addSpecialModel(MODEL_SLOPEDCONVEYORUPANIMATED);
 	ModelLoader.addSpecialModel(MODEL_SLOPEDCONVEYORDOWN);
 	ModelLoader.addSpecialModel(MODEL_SLOPEDCONVEYORDOWNANIMATED);
 	ModelLoader.addSpecialModel(MODEL_MANIPULATORINPUT);
@@ -42,6 +43,7 @@ public class ClientRegister {
 	ModelLoader.addSpecialModel(MODEL_ELEVATORRUNNING);
 	ModelLoader.addSpecialModel(MODEL_ELEVATORBOTTOM);
 	ModelLoader.addSpecialModel(MODEL_ELEVATORBOTTOMRUNNING);
+	ModelLoader.addSpecialModel(MODEL_MANIPULATOR);
     }
 
     public static final ResourceLocation MODEL_CONVEYOR = new ResourceLocation(References.ID + ":block/conveyorbelt");
@@ -56,6 +58,8 @@ public class ClientRegister {
 	    References.ID + ":block/conveyorbeltrunningleftclear");
     public static final ResourceLocation MODEL_SLOPEDCONVEYOR = new ResourceLocation(References.ID + ":block/conveyorbeltsloped");
     public static final ResourceLocation MODEL_SLOPEDCONVEYORANIMATED = new ResourceLocation(References.ID + ":block/conveyorbeltslopedrunning");
+    public static final ResourceLocation MODEL_SLOPEDCONVEYORUP = new ResourceLocation(References.ID + ":block/conveyorbeltslopedup");
+    public static final ResourceLocation MODEL_SLOPEDCONVEYORUPANIMATED = new ResourceLocation(References.ID + ":block/conveyorbeltslopeduprunning");
     public static final ResourceLocation MODEL_SLOPEDCONVEYORDOWN = new ResourceLocation(References.ID + ":block/conveyorbeltslopeddown");
     public static final ResourceLocation MODEL_SLOPEDCONVEYORDOWNANIMATED = new ResourceLocation(
 	    References.ID + ":block/conveyorbeltslopeddownrunning");
@@ -67,6 +71,7 @@ public class ClientRegister {
     public static final ResourceLocation MODEL_ELEVATORRUNNING = new ResourceLocation(References.ID + ":block/elevatorbeltrunning");
     public static final ResourceLocation MODEL_ELEVATORBOTTOM = new ResourceLocation(References.ID + ":block/elevatorbeltbottom");
     public static final ResourceLocation MODEL_ELEVATORBOTTOMRUNNING = new ResourceLocation(References.ID + ":block/elevatorbeltbottomrunning");
+    public static final ResourceLocation MODEL_MANIPULATOR = new ResourceLocation(References.ID + ":block/manipulator");
 
     public static void setup() {
 	MenuScreens.register(DeferredRegisters.CONTAINER_SORTERBELT.get(), ScreenSorterBelt::new);
@@ -76,7 +81,6 @@ public class ClientRegister {
     public static void registerEntities(EntityRenderersEvent.RegisterRenderers event) {
 	event.registerBlockEntityRenderer(DeferredRegisters.TILE_CRATE.get(), RenderCrate::new);
 	event.registerBlockEntityRenderer(DeferredRegisters.TILE_BELT.get(), RenderConveyorBelt::new);
-	event.registerBlockEntityRenderer(DeferredRegisters.TILE_ELEVATORBELT.get(), RenderElevatorBelt::new);
 
     }
 }

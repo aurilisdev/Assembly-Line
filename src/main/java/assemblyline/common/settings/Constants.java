@@ -11,4 +11,7 @@ public class Constants {
     public static double SORTERBELT_USAGE = 8.0;
     @DoubleValue(def = 1.0, comment = "Usage in watts.")
     public static double MANIPULATOR_USAGE = 1.0;
+    @DoubleValue(def = 1.0, comment = "Usage is per craft.")
+    public static double AUTOCRAFTER_USAGE = 200.0;
+
 }
