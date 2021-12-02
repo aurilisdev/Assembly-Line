@@ -33,7 +33,9 @@ public class TileAutocrafter extends GenericTile {
 	addComponent(new ComponentDirection());
 	addComponent(new ComponentTickable().tickServer(this::tickServer));
 	addComponent(new ComponentElectrodynamic(this).maxJoules(Constants.AUTOCRAFTER_USAGE * 20).input(Direction.DOWN));
-	addComponent(new ComponentInventory(this).size(10));
+	addComponent(new ComponentInventory(this).size(10).faceSlots(Direction.DOWN, 9).faceSlots(Direction.UP, 1, 3, 4, 5, 7)
+		.relativeFaceSlots(Direction.SOUTH, 6, 7, 8).relativeFaceSlots(Direction.NORTH, 0, 1, 2).relativeFaceSlots(Direction.WEST, 2, 5, 8)
+		.relativeFaceSlots(Direction.EAST, 0, 3, 6));
 	addComponent(new ComponentContainerProvider("container.autocrafter")
 		.createMenu((id, player) -> new ContainerAutocrafter(id, player, getComponent(ComponentType.Inventory), new SimpleContainerData(0))));
     }
