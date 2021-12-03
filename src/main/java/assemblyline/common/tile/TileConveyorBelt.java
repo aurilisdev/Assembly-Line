@@ -197,7 +197,7 @@ public class TileConveyorBelt extends GenericTile {
 		    if (belt.inQueue.get(0) == this && belt.isQueueReady) {
 			waiting = false;
 			belt.inQueue.remove(0);
-			belt.addItemOnBelt(getStackOnBelt(), object, conveyorType);
+			belt.addItemOnBelt(getStackOnBelt(), object);
 			this.<ComponentInventory>getComponent(ComponentType.Inventory).setItem(0, ItemStack.EMPTY);
 		    } else {
 			waiting = true;
