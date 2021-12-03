@@ -76,7 +76,7 @@ public class TileConveyorBelt extends GenericTile {
 	return add;
     }
 
-    public ItemStack addItemOnBelt(ItemStack add, ConveyorObject object, ConveyorType type) {
+    public ItemStack addItemOnBelt(ItemStack add, ConveyorObject object) {
 	if (!add.isEmpty()) {
 	    ComponentInventory inventory = getComponent(ComponentType.Inventory);
 	    ItemStack returner = new InvWrapper(inventory).insertItem(0, add, false);
