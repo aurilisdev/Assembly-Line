@@ -307,12 +307,12 @@ public class TileConveyorBelt extends GenericTile {
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public void saveAdditional(CompoundTag compound) {
 	compound.putInt("conveyorType", conveyorType.ordinal());
 	compound.putFloat("convX", object.pos.x());
 	compound.putFloat("convY", object.pos.y());
 	compound.putFloat("convZ", object.pos.z());
-	return super.save(compound);
+	super.saveAdditional(compound);
     }
 
     protected void saveToNBT(CompoundTag nbt) {
