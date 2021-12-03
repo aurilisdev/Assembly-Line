@@ -298,6 +298,7 @@ public class TileConveyorBelt extends GenericTile {
     public void load(CompoundTag nbt) {
 	super.load(nbt);
 	conveyorType = ConveyorType.values()[nbt.getInt("conveyorType")];
+	object.pos = new Vector3f(nbt.getFloat("convX"), nbt.getFloat("convY"), nbt.getFloat("convZ"));
     }
 
     @Override
@@ -308,6 +309,9 @@ public class TileConveyorBelt extends GenericTile {
     @Override
     public CompoundTag save(CompoundTag compound) {
 	compound.putInt("conveyorType", conveyorType.ordinal());
+	compound.putFloat("convX", object.pos.x());
+	compound.putFloat("convY", object.pos.y());
+	compound.putFloat("convZ", object.pos.z());
 	return super.save(compound);
     }
 
