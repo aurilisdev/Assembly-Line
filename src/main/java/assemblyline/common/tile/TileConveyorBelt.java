@@ -126,7 +126,8 @@ public class TileConveyorBelt extends GenericTile {
 		    }
 		}
 	    } else if (lastBlockEntity != null && isPuller) {
-		LazyOptional<IItemHandler> cap = lastBlockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction);
+		LazyOptional<IItemHandler> cap = lastBlockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
+			direction.getOpposite());
 		if (cap.isPresent()) {
 		    IItemHandler handler = cap.resolve().get();
 		    for (int slot = 0; slot < handler.getSlots(); slot++) {
