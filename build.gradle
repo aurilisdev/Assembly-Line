@@ -93,7 +93,7 @@ minecraft {
 
 dependencies {
 	implementation fileTree("C:/AmpzLibz")
-    minecraft 'net.minecraftforge:forge:1.18-38.0.12'
+    minecraft 'net.minecraftforge:forge:1.18-38.0.14'
 
 }
 
