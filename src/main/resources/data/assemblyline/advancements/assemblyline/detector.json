@@ -2,23 +2,25 @@
     "__comment": "pyro206",
     "display": {
         "title": {
-            "text": "No More Chests",
-            "color": "gold",
-            "bold": true
+            "text": "Always Watching",
+            "color": "dark_red",
+            "bold": true,
+            "italic": true,
+            "underlined": true
         },
         "description": {
-            "text": "Make a crate",
+            "text": "Make a Detector",
             "color": "gray"
         },
         "icon": {
-            "item": "assemblyline:crate"
+            "item": "assemblyline:detector"
         },
-        "frame": "task",
+        "frame": "challenge",
         "show_toast": true,
         "announce_to_chat": true,
         "hidden": false
     },
-    "parent": "assemblyline:root",
+    "parent": "assemblyline:assemblyline/root",
     "criteria": {
 		"requirement": {
 			"trigger": "minecraft:inventory_changed",
@@ -26,7 +28,7 @@
 				"items": [
 					{
 						"items": [ 
-							"assemblyline:crate"
+							"assemblyline:detector"
 						],
                         "count": {
                             "min": 1,

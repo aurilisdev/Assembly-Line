@@ -17,7 +17,7 @@
         "announce_to_chat": true,
         "hidden": false
     },
-    "parent": "assemblyline:root",
+    "parent": "assemblyline:assemblyline/root",
     "criteria": {
 		"requirement": {
 			"trigger": "minecraft:inventory_changed",

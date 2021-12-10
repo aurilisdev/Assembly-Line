@@ -2,9 +2,13 @@
     "__comment": "pyro206",
     "display": {
         "title": {
-            "text": "Let's Get Moving",
-            "color": "aqua",
-            "bold": false
+            "text": "Assembly Line",
+            "color": "yellow",
+			"bold": true,
+			"italic": true,
+			"underlined": false,
+			"strikethrough": false,
+			"obfuscated": false
         },
         "description": {
             "text": "Wow you made a conveyor belt",
@@ -19,9 +23,8 @@
         "hidden": false,
         "background": "minecraft:textures/gui/advancements/backgrounds/stone.png"
     },
-    "parent": "electrodynamics:root",
     "criteria": {
-		"requirement": {
+		"getaconveyorbelt": {
 			"trigger": "minecraft:inventory_changed",
 			"conditions": {
 				"items": [
@@ -37,5 +40,10 @@
                 ]
             }
         }
-    }
+    },
+    "requirements": [
+    	[
+      	"getaconveyorbelt"
+    	]
+    ]
 }
