@@ -41,8 +41,7 @@ public class TileCrate extends GenericTile {
 	return set;
     }
 
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
-	ComponentInventory inv = getComponent(ComponentType.Inventory);
+    public boolean isItemValidForSlot(int index, ItemStack stack, ComponentInventory inv) {
 	if (stack.isEmpty()) {
 	    return true;
 	}
