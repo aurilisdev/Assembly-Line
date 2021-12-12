@@ -8,6 +8,7 @@
 	"block.assemblyline.cratemedium": "Medium Crate",
 	"block.assemblyline.cratelarge": "Large Crate",
 	"block.assemblyline.autocrafter": "Autocrafter",
+	"block.assemblyline.blockbreaker": "Block Breaker",
 	"container.sorterbelt": "Sorter Belt",
 	"container.autocrafter": "Autocrafter",
 	"itemGroup.itemgroupassemblyline": "Assembly Line",

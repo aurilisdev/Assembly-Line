@@ -9,9 +9,9 @@ public class Constants {
     public static double CONVEYORBELT_USAGE = 8.0;
     @DoubleValue(def = 8.0, comment = "Usage is joules per entity movement.")
     public static double SORTERBELT_USAGE = 8.0;
-    @DoubleValue(def = 1.0, comment = "Usage in watts.")
-    public static double MANIPULATOR_USAGE = 1.0;
-    @DoubleValue(def = 1.0, comment = "Usage is per craft.")
+    @DoubleValue(def = 200.0, comment = "Usage is per craft.")
     public static double AUTOCRAFTER_USAGE = 200.0;
+    @DoubleValue(def = 20.0, comment = "Usage is per tick.")
+    public static double BLOCKBREAKER_USAGE = 20.0;
 
 }
