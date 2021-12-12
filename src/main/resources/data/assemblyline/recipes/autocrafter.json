@@ -3,7 +3,7 @@
 	"pattern": [
 		"gbg",
 		"cCc",
-		"gwg"
+		"pwp"
 	],
 	"key": {
 		"g": {
@@ -20,6 +20,9 @@
 		},
 		"w": {
 			"item": "electrodynamics:wirecopper"
+		},
+		"p": { 
+			"item": "minecraft:piston"
 		}
 	},
 	"result": {
