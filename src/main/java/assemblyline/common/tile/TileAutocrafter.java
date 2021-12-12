@@ -16,7 +16,6 @@ import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.StackedContents;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -37,7 +36,7 @@ public class TileAutocrafter extends GenericTile {
 		.relativeFaceSlots(Direction.SOUTH, 6, 7, 8).relativeFaceSlots(Direction.NORTH, 0, 1, 2).relativeFaceSlots(Direction.WEST, 2, 5, 8)
 		.relativeFaceSlots(Direction.EAST, 0, 3, 6));
 	addComponent(new ComponentContainerProvider("container.autocrafter")
-		.createMenu((id, player) -> new ContainerAutocrafter(id, player, getComponent(ComponentType.Inventory), new SimpleContainerData(0))));
+		.createMenu((id, player) -> new ContainerAutocrafter(id, player, getComponent(ComponentType.Inventory), getCoordsArray())));
     }
 
     public static boolean shapedMatches(ComponentInventory inv, ShapedRecipe shaped) {

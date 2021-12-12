@@ -4,11 +4,13 @@ import com.google.common.base.Supplier;
 import com.google.common.collect.Sets;
 
 import assemblyline.common.block.BlockBlockBreaker;
+import assemblyline.common.block.BlockBlockPlacer;
 import assemblyline.common.block.BlockConveyorBelt;
 import assemblyline.common.block.BlockCrate;
 import assemblyline.common.block.BlockDetector;
 import assemblyline.common.block.BlockSorterBelt;
 import assemblyline.common.inventory.container.ContainerAutocrafter;
+import assemblyline.common.inventory.container.ContainerBlockPlacer;
 import assemblyline.common.inventory.container.ContainerSorterBelt;
 import assemblyline.common.tile.TileAutocrafter;
 import assemblyline.common.tile.TileBlockBreaker;
@@ -42,6 +44,7 @@ public class DeferredRegisters {
     public static BlockCrate blockCrateLarge = new BlockCrate(256);
     public static GenericMachineBlock blockAutocrafter;
     public static BlockBlockBreaker blockBlockBreaker;
+    public static BlockBlockPlacer blockBlockPlacer;
 
     static {
 	BLOCKS.register("conveyorbelt", supplier(blockConveyorBelt));
@@ -53,6 +56,7 @@ public class DeferredRegisters {
 	BLOCKS.register("cratelarge", supplier(blockCrateLarge));
 	BLOCKS.register("autocrafter", supplier(blockAutocrafter = new GenericMachineBlock(TileAutocrafter::new)));
 	BLOCKS.register("blockbreaker", supplier(blockBlockBreaker = new BlockBlockBreaker()));
+	BLOCKS.register("blockplacer", supplier(blockBlockPlacer = new BlockBlockPlacer()));
 	ITEMS.register("conveyorbelt", supplier(new BlockItemDescriptable(blockConveyorBelt, new Properties().tab(References.ASSEMBLYLINETAB))));
 	ITEMS.register("sorterbelt", supplier(new BlockItemDescriptable(blockSorterBelt, new Properties().tab(References.ASSEMBLYLINETAB))));
 	ITEMS.register("sorterbeltrunning", supplier(new BlockItemDescriptable(blockSorterBeltRunning, new Properties())));
@@ -62,6 +66,7 @@ public class DeferredRegisters {
 	ITEMS.register("cratelarge", supplier(new BlockItemDescriptable(blockCrateLarge, new Properties().tab(References.ASSEMBLYLINETAB))));
 	ITEMS.register("autocrafter", supplier(new BlockItemDescriptable(blockAutocrafter, new Properties().tab(References.ASSEMBLYLINETAB))));
 	ITEMS.register("blockbreaker", supplier(new BlockItemDescriptable(blockBlockBreaker, new Properties().tab(References.ASSEMBLYLINETAB))));
+	ITEMS.register("blockplacer", supplier(new BlockItemDescriptable(blockBlockPlacer, new Properties().tab(References.ASSEMBLYLINETAB))));
 	BlockItemDescriptable.addDescription(blockConveyorBelt, "|translate|tooltip.conveyorbelt.powerusage");
 	BlockItemDescriptable.addDescription(blockSorterBelt, "|translate|tooltip.sorterbelt.powerusage");
 	BlockItemDescriptable.addDescription(blockDetector, "|translate|tooltip.detector");
@@ -82,6 +87,8 @@ public class DeferredRegisters {
 	    () -> new MenuType<>(ContainerSorterBelt::new));
     public static final RegistryObject<MenuType<ContainerAutocrafter>> CONTAINER_AUTOCRAFTER = CONTAINERS.register("autocrafter",
 	    () -> new MenuType<>(ContainerAutocrafter::new));
+    public static final RegistryObject<MenuType<ContainerBlockPlacer>> CONTAINER_BLOCKPLACER = CONTAINERS.register("blockplacer",
+	    () -> new MenuType<>(ContainerBlockPlacer::new));
 
     private static <T extends IForgeRegistryEntry<T>> Supplier<? extends T> supplier(T entry) {
 	return () -> entry;

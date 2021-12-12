@@ -14,7 +14,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,7 +28,7 @@ public class TileSorterBelt extends GenericTile {
 	addComponent(new ComponentElectrodynamic(this).maxJoules(Constants.CONVEYORBELT_USAGE * 20).input(Direction.DOWN));
 	addComponent(new ComponentInventory(this).size(18));
 	addComponent(new ComponentContainerProvider("container.sorterbelt")
-		.createMenu((id, player) -> new ContainerSorterBelt(id, player, getComponent(ComponentType.Inventory), new SimpleContainerData(0))));
+		.createMenu((id, player) -> new ContainerSorterBelt(id, player, getComponent(ComponentType.Inventory), getCoordsArray())));
     }
 
     public void onEntityCollision(Entity entityIn, boolean running) {
