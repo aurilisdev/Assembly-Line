@@ -53,3 +53,5 @@ runData.launch
 runServer.launch
 *.launch
 gradlewmac
+
+.DS_Store
