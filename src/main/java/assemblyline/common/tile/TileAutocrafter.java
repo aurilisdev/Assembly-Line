@@ -25,121 +25,121 @@ import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TileAutocrafter extends GenericTile {
-    public boolean isPowered = false;
+	public boolean isPowered = false;
 
-    public TileAutocrafter(BlockPos worldPosition, BlockState blockState) {
-	super(DeferredRegisters.TILE_AUTOCRAFTER.get(), worldPosition, blockState);
-	addComponent(new ComponentDirection());
-	addComponent(new ComponentTickable().tickServer(this::tickServer));
-	addComponent(new ComponentElectrodynamic(this).maxJoules(Constants.AUTOCRAFTER_USAGE * 20).input(Direction.DOWN));
-	addComponent(new ComponentInventory(this).size(10).faceSlots(Direction.DOWN, 9).faceSlots(Direction.UP, 1, 3, 4, 5, 7)
-		.relativeFaceSlots(Direction.SOUTH, 6, 7, 8).relativeFaceSlots(Direction.NORTH, 0, 1, 2).relativeFaceSlots(Direction.WEST, 2, 5, 8)
-		.relativeFaceSlots(Direction.EAST, 0, 3, 6));
-	addComponent(new ComponentContainerProvider("container.autocrafter")
-		.createMenu((id, player) -> new ContainerAutocrafter(id, player, getComponent(ComponentType.Inventory), getCoordsArray())));
-    }
-
-    public static boolean shapedMatches(ComponentInventory inv, ShapedRecipe shaped) {
-	for (int i = 0; i <= 3 - shaped.getWidth(); ++i) {
-	    for (int j = 0; j <= 3 - shaped.getHeight(); ++j) {
-		if (TileAutocrafter.shapedMatches(inv, shaped, i, j, true) || TileAutocrafter.shapedMatches(inv, shaped, i, j, false)) {
-		    return true;
-		}
-	    }
+	public TileAutocrafter(BlockPos worldPosition, BlockState blockState) {
+		super(DeferredRegisters.TILE_AUTOCRAFTER.get(), worldPosition, blockState);
+		addComponent(new ComponentDirection());
+		addComponent(new ComponentTickable().tickServer(this::tickServer));
+		addComponent(new ComponentElectrodynamic(this).maxJoules(Constants.AUTOCRAFTER_USAGE * 20).input(Direction.DOWN));
+		addComponent(new ComponentInventory(this).size(10).faceSlots(Direction.DOWN, 9).faceSlots(Direction.UP, 1, 3, 4, 5, 7)
+				.relativeFaceSlots(Direction.SOUTH, 6, 7, 8).relativeFaceSlots(Direction.NORTH, 0, 1, 2).relativeFaceSlots(Direction.WEST, 2, 5, 8)
+				.relativeFaceSlots(Direction.EAST, 0, 3, 6));
+		addComponent(new ComponentContainerProvider("container.autocrafter")
+				.createMenu((id, player) -> new ContainerAutocrafter(id, player, getComponent(ComponentType.Inventory), getCoordsArray())));
 	}
 
-	return false;
-    }
-
-    private static boolean shapedMatches(ComponentInventory inventory, ShapedRecipe shaped, int x, int y, boolean flag) {
-	for (int i = 0; i < 3; ++i) {
-	    for (int j = 0; j < 3; ++j) {
-		int k = i - x;
-		int l = j - y;
-		Ingredient ingredient = Ingredient.EMPTY;
-		if (k >= 0 && l >= 0 && k < shaped.getWidth() && l < shaped.getHeight()) {
-		    if (flag) {
-			ingredient = shaped.getIngredients().get(shaped.getWidth() - k - 1 + l * shaped.getWidth());
-		    } else {
-			ingredient = shaped.getIngredients().get(k + l * shaped.getWidth());
-		    }
-		}
-
-		if (!ingredient.test(inventory.getItem(i + j * 3))) {
-		    return false;
-		}
-	    }
-	}
-
-	return true;
-    }
-
-    public static boolean shapelessMatches(ComponentInventory inventory, ShapelessRecipe shaped) {
-	StackedContents stackedcontents = new StackedContents();
-	java.util.List<ItemStack> inputs = new java.util.ArrayList<>();
-	boolean isSimple = shaped.getIngredients().stream().allMatch(Ingredient::isSimple);
-	int i = 0;
-
-	for (int j = 0; j < 9; ++j) {
-	    ItemStack itemstack = inventory.getItem(j);
-	    if (!itemstack.isEmpty()) {
-		++i;
-		if (isSimple) {
-		    stackedcontents.accountStack(itemstack, 1);
-		} else {
-		    inputs.add(itemstack);
-		}
-	    }
-	}
-	return i == shaped.getIngredients().size() && (isSimple ? stackedcontents.canCraft(shaped, (IntList) null)
-		: net.minecraftforge.common.util.RecipeMatcher.findMatches(inputs, shaped.getIngredients()) != null);
-    }
-
-    public void tickServer(ComponentTickable tick) {
-	boolean canContinue = this.<ComponentElectrodynamic>getComponent(ComponentType.Electrodynamic)
-		.getJoulesStored() > Constants.AUTOCRAFTER_USAGE;
-	if (tick.getTicks() % 20 == 0) {
-	    if (canContinue) {
-		ComponentInventory inventory = getComponent(ComponentType.Inventory);
-		for (int i = 0; i < 9; i++) {
-		    if (inventory.getItem(i).getCount() == 1) {
-			canContinue = false;
-		    }
-		}
-		if (canContinue) {
-		    List<CraftingRecipe> recipes = level.getServer().getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING);
-		    ItemStack result = ItemStack.EMPTY;
-		    canContinue = false;
-		    for (CraftingRecipe recipe : recipes) {
-			result = recipe.getResultItem();
-			if (recipe instanceof ShapedRecipe shapedRecipe) {
-			    if (shapedMatches(inventory, shapedRecipe)) {
-				canContinue = true;
-				break;
-			    }
-			} else if (recipe instanceof ShapelessRecipe shapelessRecipe) {
-			    if (shapelessMatches(inventory, shapelessRecipe)) {
-				canContinue = true;
-				break;
-			    }
+	public static boolean shapedMatches(ComponentInventory inv, ShapedRecipe shaped) {
+		for (int i = 0; i <= 3 - shaped.getWidth(); ++i) {
+			for (int j = 0; j <= 3 - shaped.getHeight(); ++j) {
+				if (TileAutocrafter.shapedMatches(inv, shaped, i, j, true) || TileAutocrafter.shapedMatches(inv, shaped, i, j, false)) {
+					return true;
+				}
 			}
-		    }
-		    if (canContinue) {
-			ItemStack currentItemStack = inventory.getItem(9);
-			if (currentItemStack.isEmpty() || ItemStack.isSame(result, currentItemStack)
-				&& currentItemStack.getCount() + result.getCount() <= result.getMaxStackSize()) {
-			    for (int i = 0; i < 9; i++) {
-				inventory.getItem(i).shrink(1);
-			    }
-			    if (currentItemStack.isEmpty()) {
-				inventory.setItem(9, result.copy());
-			    } else {
-				currentItemStack.grow(result.getCount());
-			    }
-			}
-		    }
 		}
-	    }
+
+		return false;
 	}
-    }
+
+	private static boolean shapedMatches(ComponentInventory inventory, ShapedRecipe shaped, int x, int y, boolean flag) {
+		for (int i = 0; i < 3; ++i) {
+			for (int j = 0; j < 3; ++j) {
+				int k = i - x;
+				int l = j - y;
+				Ingredient ingredient = Ingredient.EMPTY;
+				if (k >= 0 && l >= 0 && k < shaped.getWidth() && l < shaped.getHeight()) {
+					if (flag) {
+						ingredient = shaped.getIngredients().get(shaped.getWidth() - k - 1 + l * shaped.getWidth());
+					} else {
+						ingredient = shaped.getIngredients().get(k + l * shaped.getWidth());
+					}
+				}
+
+				if (!ingredient.test(inventory.getItem(i + j * 3))) {
+					return false;
+				}
+			}
+		}
+
+		return true;
+	}
+
+	public static boolean shapelessMatches(ComponentInventory inventory, ShapelessRecipe shaped) {
+		StackedContents stackedcontents = new StackedContents();
+		java.util.List<ItemStack> inputs = new java.util.ArrayList<>();
+		boolean isSimple = shaped.getIngredients().stream().allMatch(Ingredient::isSimple);
+		int i = 0;
+
+		for (int j = 0; j < 9; ++j) {
+			ItemStack itemstack = inventory.getItem(j);
+			if (!itemstack.isEmpty()) {
+				++i;
+				if (isSimple) {
+					stackedcontents.accountStack(itemstack, 1);
+				} else {
+					inputs.add(itemstack);
+				}
+			}
+		}
+		return i == shaped.getIngredients().size() && (isSimple ? stackedcontents.canCraft(shaped, (IntList) null)
+				: net.minecraftforge.common.util.RecipeMatcher.findMatches(inputs, shaped.getIngredients()) != null);
+	}
+
+	public void tickServer(ComponentTickable tick) {
+		boolean canContinue = this.<ComponentElectrodynamic>getComponent(ComponentType.Electrodynamic)
+				.getJoulesStored() > Constants.AUTOCRAFTER_USAGE;
+		if (tick.getTicks() % 20 == 0) {
+			if (canContinue) {
+				ComponentInventory inventory = getComponent(ComponentType.Inventory);
+				for (int i = 0; i < 9; i++) {
+					if (inventory.getItem(i).getCount() == 1) {
+						canContinue = false;
+					}
+				}
+				if (canContinue) {
+					List<CraftingRecipe> recipes = level.getServer().getRecipeManager().getAllRecipesFor(RecipeType.CRAFTING);
+					ItemStack result = ItemStack.EMPTY;
+					canContinue = false;
+					for (CraftingRecipe recipe : recipes) {
+						result = recipe.getResultItem();
+						if (recipe instanceof ShapedRecipe shapedRecipe) {
+							if (shapedMatches(inventory, shapedRecipe)) {
+								canContinue = true;
+								break;
+							}
+						} else if (recipe instanceof ShapelessRecipe shapelessRecipe) {
+							if (shapelessMatches(inventory, shapelessRecipe)) {
+								canContinue = true;
+								break;
+							}
+						}
+					}
+					if (canContinue) {
+						ItemStack currentItemStack = inventory.getItem(9);
+						if (currentItemStack.isEmpty() || ItemStack.isSame(result, currentItemStack)
+								&& currentItemStack.getCount() + result.getCount() <= result.getMaxStackSize()) {
+							for (int i = 0; i < 9; i++) {
+								inventory.getItem(i).shrink(1);
+							}
+							if (currentItemStack.isEmpty()) {
+								inventory.setItem(9, result.copy());
+							} else {
+								currentItemStack.grow(result.getCount());
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }

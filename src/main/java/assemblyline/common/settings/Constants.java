@@ -13,5 +13,7 @@ public class Constants {
     public static double AUTOCRAFTER_USAGE = 200.0;
     @DoubleValue(def = 20.0, comment = "Usage is per tick.")
     public static double BLOCKBREAKER_USAGE = 20.0;
+    @DoubleValue(def = 40.0, comment = "Usage is per usage.")
+    public static double BLOCKPLACER_USAGE = 40.0;
 
 }
