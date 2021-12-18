@@ -17,19 +17,19 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 @EventBusSubscriber(modid = References.ID, bus = Bus.MOD)
 public class AssemblyLine {
 
-    public AssemblyLine() {
-	ConfigurationHandler.registerConfig(Constants.class);
-	IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-	DeferredRegisters.BLOCKS.register(bus);
-	DeferredRegisters.ITEMS.register(bus);
-	DeferredRegisters.TILES.register(bus);
-	DeferredRegisters.CONTAINERS.register(bus);
-    }
+	public AssemblyLine() {
+		ConfigurationHandler.registerConfig(Constants.class);
+		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+		DeferredRegisters.BLOCKS.register(bus);
+		DeferredRegisters.ITEMS.register(bus);
+		DeferredRegisters.TILES.register(bus);
+		DeferredRegisters.CONTAINERS.register(bus);
+	}
 
-    @SubscribeEvent
-    @OnlyIn(Dist.CLIENT)
-    public static void onClientSetup(FMLClientSetupEvent event) {
-	ClientRegister.setup();
-    }
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
+	public static void onClientSetup(FMLClientSetupEvent event) {
+		ClientRegister.setup();
+	}
 
 }

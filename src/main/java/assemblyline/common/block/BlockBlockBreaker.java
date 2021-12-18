@@ -7,12 +7,12 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class BlockBlockBreaker extends GenericMachineBlock {
 
-    public BlockBlockBreaker() {
-	super(TileBlockBreaker::new);
-    }
+	public BlockBlockBreaker() {
+		super(TileBlockBreaker::new);
+	}
 
-    @Override
-    public RenderShape getRenderShape(BlockState state) {
-	return RenderShape.ENTITYBLOCK_ANIMATED;
-    }
+	@Override
+	public RenderShape getRenderShape(BlockState state) {
+		return RenderShape.ENTITYBLOCK_ANIMATED;
+	}
 }

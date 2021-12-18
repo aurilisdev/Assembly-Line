@@ -16,84 +16,84 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TileCrate extends GenericTile {
-    private int lastCheckCount = 0;
-    private int count = 0;
+	private int lastCheckCount = 0;
+	private int count = 0;
 
-    public TileCrate(BlockPos worldPosition, BlockState blockState) {
-	this(64, worldPosition, blockState);
-    }
-
-    public TileCrate(int size, BlockPos worldPosition, BlockState blockState) {
-	super(DeferredRegisters.TILE_CRATE.get(), worldPosition, blockState);
-	addComponent(new ComponentPacketHandler().guiPacketWriter(this::writeCustomPacket).guiPacketReader(this::readCustomPacket)
-		.customPacketReader(this::readCustomPacket).customPacketWriter(this::writeCustomPacket));
-	addComponent(new ComponentInventory(this).size(size).getSlots(this::getSlotsForFace).valid(this::isItemValidForSlot).slotFaces(0,
-		Direction.values()));
-	addComponent(new ComponentTickable().tickServer(this::tickServer));
-    }
-
-    public HashSet<Integer> getSlotsForFace(Direction side) {
-	HashSet<Integer> set = new HashSet<>();
-	for (int i = 0; i < this.<ComponentInventory>getComponent(ComponentType.Inventory).getContainerSize(); i++) {
-	    set.add(i);
+	public TileCrate(BlockPos worldPosition, BlockState blockState) {
+		this(64, worldPosition, blockState);
 	}
-	Scheduler.schedule(1, () -> this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking());
-	return set;
-    }
 
-    public boolean isItemValidForSlot(int index, ItemStack stack, ComponentInventory inv) {
-	if (stack.isEmpty()) {
-	    return true;
+	public TileCrate(int size, BlockPos worldPosition, BlockState blockState) {
+		super(DeferredRegisters.TILE_CRATE.get(), worldPosition, blockState);
+		addComponent(new ComponentPacketHandler().guiPacketWriter(this::writeCustomPacket).guiPacketReader(this::readCustomPacket)
+				.customPacketReader(this::readCustomPacket).customPacketWriter(this::writeCustomPacket));
+		addComponent(new ComponentInventory(this).size(size).getSlots(this::getSlotsForFace).valid(this::isItemValidForSlot).slotFaces(0,
+				Direction.values()));
+		addComponent(new ComponentTickable().tickServer(this::tickServer));
 	}
-	for (int i = 0; i < inv.getContainerSize(); i++) {
-	    ItemStack s = inv.getItem(i);
-	    if (s.isEmpty()) {
-		continue;
-	    }
-	    if (stack.getItem() != s.getItem()) {
-		return false;
-	    }
-	}
-	return true;
-    }
 
-    public void writeCustomPacket(CompoundTag nbt) {
-	ComponentInventory inv = getComponent(ComponentType.Inventory);
-	ItemStack stack = ItemStack.EMPTY;
-	for (int i = 0; i < inv.getContainerSize(); i++) {
-	    if (!inv.getItem(i).isEmpty()) {
-		stack = inv.getItem(i);
-		break;
-	    }
-	}
-	new ItemStack(stack.getItem()).save(nbt);
-	nbt.putInt("acccount", getCount());
-    }
-
-    public void readCustomPacket(CompoundTag nbt) {
-	this.<ComponentInventory>getComponent(ComponentType.Inventory).setItem(0, ItemStack.of(nbt));
-	count = nbt.getInt("acccount");
-    }
-
-    public void tickServer(ComponentTickable tickable) {
-	if (tickable.getTicks() % 40 == 0) {
-	    this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
-	    count = lastCheckCount;
-	}
-    }
-
-    public int getCount() {
-	if (!level.isClientSide) {
-	    ComponentInventory inv = getComponent(ComponentType.Inventory);
-	    count = 0;
-	    for (int i = 0; i < inv.getContainerSize(); i++) {
-		ItemStack stack = inv.getItem(i);
-		if (!stack.isEmpty()) {
-		    count += stack.getCount();
+	public HashSet<Integer> getSlotsForFace(Direction side) {
+		HashSet<Integer> set = new HashSet<>();
+		for (int i = 0; i < this.<ComponentInventory>getComponent(ComponentType.Inventory).getContainerSize(); i++) {
+			set.add(i);
 		}
-	    }
+		Scheduler.schedule(1, () -> this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking());
+		return set;
 	}
-	return count;
-    }
+
+	public boolean isItemValidForSlot(int index, ItemStack stack, ComponentInventory inv) {
+		if (stack.isEmpty()) {
+			return true;
+		}
+		for (int i = 0; i < inv.getContainerSize(); i++) {
+			ItemStack s = inv.getItem(i);
+			if (s.isEmpty()) {
+				continue;
+			}
+			if (stack.getItem() != s.getItem()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public void writeCustomPacket(CompoundTag nbt) {
+		ComponentInventory inv = getComponent(ComponentType.Inventory);
+		ItemStack stack = ItemStack.EMPTY;
+		for (int i = 0; i < inv.getContainerSize(); i++) {
+			if (!inv.getItem(i).isEmpty()) {
+				stack = inv.getItem(i);
+				break;
+			}
+		}
+		new ItemStack(stack.getItem()).save(nbt);
+		nbt.putInt("acccount", getCount());
+	}
+
+	public void readCustomPacket(CompoundTag nbt) {
+		this.<ComponentInventory>getComponent(ComponentType.Inventory).setItem(0, ItemStack.of(nbt));
+		count = nbt.getInt("acccount");
+	}
+
+	public void tickServer(ComponentTickable tickable) {
+		if (tickable.getTicks() % 40 == 0) {
+			this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
+			count = lastCheckCount;
+		}
+	}
+
+	public int getCount() {
+		if (!level.isClientSide) {
+			ComponentInventory inv = getComponent(ComponentType.Inventory);
+			count = 0;
+			for (int i = 0; i < inv.getContainerSize(); i++) {
+				ItemStack stack = inv.getItem(i);
+				if (!stack.isEmpty()) {
+					count += stack.getCount();
+				}
+			}
+		}
+		return count;
+	}
 
 }

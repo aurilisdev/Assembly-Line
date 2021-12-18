@@ -35,76 +35,76 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
-    private static final VoxelShape shape = Shapes.box(0, 0, 0, 1, 5.0 / 16.0, 1);
+	private static final VoxelShape shape = Shapes.box(0, 0, 0, 1, 5.0 / 16.0, 1);
 
-    public BlockConveyorBelt() {
-	super(Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion());
-	registerDefaultState(stateDefinition.any().setValue(GenericEntityBlock.FACING, Direction.NORTH));
-    }
-
-    @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-	return shape;
-    }
-
-    @Override
-    public List<ItemStack> getDrops(BlockState state, Builder builder) {
-	return Arrays.asList(new ItemStack(DeferredRegisters.blockConveyorBelt));
-    }
-
-    @Override
-    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entityIn) {
-	BlockEntity tile = world.getBlockEntity(pos);
-	if (!world.isClientSide && tile instanceof TileConveyorBelt belt && entityIn instanceof ItemEntity item && entityIn.tickCount > 5) {
-	    item.setItem(belt.addItemOnBelt(item.getItem()));
+	public BlockConveyorBelt() {
+		super(Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion());
+		registerDefaultState(stateDefinition.any().setValue(GenericEntityBlock.FACING, Direction.NORTH));
 	}
-    }
 
-    @Override
-    public void onRotate(ItemStack stack, BlockPos pos, Player player) {
-	if (player.level.getBlockEntity(pos)instanceof TileConveyorBelt belt) {
-	    if (belt.conveyorType.ordinal() + 1 <= ConveyorType.values().length - 1) {
-		belt.conveyorType = ConveyorType.values()[belt.conveyorType.ordinal() + 1];
-	    } else {
-		belt.conveyorType = ConveyorType.values()[0];
-	    }
-	    belt.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
+	@Override
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+		return shape;
 	}
-    }
 
-    @Override
-    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-	if (!(newState.getBlock() instanceof BlockConveyorBelt)) {
-	    BlockEntity tile = worldIn.getBlockEntity(pos);
-	    if (!(state.getBlock() == newState.getBlock()
-		    && state.getValue(GenericEntityBlock.FACING) != newState.getValue(GenericEntityBlock.FACING))
-		    && tile instanceof GenericTile generic) {
-		if (generic.hasComponent(ComponentType.Inventory)) {
-		    Containers.dropContents(worldIn, pos, generic.<ComponentInventory>getComponent(ComponentType.Inventory));
+	@Override
+	public List<ItemStack> getDrops(BlockState state, Builder builder) {
+		return Arrays.asList(new ItemStack(DeferredRegisters.blockConveyorBelt));
+	}
+
+	@Override
+	public void entityInside(BlockState state, Level world, BlockPos pos, Entity entityIn) {
+		BlockEntity tile = world.getBlockEntity(pos);
+		if (!world.isClientSide && tile instanceof TileConveyorBelt belt && entityIn instanceof ItemEntity item && entityIn.tickCount > 5) {
+			item.setItem(belt.addItemOnBelt(item.getItem()));
 		}
-	    }
-	    super.onRemove(state, worldIn, pos, newState, isMoving);
 	}
-    }
 
-    @Override
-    public RenderShape getRenderShape(BlockState state) {
-	return RenderShape.INVISIBLE;
-    }
+	@Override
+	public void onRotate(ItemStack stack, BlockPos pos, Player player) {
+		if (player.level.getBlockEntity(pos) instanceof TileConveyorBelt belt) {
+			if (belt.conveyorType.ordinal() + 1 <= ConveyorType.values().length - 1) {
+				belt.conveyorType = ConveyorType.values()[belt.conveyorType.ordinal() + 1];
+			} else {
+				belt.conveyorType = ConveyorType.values()[0];
+			}
+			belt.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
+		}
+	}
 
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-	return super.getStateForPlacement(context).setValue(GenericEntityBlock.FACING, context.getHorizontalDirection().getOpposite());
-    }
+	@Override
+	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (!(newState.getBlock() instanceof BlockConveyorBelt)) {
+			BlockEntity tile = worldIn.getBlockEntity(pos);
+			if (!(state.getBlock() == newState.getBlock()
+					&& state.getValue(GenericEntityBlock.FACING) != newState.getValue(GenericEntityBlock.FACING))
+					&& tile instanceof GenericTile generic) {
+				if (generic.hasComponent(ComponentType.Inventory)) {
+					Containers.dropContents(worldIn, pos, generic.<ComponentInventory>getComponent(ComponentType.Inventory));
+				}
+			}
+			super.onRemove(state, worldIn, pos, newState, isMoving);
+		}
+	}
 
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-	super.createBlockStateDefinition(builder);
-	builder.add(GenericEntityBlock.FACING);
-    }
+	@Override
+	public RenderShape getRenderShape(BlockState state) {
+		return RenderShape.INVISIBLE;
+	}
 
-    @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-	return new TileConveyorBelt(pos, state);
-    }
+	@Override
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		return super.getStateForPlacement(context).setValue(GenericEntityBlock.FACING, context.getHorizontalDirection().getOpposite());
+	}
+
+	@Override
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
+		builder.add(GenericEntityBlock.FACING);
+	}
+
+	@Override
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return new TileConveyorBelt(pos, state);
+	}
 }

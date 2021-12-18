@@ -12,20 +12,20 @@ import net.minecraft.world.inventory.SimpleContainerData;
 
 public class ContainerBlockPlacer extends GenericContainer<TileSorterBelt> {
 
-    public ContainerBlockPlacer(int id, Inventory playerinv) {
-	this(id, playerinv, new SimpleContainer(1));
-    }
+	public ContainerBlockPlacer(int id, Inventory playerinv) {
+		this(id, playerinv, new SimpleContainer(1));
+	}
 
-    public ContainerBlockPlacer(int id, Inventory playerinv, Container inventory) {
-	this(id, playerinv, inventory, new SimpleContainerData(3));
-    }
+	public ContainerBlockPlacer(int id, Inventory playerinv, Container inventory) {
+		this(id, playerinv, inventory, new SimpleContainerData(3));
+	}
 
-    public ContainerBlockPlacer(int id, Inventory playerinv, Container inventory, ContainerData inventorydata) {
-	super(DeferredRegisters.CONTAINER_BLOCKPLACER.get(), id, playerinv, inventory, inventorydata);
-    }
+	public ContainerBlockPlacer(int id, Inventory playerinv, Container inventory, ContainerData inventorydata) {
+		super(DeferredRegisters.CONTAINER_BLOCKPLACER.get(), id, playerinv, inventory, inventorydata);
+	}
 
-    @Override
-    public void addInventorySlots(Container inv, Inventory playerinv) {
-	addSlot(new GenericSlot(inv, nextIndex(), 8 + 3 * 18, 17 + 18));
-    }
+	@Override
+	public void addInventorySlots(Container inv, Inventory playerinv) {
+		addSlot(new GenericSlot(inv, nextIndex(), 8 + 3 * 18, 17 + 18));
+	}
 }

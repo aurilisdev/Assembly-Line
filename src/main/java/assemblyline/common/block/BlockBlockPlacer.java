@@ -7,12 +7,12 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class BlockBlockPlacer extends GenericMachineBlock {
 
-    public BlockBlockPlacer() {
-	super(TileBlockPlacer::new);
-    }
+	public BlockBlockPlacer() {
+		super(TileBlockPlacer::new);
+	}
 
-    @Override
-    public RenderShape getRenderShape(BlockState state) {
-	return RenderShape.ENTITYBLOCK_ANIMATED;
-    }
+	@Override
+	public RenderShape getRenderShape(BlockState state) {
+		return RenderShape.ENTITYBLOCK_ANIMATED;
+	}
 }
