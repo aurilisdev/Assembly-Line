@@ -14,7 +14,6 @@ import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
 import electrodynamics.prefab.utilities.object.TransferPack;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -31,7 +30,7 @@ public class TileBlockPlacer extends GenericTile {
 		addComponent(new ComponentDirection());
 		addComponent(new ComponentTickable().tickServer(this::tickServer).tickClient(this::tickClient).tickCommon(this::tickCommon));
 		addComponent(new ComponentPacketHandler());
-		addComponent(new ComponentElectrodynamic(this).maxJoules(Constants.BLOCKPLACER_USAGE * 20).input(Direction.DOWN));
+		addComponent(new ComponentElectrodynamic(this).maxJoules(Constants.BLOCKPLACER_USAGE * 20).universalInput());
 		addComponent(new ComponentInventory(this).size(1));
 		addComponent(new ComponentContainerProvider("container.blockplacer")
 				.createMenu((id, player) -> new ContainerBlockPlacer(id, player, getComponent(ComponentType.Inventory), getCoordsArray())));
