@@ -1,7 +1,7 @@
 package assemblyline.common.inventory.container;
 
 import assemblyline.DeferredRegisters;
-import assemblyline.common.tile.TileSorterBelt;
+import assemblyline.common.tile.TileBlockPlacer;
 import electrodynamics.prefab.inventory.container.GenericContainer;
 import electrodynamics.prefab.inventory.container.slot.GenericSlot;
 import net.minecraft.world.Container;
@@ -10,7 +10,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 
-public class ContainerBlockPlacer extends GenericContainer<TileSorterBelt> {
+public class ContainerBlockPlacer extends GenericContainer<TileBlockPlacer> {
 
 	public ContainerBlockPlacer(int id, Inventory playerinv) {
 		this(id, playerinv, new SimpleContainer(1));

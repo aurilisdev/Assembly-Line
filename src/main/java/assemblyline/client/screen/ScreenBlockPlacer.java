@@ -5,7 +5,7 @@ import java.util.List;
 
 import assemblyline.common.inventory.container.ContainerBlockPlacer;
 import assemblyline.common.settings.Constants;
-import assemblyline.common.tile.TileSorterBelt;
+import assemblyline.common.tile.TileBlockPlacer;
 import electrodynamics.api.electricity.formatting.ChatFormatter;
 import electrodynamics.api.electricity.formatting.ElectricUnit;
 import electrodynamics.prefab.screen.GenericScreen;
@@ -31,7 +31,7 @@ public class ScreenBlockPlacer extends GenericScreen<ContainerBlockPlacer> {
 
 	private List<? extends FormattedCharSequence> getEnergyInformation() {
 		ArrayList<FormattedCharSequence> list = new ArrayList<>();
-		TileSorterBelt box = menu.getHostFromIntArray();
+		TileBlockPlacer box = menu.getHostFromIntArray();
 		if (box != null) {
 			ComponentElectrodynamic electro = box.getComponent(ComponentType.Electrodynamic);
 			list.add(new TranslatableComponent("gui.blockplacer.usage",
