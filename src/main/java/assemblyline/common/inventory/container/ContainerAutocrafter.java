@@ -2,7 +2,7 @@ package assemblyline.common.inventory.container;
 
 import assemblyline.DeferredRegisters;
 import assemblyline.common.tile.TileAutocrafter;
-import electrodynamics.prefab.inventory.container.GenericContainer;
+import electrodynamics.prefab.inventory.container.GenericContainerBlockEntity;
 import electrodynamics.prefab.inventory.container.slot.GenericSlot;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -11,7 +11,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.FurnaceResultSlot;
 import net.minecraft.world.inventory.SimpleContainerData;
 
-public class ContainerAutocrafter extends GenericContainer<TileAutocrafter> {
+public class ContainerAutocrafter extends GenericContainerBlockEntity<TileAutocrafter> {
 
 	public ContainerAutocrafter(int id, Inventory playerinv) {
 		this(id, playerinv, new SimpleContainer(10));
