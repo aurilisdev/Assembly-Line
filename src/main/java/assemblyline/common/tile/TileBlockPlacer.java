@@ -3,7 +3,7 @@ package assemblyline.common.tile;
 import assemblyline.DeferredRegisters;
 import assemblyline.common.inventory.container.ContainerBlockPlacer;
 import assemblyline.common.settings.Constants;
-import electrodynamics.api.capability.electrodynamic.CapabilityElectrodynamic;
+import electrodynamics.api.capability.ElectrodynamicsCapabilities;
 import electrodynamics.prefab.tile.GenericTile;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentContainerProvider;
@@ -45,7 +45,7 @@ public class TileBlockPlacer extends GenericTile {
 		if (tick.getTicks() % 20 == 0) {
 			ComponentElectrodynamic electrodynamic = getComponent(ComponentType.Electrodynamic);
 			if (electrodynamic.getJoulesStored() > Constants.BLOCKPLACER_USAGE) {
-				electrodynamic.extractPower(TransferPack.joulesVoltage(Constants.BLOCKBREAKER_USAGE, CapabilityElectrodynamic.DEFAULT_VOLTAGE),
+				electrodynamic.extractPower(TransferPack.joulesVoltage(Constants.BLOCKBREAKER_USAGE, ElectrodynamicsCapabilities.DEFAULT_VOLTAGE),
 						false);
 				if (state.isAir()) {
 					ItemStack stack = inventory.getItem(0);

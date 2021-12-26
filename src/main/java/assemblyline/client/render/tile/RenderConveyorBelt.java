@@ -10,7 +10,7 @@ import assemblyline.common.tile.TileConveyorBelt.ConveyorType;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentDirection;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
-import electrodynamics.prefab.utilities.UtilitiesRendering;
+import electrodynamics.prefab.utilities.RenderingUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -123,12 +123,12 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 
 		matrixStackIn.pushPose();
 		matrixStackIn.translate(0, 1 / 16.0, 0);
-		UtilitiesRendering.prepareRotationalTileModel(tile, matrixStackIn);
+		RenderingUtils.prepareRotationalTileModel(tile, matrixStackIn);
 		if (tile.conveyorType == ConveyorType.SlopedDown) {
 			matrixStackIn.translate(0, -1, 0);
 			matrixStackIn.mulPose(new Quaternion(0, 180, 0, true));
 		}
-		UtilitiesRendering.renderModel(model, tile, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+		RenderingUtils.renderModel(model, tile, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 		matrixStackIn.popPose();
 
 		if (tile.isPusher || tile.isPuller) {
@@ -142,19 +142,19 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 					matrixStackIn.translate(0, 0.4, 0);
 				}
 				matrixStackIn.translate(nextBlockPos.getX() - move.x(), nextBlockPos.getY() - move.y(), nextBlockPos.getZ() - move.z());
-				UtilitiesRendering.prepareRotationalTileModel(tile, matrixStackIn);
-				UtilitiesRendering.renderModel(model, tile, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+				RenderingUtils.prepareRotationalTileModel(tile, matrixStackIn);
+				RenderingUtils.renderModel(model, tile, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 				matrixStackIn.popPose();
 			}
 			if (tile.isPuller) {
 				matrixStackIn.pushPose();
 				matrixStackIn.translate(0, 1 / 16.0, 0);
-				UtilitiesRendering.prepareRotationalTileModel(tile, matrixStackIn);
+				RenderingUtils.prepareRotationalTileModel(tile, matrixStackIn);
 				if (tile.conveyorType == ConveyorType.SlopedUp) {
 					matrixStackIn.translate(0, 0.4, 0);
 				}
 				matrixStackIn.mulPose(new Quaternion(0, 180, 0, true));
-				UtilitiesRendering.renderModel(model, tile, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+				RenderingUtils.renderModel(model, tile, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 				matrixStackIn.popPose();
 			}
 		}

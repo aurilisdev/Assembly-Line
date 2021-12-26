@@ -3,7 +3,7 @@ package assemblyline.common.tile;
 import assemblyline.DeferredRegisters;
 import assemblyline.common.settings.Constants;
 import electrodynamics.SoundRegister;
-import electrodynamics.api.capability.electrodynamic.CapabilityElectrodynamic;
+import electrodynamics.api.capability.ElectrodynamicsCapabilities;
 import electrodynamics.api.particle.ParticleAPI;
 import electrodynamics.api.sound.SoundAPI;
 import electrodynamics.prefab.tile.GenericTile;
@@ -43,7 +43,7 @@ public class TileBlockBreaker extends GenericTile {
 			double k1 = 1 / state.getDestroySpeed(level, off) / 30;
 			if (progress < 1) {
 				progress += k1 * 5;
-				electrodynamic.extractPower(TransferPack.joulesVoltage(Constants.BLOCKBREAKER_USAGE, CapabilityElectrodynamic.DEFAULT_VOLTAGE),
+				electrodynamic.extractPower(TransferPack.joulesVoltage(Constants.BLOCKBREAKER_USAGE, ElectrodynamicsCapabilities.DEFAULT_VOLTAGE),
 						false);
 			} else {
 				if (!level.isClientSide) {
