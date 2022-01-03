@@ -14,8 +14,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class ScreenBlockPlacer extends GenericScreen<ContainerBlockPlacer> {
 	public ScreenBlockPlacer(ContainerBlockPlacer container, Inventory playerInventory, Component title) {
 		super(container, playerInventory, title);
-		components
-				.add(new ScreenComponentElectricInfo(this, -ScreenComponentInfo.SIZE + 1, 2).wattage(Constants.BLOCKPLACER_USAGE));
+		components.add(new ScreenComponentElectricInfo(this, -ScreenComponentInfo.SIZE + 1, 2).wattage(Constants.BLOCKPLACER_USAGE));
 	}
 
 }

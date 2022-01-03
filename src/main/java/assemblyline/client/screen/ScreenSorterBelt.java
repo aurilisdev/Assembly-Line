@@ -14,7 +14,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class ScreenSorterBelt extends GenericScreen<ContainerSorterBelt> {
 	public ScreenSorterBelt(ContainerSorterBelt container, Inventory playerInventory, Component title) {
 		super(container, playerInventory, title);
-		components.add(
-				new ScreenComponentElectricInfo(this, -ScreenComponentInfo.SIZE + 1, 2).wattage(Constants.SORTERBELT_USAGE * 20));
+		components.add(new ScreenComponentElectricInfo(this, -ScreenComponentInfo.SIZE + 1, 2).wattage(Constants.SORTERBELT_USAGE * 20));
 	}
 }

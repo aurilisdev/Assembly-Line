@@ -68,15 +68,15 @@ public class DeferredRegisters {
 		ITEMS.register("autocrafter", supplier(new BlockItemDescriptable(blockAutocrafter, new Properties().tab(References.ASSEMBLYLINETAB))));
 		ITEMS.register("blockbreaker", supplier(new BlockItemDescriptable(blockBlockBreaker, new Properties().tab(References.ASSEMBLYLINETAB))));
 		ITEMS.register("blockplacer", supplier(new BlockItemDescriptable(blockBlockPlacer, new Properties().tab(References.ASSEMBLYLINETAB))));
-		
-		//MACHINES
+
+		// MACHINES
 		BlockItemDescriptable.addDescription(blockConveyorBelt, "|translate|tooltip.voltage.120");
 		BlockItemDescriptable.addDescription(blockSorterBelt, "|translate|tooltip.voltage.120");
 		BlockItemDescriptable.addDescription(blockAutocrafter, "|translate|tooltip.voltage.120");
 		BlockItemDescriptable.addDescription(blockBlockPlacer, "|translate|tooltip.voltage.120");
 		BlockItemDescriptable.addDescription(blockBlockBreaker, "|translate|tooltip.voltage.120");
-		
-		//Misc
+
+		// Misc
 		BlockItemDescriptable.addDescription(blockDetector, "|translate|tooltip.detector");
 		BlockItemDescriptable.addDescription(blockCrate, "|translate|tooltip.crate");
 		BlockItemDescriptable.addDescription(blockCrateMedium, "|translate|tooltip.cratemedium");
