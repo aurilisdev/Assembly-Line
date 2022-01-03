@@ -17,7 +17,7 @@ public class ScreenAutocrafter extends GenericScreen<ContainerAutocrafter> {
 		super(container, playerInventory, title);
 		components.add(new ScreenComponentProgress(() -> 0, this, 80, 34));
 		components
-				.add(new ScreenComponentElectricInfo(this, -ScreenComponentInfo.SIZE + 1, 2).tag("autocrafter").wattage(Constants.AUTOCRAFTER_USAGE));
+				.add(new ScreenComponentElectricInfo(this, -ScreenComponentInfo.SIZE + 1, 2).wattage(Constants.AUTOCRAFTER_USAGE));
 	}
 
 }
