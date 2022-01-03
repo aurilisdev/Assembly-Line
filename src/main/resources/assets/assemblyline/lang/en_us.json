@@ -13,13 +13,12 @@
   "container.sorterbelt" : "Sorter Belt",
   "container.autocrafter" : "Autocrafter",
   "container.blockplacer" : "Block Placer",
-  "gui.sorterbelt.voltage" : "Voltage: %s",
-  "gui.sorterbelt.usage" : "Usage: %s",
-  "gui.autocrafter.voltage" : "Voltage: %s",
-  "gui.autocrafter.usage" : "Usage: %s",
-  "gui.blockplacer.voltage" : "Voltage: %s",
-  "gui.blockplacer.usage" : "Usage: %s",
+  "gui.machine.voltage" : "Voltage: %s",
+  "gui.machine.usage" : "Usage: %s",
   "itemGroup.itemgroupassemblyline" : "Assembly Line",
-  "tooltip.conveyorbelt.powerusage" : "Power Usage: 10W",
-  "tooltip.detector" : "Emits redstone signal when an item is in front of it"
+  "tooltip.voltage.120" : "Voltage: 120 Volts",
+  "tooltip.detector" : "Emits redstone signal when an item is in front of it",
+  "tooltip.crate" : "Stores 4096 of one item",
+  "tooltip.cratemedium" : "Stores 8192 of one item",
+  "tooltip.cratelarge" : "Stores 16384 of one item"
 }

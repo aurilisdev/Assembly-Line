@@ -3,7 +3,7 @@ package assemblyline.common.inventory.container;
 import assemblyline.DeferredRegisters;
 import assemblyline.common.tile.TileBlockPlacer;
 import electrodynamics.prefab.inventory.container.GenericContainerBlockEntity;
-import electrodynamics.prefab.inventory.container.slot.GenericSlot;
+import electrodynamics.prefab.inventory.container.slot.item.SlotGeneric;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -26,6 +26,6 @@ public class ContainerBlockPlacer extends GenericContainerBlockEntity<TileBlockP
 
 	@Override
 	public void addInventorySlots(Container inv, Inventory playerinv) {
-		addSlot(new GenericSlot(inv, nextIndex(), 8 + 3 * 18, 17 + 18));
+		addSlot(new SlotGeneric(inv, nextIndex(), 8 + 3 * 18, 17 + 18));
 	}
 }

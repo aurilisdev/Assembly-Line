@@ -68,9 +68,19 @@ public class DeferredRegisters {
 		ITEMS.register("autocrafter", supplier(new BlockItemDescriptable(blockAutocrafter, new Properties().tab(References.ASSEMBLYLINETAB))));
 		ITEMS.register("blockbreaker", supplier(new BlockItemDescriptable(blockBlockBreaker, new Properties().tab(References.ASSEMBLYLINETAB))));
 		ITEMS.register("blockplacer", supplier(new BlockItemDescriptable(blockBlockPlacer, new Properties().tab(References.ASSEMBLYLINETAB))));
-		BlockItemDescriptable.addDescription(blockConveyorBelt, "|translate|tooltip.conveyorbelt.powerusage");
-		BlockItemDescriptable.addDescription(blockSorterBelt, "|translate|tooltip.sorterbelt.powerusage");
+		
+		//MACHINES
+		BlockItemDescriptable.addDescription(blockConveyorBelt, "|translate|tooltip.voltage.120");
+		BlockItemDescriptable.addDescription(blockSorterBelt, "|translate|tooltip.voltage.120");
+		BlockItemDescriptable.addDescription(blockAutocrafter, "|translate|tooltip.voltage.120");
+		BlockItemDescriptable.addDescription(blockBlockPlacer, "|translate|tooltip.voltage.120");
+		BlockItemDescriptable.addDescription(blockBlockBreaker, "|translate|tooltip.voltage.120");
+		
+		//Misc
 		BlockItemDescriptable.addDescription(blockDetector, "|translate|tooltip.detector");
+		BlockItemDescriptable.addDescription(blockCrate, "|translate|tooltip.crate");
+		BlockItemDescriptable.addDescription(blockCrateMedium, "|translate|tooltip.cratemedium");
+		BlockItemDescriptable.addDescription(blockCrateLarge, "|translate|tooltip.cratelarge");
 	}
 	public static final RegistryObject<BlockEntityType<TileConveyorBelt>> TILE_BELT = TILES.register("belt",
 			() -> new BlockEntityType<>(TileConveyorBelt::new, Sets.newHashSet(blockConveyorBelt), null));
