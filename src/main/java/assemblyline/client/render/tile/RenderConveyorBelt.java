@@ -100,7 +100,7 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 			location = tile.running ? ClientRegister.MODEL_SLOPEDCONVEYORUPANIMATED : ClientRegister.MODEL_SLOPEDCONVEYORUP;
 			break;
 		case Vertical:
-			if (tile.getLevel().getBlockEntity(tile.getBlockPos().below()) instanceof TileConveyorBelt belt
+			if (tile.getLevel().getBlockEntity(tile.getBlockPos().below())instanceof TileConveyorBelt belt
 					&& belt.conveyorType == ConveyorType.Vertical) {
 				location = tile.running ? ClientRegister.MODEL_ELEVATORRUNNING : ClientRegister.MODEL_ELEVATOR;
 			} else {

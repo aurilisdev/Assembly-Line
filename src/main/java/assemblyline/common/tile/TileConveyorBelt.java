@@ -264,7 +264,7 @@ public class TileConveyorBelt extends GenericTile {
 		case Horizontal -> worldPosition.relative(direction);
 		case SlopedDown -> worldPosition.relative(direction).below();
 		case SlopedUp -> worldPosition.relative(direction).above();
-		case Vertical -> level.getBlockEntity(worldPosition.relative(Direction.UP)) instanceof TileConveyorBelt belt
+		case Vertical -> level.getBlockEntity(worldPosition.relative(Direction.UP))instanceof TileConveyorBelt belt
 				&& belt.conveyorType == ConveyorType.Vertical ? worldPosition.relative(Direction.UP) : worldPosition.relative(direction).above();
 		default -> null;
 		};
@@ -280,7 +280,7 @@ public class TileConveyorBelt extends GenericTile {
 	}
 
 	protected TileConveyorBelt getNextConveyor() {
-		return getNextEntity() instanceof TileConveyorBelt belt ? belt : null;
+		return getNextEntity()instanceof TileConveyorBelt belt ? belt : null;
 	}
 
 	protected void loadFromNBT(CompoundTag nbt) {
