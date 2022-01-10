@@ -63,6 +63,7 @@ public class RenderBlockBreaker implements BlockEntityRenderer<TileBlockBreaker>
 					.getBuffer(ModelBakery.DESTROY_TYPES.get(Math.min(9, (int) (tileEntityIn.progress * 9)))), pose.pose(), pose.normal());
 			matrixStackIn.translate(norm.getX(), norm.getY(), norm.getZ());
 			Minecraft.getInstance().getBlockRenderer().renderBreakingTexture(state, off, tileEntityIn.getLevel(), matrixStackIn, vertexconsumer1);
+			Minecraft.getInstance().renderBuffers().crumblingBufferSource().endBatch();
 			matrixStackIn.popPose();
 		}
 	}
