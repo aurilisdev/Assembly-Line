@@ -49,7 +49,7 @@ public class TileBlockPlacer extends GenericTile {
 						false);
 				if (state.isAir()) {
 					ItemStack stack = inventory.getItem(0);
-					if (!stack.isEmpty() && stack.getItem()instanceof BlockItem bi) {
+					if (!stack.isEmpty() && stack.getItem() instanceof BlockItem bi) {
 						Block b = bi.getBlock();
 						BlockState newState = b.getStateForPlacement(new BlockPlaceContext(level, null, InteractionHand.MAIN_HAND, stack,
 								new BlockHitResult(Vec3.ZERO, direction.getDirection(), off, false)));
