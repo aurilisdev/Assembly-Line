@@ -17,7 +17,7 @@ public class ContainerSorterBelt extends GenericContainerBlockEntity<TileSorterB
 	}
 
 	public ContainerSorterBelt(int id, Inventory playerinv, Container inventory) {
-		this(id, playerinv, inventory, new SimpleContainerData(0));
+		this(id, playerinv, inventory, new SimpleContainerData(3));
 	}
 
 	public ContainerSorterBelt(int id, Inventory playerinv, Container inventory, ContainerData inventorydata) {
