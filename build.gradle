@@ -97,7 +97,9 @@ dependencies {
         implementation fileTree(Folder)
     }
     minecraft 'net.minecraftforge:forge:1.18.1-39.0.0'
-
+    //makes testing easier; no JEI plugin for mod currently
+	compileOnly fg.deobf("mezz.jei:jei-1.18.1:9.1.0.41:api")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.18.1:9.1.0.41")
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
@@ -142,6 +144,19 @@ publishing {
         }
     }
 }
+
+repositories{
+	mavenCentral()
+  	maven {
+   	    name = "Progwml6 maven"
+   	    url = "https://dvs1.progwml6.com/files/maven/"
+  	}
+    maven {
+       name = "ModMaven"
+       url = "https://modmaven.k-4u.nl"
+    }
+}
+
 ext.gittagnew = 'v'+project.version
 
 task createTag(type: GitTag) {
