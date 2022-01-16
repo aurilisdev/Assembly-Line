@@ -82,7 +82,7 @@ public class TileMobGrinder extends GenericTile {
 					for(Entity entity : entities) {
 						if((electro.getJoulesStored() >= Constants.RANCHER_USAGE) && !(entity instanceof Player)) {
 							electro.extractPower(TransferPack.joulesVoltage(Constants.MOBGRINDER_USAGE, electro.getVoltage()), false);
-							entity.getCapability(ElectrodynamicsCapabilities.LOCATION_STORAGE_CAPABILITY).ifPresent(h -> h.setLocation(0, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()));
+							entity.getCapability(ElectrodynamicsCapabilities.LOCATION_STORAGE_CAPABILITY).ifPresent(h -> h.setLocation(0, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ()));
 							entity.kill();
 						}
 					}

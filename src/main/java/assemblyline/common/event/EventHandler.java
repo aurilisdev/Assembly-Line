@@ -5,7 +5,6 @@ import java.util.List;
 
 import assemblyline.References;
 import assemblyline.common.tile.TileMobGrinder;
-import electrodynamics.Electrodynamics;
 import electrodynamics.api.capability.ElectrodynamicsCapabilities;
 import electrodynamics.api.capability.types.locationstorage.CapabilityLocationStorage;
 import electrodynamics.api.capability.types.locationstorage.ILocationStorage;
@@ -15,7 +14,6 @@ import electrodynamics.prefab.utilities.object.Location;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -30,8 +28,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 public class EventHandler {
 
 	@SubscribeEvent
-	public static void attachLocStorageCapabiliity(AttachCapabilitiesEvent<LivingEntity> event) {
-		Electrodynamics.LOGGER.info("fired");
+	public static void attachLocStorageCapabiliity(AttachCapabilitiesEvent<Entity> event) {
 		event.addCapability(new ResourceLocation(References.ID, ElectrodynamicsCapabilities.LOCATION_KEY), new CapabilityLocationStorage(1));
 	}
 	
@@ -40,7 +37,6 @@ public class EventHandler {
 		Entity entity = event.getEntity();
 		LazyOptional<ILocationStorage> lazyOptional = entity.getCapability(ElectrodynamicsCapabilities.LOCATION_STORAGE_CAPABILITY);
 		if(lazyOptional.isPresent()) {
-			Electrodynamics.LOGGER.info("found cap");
 			Level level = entity.getLevel();
 			ILocationStorage storage = lazyOptional.resolve().get();
 			Location location = storage.getLocation(0);
