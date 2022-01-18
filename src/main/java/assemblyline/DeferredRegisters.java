@@ -80,7 +80,7 @@ public class DeferredRegisters {
 		ITEMS.register("blockplacer", supplier(new BlockItemDescriptable(blockBlockPlacer, new Properties().tab(References.ASSEMBLYLINETAB))));
 		ITEMS.register("rancher", supplier(new BlockItemDescriptable(blockRancher, new Properties().tab(References.ASSEMBLYLINETAB))));
 		ITEMS.register("mobgrinder", supplier(new BlockItemDescriptable(blockMobGrinder, new Properties().tab(References.ASSEMBLYLINETAB))));
-		
+
 		// MACHINES
 		BlockItemDescriptable.addDescription(blockConveyorBelt, "|translate|tooltip.voltage.120");
 		BlockItemDescriptable.addDescription(blockSorterBelt, "|translate|tooltip.voltage.120");
@@ -112,9 +112,9 @@ public class DeferredRegisters {
 			() -> new BlockEntityType<>(TileBlockPlacer::new, Sets.newHashSet(blockBlockPlacer), null));
 	public static final RegistryObject<BlockEntityType<TileRancher>> TILE_RANCHER = TILES.register("rancher",
 			() -> new BlockEntityType<>(TileRancher::new, Sets.newHashSet(blockRancher), null));
-	public static final RegistryObject<BlockEntityType<TileMobGrinder>> TILE_MOBGRINDER = TILES.register("mobgrinder", 
+	public static final RegistryObject<BlockEntityType<TileMobGrinder>> TILE_MOBGRINDER = TILES.register("mobgrinder",
 			() -> new BlockEntityType<>(TileMobGrinder::new, Sets.newHashSet(blockMobGrinder), null));
-	
+
 	public static final RegistryObject<MenuType<ContainerSorterBelt>> CONTAINER_SORTERBELT = CONTAINERS.register("sorterbelt",
 			() -> new MenuType<>(ContainerSorterBelt::new));
 	public static final RegistryObject<MenuType<ContainerAutocrafter>> CONTAINER_AUTOCRAFTER = CONTAINERS.register("autocrafter",

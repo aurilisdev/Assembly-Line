@@ -14,7 +14,7 @@ public class ContainerBlockBreaker extends AbstractHarvesterContainer {
 	public ContainerBlockBreaker(int id, Inventory playerinv) {
 		this(id, playerinv, new SimpleContainer(3), new SimpleContainerData(3));
 	}
-	
+
 	public ContainerBlockBreaker(int id, Inventory playerinv, Container inventory, ContainerData inventorydata) {
 		super(DeferredRegisters.CONTAINER_BLOCKBREAKER.get(), id, playerinv, inventory, inventorydata);
 	}

@@ -31,17 +31,17 @@ public class EventHandler {
 	public static void attachLocStorageCapabiliity(AttachCapabilitiesEvent<Entity> event) {
 		event.addCapability(new ResourceLocation(References.ID, ElectrodynamicsCapabilities.LOCATION_KEY), new CapabilityLocationStorage(1));
 	}
-	
+
 	@SubscribeEvent
 	public static void captureDroppedItems(LivingDropsEvent event) {
 		Entity entity = event.getEntity();
 		LazyOptional<ILocationStorage> lazyOptional = entity.getCapability(ElectrodynamicsCapabilities.LOCATION_STORAGE_CAPABILITY);
-		if(lazyOptional.isPresent()) {
+		if (lazyOptional.isPresent()) {
 			Level level = entity.getLevel();
 			ILocationStorage storage = lazyOptional.resolve().get();
 			Location location = storage.getLocation(0);
 			BlockEntity machine = level.getBlockEntity(new BlockPos(location.intX(), location.intY(), location.intZ()));
-			if(machine != null && machine instanceof TileMobGrinder grinder) {
+			if (machine != null && machine instanceof TileMobGrinder grinder) {
 				List<ItemStack> droppedItems = new ArrayList<>();
 				event.getDrops().forEach(h -> droppedItems.add(h.getItem()));
 				ComponentInventory inv = grinder.getComponent(ComponentType.Inventory);
@@ -49,7 +49,7 @@ public class EventHandler {
 				event.setCanceled(true);
 			}
 		}
-		
+
 	}
-	
+
 }

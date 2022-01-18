@@ -28,28 +28,29 @@ import net.minecraft.world.phys.Vec3;
 public class TileBlockPlacer extends TileFrontHarvester {
 
 	public TileBlockPlacer(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_BLOCKPLACER.get(), pos, state, Constants.BLOCKPLACER_USAGE * 20, (int) ElectrodynamicsCapabilities.DEFAULT_VOLTAGE, "blockplacer");
+		super(DeferredRegisters.TILE_BLOCKPLACER.get(), pos, state, Constants.BLOCKPLACER_USAGE * 20,
+				(int) ElectrodynamicsCapabilities.DEFAULT_VOLTAGE, "blockplacer");
 	}
 
 	@Override
 	public void tickServer(ComponentTickable tickable) {
 		ComponentInventory inv = getComponent(ComponentType.Inventory);
 		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
-		//ignore dims; for rendering purposes
+		// ignore dims; for rendering purposes
 		currentLength = DEFAULT_CHECK_LENGTH;
 		currentWidth = DEFAULT_CHECK_WIDTH;
 		currentHeight = 2;
-		//we can add speed upgrade functionality if you want
+		// we can add speed upgrade functionality if you want
 		currentWaitTime = 20;
-		
-		for(ItemStack stack : inv.getUpgradeContents()) {
-			if(!stack.isEmpty()) {
+
+		for (ItemStack stack : inv.getUpgradeContents()) {
+			if (!stack.isEmpty()) {
 				ItemUpgrade upgrade = (ItemUpgrade) stack.getItem();
-				switch(upgrade.subtype) {
+				switch (upgrade.subtype) {
 				case iteminput:
 					upgrade.subtype.applyUpgrade.accept(this, null, stack);
 					break;
-				default : 
+				default:
 					break;
 				}
 			}
@@ -57,12 +58,12 @@ public class TileBlockPlacer extends TileFrontHarvester {
 		if (tickable.getTicks() % 20 == 0) {
 			this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
 		}
-		if(!inv.areInputsEmpty() && (electro.getJoulesStored() >= Constants.BLOCKPLACER_USAGE)) {
-			if(ticksSinceCheck == 0) {
+		if (!inv.areInputsEmpty() && electro.getJoulesStored() >= Constants.BLOCKPLACER_USAGE) {
+			if (ticksSinceCheck == 0) {
 				ComponentDirection dir = getComponent(ComponentType.Direction);
 				BlockPos off = worldPosition.offset(dir.getDirection().getOpposite().getNormal());
 				BlockState state = level.getBlockState(off);
-				electro.extractPower(TransferPack.joulesVoltage(Constants.BLOCKBREAKER_USAGE, ElectrodynamicsCapabilities.DEFAULT_VOLTAGE),false);
+				electro.extractPower(TransferPack.joulesVoltage(Constants.BLOCKBREAKER_USAGE, ElectrodynamicsCapabilities.DEFAULT_VOLTAGE), false);
 				if (state.isAir()) {
 					ItemStack stack = inv.getItem(0);
 					if (!stack.isEmpty() && stack.getItem() instanceof BlockItem bi) {
@@ -77,17 +78,19 @@ public class TileBlockPlacer extends TileFrontHarvester {
 				}
 			}
 			ticksSinceCheck++;
-			if(ticksSinceCheck >= currentWaitTime) {
+			if (ticksSinceCheck >= currentWaitTime) {
 				ticksSinceCheck = 0;
 			}
 		}
 	}
 
 	@Override
-	public void tickClient(ComponentTickable tickable) {}
+	public void tickClient(ComponentTickable tickable) {
+	}
 
 	@Override
-	public void tickCommon(ComponentTickable tickable) {}
+	public void tickCommon(ComponentTickable tickable) {
+	}
 
 	@Override
 	public ComponentInventory getInv(TileFrontHarvester harvester) {

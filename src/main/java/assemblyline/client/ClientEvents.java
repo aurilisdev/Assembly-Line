@@ -21,14 +21,14 @@ import net.minecraftforge.fml.common.Mod;
 public class ClientEvents {
 
 	public static HashMap<BlockPos, AABB> outlines = new HashMap<>();
-	
+
 	@SubscribeEvent
 	public static void renderSelectedBlocks(RenderLevelLastEvent event) {
 		PoseStack matrix = event.getPoseStack();
 		MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
 		VertexConsumer builder = buffer.getBuffer(RenderType.LINES);
 		Vec3 camera = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-		for(BlockPos pos : outlines.keySet()) {
+		for (BlockPos pos : outlines.keySet()) {
 			AABB box = outlines.get(pos);
 			matrix.pushPose();
 			matrix.translate(-camera.x, -camera.y, -camera.z);
@@ -37,5 +37,5 @@ public class ClientEvents {
 		}
 		buffer.endBatch(RenderType.LINES);
 	}
-	
+
 }

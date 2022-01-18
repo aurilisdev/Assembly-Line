@@ -23,13 +23,13 @@ public abstract class TileOutlineArea extends GenericTile {
 	public int clientWidth;
 	public int clientHeight;
 	protected AABB checkArea;
-	
+
 	protected TileOutlineArea(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 	}
-	
+
 	public abstract AABB getAABB(int width, int length, int height, boolean isFlipped, boolean isClient, TileOutlineArea tile);
-	
+
 	protected void createPacket(CompoundTag nbt) {
 		nbt.putInt("clientLength", currentLength);
 		nbt.putInt("clientWidth", currentWidth);
@@ -41,7 +41,7 @@ public abstract class TileOutlineArea extends GenericTile {
 		clientWidth = nbt.getInt("clientWidth");
 		clientHeight = nbt.getInt("clientHeight");
 	}
-	
+
 	@Override
 	public void setRemoved() {
 		super.setRemoved();

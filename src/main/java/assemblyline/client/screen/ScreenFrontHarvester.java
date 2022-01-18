@@ -7,7 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
 public class ScreenFrontHarvester extends AbstractHarvesterScreen<ContainerFrontHarvester> {
-	
+
 	public ScreenFrontHarvester(ContainerFrontHarvester container, Inventory inv, Component titleIn) {
 		super(container, inv, titleIn);
 	}
