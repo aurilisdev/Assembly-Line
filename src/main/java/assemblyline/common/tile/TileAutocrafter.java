@@ -96,8 +96,8 @@ public class TileAutocrafter extends GenericTile {
 	}
 
 	public void tickServer(ComponentTickable tick) {
-		boolean canContinue = this.<ComponentElectrodynamic>getComponent(ComponentType.Electrodynamic)
-				.getJoulesStored() > Constants.AUTOCRAFTER_USAGE;
+		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
+		boolean canContinue = electro.getJoulesStored() >= Constants.AUTOCRAFTER_USAGE;
 		if (tick.getTicks() % 20 == 0) {
 			if (canContinue) {
 				ComponentInventory inventory = getComponent(ComponentType.Inventory);
@@ -136,6 +136,7 @@ public class TileAutocrafter extends GenericTile {
 							} else {
 								currentItemStack.grow(result.getCount());
 							}
+							electro.joules(electro.getJoulesStored() - Constants.AUTOCRAFTER_USAGE);
 						}
 					}
 				}
