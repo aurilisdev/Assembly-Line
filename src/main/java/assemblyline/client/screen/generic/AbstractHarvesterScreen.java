@@ -27,7 +27,7 @@ public abstract class AbstractHarvesterScreen<T extends AbstractHarvesterContain
 
 	private ButtonSwappableLabel renderArea;
 
-	public AbstractHarvesterScreen(T screenContainer, Inventory inv, Component titleIn) {
+	protected AbstractHarvesterScreen(T screenContainer, Inventory inv, Component titleIn) {
 		super(screenContainer, inv, titleIn);
 		components.add(new ScreenComponentCountdown(() -> {
 			TileFrontHarvester harvester = menu.getHostFromIntArray();
