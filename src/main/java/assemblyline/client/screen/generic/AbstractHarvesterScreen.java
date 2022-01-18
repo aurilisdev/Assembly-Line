@@ -7,7 +7,7 @@ import assemblyline.client.ClientEvents;
 import assemblyline.common.inventory.container.generic.AbstractHarvesterContainer;
 import assemblyline.common.tile.generic.TileFrontHarvester;
 import electrodynamics.api.electricity.formatting.ChatFormatter;
-import electrodynamics.api.electricity.formatting.ElectricUnit;
+import electrodynamics.api.electricity.formatting.DisplayUnit;
 import electrodynamics.prefab.screen.GenericScreen;
 import electrodynamics.prefab.screen.component.button.ButtonSwappableLabel;
 import electrodynamics.prefab.screen.component.gui.ScreenComponentInfo;
@@ -45,10 +45,10 @@ public abstract class AbstractHarvesterScreen<T extends AbstractHarvesterContain
 		if(harvester != null) {
 			ComponentElectrodynamic electro = harvester.getComponent(ComponentType.Electrodynamic);
 			list.add(new TranslatableComponent("gui.machine.usage",
-					new TextComponent(ChatFormatter.getElectricDisplayShort(harvester.getUsage() * harvester.clientUsageMultiplier * 20, ElectricUnit.WATT))
+					new TextComponent(ChatFormatter.getChatDisplayShort(harvester.getUsage() * harvester.clientUsageMultiplier * 20, DisplayUnit.WATT))
 							.withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
 			list.add(new TranslatableComponent("gui.machine.voltage",
-					new TextComponent(ChatFormatter.getElectricDisplayShort(electro.getVoltage(), ElectricUnit.VOLTAGE))
+					new TextComponent(ChatFormatter.getChatDisplayShort(electro.getVoltage(), DisplayUnit.VOLTAGE))
 							.withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
 		}
 		return list;
