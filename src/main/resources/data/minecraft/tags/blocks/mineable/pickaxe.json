@@ -8,6 +8,8 @@
 		"assemblyline:detector",
 		"assemblyline:sorterbelt",
 		"assemblyline:sorterbeltrunning",
-		"assemblyline:autocrafter"
+		"assemblyline:autocrafter",
+		"assemblyline:mobgrinder",
+		"assemblyline:rancher"
 	]
 }

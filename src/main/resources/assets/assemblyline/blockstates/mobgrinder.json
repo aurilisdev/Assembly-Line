@@ -1,0 +1,20 @@
+{
+	"variants": {
+		"facing=east": {
+			"model": "assemblyline:block/mobgrinder",
+			"y": 0
+		},
+		"facing=north": {
+			"model": "assemblyline:block/mobgrinder",
+			"y": 270
+		},
+		"facing=south": {
+			"model": "assemblyline:block/mobgrinder",
+			"y": 90
+		},
+		"facing=west": {
+			"model": "assemblyline:block/mobgrinder",
+			"y": 180
+		}
+	}
+}

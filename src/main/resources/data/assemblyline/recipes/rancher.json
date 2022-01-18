@@ -1,0 +1,26 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"psp",
+		"scs",
+		"pwp"
+	],
+	"key": {
+		"p": {
+			"tag": "forge:plates/steel"
+		},
+		"s": {
+			"item": "minecraft:shears"
+		},
+		"c": {
+			"tag": "forge:circuits/basic"
+		},
+		"w": {
+			"item": "electrodynamics:wireinsulatedcopper"
+		}
+	},
+	"result": {
+		"item": "assemblyline:rancher",
+		"count": 1
+	}
+}

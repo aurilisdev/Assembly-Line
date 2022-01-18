@@ -15,5 +15,8 @@ public class Constants {
 	public static double BLOCKBREAKER_USAGE = 20.0;
 	@DoubleValue(def = 40.0, comment = "Usage is per usage.")
 	public static double BLOCKPLACER_USAGE = 40.0;
-
+	@DoubleValue(def = 40.0, comment = "Usage is per usage")
+	public static double RANCHER_USAGE = 40.0;
+	@DoubleValue(def = 40.0, comment = "Usage is per usage")
+	public static double MOBGRINDER_USAGE = 40.0;
 }
