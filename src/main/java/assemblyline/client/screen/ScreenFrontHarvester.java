@@ -1,17 +1,15 @@
 package assemblyline.client.screen;
 
 import assemblyline.client.screen.generic.AbstractHarvesterScreen;
-import assemblyline.common.inventory.container.ContainerBlockPlacer;
+import assemblyline.common.inventory.container.ContainerFrontHarvester;
 import assemblyline.common.tile.generic.TileFrontHarvester;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
-public class ScreenBlockPlacer extends AbstractHarvesterScreen<ContainerBlockPlacer> {
-	public ScreenBlockPlacer(ContainerBlockPlacer container, Inventory playerInventory, Component title) {
-		super(container, playerInventory, title);
+public class ScreenFrontHarvester extends AbstractHarvesterScreen<ContainerFrontHarvester> {
+	
+	public ScreenFrontHarvester(ContainerFrontHarvester container, Inventory inv, Component titleIn) {
+		super(container, inv, titleIn);
 	}
 
 	@Override

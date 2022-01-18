@@ -12,9 +12,9 @@ import assemblyline.common.block.BlockMobGrinder;
 import assemblyline.common.block.BlockRancher;
 import assemblyline.common.block.BlockSorterBelt;
 import assemblyline.common.inventory.container.ContainerAutocrafter;
+import assemblyline.common.inventory.container.ContainerBlockBreaker;
 import assemblyline.common.inventory.container.ContainerBlockPlacer;
-import assemblyline.common.inventory.container.ContainerMobGrinder;
-import assemblyline.common.inventory.container.ContainerRancher;
+import assemblyline.common.inventory.container.ContainerFrontHarvester;
 import assemblyline.common.inventory.container.ContainerSorterBelt;
 import assemblyline.common.tile.TileAutocrafter;
 import assemblyline.common.tile.TileBlockBreaker;
@@ -121,10 +121,10 @@ public class DeferredRegisters {
 			() -> new MenuType<>(ContainerAutocrafter::new));
 	public static final RegistryObject<MenuType<ContainerBlockPlacer>> CONTAINER_BLOCKPLACER = CONTAINERS.register("blockplacer",
 			() -> new MenuType<>(ContainerBlockPlacer::new));
-	public static final RegistryObject<MenuType<ContainerRancher>> CONTAINER_RANCHER = CONTAINERS.register("rancher", 
-			() -> new MenuType<>(ContainerRancher::new));
-	public static final RegistryObject<MenuType<ContainerMobGrinder>> CONTAINER_MOBGRINDER = CONTAINERS.register("mobgrinder",
-			() -> new MenuType<>(ContainerMobGrinder::new));
+	public static final RegistryObject<MenuType<ContainerBlockBreaker>> CONTAINER_BLOCKBREAKER = CONTAINERS.register("blockbreaker",
+			() -> new MenuType<>(ContainerBlockBreaker::new));
+	public static final RegistryObject<MenuType<ContainerFrontHarvester>> CONTAINER_HARVESTER = CONTAINERS.register("harvester",
+			() -> new MenuType<>(ContainerFrontHarvester::new));
 
 	private static <T extends IForgeRegistryEntry<T>> Supplier<? extends T> supplier(T entry) {
 		return () -> entry;

@@ -15,8 +15,9 @@
   "container.sorterbelt" : "Sorter Belt",
   "container.autocrafter" : "Autocrafter",
   "container.blockplacer" : "Block Placer",
+  "container.blockbreaker" : "Block Breaker",
   "container.rancher" : "Energized Rancher",
-  "container.mobgrinder" : "",
+  "container.mobgrinder" : "Mob Grinder",
   "gui.machine.voltage" : "Voltage: %s",
   "gui.machine.usage" : "Usage: %s",
   "itemGroup.itemgroupassemblyline" : "Assembly Line",
@@ -24,5 +25,10 @@
   "tooltip.detector" : "Emits redstone signal when an item is in front of it",
   "tooltip.crate" : "Stores 4096 of one item",
   "tooltip.cratemedium" : "Stores 8192 of one item",
-  "tooltip.cratelarge" : "Stores 16384 of one item"
+  "tooltip.cratelarge" : "Stores 16384 of one item",
+  "tooltip.countdown.cooldown" : "Cooldown Left: %s",
+  "tooltip.countdown.progress" : "Progress: %s",
+  "label.renderarea" : "Show Area",
+  "label.hidearea" : "Hide Area"
+  
 }

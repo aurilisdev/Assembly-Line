@@ -7,6 +7,8 @@
 		"assemblyline:cratemedium",
 		"assemblyline:detector",
 		"assemblyline:sorterbelt",
-		"assemblyline:sorterbeltrunning"
+		"assemblyline:sorterbeltrunning",
+		"assemblyline:mobgrinder",
+		"assemblyline:rancher"
 	]
 }

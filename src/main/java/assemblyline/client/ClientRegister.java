@@ -6,9 +6,9 @@ import assemblyline.client.render.tile.RenderBlockBreaker;
 import assemblyline.client.render.tile.RenderConveyorBelt;
 import assemblyline.client.render.tile.RenderCrate;
 import assemblyline.client.screen.ScreenAutocrafter;
+import assemblyline.client.screen.ScreenBlockBreaker;
 import assemblyline.client.screen.ScreenBlockPlacer;
-import assemblyline.client.screen.ScreenMobGrinder;
-import assemblyline.client.screen.ScreenRancher;
+import assemblyline.client.screen.ScreenFrontHarvester;
 import assemblyline.client.screen.ScreenSorterBelt;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;
@@ -86,8 +86,8 @@ public class ClientRegister {
 		MenuScreens.register(DeferredRegisters.CONTAINER_SORTERBELT.get(), ScreenSorterBelt::new);
 		MenuScreens.register(DeferredRegisters.CONTAINER_AUTOCRAFTER.get(), ScreenAutocrafter::new);
 		MenuScreens.register(DeferredRegisters.CONTAINER_BLOCKPLACER.get(), ScreenBlockPlacer::new);
-		MenuScreens.register(DeferredRegisters.CONTAINER_RANCHER.get(), ScreenRancher::new);
-		MenuScreens.register(DeferredRegisters.CONTAINER_MOBGRINDER.get(), ScreenMobGrinder::new);
+		MenuScreens.register(DeferredRegisters.CONTAINER_BLOCKBREAKER.get(), ScreenBlockBreaker::new);
+		MenuScreens.register(DeferredRegisters.CONTAINER_HARVESTER.get(), ScreenFrontHarvester::new);
 	}
 
 	@SubscribeEvent
