@@ -28,20 +28,21 @@ public class TileBlockBreaker extends TileFrontHarvester {
 	public float progress = 0;
 
 	public TileBlockBreaker(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_BLOCKBREAKER.get(), pos, state, Constants.BLOCKBREAKER_USAGE * 20, (int)ElectrodynamicsCapabilities.DEFAULT_VOLTAGE, "blockbreaker");
+		super(DeferredRegisters.TILE_BLOCKBREAKER.get(), pos, state, Constants.BLOCKBREAKER_USAGE * 20,
+				(int) ElectrodynamicsCapabilities.DEFAULT_VOLTAGE, "blockbreaker");
 	}
 
 	@Override
 	public void tickCommon(ComponentTickable tickable) {
 		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
-		//ignore dims; for rendering purposes
+		// ignore dims; for rendering purposes
 		currentLength = DEFAULT_CHECK_LENGTH;
 		currentWidth = DEFAULT_CHECK_WIDTH;
 		currentHeight = 2;
 		ticksSinceCheck = (int) (progress * 100);
 		currentWaitTime = 100;
 		powerUsageMultiplier = 1;
-		
+
 		if (tickable.getTicks() % 20 == 0) {
 			this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
 		}

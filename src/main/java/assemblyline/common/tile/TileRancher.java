@@ -25,13 +25,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.IForgeShearable;
 
 public class TileRancher extends TileFrontHarvester {
-	
+
 	private static ItemStack SHEERS = new ItemStack(Items.SHEARS);
-	
+
 	public TileRancher(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_RANCHER.get(), pos, state, Constants.RANCHER_USAGE * 20, (int) ElectrodynamicsCapabilities.DEFAULT_VOLTAGE, "rancher");
+		super(DeferredRegisters.TILE_RANCHER.get(), pos, state, Constants.RANCHER_USAGE * 20, (int) ElectrodynamicsCapabilities.DEFAULT_VOLTAGE,
+				"rancher");
 	}
-	
+
 	@Override
 	public void tickServer(ComponentTickable tickable) {
 		ComponentInventory inv = getComponent(ComponentType.Inventory);
@@ -44,71 +45,74 @@ public class TileRancher extends TileFrontHarvester {
 		currentLength = DEFAULT_CHECK_LENGTH;
 		currentHeight = DEFAULT_CHECK_HEIGHT;
 		powerUsageMultiplier = 1;
-		for(ItemStack stack : inv.getUpgradeContents()) {
-			if(!stack.isEmpty()) {
+		for (ItemStack stack : inv.getUpgradeContents()) {
+			if (!stack.isEmpty()) {
 				ItemUpgrade upgrade = (ItemUpgrade) stack.getItem();
-				switch(upgrade.subtype) {
-				case advancedspeed :
-					for(int i = 0; i < stack.getCount(); i++) {
+				switch (upgrade.subtype) {
+				case advancedspeed:
+					for (int i = 0; i < stack.getCount(); i++) {
 						currentWaitTime = Math.max(currentWaitTime / 3, FASTEST_WAIT_TICKS);
 						powerUsageMultiplier *= 1.5;
 					}
 					break;
-				case basicspeed :
-					for(int i = 0; i < stack.getCount(); i++) {
+				case basicspeed:
+					for (int i = 0; i < stack.getCount(); i++) {
 						currentWaitTime = (int) Math.max(currentWaitTime / 1.25, FASTEST_WAIT_TICKS);
 						powerUsageMultiplier *= 1.5;
 					}
 					break;
 				case range:
-					for(int i = 0; i < stack.getCount(); i++) {
+					for (int i = 0; i < stack.getCount(); i++) {
 						currentLength = Math.min(currentLength + 2, MAX_CHECK_LENGTH);
-						currentWidth = Math.min(currentWidth + 2,  MAX_CHECK_WIDTH);
+						currentWidth = Math.min(currentWidth + 2, MAX_CHECK_WIDTH);
 						powerUsageMultiplier *= 1.3;
 					}
 					break;
 				case itemoutput:
 					upgrade.subtype.applyUpgrade.accept(this, null, stack);
 					break;
-				default : 
+				default:
 					break;
 				}
 			}
 		}
-		if(inv.areOutputsEmpty() && (electro.getJoulesStored() >= Constants.RANCHER_USAGE)) {
-			if(ticksSinceCheck == 0) {
+		if (inv.areOutputsEmpty() && electro.getJoulesStored() >= Constants.RANCHER_USAGE) {
+			if (ticksSinceCheck == 0) {
 				checkArea = getAABB(currentWidth, currentLength, currentHeight, true, false, this);
 				List<Entity> entities = level.getEntities(null, checkArea);
 				List<ItemStack> collectedItems = new ArrayList<>();
-				for(Entity entity : entities) {
-					if((electro.getJoulesStored() >= Constants.RANCHER_USAGE) && entity instanceof IForgeShearable sheep && sheep.isShearable(SHEERS, level, entity.blockPosition())) {
+				for (Entity entity : entities) {
+					if (electro.getJoulesStored() >= Constants.RANCHER_USAGE && entity instanceof IForgeShearable sheep
+							&& sheep.isShearable(SHEERS, level, entity.blockPosition())) {
 						collectedItems.addAll(sheep.onSheared(null, SHEERS, level, entity.blockPosition(), 0));
 						electro.extractPower(TransferPack.joulesVoltage(Constants.RANCHER_USAGE, electro.getVoltage()), false);
 					}
 				}
-				if(collectedItems.size() > 0) {
+				if (collectedItems.size() > 0) {
 					ComponentInventory.addItemsToInventory(inv, collectedItems, inv.getOutputStartIndex(), inv.getOutputContents().size());
 				}
 			}
-		
+
 			ticksSinceCheck++;
-			if(ticksSinceCheck >= currentWaitTime) {
+			if (ticksSinceCheck >= currentWaitTime) {
 				ticksSinceCheck = 0;
 			}
 		}
 	}
 
 	@Override
-	public void tickClient(ComponentTickable tickable) {}
+	public void tickClient(ComponentTickable tickable) {
+	}
 
 	@Override
-	public void tickCommon(ComponentTickable tickable) {}
+	public void tickCommon(ComponentTickable tickable) {
+	}
 
 	@Override
 	public ComponentInventory getInv(TileFrontHarvester harvester) {
 		return new ComponentInventory(this).size(12).outputs(9).upgrades(3).valid(machineValidator()).shouldSendInfo();
 	}
-	
+
 	@Override
 	public AbstractHarvesterContainer getContainer(int id, Inventory player) {
 		return new ContainerFrontHarvester(id, player, getComponent(ComponentType.Inventory), getCoordsArray());
@@ -118,5 +122,5 @@ public class TileRancher extends TileFrontHarvester {
 	public double getUsage() {
 		return Constants.RANCHER_USAGE;
 	}
-	
+
 }

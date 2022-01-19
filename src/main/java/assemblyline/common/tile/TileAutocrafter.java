@@ -31,7 +31,7 @@ public class TileAutocrafter extends GenericTile {
 		super(DeferredRegisters.TILE_AUTOCRAFTER.get(), worldPosition, blockState);
 		addComponent(new ComponentDirection());
 		addComponent(new ComponentTickable().tickServer(this::tickServer));
-		addComponent(new ComponentElectrodynamic(this).maxJoules(Constants.AUTOCRAFTER_USAGE * 20).input(Direction.DOWN));
+		addComponent(new ComponentElectrodynamic(this).maxJoules(Constants.AUTOCRAFTER_USAGE * 20).universalInput());
 		addComponent(new ComponentInventory(this).size(10).faceSlots(Direction.DOWN, 9).faceSlots(Direction.UP, 1, 3, 4, 5, 7)
 				.relativeFaceSlots(Direction.SOUTH, 6, 7, 8).relativeFaceSlots(Direction.NORTH, 0, 1, 2).relativeFaceSlots(Direction.WEST, 2, 5, 8)
 				.relativeFaceSlots(Direction.EAST, 0, 3, 6));
@@ -96,8 +96,8 @@ public class TileAutocrafter extends GenericTile {
 	}
 
 	public void tickServer(ComponentTickable tick) {
-		boolean canContinue = this.<ComponentElectrodynamic>getComponent(ComponentType.Electrodynamic)
-				.getJoulesStored() > Constants.AUTOCRAFTER_USAGE;
+		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
+		boolean canContinue = electro.getJoulesStored() >= Constants.AUTOCRAFTER_USAGE;
 		if (tick.getTicks() % 20 == 0) {
 			if (canContinue) {
 				ComponentInventory inventory = getComponent(ComponentType.Inventory);
@@ -136,6 +136,7 @@ public class TileAutocrafter extends GenericTile {
 							} else {
 								currentItemStack.grow(result.getCount());
 							}
+							electro.joules(electro.getJoulesStored() - Constants.AUTOCRAFTER_USAGE);
 						}
 					}
 				}

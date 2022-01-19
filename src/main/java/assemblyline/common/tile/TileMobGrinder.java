@@ -25,9 +25,11 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileMobGrinder extends TileFrontHarvester {
 
 	public TileMobGrinder(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_MOBGRINDER.get(), pos, state, Constants.MOBGRINDER_USAGE * 40, (int) ElectrodynamicsCapabilities.DEFAULT_VOLTAGE, "mobgrinder");
+		super(DeferredRegisters.TILE_MOBGRINDER.get(), pos, state, Constants.MOBGRINDER_USAGE * 40, (int) ElectrodynamicsCapabilities.DEFAULT_VOLTAGE,
+				"mobgrinder");
 	}
-	
+
+	@Override
 	public void tickServer(ComponentTickable tickable) {
 		ComponentInventory inv = getComponent(ComponentType.Inventory);
 		currentWaitTime = DEFAULT_WAIT_TICKS;
@@ -35,33 +37,33 @@ public class TileMobGrinder extends TileFrontHarvester {
 		currentLength = DEFAULT_CHECK_LENGTH;
 		currentHeight = DEFAULT_CHECK_HEIGHT;
 		powerUsageMultiplier = 1;
-		for(ItemStack stack : inv.getUpgradeContents()) {
-			if(!stack.isEmpty()) {
+		for (ItemStack stack : inv.getUpgradeContents()) {
+			if (!stack.isEmpty()) {
 				ItemUpgrade upgrade = (ItemUpgrade) stack.getItem();
-				switch(upgrade.subtype) {
-				case advancedspeed :
-					for(int i = 0; i < stack.getCount(); i++) {
+				switch (upgrade.subtype) {
+				case advancedspeed:
+					for (int i = 0; i < stack.getCount(); i++) {
 						currentWaitTime = Math.max(currentWaitTime / 3, FASTEST_WAIT_TICKS);
 						powerUsageMultiplier *= 1.5;
 					}
 					break;
-				case basicspeed :
-					for(int i = 0; i < stack.getCount(); i++) {
+				case basicspeed:
+					for (int i = 0; i < stack.getCount(); i++) {
 						currentWaitTime = (int) Math.max(currentWaitTime / 1.25, FASTEST_WAIT_TICKS);
 						powerUsageMultiplier *= 1.5;
 					}
 					break;
 				case range:
-					for(int i = 0; i < stack.getCount(); i++) {
+					for (int i = 0; i < stack.getCount(); i++) {
 						currentLength = Math.min(currentLength + 2, MAX_CHECK_LENGTH);
-						currentWidth = Math.min(currentWidth + 2,  MAX_CHECK_WIDTH);
+						currentWidth = Math.min(currentWidth + 2, MAX_CHECK_WIDTH);
 						powerUsageMultiplier *= 1.3;
 					}
 					break;
 				case itemoutput:
 					upgrade.subtype.applyUpgrade.accept(this, null, stack);
 					break;
-				default : 
+				default:
 					break;
 				}
 			}
@@ -70,30 +72,34 @@ public class TileMobGrinder extends TileFrontHarvester {
 		if (tickable.getTicks() % 20 == 0) {
 			this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
 		}
-		if(inv.areOutputsEmpty() && (electro.getJoulesStored() >= Constants.MOBGRINDER_USAGE)) {
-			if(ticksSinceCheck == 0) {
+		if (inv.areOutputsEmpty() && electro.getJoulesStored() >= Constants.MOBGRINDER_USAGE) {
+			if (ticksSinceCheck == 0) {
 				checkArea = getAABB(currentWidth, currentLength, currentHeight, true, false, this);
 				List<Entity> entities = level.getEntities(null, checkArea);
-				for(Entity entity : entities) {
-					if((electro.getJoulesStored() >= Constants.RANCHER_USAGE) && !(entity instanceof Player)) {
-						electro.extractPower(TransferPack.joulesVoltage(Constants.MOBGRINDER_USAGE * powerUsageMultiplier, electro.getVoltage()), false);
-						entity.getCapability(ElectrodynamicsCapabilities.LOCATION_STORAGE_CAPABILITY).ifPresent(h -> h.setLocation(0, this.getBlockPos().getX(), this.getBlockPos().getY(), this.getBlockPos().getZ()));
+				for (Entity entity : entities) {
+					if (electro.getJoulesStored() >= Constants.RANCHER_USAGE && !(entity instanceof Player)) {
+						electro.extractPower(TransferPack.joulesVoltage(Constants.MOBGRINDER_USAGE * powerUsageMultiplier, electro.getVoltage()),
+								false);
+						entity.getCapability(ElectrodynamicsCapabilities.LOCATION_STORAGE_CAPABILITY)
+								.ifPresent(h -> h.setLocation(0, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()));
 						entity.kill();
 					}
 				}
 			}
 			ticksSinceCheck++;
-			if(ticksSinceCheck >= currentWaitTime) {
+			if (ticksSinceCheck >= currentWaitTime) {
 				ticksSinceCheck = 0;
 			}
 		}
 	}
 
 	@Override
-	public void tickClient(ComponentTickable tickable) {}
+	public void tickClient(ComponentTickable tickable) {
+	}
 
 	@Override
-	public void tickCommon(ComponentTickable tickable) {}
+	public void tickCommon(ComponentTickable tickable) {
+	}
 
 	@Override
 	public ComponentInventory getInv(TileFrontHarvester harvester) {
@@ -109,5 +115,5 @@ public class TileMobGrinder extends TileFrontHarvester {
 	public double getUsage() {
 		return Constants.MOBGRINDER_USAGE;
 	}
-	
+
 }
