@@ -5,6 +5,7 @@ import assemblyline.References;
 import assemblyline.client.render.tile.RenderBlockBreaker;
 import assemblyline.client.render.tile.RenderConveyorBelt;
 import assemblyline.client.render.tile.RenderCrate;
+import assemblyline.client.render.tile.RenderMobGrinder;
 import assemblyline.client.screen.ScreenAutocrafter;
 import assemblyline.client.screen.ScreenBlockBreaker;
 import assemblyline.client.screen.ScreenBlockPlacer;
@@ -51,6 +52,9 @@ public class ClientRegister {
 		ForgeModelBakery.addSpecialModel(MODEL_MANIPULATOR);
 		ForgeModelBakery.addSpecialModel(MODEL_BLOCKBREAKERWHEEL);
 		ForgeModelBakery.addSpecialModel(MODEL_BLOCKBREAKERBASE);
+		ForgeModelBakery.addSpecialModel(MODEL_MOBGRINDERBASE);
+		ForgeModelBakery.addSpecialModel(MODEL_MOBGRINDERCENTERWHEEL);
+		ForgeModelBakery.addSpecialModel(MODEL_MOBGRINDERSIDEWHEEL);
 	}
 
 	public static final ResourceLocation MODEL_CONVEYOR = new ResourceLocation(References.ID + ":block/conveyorbelt");
@@ -81,6 +85,9 @@ public class ClientRegister {
 	public static final ResourceLocation MODEL_MANIPULATOR = new ResourceLocation(References.ID + ":block/manipulator");
 	public static final ResourceLocation MODEL_BLOCKBREAKERWHEEL = new ResourceLocation(References.ID + ":block/blockbreakerwheel");
 	public static final ResourceLocation MODEL_BLOCKBREAKERBASE = new ResourceLocation(References.ID + ":block/blockbreakerbase");
+	public static final ResourceLocation MODEL_MOBGRINDERBASE = new ResourceLocation(References.ID + ":block/mobgrinderbase");
+	public static final ResourceLocation MODEL_MOBGRINDERSIDEWHEEL = new ResourceLocation(References.ID + ":block/mobgrindersidewheel");
+	public static final ResourceLocation MODEL_MOBGRINDERCENTERWHEEL = new ResourceLocation(References.ID + ":block/mobgrindercenterwheel");
 
 	public static void setup() {
 		MenuScreens.register(DeferredRegisters.CONTAINER_SORTERBELT.get(), ScreenSorterBelt::new);
@@ -95,5 +102,6 @@ public class ClientRegister {
 		event.registerBlockEntityRenderer(DeferredRegisters.TILE_CRATE.get(), RenderCrate::new);
 		event.registerBlockEntityRenderer(DeferredRegisters.TILE_BELT.get(), RenderConveyorBelt::new);
 		event.registerBlockEntityRenderer(DeferredRegisters.TILE_BLOCKBREAKER.get(), RenderBlockBreaker::new);
+		event.registerBlockEntityRenderer(DeferredRegisters.TILE_MOBGRINDER.get(), RenderMobGrinder::new);
 	}
 }
