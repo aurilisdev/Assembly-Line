@@ -45,7 +45,7 @@ public abstract class TileOutlineArea extends GenericTile {
 	@Override
 	public void setRemoved() {
 		super.setRemoved();
-		if(getLevel().isClientSide) {
+		if (getLevel().isClientSide) {
 			ClientEvents.outlines.remove(getBlockPos());
 		}
 	}
