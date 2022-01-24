@@ -25,8 +25,7 @@ public class RenderCrate implements BlockEntityRenderer<TileCrate> {
 	}
 
 	@Override
-	public void render(TileCrate tileCrate, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
-			int combinedOverlayIn) {
+	public void render(TileCrate tileCrate, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 		if (tileCrate.getCount() > 0) {
 			for (Direction dir : Direction.values()) {
 				if (dir != Direction.UP && dir != Direction.DOWN) {
@@ -47,8 +46,7 @@ public class RenderCrate implements BlockEntityRenderer<TileCrate> {
 					default:
 						break;
 					}
-					TextComponent displayNameIn = new TextComponent(tileCrate.getCount() + "x"
-							+ tileCrate.<ComponentInventory>getComponent(ComponentType.Inventory).getItem(0).getHoverName().getString());
+					TextComponent displayNameIn = new TextComponent(tileCrate.getCount() + "x" + tileCrate.<ComponentInventory>getComponent(ComponentType.Inventory).getItem(0).getHoverName().getString());
 					Font fontrenderer = Minecraft.getInstance().font;
 					float scale = 0.025f / (fontrenderer.width(displayNameIn) / 32f);
 					matrixStackIn.scale(-scale, -scale, scale);
@@ -79,8 +77,7 @@ public class RenderCrate implements BlockEntityRenderer<TileCrate> {
 					} else {
 						matrixStackIn.scale(0.4f, 0.4f, 0.4f);
 					}
-					Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.NONE, 0xF000F0, combinedOverlayIn, matrixStackIn,
-							bufferIn, 0);
+					Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.NONE, 0xF000F0, combinedOverlayIn, matrixStackIn, bufferIn, 0);
 					matrixStackIn.popPose();
 				}
 			}

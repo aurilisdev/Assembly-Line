@@ -18,11 +18,8 @@ public class RenderMobGrinder implements BlockEntityRenderer<TileMobGrinder> {
 	}
 
 	@Override
-	public void render(TileMobGrinder tileEntityIn, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
-			int combinedOverlayIn) {
-		double progress = tileEntityIn.clientProgress > 0
-				? (tileEntityIn.getLevel().getDayTime() + (tileEntityIn.clientProgress > 0 ? partialTicks : 0)) * 30
-				: 0;
+	public void render(TileMobGrinder tileEntityIn, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+		double progress = tileEntityIn.clientProgress > 0 ? (tileEntityIn.getLevel().getDayTime() + (tileEntityIn.clientProgress > 0 ? partialTicks : 0)) * 30 : 0;
 		BakedModel ibakedmodel = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_MOBGRINDERSIDEWHEEL);
 		matrixStackIn.pushPose();
 		RenderingUtils.prepareRotationalTileModel(tileEntityIn, matrixStackIn);

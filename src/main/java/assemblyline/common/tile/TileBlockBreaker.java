@@ -28,8 +28,7 @@ public class TileBlockBreaker extends TileFrontHarvester {
 	public float progress = 0;
 
 	public TileBlockBreaker(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_BLOCKBREAKER.get(), pos, state, Constants.BLOCKBREAKER_USAGE * 20,
-				(int) ElectrodynamicsCapabilities.DEFAULT_VOLTAGE, "blockbreaker");
+		super(DeferredRegisters.TILE_BLOCKBREAKER.get(), pos, state, Constants.BLOCKBREAKER_USAGE * 20, (int) ElectrodynamicsCapabilities.DEFAULT_VOLTAGE, "blockbreaker");
 	}
 
 	@Override

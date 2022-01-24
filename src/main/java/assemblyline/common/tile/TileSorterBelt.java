@@ -27,8 +27,7 @@ public class TileSorterBelt extends GenericTile {
 		addComponent(new ComponentDirection());
 		addComponent(new ComponentElectrodynamic(this).maxJoules(Constants.CONVEYORBELT_USAGE * 20).input(Direction.DOWN));
 		addComponent(new ComponentInventory(this).size(18));
-		addComponent(new ComponentContainerProvider("container.sorterbelt")
-				.createMenu((id, player) -> new ContainerSorterBelt(id, player, getComponent(ComponentType.Inventory), getCoordsArray())));
+		addComponent(new ComponentContainerProvider("container.sorterbelt").createMenu((id, player) -> new ContainerSorterBelt(id, player, getComponent(ComponentType.Inventory), getCoordsArray())));
 	}
 
 	public void onEntityCollision(Entity entityIn, boolean running) {
@@ -69,22 +68,19 @@ public class TileSorterBelt extends GenericTile {
 		if (currentSpread == 0 || currentSpread == 16) {
 			if (electro.getJoulesStored() < Constants.SORTERBELT_USAGE) {
 				if (running) {
-					level.setBlock(worldPosition, DeferredRegisters.blockSorterBelt.defaultBlockState().setValue(GenericEntityBlock.FACING, facing),
-							2 | 16);
+					level.setBlock(worldPosition, DeferredRegisters.blockSorterBelt.defaultBlockState().setValue(GenericEntityBlock.FACING, facing), 2 | 16);
 					currentSpread = 0;
 				}
 			} else if (lastTime != level.getGameTime()) {
 				electro.joules(electro.getJoulesStored() - Constants.SORTERBELT_USAGE);
 				lastTime = level.getGameTime();
 				if (!running) {
-					level.setBlock(worldPosition,
-							DeferredRegisters.blockSorterBeltRunning.defaultBlockState().setValue(GenericEntityBlock.FACING, facing), 2 | 16);
+					level.setBlock(worldPosition, DeferredRegisters.blockSorterBeltRunning.defaultBlockState().setValue(GenericEntityBlock.FACING, facing), 2 | 16);
 				}
 				currentSpread = 16;
 			}
 		} else if (currentSpread > 0 && !running) {
-			level.setBlock(worldPosition, DeferredRegisters.blockSorterBeltRunning.defaultBlockState().setValue(GenericEntityBlock.FACING, facing),
-					2 | 16);
+			level.setBlock(worldPosition, DeferredRegisters.blockSorterBeltRunning.defaultBlockState().setValue(GenericEntityBlock.FACING, facing), 2 | 16);
 		}
 	}
 

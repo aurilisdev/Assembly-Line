@@ -96,35 +96,21 @@ public class DeferredRegisters {
 		BlockItemDescriptable.addDescription(blockCrateMedium, "|translate|tooltip.cratemedium");
 		BlockItemDescriptable.addDescription(blockCrateLarge, "|translate|tooltip.cratelarge");
 	}
-	public static final RegistryObject<BlockEntityType<TileConveyorBelt>> TILE_BELT = TILES.register("belt",
-			() -> new BlockEntityType<>(TileConveyorBelt::new, Sets.newHashSet(blockConveyorBelt), null));
-	public static final RegistryObject<BlockEntityType<TileDetector>> TILE_DETECTOR = TILES.register("detector",
-			() -> new BlockEntityType<>(TileDetector::new, Sets.newHashSet(blockDetector), null));
-	public static final RegistryObject<BlockEntityType<TileSorterBelt>> TILE_SORTERBELT = TILES.register("sorterbelt",
-			() -> new BlockEntityType<>(TileSorterBelt::new, Sets.newHashSet(blockSorterBelt, blockSorterBeltRunning), null));
-	public static final RegistryObject<BlockEntityType<TileCrate>> TILE_CRATE = TILES.register("crate",
-			() -> new BlockEntityType<>(TileCrate::new, Sets.newHashSet(blockCrate, blockCrateMedium, blockCrateLarge), null));
-	public static final RegistryObject<BlockEntityType<TileAutocrafter>> TILE_AUTOCRAFTER = TILES.register("autocrafter",
-			() -> new BlockEntityType<>(TileAutocrafter::new, Sets.newHashSet(blockAutocrafter), null));
-	public static final RegistryObject<BlockEntityType<TileBlockBreaker>> TILE_BLOCKBREAKER = TILES.register("blockbreaker",
-			() -> new BlockEntityType<>(TileBlockBreaker::new, Sets.newHashSet(blockBlockBreaker), null));
-	public static final RegistryObject<BlockEntityType<TileBlockPlacer>> TILE_BLOCKPLACER = TILES.register("blockplacer",
-			() -> new BlockEntityType<>(TileBlockPlacer::new, Sets.newHashSet(blockBlockPlacer), null));
-	public static final RegistryObject<BlockEntityType<TileRancher>> TILE_RANCHER = TILES.register("rancher",
-			() -> new BlockEntityType<>(TileRancher::new, Sets.newHashSet(blockRancher), null));
-	public static final RegistryObject<BlockEntityType<TileMobGrinder>> TILE_MOBGRINDER = TILES.register("mobgrinder",
-			() -> new BlockEntityType<>(TileMobGrinder::new, Sets.newHashSet(blockMobGrinder), null));
+	public static final RegistryObject<BlockEntityType<TileConveyorBelt>> TILE_BELT = TILES.register("belt", () -> new BlockEntityType<>(TileConveyorBelt::new, Sets.newHashSet(blockConveyorBelt), null));
+	public static final RegistryObject<BlockEntityType<TileDetector>> TILE_DETECTOR = TILES.register("detector", () -> new BlockEntityType<>(TileDetector::new, Sets.newHashSet(blockDetector), null));
+	public static final RegistryObject<BlockEntityType<TileSorterBelt>> TILE_SORTERBELT = TILES.register("sorterbelt", () -> new BlockEntityType<>(TileSorterBelt::new, Sets.newHashSet(blockSorterBelt, blockSorterBeltRunning), null));
+	public static final RegistryObject<BlockEntityType<TileCrate>> TILE_CRATE = TILES.register("crate", () -> new BlockEntityType<>(TileCrate::new, Sets.newHashSet(blockCrate, blockCrateMedium, blockCrateLarge), null));
+	public static final RegistryObject<BlockEntityType<TileAutocrafter>> TILE_AUTOCRAFTER = TILES.register("autocrafter", () -> new BlockEntityType<>(TileAutocrafter::new, Sets.newHashSet(blockAutocrafter), null));
+	public static final RegistryObject<BlockEntityType<TileBlockBreaker>> TILE_BLOCKBREAKER = TILES.register("blockbreaker", () -> new BlockEntityType<>(TileBlockBreaker::new, Sets.newHashSet(blockBlockBreaker), null));
+	public static final RegistryObject<BlockEntityType<TileBlockPlacer>> TILE_BLOCKPLACER = TILES.register("blockplacer", () -> new BlockEntityType<>(TileBlockPlacer::new, Sets.newHashSet(blockBlockPlacer), null));
+	public static final RegistryObject<BlockEntityType<TileRancher>> TILE_RANCHER = TILES.register("rancher", () -> new BlockEntityType<>(TileRancher::new, Sets.newHashSet(blockRancher), null));
+	public static final RegistryObject<BlockEntityType<TileMobGrinder>> TILE_MOBGRINDER = TILES.register("mobgrinder", () -> new BlockEntityType<>(TileMobGrinder::new, Sets.newHashSet(blockMobGrinder), null));
 
-	public static final RegistryObject<MenuType<ContainerSorterBelt>> CONTAINER_SORTERBELT = CONTAINERS.register("sorterbelt",
-			() -> new MenuType<>(ContainerSorterBelt::new));
-	public static final RegistryObject<MenuType<ContainerAutocrafter>> CONTAINER_AUTOCRAFTER = CONTAINERS.register("autocrafter",
-			() -> new MenuType<>(ContainerAutocrafter::new));
-	public static final RegistryObject<MenuType<ContainerBlockPlacer>> CONTAINER_BLOCKPLACER = CONTAINERS.register("blockplacer",
-			() -> new MenuType<>(ContainerBlockPlacer::new));
-	public static final RegistryObject<MenuType<ContainerBlockBreaker>> CONTAINER_BLOCKBREAKER = CONTAINERS.register("blockbreaker",
-			() -> new MenuType<>(ContainerBlockBreaker::new));
-	public static final RegistryObject<MenuType<ContainerFrontHarvester>> CONTAINER_HARVESTER = CONTAINERS.register("harvester",
-			() -> new MenuType<>(ContainerFrontHarvester::new));
+	public static final RegistryObject<MenuType<ContainerSorterBelt>> CONTAINER_SORTERBELT = CONTAINERS.register("sorterbelt", () -> new MenuType<>(ContainerSorterBelt::new));
+	public static final RegistryObject<MenuType<ContainerAutocrafter>> CONTAINER_AUTOCRAFTER = CONTAINERS.register("autocrafter", () -> new MenuType<>(ContainerAutocrafter::new));
+	public static final RegistryObject<MenuType<ContainerBlockPlacer>> CONTAINER_BLOCKPLACER = CONTAINERS.register("blockplacer", () -> new MenuType<>(ContainerBlockPlacer::new));
+	public static final RegistryObject<MenuType<ContainerBlockBreaker>> CONTAINER_BLOCKBREAKER = CONTAINERS.register("blockbreaker", () -> new MenuType<>(ContainerBlockBreaker::new));
+	public static final RegistryObject<MenuType<ContainerFrontHarvester>> CONTAINER_HARVESTER = CONTAINERS.register("harvester", () -> new MenuType<>(ContainerFrontHarvester::new));
 
 	private static <T extends IForgeRegistryEntry<T>> Supplier<? extends T> supplier(T entry) {
 		return () -> entry;

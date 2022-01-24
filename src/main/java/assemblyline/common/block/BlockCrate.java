@@ -35,8 +35,7 @@ public class BlockCrate extends GenericEntityBlock {
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		BlockEntity tile = worldIn.getBlockEntity(pos);
-		if (tile instanceof GenericTile generic && !(state.getBlock() == newState.getBlock()
-				&& state.getValue(GenericEntityBlock.FACING) != newState.getValue(GenericEntityBlock.FACING))) {
+		if (tile instanceof GenericTile generic && !(state.getBlock() == newState.getBlock() && state.getValue(GenericEntityBlock.FACING) != newState.getValue(GenericEntityBlock.FACING))) {
 			if (generic.hasComponent(ComponentType.Inventory)) {
 				Containers.dropContents(worldIn, pos, generic.<ComponentInventory>getComponent(ComponentType.Inventory));
 			}
@@ -53,8 +52,7 @@ public class BlockCrate extends GenericEntityBlock {
 				if (player.isShiftKeyDown()) {
 					ComponentInventory inv = tile.getComponent(ComponentType.Inventory);
 					for (int i = 0; i < inv.getContainerSize(); i++) {
-						ItemStack stack = inv.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).resolve().get()
-								.extractItem(i, inv.getMaxStackSize(), false);
+						ItemStack stack = inv.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).resolve().get().extractItem(i, inv.getMaxStackSize(), false);
 						if (!stack.isEmpty()) {
 							ItemEntity item = new ItemEntity(worldIn, player.getX() + 0.5, player.getY() + 0.5, player.getZ() + 0.5, stack);
 							worldIn.addFreshEntity(item);
@@ -63,9 +61,7 @@ public class BlockCrate extends GenericEntityBlock {
 					}
 
 				} else {
-					player.setItemSlot(handIn == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND,
-							HopperBlockEntity.addItem(player.getInventory(), tile.getComponent(ComponentType.Inventory), player.getItemInHand(handIn),
-									Direction.EAST));
+					player.setItemSlot(handIn == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND, HopperBlockEntity.addItem(player.getInventory(), tile.getComponent(ComponentType.Inventory), player.getItemInHand(handIn), Direction.EAST));
 				}
 			}
 		}

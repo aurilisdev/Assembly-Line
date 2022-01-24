@@ -26,8 +26,7 @@ public class RenderBlockBreaker implements BlockEntityRenderer<TileBlockBreaker>
 	}
 
 	@Override
-	public void render(TileBlockBreaker tileEntityIn, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn,
-			int combinedOverlayIn) {
+	public void render(TileBlockBreaker tileEntityIn, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 		double progress = (tileEntityIn.clientRunningTicks + (tileEntityIn.works ? partialTicks : 0)) * 20;
 		BakedModel ibakedmodel = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_BLOCKBREAKERWHEEL);
 		matrixStackIn.pushPose();
@@ -59,8 +58,7 @@ public class RenderBlockBreaker implements BlockEntityRenderer<TileBlockBreaker>
 			BlockPos off = tileEntityIn.getBlockPos().offset(norm);
 			BlockState state = tileEntityIn.getLevel().getBlockState(off);
 			PoseStack.Pose pose = matrixStackIn.last();
-			VertexConsumer vertexconsumer1 = new SheetedDecalTextureGenerator(Minecraft.getInstance().renderBuffers().crumblingBufferSource()
-					.getBuffer(ModelBakery.DESTROY_TYPES.get(Math.min(9, (int) (tileEntityIn.progress * 9)))), pose.pose(), pose.normal());
+			VertexConsumer vertexconsumer1 = new SheetedDecalTextureGenerator(Minecraft.getInstance().renderBuffers().crumblingBufferSource().getBuffer(ModelBakery.DESTROY_TYPES.get(Math.min(9, (int) (tileEntityIn.progress * 9)))), pose.pose(), pose.normal());
 			matrixStackIn.translate(norm.getX(), norm.getY(), norm.getZ());
 			Minecraft.getInstance().getBlockRenderer().renderBreakingTexture(state, off, tileEntityIn.getLevel(), matrixStackIn, vertexconsumer1);
 			Minecraft.getInstance().renderBuffers().crumblingBufferSource().endBatch();

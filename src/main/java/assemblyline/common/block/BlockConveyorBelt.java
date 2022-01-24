@@ -76,9 +76,7 @@ public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (!(newState.getBlock() instanceof BlockConveyorBelt)) {
 			BlockEntity tile = worldIn.getBlockEntity(pos);
-			if (!(state.getBlock() == newState.getBlock()
-					&& state.getValue(GenericEntityBlock.FACING) != newState.getValue(GenericEntityBlock.FACING))
-					&& tile instanceof GenericTile generic) {
+			if (!(state.getBlock() == newState.getBlock() && state.getValue(GenericEntityBlock.FACING) != newState.getValue(GenericEntityBlock.FACING)) && tile instanceof GenericTile generic) {
 				if (generic.hasComponent(ComponentType.Inventory)) {
 					Containers.dropContents(worldIn, pos, generic.<ComponentInventory>getComponent(ComponentType.Inventory));
 				}

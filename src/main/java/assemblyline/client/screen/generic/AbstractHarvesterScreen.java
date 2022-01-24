@@ -44,13 +44,8 @@ public abstract class AbstractHarvesterScreen<T extends AbstractHarvesterContain
 		TileFrontHarvester harvester = menu.getHostFromIntArray();
 		if (harvester != null) {
 			ComponentElectrodynamic electro = harvester.getComponent(ComponentType.Electrodynamic);
-			list.add(new TranslatableComponent("gui.machine.usage",
-					new TextComponent(
-							ChatFormatter.getChatDisplayShort(harvester.getUsage() * harvester.clientUsageMultiplier * 20, DisplayUnit.WATT))
-									.withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
-			list.add(new TranslatableComponent("gui.machine.voltage",
-					new TextComponent(ChatFormatter.getChatDisplayShort(electro.getVoltage(), DisplayUnit.VOLTAGE)).withStyle(ChatFormatting.GRAY))
-							.withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
+			list.add(new TranslatableComponent("gui.machine.usage", new TextComponent(ChatFormatter.getChatDisplayShort(harvester.getUsage() * harvester.clientUsageMultiplier * 20, DisplayUnit.WATT)).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
+			list.add(new TranslatableComponent("gui.machine.voltage", new TextComponent(ChatFormatter.getChatDisplayShort(electro.getVoltage(), DisplayUnit.VOLTAGE)).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
 		}
 		return list;
 	}
@@ -74,16 +69,15 @@ public abstract class AbstractHarvesterScreen<T extends AbstractHarvesterContain
 	protected void initButtons() {
 		int i = (width - imageWidth) / 2;
 		int j = (height - imageHeight) / 2;
-		renderArea = new ButtonSwappableLabel(i + 10, j + 20, 60, 20, new TranslatableComponent("label.renderarea"),
-				new TranslatableComponent("label.hidearea"), () -> {
-					TileFrontHarvester harvester = menu.getHostFromIntArray();
-					if (harvester != null) {
-						return ClientEvents.outlines.containsKey(harvester.getBlockPos());
-					}
-					return false;
-				}, button -> {
-					toggleRendering();
-				});
+		renderArea = new ButtonSwappableLabel(i + 10, j + 20, 60, 20, new TranslatableComponent("label.renderarea"), new TranslatableComponent("label.hidearea"), () -> {
+			TileFrontHarvester harvester = menu.getHostFromIntArray();
+			if (harvester != null) {
+				return ClientEvents.outlines.containsKey(harvester.getBlockPos());
+			}
+			return false;
+		}, button -> {
+			toggleRendering();
+		});
 		addRenderableWidget(renderArea);
 	}
 
@@ -100,8 +94,7 @@ public abstract class AbstractHarvesterScreen<T extends AbstractHarvesterContain
 	}
 
 	private void updateBox(TileFrontHarvester harvester) {
-		ClientEvents.outlines.put(harvester.getBlockPos(),
-				harvester.getAABB(harvester.clientWidth, harvester.clientLength, harvester.clientHeight, isFlipped(), true, harvester));
+		ClientEvents.outlines.put(harvester.getBlockPos(), harvester.getAABB(harvester.clientWidth, harvester.clientLength, harvester.clientHeight, isFlipped(), true, harvester));
 	}
 
 	protected abstract boolean isFlipped();

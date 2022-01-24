@@ -45,8 +45,7 @@ public class TileConveyorBelt extends GenericTile {
 		addComponent(new ComponentDirection());
 		addComponent(new ComponentPacketHandler().guiPacketReader(this::loadFromNBT).guiPacketWriter(this::saveToNBT));
 		addComponent(new ComponentInventory(this).size(1));
-		addComponent(new ComponentElectrodynamic(this).input(Direction.DOWN).relativeInput(Direction.EAST).relativeInput(Direction.WEST)
-				.maxJoules(Constants.CONVEYORBELT_USAGE * 100));
+		addComponent(new ComponentElectrodynamic(this).input(Direction.DOWN).relativeInput(Direction.EAST).relativeInput(Direction.WEST).maxJoules(Constants.CONVEYORBELT_USAGE * 100));
 	}
 
 	protected void sync() {
@@ -60,10 +59,7 @@ public class TileConveyorBelt extends GenericTile {
 	public ItemStack addItemOnBelt(ItemStack add) {
 		ItemStack onBelt = getStackOnBelt();
 		if (onBelt.isEmpty()) {
-			object.pos = new Vector3f(0.5f + worldPosition.getX(),
-					worldPosition.getY()
-							+ (conveyorType == ConveyorType.SlopedDown ? -4.0f / 16.0f : conveyorType == ConveyorType.SlopedUp ? 8.0f / 16.0f : 0),
-					0.5f + worldPosition.getZ());
+			object.pos = new Vector3f(0.5f + worldPosition.getX(), worldPosition.getY() + (conveyorType == ConveyorType.SlopedDown ? -4.0f / 16.0f : conveyorType == ConveyorType.SlopedUp ? 8.0f / 16.0f : 0), 0.5f + worldPosition.getZ());
 		}
 		if (!add.isEmpty()) {
 			ComponentInventory inventory = getComponent(ComponentType.Inventory);
@@ -126,8 +122,7 @@ public class TileConveyorBelt extends GenericTile {
 					}
 				}
 			} else if (lastBlockEntity != null && isPuller) {
-				LazyOptional<IItemHandler> cap = lastBlockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
-						direction.getOpposite());
+				LazyOptional<IItemHandler> cap = lastBlockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction.getOpposite());
 				if (cap.isPresent()) {
 					IItemHandler handler = cap.resolve().get();
 					for (int slot = 0; slot < handler.getSlots(); slot++) {
@@ -175,9 +170,7 @@ public class TileConveyorBelt extends GenericTile {
 		if (conveyorType != ConveyorType.Horizontal) {
 			return conveyorType == ConveyorType.SlopedDown ? object.pos.y() <= worldPosition.getY() - 1 : object.pos.y() >= worldPosition.getY() + 1;
 		}
-		float value = belt != null && (belt.inQueue.isEmpty() || belt.inQueue.get(0) == this) && belt.isQueueReady
-				? belt.conveyorType == ConveyorType.SlopedUp || conveyorType == ConveyorType.Vertical ? 1 : 1.25f
-				: 1;
+		float value = belt != null && (belt.inQueue.isEmpty() || belt.inQueue.get(0) == this) && belt.isQueueReady ? belt.conveyorType == ConveyorType.SlopedUp || conveyorType == ConveyorType.Vertical ? 1 : 1.25f : 1;
 		if (direction.x() + direction.y() + direction.z() > 0) {
 			return !pos.equals(worldPosition) && coordComponent >= value;
 		}
@@ -207,8 +200,7 @@ public class TileConveyorBelt extends GenericTile {
 			} else if (nextBlockEntity != null) {
 				if (shouldTransfer) {
 					Direction direction = this.<ComponentDirection>getComponent(ComponentType.Direction).getDirection();
-					LazyOptional<IItemHandler> handlerOptional = nextBlockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY,
-							direction);
+					LazyOptional<IItemHandler> handlerOptional = nextBlockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction);
 					ComponentInventory inventory = getComponent(ComponentType.Inventory);
 					if (handlerOptional.isPresent()) {
 						putItemsIntoInventory(handlerOptional, inventory);
@@ -234,8 +226,7 @@ public class TileConveyorBelt extends GenericTile {
 	}
 
 	public void dropItem(ItemStack stackOnBelt, Vector3f move) {
-		ItemEntity entity = new ItemEntity(level, worldPosition.getX() + 0.5 + move.x() / 2.0f, worldPosition.getY() + 0.4,
-				worldPosition.getZ() + 0.5 + move.z() / 2.0f, stackOnBelt);
+		ItemEntity entity = new ItemEntity(level, worldPosition.getX() + 0.5 + move.x() / 2.0f, worldPosition.getY() + 0.4, worldPosition.getZ() + 0.5 + move.z() / 2.0f, stackOnBelt);
 		entity.setDeltaMovement(move.x() / 12.0, 1.5 / 16.0, move.z() / 12.0);
 		entity.setPickUpDelay(20);
 		level.addFreshEntity(entity);
@@ -264,8 +255,7 @@ public class TileConveyorBelt extends GenericTile {
 		case Horizontal -> worldPosition.relative(direction);
 		case SlopedDown -> worldPosition.relative(direction).below();
 		case SlopedUp -> worldPosition.relative(direction).above();
-		case Vertical -> level.getBlockEntity(worldPosition.relative(Direction.UP)) instanceof TileConveyorBelt belt
-				&& belt.conveyorType == ConveyorType.Vertical ? worldPosition.relative(Direction.UP) : worldPosition.relative(direction).above();
+		case Vertical -> level.getBlockEntity(worldPosition.relative(Direction.UP)) instanceof TileConveyorBelt belt && belt.conveyorType == ConveyorType.Vertical ? worldPosition.relative(Direction.UP) : worldPosition.relative(direction).above();
 		default -> null;
 		};
 	}

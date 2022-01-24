@@ -25,8 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileMobGrinder extends TileFrontHarvester {
 
 	public TileMobGrinder(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_MOBGRINDER.get(), pos, state, Constants.MOBGRINDER_USAGE * 40, (int) ElectrodynamicsCapabilities.DEFAULT_VOLTAGE,
-				"mobgrinder");
+		super(DeferredRegisters.TILE_MOBGRINDER.get(), pos, state, Constants.MOBGRINDER_USAGE * 40, (int) ElectrodynamicsCapabilities.DEFAULT_VOLTAGE, "mobgrinder");
 	}
 
 	@Override
@@ -78,10 +77,8 @@ public class TileMobGrinder extends TileFrontHarvester {
 				List<Entity> entities = level.getEntities(null, checkArea);
 				for (Entity entity : entities) {
 					if (electro.getJoulesStored() >= Constants.RANCHER_USAGE && !(entity instanceof Player)) {
-						electro.extractPower(TransferPack.joulesVoltage(Constants.MOBGRINDER_USAGE * powerUsageMultiplier, electro.getVoltage()),
-								false);
-						entity.getCapability(ElectrodynamicsCapabilities.LOCATION_STORAGE_CAPABILITY)
-								.ifPresent(h -> h.setLocation(0, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()));
+						electro.extractPower(TransferPack.joulesVoltage(Constants.MOBGRINDER_USAGE * powerUsageMultiplier, electro.getVoltage()), false);
+						entity.getCapability(ElectrodynamicsCapabilities.LOCATION_STORAGE_CAPABILITY).ifPresent(h -> h.setLocation(0, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()));
 						entity.kill();
 					}
 				}

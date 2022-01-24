@@ -29,8 +29,7 @@ public class TileRancher extends TileFrontHarvester {
 	private static ItemStack SHEERS = new ItemStack(Items.SHEARS);
 
 	public TileRancher(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_RANCHER.get(), pos, state, Constants.RANCHER_USAGE * 20, (int) ElectrodynamicsCapabilities.DEFAULT_VOLTAGE,
-				"rancher");
+		super(DeferredRegisters.TILE_RANCHER.get(), pos, state, Constants.RANCHER_USAGE * 20, (int) ElectrodynamicsCapabilities.DEFAULT_VOLTAGE, "rancher");
 	}
 
 	@Override
@@ -82,8 +81,7 @@ public class TileRancher extends TileFrontHarvester {
 				List<Entity> entities = level.getEntities(null, checkArea);
 				List<ItemStack> collectedItems = new ArrayList<>();
 				for (Entity entity : entities) {
-					if (electro.getJoulesStored() >= Constants.RANCHER_USAGE && entity instanceof IForgeShearable sheep
-							&& sheep.isShearable(SHEERS, level, entity.blockPosition())) {
+					if (electro.getJoulesStored() >= Constants.RANCHER_USAGE && entity instanceof IForgeShearable sheep && sheep.isShearable(SHEERS, level, entity.blockPosition())) {
 						collectedItems.addAll(sheep.onSheared(null, SHEERS, level, entity.blockPosition(), 0));
 						electro.extractPower(TransferPack.joulesVoltage(Constants.RANCHER_USAGE, electro.getVoltage()), false);
 					}

@@ -28,8 +28,7 @@ import net.minecraft.world.phys.Vec3;
 public class TileBlockPlacer extends TileFrontHarvester {
 
 	public TileBlockPlacer(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_BLOCKPLACER.get(), pos, state, Constants.BLOCKPLACER_USAGE * 20,
-				(int) ElectrodynamicsCapabilities.DEFAULT_VOLTAGE, "blockplacer");
+		super(DeferredRegisters.TILE_BLOCKPLACER.get(), pos, state, Constants.BLOCKPLACER_USAGE * 20, (int) ElectrodynamicsCapabilities.DEFAULT_VOLTAGE, "blockplacer");
 	}
 
 	@Override
@@ -68,8 +67,7 @@ public class TileBlockPlacer extends TileFrontHarvester {
 					ItemStack stack = inv.getItem(0);
 					if (!stack.isEmpty() && stack.getItem() instanceof BlockItem bi) {
 						Block b = bi.getBlock();
-						BlockState newState = b.getStateForPlacement(new BlockPlaceContext(level, null, InteractionHand.MAIN_HAND, stack,
-								new BlockHitResult(Vec3.ZERO, dir.getDirection(), off, false)));
+						BlockState newState = b.getStateForPlacement(new BlockPlaceContext(level, null, InteractionHand.MAIN_HAND, stack, new BlockHitResult(Vec3.ZERO, dir.getDirection(), off, false)));
 						if (newState.canSurvive(level, off)) {
 							level.setBlockAndUpdate(off, newState);
 							stack.shrink(1);

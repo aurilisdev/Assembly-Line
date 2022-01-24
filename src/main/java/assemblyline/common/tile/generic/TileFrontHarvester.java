@@ -29,8 +29,7 @@ public abstract class TileFrontHarvester extends TileOutlineArea {
 	protected TileFrontHarvester(BlockEntityType<?> type, BlockPos pos, BlockState state, double maxJoules, int voltage, String name) {
 		super(type, pos, state);
 		addComponent(new ComponentDirection());
-		addComponent(new ComponentPacketHandler().customPacketWriter(this::createPacket).guiPacketWriter(this::createPacket)
-				.customPacketReader(this::readPacket).guiPacketReader(this::readPacket));
+		addComponent(new ComponentPacketHandler().customPacketWriter(this::createPacket).guiPacketWriter(this::createPacket).customPacketReader(this::readPacket).guiPacketReader(this::readPacket));
 		addComponent(new ComponentTickable().tickServer(this::tickServer).tickClient(this::tickClient).tickCommon(this::tickCommon));
 		addComponent(new ComponentElectrodynamic(this).relativeInput(getVoltageInput()).voltage(voltage).maxJoules(maxJoules));
 		addComponent(getInv(this));
@@ -60,18 +59,14 @@ public abstract class TileFrontHarvester extends TileOutlineArea {
 			if (deltaX == 0) {
 				xShift = deltaZ * (width + 2) / 2;
 				zShift = deltaZ * length;
-				startPos = new BlockPos(blockInFront.getX() + (isClient && deltaZ < 0 ? xShift + 1 : xShift), blockInFront.getY() + yShift,
-						blockInFront.getZ() + (isClient && deltaZ < 0 ? zShift + 1 : zShift));
-				endPos = new BlockPos(blockInFront.getX() - (isClient && deltaZ > 0 ? xShift - 1 : xShift), blockInFront.getY(),
-						blockInFront.getZ() - (isClient && deltaZ > 0 ? deltaZ - 1 : deltaZ));
+				startPos = new BlockPos(blockInFront.getX() + (isClient && deltaZ < 0 ? xShift + 1 : xShift), blockInFront.getY() + yShift, blockInFront.getZ() + (isClient && deltaZ < 0 ? zShift + 1 : zShift));
+				endPos = new BlockPos(blockInFront.getX() - (isClient && deltaZ > 0 ? xShift - 1 : xShift), blockInFront.getY(), blockInFront.getZ() - (isClient && deltaZ > 0 ? deltaZ - 1 : deltaZ));
 				return new AABB(startPos, endPos);
 			} else if (deltaZ == 0) {
 				xShift = deltaX * width;
 				zShift = deltaX * (length + 2) / 2;
-				startPos = new BlockPos(blockInFront.getX() + (isClient && deltaX < 0 ? xShift + 1 : xShift), blockInFront.getY() + yShift,
-						blockInFront.getZ() + (isClient && deltaX < 0 ? zShift + 1 : zShift));
-				endPos = new BlockPos(blockInFront.getX() - (isClient && deltaX > 0 ? 0 : deltaX), blockInFront.getY(),
-						blockInFront.getZ() - (isClient && deltaX > 0 ? zShift - 1 : zShift));
+				startPos = new BlockPos(blockInFront.getX() + (isClient && deltaX < 0 ? xShift + 1 : xShift), blockInFront.getY() + yShift, blockInFront.getZ() + (isClient && deltaX < 0 ? zShift + 1 : zShift));
+				endPos = new BlockPos(blockInFront.getX() - (isClient && deltaX > 0 ? 0 : deltaX), blockInFront.getY(), blockInFront.getZ() - (isClient && deltaX > 0 ? zShift - 1 : zShift));
 				return new AABB(startPos, endPos);
 			}
 		} else // voltage north
@@ -79,15 +74,13 @@ public abstract class TileFrontHarvester extends TileOutlineArea {
 		if (deltaX == 0) {
 			xShift = isClient ? deltaZ * width / 2 : deltaZ * (width + 2) / 2;
 			zShift = deltaZ * length;
-			startPos = new BlockPos(blockInFront.getX() + xShift + (isClient ? deltaZ : 0), blockInFront.getY() + yShift,
-					blockInFront.getZ() + zShift);
+			startPos = new BlockPos(blockInFront.getX() + xShift + (isClient ? deltaZ : 0), blockInFront.getY() + yShift, blockInFront.getZ() + zShift);
 			endPos = new BlockPos(blockInFront.getX() - xShift, blockInFront.getY(), blockInFront.getZ() - (isClient ? 0 : deltaZ));
 			return new AABB(startPos, endPos);
 		} else if (deltaZ == 0) {
 			xShift = deltaX * width;
 			zShift = isClient ? deltaX * length / 2 : deltaX * (length + 2) / 2;
-			startPos = new BlockPos(blockInFront.getX() + xShift, blockInFront.getY() + yShift,
-					blockInFront.getZ() + zShift + (isClient ? deltaX : 0));
+			startPos = new BlockPos(blockInFront.getX() + xShift, blockInFront.getY() + yShift, blockInFront.getZ() + zShift + (isClient ? deltaX : 0));
 			endPos = new BlockPos(blockInFront.getX() - (isClient ? 0 : deltaX), blockInFront.getY(), blockInFront.getZ() - zShift);
 			return new AABB(startPos, endPos);
 		}

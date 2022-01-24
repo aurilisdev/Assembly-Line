@@ -32,11 +32,8 @@ public class TileAutocrafter extends GenericTile {
 		addComponent(new ComponentDirection());
 		addComponent(new ComponentTickable().tickServer(this::tickServer));
 		addComponent(new ComponentElectrodynamic(this).maxJoules(Constants.AUTOCRAFTER_USAGE * 20).universalInput());
-		addComponent(new ComponentInventory(this).size(10).faceSlots(Direction.DOWN, 9).faceSlots(Direction.UP, 1, 3, 4, 5, 7)
-				.relativeFaceSlots(Direction.SOUTH, 6, 7, 8).relativeFaceSlots(Direction.NORTH, 0, 1, 2).relativeFaceSlots(Direction.WEST, 2, 5, 8)
-				.relativeFaceSlots(Direction.EAST, 0, 3, 6));
-		addComponent(new ComponentContainerProvider("container.autocrafter")
-				.createMenu((id, player) -> new ContainerAutocrafter(id, player, getComponent(ComponentType.Inventory), getCoordsArray())));
+		addComponent(new ComponentInventory(this).size(10).faceSlots(Direction.DOWN, 9).faceSlots(Direction.UP, 1, 3, 4, 5, 7).relativeFaceSlots(Direction.SOUTH, 6, 7, 8).relativeFaceSlots(Direction.NORTH, 0, 1, 2).relativeFaceSlots(Direction.WEST, 2, 5, 8).relativeFaceSlots(Direction.EAST, 0, 3, 6));
+		addComponent(new ComponentContainerProvider("container.autocrafter").createMenu((id, player) -> new ContainerAutocrafter(id, player, getComponent(ComponentType.Inventory), getCoordsArray())));
 	}
 
 	public static boolean shapedMatches(ComponentInventory inv, ShapedRecipe shaped) {
@@ -91,8 +88,7 @@ public class TileAutocrafter extends GenericTile {
 				}
 			}
 		}
-		return i == shaped.getIngredients().size() && (isSimple ? stackedcontents.canCraft(shaped, (IntList) null)
-				: net.minecraftforge.common.util.RecipeMatcher.findMatches(inputs, shaped.getIngredients()) != null);
+		return i == shaped.getIngredients().size() && (isSimple ? stackedcontents.canCraft(shaped, (IntList) null) : net.minecraftforge.common.util.RecipeMatcher.findMatches(inputs, shaped.getIngredients()) != null);
 	}
 
 	public void tickServer(ComponentTickable tick) {
@@ -126,8 +122,7 @@ public class TileAutocrafter extends GenericTile {
 					}
 					if (canContinue) {
 						ItemStack currentItemStack = inventory.getItem(9);
-						if (currentItemStack.isEmpty() || ItemStack.isSame(result, currentItemStack)
-								&& currentItemStack.getCount() + result.getCount() <= result.getMaxStackSize()) {
+						if (currentItemStack.isEmpty() || ItemStack.isSame(result, currentItemStack) && currentItemStack.getCount() + result.getCount() <= result.getMaxStackSize()) {
 							for (int i = 0; i < 9; i++) {
 								inventory.getItem(i).shrink(1);
 							}

@@ -83,8 +83,7 @@ public class BlockSorterBelt extends GenericEntityBlockWaterloggable {
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (!(newState.getBlock() instanceof BlockSorterBelt)) {
 			BlockEntity tile = worldIn.getBlockEntity(pos);
-			if (tile instanceof GenericTile gen
-					&& !(state.getBlock() == newState.getBlock() && state.getValue(FACING) != newState.getValue(FACING))) {
+			if (tile instanceof GenericTile gen && !(state.getBlock() == newState.getBlock() && state.getValue(FACING) != newState.getValue(FACING))) {
 				Containers.dropContents(worldIn, pos, gen.<ComponentInventory>getComponent(ComponentType.Inventory));
 			}
 			super.onRemove(state, worldIn, pos, newState, isMoving);
