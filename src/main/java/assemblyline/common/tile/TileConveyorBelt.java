@@ -361,7 +361,5 @@ public class TileConveyorBelt extends GenericTile {
 		offsets.add(new BlockPos(0, 0, 0).relative(Direction.UP).relative(Direction.SOUTH));
 	}
 
-	public enum ConveyorType {
-		Horizontal, SlopedUp, SlopedDown, Vertical;
-	}
+	public enum ConveyorType { Horizontal, SlopedUp, SlopedDown, Vertical; }
 }
