@@ -10,6 +10,7 @@ import electrodynamics.api.capability.types.locationstorage.CapabilityLocationSt
 import electrodynamics.api.capability.types.locationstorage.ILocationStorage;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
+import electrodynamics.prefab.utilities.InventoryUtils;
 import electrodynamics.prefab.utilities.object.Location;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -45,7 +46,7 @@ public class EventHandler {
 				List<ItemStack> droppedItems = new ArrayList<>();
 				event.getDrops().forEach(h -> droppedItems.add(h.getItem()));
 				ComponentInventory inv = grinder.getComponent(ComponentType.Inventory);
-				ComponentInventory.addItemsToInventory(inv, droppedItems, inv.getOutputStartIndex(), inv.getOutputContents().size());
+				InventoryUtils.addItemsToInventory(inv, droppedItems, inv.getOutputStartIndex(), inv.getOutputContents().size());
 				event.setCanceled(true);
 			}
 		}

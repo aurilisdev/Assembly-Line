@@ -15,6 +15,7 @@ import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
+import electrodynamics.prefab.utilities.InventoryUtils;
 import electrodynamics.prefab.utilities.object.TransferPack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -86,8 +87,8 @@ public class TileRancher extends TileFrontHarvester {
 						electro.extractPower(TransferPack.joulesVoltage(Constants.RANCHER_USAGE, electro.getVoltage()), false);
 					}
 				}
-				if (collectedItems.size() > 0) {
-					ComponentInventory.addItemsToInventory(inv, collectedItems, inv.getOutputStartIndex(), inv.getOutputContents().size());
+				if (!collectedItems.isEmpty()) {
+					InventoryUtils.addItemsToInventory(inv, collectedItems, inv.getOutputStartIndex(), inv.getOutputContents().size());
 				}
 			}
 
