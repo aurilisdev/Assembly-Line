@@ -10,6 +10,7 @@ import assemblyline.client.render.tile.RenderRancher;
 import assemblyline.client.screen.ScreenAutocrafter;
 import assemblyline.client.screen.ScreenBlockBreaker;
 import assemblyline.client.screen.ScreenBlockPlacer;
+import assemblyline.client.screen.ScreenFarmer;
 import assemblyline.client.screen.ScreenFrontHarvester;
 import assemblyline.client.screen.ScreenSorterBelt;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -99,6 +100,7 @@ public class ClientRegister {
 		MenuScreens.register(DeferredRegisters.CONTAINER_BLOCKPLACER.get(), ScreenBlockPlacer::new);
 		MenuScreens.register(DeferredRegisters.CONTAINER_BLOCKBREAKER.get(), ScreenBlockBreaker::new);
 		MenuScreens.register(DeferredRegisters.CONTAINER_HARVESTER.get(), ScreenFrontHarvester::new);
+		MenuScreens.register(DeferredRegisters.CONTAINER_FARMER.get(), ScreenFarmer::new);
 	}
 
 	@SubscribeEvent

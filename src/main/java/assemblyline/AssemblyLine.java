@@ -1,6 +1,7 @@
 package assemblyline;
 
 import assemblyline.client.ClientRegister;
+import assemblyline.common.packet.NetworkHandler;
 import assemblyline.common.settings.Constants;
 import electrodynamics.prefab.configuration.ConfigurationHandler;
 import net.minecraftforge.api.distmarker.Dist;
@@ -11,6 +12,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 @Mod(References.ID)
@@ -24,6 +26,11 @@ public class AssemblyLine {
 		DeferredRegisters.ITEMS.register(bus);
 		DeferredRegisters.TILES.register(bus);
 		DeferredRegisters.CONTAINERS.register(bus);
+	}
+	
+	@SubscribeEvent
+	public static void onCommonSetup(FMLCommonSetupEvent event) {
+		NetworkHandler.init();
 	}
 
 	@SubscribeEvent

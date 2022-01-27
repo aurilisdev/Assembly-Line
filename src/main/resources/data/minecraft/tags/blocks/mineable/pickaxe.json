@@ -10,6 +10,7 @@
 		"assemblyline:sorterbeltrunning",
 		"assemblyline:autocrafter",
 		"assemblyline:mobgrinder",
-		"assemblyline:rancher"
+		"assemblyline:rancher",
+		"assemblyline:farmer"
 	]
 }
