@@ -113,7 +113,7 @@ public class DeferredRegisters {
 	public static final RegistryObject<BlockEntityType<TileRancher>> TILE_RANCHER = TILES.register("rancher", () -> new BlockEntityType<>(TileRancher::new, Sets.newHashSet(blockRancher), null));
 	public static final RegistryObject<BlockEntityType<TileMobGrinder>> TILE_MOBGRINDER = TILES.register("mobgrinder", () -> new BlockEntityType<>(TileMobGrinder::new, Sets.newHashSet(blockMobGrinder), null));
 	public static final RegistryObject<BlockEntityType<TileFarmer>> TILE_FARMER = TILES.register("farmer", () -> new BlockEntityType<>(TileFarmer::new, Sets.newHashSet(blockFarmer), null));
-	
+
 	public static final RegistryObject<MenuType<ContainerSorterBelt>> CONTAINER_SORTERBELT = CONTAINERS.register("sorterbelt", () -> new MenuType<>(ContainerSorterBelt::new));
 	public static final RegistryObject<MenuType<ContainerAutocrafter>> CONTAINER_AUTOCRAFTER = CONTAINERS.register("autocrafter", () -> new MenuType<>(ContainerAutocrafter::new));
 	public static final RegistryObject<MenuType<ContainerBlockPlacer>> CONTAINER_BLOCKPLACER = CONTAINERS.register("blockplacer", () -> new MenuType<>(ContainerBlockPlacer::new));

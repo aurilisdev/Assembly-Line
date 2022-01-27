@@ -32,7 +32,7 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 	private ButtonSwappableLabel renderArea;
 	private ButtonSwappableLabel fullBonemeal;
 	private ButtonSwappableLabel refillEmpty;
-	
+
 	public ScreenFarmer(ContainerFarmer container, Inventory inv, Component titleIn) {
 		super(container, inv, titleIn);
 		imageHeight += 58;
@@ -46,7 +46,7 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 		}, this, 10, 50 + 58, "tooltip.countdown.cooldown"));
 		components.add(new ScreenComponentElectricInfo(this::getElectricInformation, this, -ScreenComponentInfo.SIZE + 1, 2));
 	}
-	
+
 	private List<? extends FormattedCharSequence> getElectricInformation() {
 		ArrayList<FormattedCharSequence> list = new ArrayList<>();
 		TileFarmer farmer = menu.getHostFromIntArray();
@@ -57,18 +57,18 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 		}
 		return list;
 	}
-	
+
 	@Override
 	protected ScreenComponentSlot createScreenSlot(Slot slot) {
 		ScreenComponentSlot component = super.createScreenSlot(slot);
 		int index = slot.index;
-		if(index < 9) {
+		if (index < 9) {
 			List<Integer> rgba = TileFarmer.COLORS.get(index);
 			component.color(RenderingUtils.getRGBA(rgba.get(0), rgba.get(1), rgba.get(2), rgba.get(3)));
 		}
 		return component;
 	}
-	
+
 	@Override
 	protected void containerTick() {
 		super.containerTick();

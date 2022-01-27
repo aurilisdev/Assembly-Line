@@ -12,20 +12,20 @@ public class PacketFarmer {
 
 	private final int num;
 	private final BlockPos pos;
-	
+
 	public PacketFarmer(int num, BlockPos pos) {
 		this.num = num;
 		this.pos = pos;
 	}
-	
+
 	public static void handle(PacketFarmer message, Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
 			ServerLevel world = context.get().getSender().getLevel();
 			if (world != null) {
 				TileFarmer farmer = (TileFarmer) world.getBlockEntity(message.pos);
-				if(farmer != null) {
-					switch(message.num) {
+				if (farmer != null) {
+					switch (message.num) {
 					case 0:
 						farmer.fullGrowBonemeal = !farmer.fullGrowBonemeal;
 						break;
@@ -37,16 +37,16 @@ public class PacketFarmer {
 			}
 		});
 	}
-	
+
 	public static void encode(PacketFarmer pkt, FriendlyByteBuf buf) {
 		buf.writeInt(pkt.num);
 		buf.writeInt(pkt.pos.getX());
 		buf.writeInt(pkt.pos.getY());
 		buf.writeInt(pkt.pos.getZ());
 	}
-	
+
 	public static PacketFarmer decode(FriendlyByteBuf buf) {
 		return new PacketFarmer(buf.readInt(), new BlockPos(buf.readInt(), buf.readInt(), buf.readInt()));
 	}
-	
+
 }

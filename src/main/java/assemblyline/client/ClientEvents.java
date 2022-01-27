@@ -42,7 +42,7 @@ public class ClientEvents {
 		for (Entry<BlockPos, Pair<List<List<Integer>>, List<AABB>>> en : farmerLines.entrySet()) {
 			List<List<Integer>> rgbaValues = en.getValue().getFirst();
 			List<AABB> lines = en.getValue().getSecond();
-			for(int i = 0; i < lines.size(); i++) {
+			for (int i = 0; i < lines.size(); i++) {
 				AABB box = lines.get(i).deflate(0.01);
 				List<Integer> rgba = rgbaValues.get(i);
 				matrix.pushPose();
@@ -53,7 +53,5 @@ public class ClientEvents {
 		}
 		buffer.endBatch(RenderType.LINES);
 	}
-	
-	
 
 }
