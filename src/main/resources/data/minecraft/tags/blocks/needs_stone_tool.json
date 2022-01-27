@@ -9,6 +9,7 @@
 		"assemblyline:sorterbelt",
 		"assemblyline:sorterbeltrunning",
 		"assemblyline:mobgrinder",
-		"assemblyline:rancher"
+		"assemblyline:rancher",
+		"assemblyline:farmer"
 	]
 }

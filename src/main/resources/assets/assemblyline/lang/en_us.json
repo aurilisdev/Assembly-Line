@@ -12,12 +12,14 @@
   "block.assemblyline.blockplacer" : "Block Placer",
   "block.assemblyline.rancher" : "Energized Rancher",
   "block.assemblyline.mobgrinder" : "Mob Grinder",
+  "block.assemblyline.farmer" : "Farmer",
   "container.sorterbelt" : "Sorter Belt",
   "container.autocrafter" : "Autocrafter",
   "container.blockplacer" : "Block Placer",
   "container.blockbreaker" : "Block Breaker",
   "container.rancher" : "Energized Rancher",
   "container.mobgrinder" : "Mob Grinder",
+  "container.farmer" : "Farmer",
   "gui.machine.voltage" : "Voltage: %s",
   "gui.machine.usage" : "Usage: %s",
   "itemGroup.itemgroupassemblyline" : "Assembly Line",
@@ -29,6 +31,10 @@
   "tooltip.countdown.cooldown" : "Cooldown Left: %s",
   "tooltip.countdown.progress" : "Progress: %s",
   "label.renderarea" : "Show Area",
-  "label.hidearea" : "Hide Area"
+  "label.hidearea" : "Hide Area",
+  "label.fullbonemeal" : "Bone Full",
+  "label.regbonemeal" : "Bone Once",
+  "label.refillempty" : "Refill Empty",
+  "label.ignoreempty" : "Skip Empty"
   
 }

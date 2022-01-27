@@ -19,4 +19,6 @@ public class Constants {
 	public static double RANCHER_USAGE = 40.0;
 	@DoubleValue(def = 40.0, comment = "Usage is per usage")
 	public static double MOBGRINDER_USAGE = 40.0;
+	@DoubleValue(def = 40.0, comment = "Usage is per usage")
+	public static double FARMER_USAGE = 40.0;
 }
