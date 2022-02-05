@@ -428,7 +428,7 @@ public class TileFarmer extends GenericTile {
 		}
 	}
 
-	private boolean matchesQuadrant(List<Integer> quadrant, int xShift, int zShift) {
+	private static boolean matchesQuadrant(List<Integer> quadrant, int xShift, int zShift) {
 		if (quadrant.get(0) <= xShift && quadrant.get(1) >= xShift) {
 			if (quadrant.get(2) <= zShift && quadrant.get(3) >= zShift) {
 				return true;

@@ -94,27 +94,21 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 				return farmer.clientGrowBonemeal;
 			}
 			return false;
-		}, button -> {
-			menu.toggleBoolean(0);
-		});
+		}, button -> menu.toggleBoolean(0));
 		refillEmpty = new ButtonSwappableLabel(i + 10, j + 20 + 30, 60, 20, new TranslatableComponent("label.refillempty"), new TranslatableComponent("label.ignoreempty"), () -> {
 			TileFarmer farmer = menu.getHostFromIntArray();
 			if (farmer != null) {
 				return farmer.clientRefillEmpty;
 			}
 			return false;
-		}, button -> {
-			menu.toggleBoolean(1);
-		});
+		}, button -> menu.toggleBoolean(1));
 		renderArea = new ButtonSwappableLabel(i + 10, j + 20 + 60, 60, 20, new TranslatableComponent("label.renderarea"), new TranslatableComponent("label.hidearea"), () -> {
 			TileFarmer farmer = menu.getHostFromIntArray();
 			if (farmer != null) {
 				return ClientEvents.farmerLines.containsKey(farmer.getBlockPos());
 			}
 			return false;
-		}, button -> {
-			toggleRendering();
-		});
+		}, button -> toggleRendering());
 		addRenderableWidget(fullBonemeal);
 		addRenderableWidget(refillEmpty);
 		addRenderableWidget(renderArea);
@@ -132,7 +126,7 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 		}
 	}
 
-	private void updateBox(TileFarmer farmer) {
+	private static void updateBox(TileFarmer farmer) {
 		ClientEvents.farmerLines.put(farmer.getBlockPos(), farmer.getLines(farmer));
 	}
 
