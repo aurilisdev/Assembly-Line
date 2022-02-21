@@ -27,7 +27,7 @@ public class AssemblyLine {
 		DeferredRegisters.TILES.register(bus);
 		DeferredRegisters.CONTAINERS.register(bus);
 	}
-	
+
 	@SubscribeEvent
 	public static void onCommonSetup(FMLCommonSetupEvent event) {
 		NetworkHandler.init();

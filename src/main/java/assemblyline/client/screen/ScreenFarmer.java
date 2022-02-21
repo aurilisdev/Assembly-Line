@@ -32,7 +32,7 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 	private ButtonSwappableLabel renderArea;
 	private ButtonSwappableLabel fullBonemeal;
 	private ButtonSwappableLabel refillEmpty;
-	
+
 	public ScreenFarmer(ContainerFarmer container, Inventory inv, Component titleIn) {
 		super(container, inv, titleIn);
 		imageHeight += 58;
@@ -46,7 +46,7 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 		}, this, 10, 50 + 58, "tooltip.countdown.cooldown"));
 		components.add(new ScreenComponentElectricInfo(this::getElectricInformation, this, -ScreenComponentInfo.SIZE + 1, 2));
 	}
-	
+
 	private List<? extends FormattedCharSequence> getElectricInformation() {
 		ArrayList<FormattedCharSequence> list = new ArrayList<>();
 		TileFarmer farmer = menu.getHostFromIntArray();
@@ -57,18 +57,18 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 		}
 		return list;
 	}
-	
+
 	@Override
 	protected ScreenComponentSlot createScreenSlot(Slot slot) {
 		ScreenComponentSlot component = super.createScreenSlot(slot);
 		int index = slot.index;
-		if(index < 9) {
+		if (index < 9) {
 			List<Integer> rgba = TileFarmer.COLORS.get(index);
 			component.color(RenderingUtils.getRGBA(rgba.get(0), rgba.get(1), rgba.get(2), rgba.get(3)));
 		}
 		return component;
 	}
-	
+
 	@Override
 	protected void containerTick() {
 		super.containerTick();
@@ -94,27 +94,21 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 				return farmer.clientGrowBonemeal;
 			}
 			return false;
-		}, button -> {
-			menu.toggleBoolean(0);
-		});
+		}, button -> menu.toggleBoolean(0));
 		refillEmpty = new ButtonSwappableLabel(i + 10, j + 20 + 30, 60, 20, new TranslatableComponent("label.refillempty"), new TranslatableComponent("label.ignoreempty"), () -> {
 			TileFarmer farmer = menu.getHostFromIntArray();
 			if (farmer != null) {
 				return farmer.clientRefillEmpty;
 			}
 			return false;
-		}, button -> {
-			menu.toggleBoolean(1);
-		});
+		}, button -> menu.toggleBoolean(1));
 		renderArea = new ButtonSwappableLabel(i + 10, j + 20 + 60, 60, 20, new TranslatableComponent("label.renderarea"), new TranslatableComponent("label.hidearea"), () -> {
 			TileFarmer farmer = menu.getHostFromIntArray();
 			if (farmer != null) {
 				return ClientEvents.farmerLines.containsKey(farmer.getBlockPos());
 			}
 			return false;
-		}, button -> {
-			toggleRendering();
-		});
+		}, button -> toggleRendering());
 		addRenderableWidget(fullBonemeal);
 		addRenderableWidget(refillEmpty);
 		addRenderableWidget(renderArea);
@@ -132,7 +126,7 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 		}
 	}
 
-	private void updateBox(TileFarmer farmer) {
+	private static void updateBox(TileFarmer farmer) {
 		ClientEvents.farmerLines.put(farmer.getBlockPos(), farmer.getLines(farmer));
 	}
 

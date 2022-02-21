@@ -46,10 +46,10 @@ public class ContainerFarmer extends GenericContainerBlockEntity<TileFarmer> {
 		addSlot(new SlotUpgrade(inv, nextIndex(), 153, 91, SubtypeItemUpgrade.advancedspeed, SubtypeItemUpgrade.basicspeed, SubtypeItemUpgrade.itemoutput, SubtypeItemUpgrade.range));
 		addSlot(new SlotUpgrade(inv, nextIndex(), 153, 111, SubtypeItemUpgrade.advancedspeed, SubtypeItemUpgrade.basicspeed, SubtypeItemUpgrade.itemoutput, SubtypeItemUpgrade.range));
 	}
-	
+
 	@OnlyIn(Dist.CLIENT)
 	public void toggleBoolean(int num) {
-		if(getHostFromIntArray() != null) {
+		if (getHostFromIntArray() != null) {
 			NetworkHandler.CHANNEL.sendToServer(new PacketFarmer(num, getHostFromIntArray().getBlockPos()));
 		}
 	}
