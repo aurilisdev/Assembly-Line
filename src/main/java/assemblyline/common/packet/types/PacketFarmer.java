@@ -32,6 +32,8 @@ public class PacketFarmer {
 					case 1:
 						farmer.refillEmpty = !farmer.refillEmpty;
 						break;
+					default:
+						break;
 					}
 				}
 			}
