@@ -20,6 +20,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class ContainerFarmer extends GenericContainerBlockEntity<TileFarmer> {
 
+	public static final SubtypeItemUpgrade[] VALID_UPGRADES = new SubtypeItemUpgrade[] {SubtypeItemUpgrade.advancedspeed, SubtypeItemUpgrade.basicspeed, SubtypeItemUpgrade.itemoutput, SubtypeItemUpgrade.range};
+	
 	public ContainerFarmer(int id, Inventory playerinv) {
 		this(id, playerinv, new SimpleContainer(22), new SimpleContainerData(3));
 	}
@@ -42,9 +44,9 @@ public class ContainerFarmer extends GenericContainerBlockEntity<TileFarmer> {
 				addSlot(new SlotRestricted(inv, nextIndex(), 85 + j * 18, 75 + i * 18));
 			}
 		}
-		addSlot(new SlotUpgrade(inv, nextIndex(), 153, 71, SubtypeItemUpgrade.advancedspeed, SubtypeItemUpgrade.basicspeed, SubtypeItemUpgrade.itemoutput, SubtypeItemUpgrade.range));
-		addSlot(new SlotUpgrade(inv, nextIndex(), 153, 91, SubtypeItemUpgrade.advancedspeed, SubtypeItemUpgrade.basicspeed, SubtypeItemUpgrade.itemoutput, SubtypeItemUpgrade.range));
-		addSlot(new SlotUpgrade(inv, nextIndex(), 153, 111, SubtypeItemUpgrade.advancedspeed, SubtypeItemUpgrade.basicspeed, SubtypeItemUpgrade.itemoutput, SubtypeItemUpgrade.range));
+		addSlot(new SlotUpgrade(inv, nextIndex(), 153, 71, VALID_UPGRADES));
+		addSlot(new SlotUpgrade(inv, nextIndex(), 153, 91, VALID_UPGRADES));
+		addSlot(new SlotUpgrade(inv, nextIndex(), 153, 111, VALID_UPGRADES));
 	}
 
 	@OnlyIn(Dist.CLIENT)

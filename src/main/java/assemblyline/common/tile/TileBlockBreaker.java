@@ -2,6 +2,7 @@ package assemblyline.common.tile;
 
 import assemblyline.DeferredRegisters;
 import assemblyline.common.inventory.container.ContainerBlockBreaker;
+import assemblyline.common.inventory.container.ContainerFrontHarvester;
 import assemblyline.common.inventory.container.generic.AbstractHarvesterContainer;
 import assemblyline.common.settings.Constants;
 import assemblyline.common.tile.generic.TileFrontHarvester;
@@ -100,7 +101,7 @@ public class TileBlockBreaker extends TileFrontHarvester {
 
 	@Override
 	public ComponentInventory getInv(TileFrontHarvester harvester) {
-		return new ComponentInventory(harvester).size(3).upgrades(3).valid(machineValidator());
+		return new ComponentInventory(harvester).size(3).upgrades(3).validUpgrades(ContainerFrontHarvester.VALID_UPGRADES).valid(machineValidator());
 	}
 
 	@Override

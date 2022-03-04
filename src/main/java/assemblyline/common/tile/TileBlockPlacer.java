@@ -92,7 +92,7 @@ public class TileBlockPlacer extends TileFrontHarvester {
 
 	@Override
 	public ComponentInventory getInv(TileFrontHarvester harvester) {
-		return new ComponentInventory(harvester).size(4).inputs(1).upgrades(3).valid(machineValidator());
+		return new ComponentInventory(harvester).size(4).inputs(1).upgrades(3).validUpgrades(ContainerBlockPlacer.VALID_UPGRADES).valid(machineValidator());
 	}
 
 	@Override
