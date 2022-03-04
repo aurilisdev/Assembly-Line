@@ -13,8 +13,8 @@ import net.minecraft.world.inventory.SimpleContainerData;
 
 public class ContainerBlockPlacer extends AbstractHarvesterContainer {
 
-	public static final SubtypeItemUpgrade[] VALID_UPGRADES = new SubtypeItemUpgrade[] {SubtypeItemUpgrade.iteminput};
-	
+	public static final SubtypeItemUpgrade[] VALID_UPGRADES = new SubtypeItemUpgrade[] { SubtypeItemUpgrade.iteminput };
+
 	public ContainerBlockPlacer(int id, Inventory playerinv) {
 		this(id, playerinv, new SimpleContainer(4), new SimpleContainerData(3));
 	}
