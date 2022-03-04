@@ -100,7 +100,7 @@ public class TileMobGrinder extends TileFrontHarvester {
 
 	@Override
 	public ComponentInventory getInv(TileFrontHarvester harvester) {
-		return new ComponentInventory(harvester).size(12).outputs(9).upgrades(3).valid(machineValidator()).shouldSendInfo();
+		return new ComponentInventory(harvester).size(12).outputs(9).upgrades(3).validUpgrades(ContainerFrontHarvester.VALID_UPGRADES).valid(machineValidator()).shouldSendInfo();
 	}
 
 	@Override

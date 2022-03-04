@@ -109,7 +109,7 @@ public class TileFarmer extends GenericTile {
 		addComponent(new ComponentPacketHandler().customPacketWriter(this::createPacket).guiPacketWriter(this::createPacket).customPacketReader(this::readPacket).guiPacketReader(this::readPacket));
 		addComponent(new ComponentTickable().tickServer(this::tickServer));
 		addComponent(new ComponentElectrodynamic(this).relativeInput(Direction.DOWN).voltage(ElectrodynamicsCapabilities.DEFAULT_VOLTAGE).maxJoules(Constants.FARMER_USAGE * 20));
-		addComponent(new ComponentInventory(this).size(22).inputs(10).outputs(9).upgrades(3).valid(machineValidator()).shouldSendInfo());
+		addComponent(new ComponentInventory(this).size(22).inputs(10).outputs(9).upgrades(3).validUpgrades(ContainerFarmer.VALID_UPGRADES).valid(machineValidator()).shouldSendInfo());
 		addComponent(new ComponentContainerProvider("container.farmer").createMenu((id, player) -> new ContainerFarmer(id, player, getComponent(ComponentType.Inventory), getCoordsArray())));
 	}
 

@@ -13,6 +13,8 @@ import net.minecraft.world.inventory.SimpleContainerData;
 
 public class ContainerBlockPlacer extends AbstractHarvesterContainer {
 
+	public static final SubtypeItemUpgrade[] VALID_UPGRADES = new SubtypeItemUpgrade[] {SubtypeItemUpgrade.iteminput};
+	
 	public ContainerBlockPlacer(int id, Inventory playerinv) {
 		this(id, playerinv, new SimpleContainer(4), new SimpleContainerData(3));
 	}
@@ -24,8 +26,8 @@ public class ContainerBlockPlacer extends AbstractHarvesterContainer {
 	@Override
 	public void addInventorySlots(Container inv, Inventory playerinv) {
 		addSlot(new SlotGeneric(inv, nextIndex(), 103, 35));
-		addSlot(new SlotUpgrade(inv, nextIndex(), 153, 14, SubtypeItemUpgrade.iteminput));
-		addSlot(new SlotUpgrade(inv, nextIndex(), 153, 34, SubtypeItemUpgrade.iteminput));
-		addSlot(new SlotUpgrade(inv, nextIndex(), 153, 54, SubtypeItemUpgrade.iteminput));
+		addSlot(new SlotUpgrade(inv, nextIndex(), 153, 14, VALID_UPGRADES));
+		addSlot(new SlotUpgrade(inv, nextIndex(), 153, 34, VALID_UPGRADES));
+		addSlot(new SlotUpgrade(inv, nextIndex(), 153, 54, VALID_UPGRADES));
 	}
 }
