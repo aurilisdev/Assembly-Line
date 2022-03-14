@@ -95,7 +95,7 @@ minecraft {
 }
 
 dependencies {
-	minecraft 'net.minecraftforge:forge:1.18.1-39.0.88'
+	minecraft 'net.minecraftforge:forge:1.18.1-39.1.2'
     //makes testing easier; no JEI plugin for mod currently
 	compileOnly fg.deobf("mezz.jei:jei-1.18.1:9.1.0.41:api")
     runtimeOnly fg.deobf("mezz.jei:jei-1.18.1:9.1.0.41")
