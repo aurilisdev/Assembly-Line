@@ -96,6 +96,10 @@ minecraft {
 
 dependencies {
 	minecraft 'net.minecraftforge:forge:1.18.1-39.1.2'
+	def Folder = new File("C:/AmpzLibz")
+    if(Folder.exists()) {
+        implementation fileTree(Folder)
+    }
     //makes testing easier; no JEI plugin for mod currently
 	compileOnly fg.deobf("mezz.jei:jei-1.18.1:9.1.0.41:api")
     runtimeOnly fg.deobf("mezz.jei:jei-1.18.1:9.1.0.41")
