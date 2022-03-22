@@ -17,6 +17,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class TileSorterBelt extends GenericTile {
 	public int currentSpread = 0;
@@ -68,14 +69,14 @@ public class TileSorterBelt extends GenericTile {
 		if (currentSpread == 0 || currentSpread == 16) {
 			if (electro.getJoulesStored() < Constants.SORTERBELT_USAGE) {
 				if (running) {
-					level.setBlock(worldPosition, DeferredRegisters.blockSorterBelt.defaultBlockState().setValue(GenericEntityBlock.FACING, facing), 2 | 16);
+					level.setBlock(worldPosition, DeferredRegisters.blockSorterBelt.defaultBlockState().setValue(GenericEntityBlock.FACING, facing).setValue(BlockStateProperties.WATERLOGGED, getBlockState().getValue(BlockStateProperties.WATERLOGGED)), 2 | 16);
 					currentSpread = 0;
 				}
 			} else if (lastTime != level.getGameTime()) {
 				electro.joules(electro.getJoulesStored() - Constants.SORTERBELT_USAGE);
 				lastTime = level.getGameTime();
 				if (!running) {
-					level.setBlock(worldPosition, DeferredRegisters.blockSorterBeltRunning.defaultBlockState().setValue(GenericEntityBlock.FACING, facing), 2 | 16);
+					level.setBlock(worldPosition, DeferredRegisters.blockSorterBeltRunning.defaultBlockState().setValue(GenericEntityBlock.FACING, facing).setValue(BlockStateProperties.WATERLOGGED, getBlockState().getValue(BlockStateProperties.WATERLOGGED)), 2 | 16);
 				}
 				currentSpread = 16;
 			}
