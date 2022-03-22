@@ -35,6 +35,11 @@
   "label.fullbonemeal" : "Bone Full",
   "label.regbonemeal" : "Bone Once",
   "label.refillempty" : "Refill Empty",
-  "label.ignoreempty" : "Skip Empty"
+  "label.ignoreempty" : "Skip Empty",
+  
+  "guidebook.assemblyline.moduletitle" : "Assembly Line",
+  "guidebook.assemblyline.chapter.conveyers" : "Conveyers",
+  "guidebook.assemblyline.chapter.machines" : "Machines",
+  "guidebook.assemblyline.chapter.otherblocks" : "Other Blocks"
   
 }
