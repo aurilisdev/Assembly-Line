@@ -2,6 +2,7 @@ package assemblyline.client;
 
 import assemblyline.DeferredRegisters;
 import assemblyline.References;
+import assemblyline.client.guidebook.ModuleAssemblyLine;
 import assemblyline.client.render.tile.RenderBlockBreaker;
 import assemblyline.client.render.tile.RenderConveyorBelt;
 import assemblyline.client.render.tile.RenderCrate;
@@ -13,6 +14,7 @@ import assemblyline.client.screen.ScreenBlockPlacer;
 import assemblyline.client.screen.ScreenFarmer;
 import assemblyline.client.screen.ScreenFrontHarvester;
 import assemblyline.client.screen.ScreenSorterBelt;
+import electrodynamics.client.guidebook.ScreenGuidebook;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -101,6 +103,8 @@ public class ClientRegister {
 		MenuScreens.register(DeferredRegisters.CONTAINER_BLOCKBREAKER.get(), ScreenBlockBreaker::new);
 		MenuScreens.register(DeferredRegisters.CONTAINER_HARVESTER.get(), ScreenFrontHarvester::new);
 		MenuScreens.register(DeferredRegisters.CONTAINER_FARMER.get(), ScreenFarmer::new);
+		
+		ScreenGuidebook.addGuidebookModule(new ModuleAssemblyLine());
 	}
 
 	@SubscribeEvent
