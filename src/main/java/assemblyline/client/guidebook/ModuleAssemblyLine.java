@@ -6,7 +6,6 @@ import java.util.List;
 import assemblyline.References;
 import assemblyline.client.guidebook.chapters.ChapterConveyers;
 import assemblyline.client.guidebook.chapters.ChapterMachines;
-import assemblyline.client.guidebook.chapters.ChapterOtherBlocks;
 import electrodynamics.client.guidebook.utils.ImageWrapperObject;
 import electrodynamics.client.guidebook.utils.components.Chapter;
 import electrodynamics.client.guidebook.utils.components.Module;
@@ -20,7 +19,6 @@ public class ModuleAssemblyLine extends Module {
 		List<Chapter> chapters = new ArrayList<>();
 		chapters.add(new ChapterConveyers());
 		chapters.add(new ChapterMachines());
-		chapters.add(new ChapterOtherBlocks());
 		return chapters;
 	}
 

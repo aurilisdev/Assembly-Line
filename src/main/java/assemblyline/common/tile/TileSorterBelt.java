@@ -81,7 +81,7 @@ public class TileSorterBelt extends GenericTile {
 				currentSpread = 16;
 			}
 		} else if (currentSpread > 0 && !running) {
-			level.setBlock(worldPosition, DeferredRegisters.blockSorterBeltRunning.defaultBlockState().setValue(GenericEntityBlock.FACING, facing), 2 | 16);
+			level.setBlock(worldPosition, DeferredRegisters.blockSorterBeltRunning.defaultBlockState().setValue(GenericEntityBlock.FACING, facing).setValue(BlockStateProperties.WATERLOGGED, getBlockState().getValue(BlockStateProperties.WATERLOGGED)), 2 | 16);
 		}
 	}
 
