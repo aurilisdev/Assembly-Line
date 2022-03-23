@@ -15,11 +15,11 @@ import electrodynamics.client.guidebook.utils.components.Page;
 public class ChapterConveyers extends Chapter {
 
 	private static final ItemWrapperObject LOGO = new ItemWrapperObject(17, 60, 2.0F, ItemUtils.fromBlock(DeferredRegisters.blockConveyorBelt));
-	
+
 	@Override
 	protected List<Page> genPages() {
 		List<Page> pages = new ArrayList<>();
-		
+
 		pages.add(new Page(new TextWrapperObject[] {
 				//
 				new TextWrapperObject(10, 40, 4210752, "guidebook.assemblyline.chapter.conveyers.p1l1"),
@@ -51,7 +51,7 @@ public class ChapterConveyers extends Chapter {
 				new TextWrapperObject(10, 170, 4210752, "guidebook.assemblyline.chapter.conveyers.p1l14"),
 				//
 				new TextWrapperObject(10, 180, 4210752, "guidebook.assemblyline.chapter.conveyers.p1l15") }));
-		
+
 		pages.add(new Page(new TextWrapperObject[] {
 				//
 				new TextWrapperObject(10, 40, 4210752, "guidebook.assemblyline.chapter.conveyers.p2l1"),
@@ -83,19 +83,19 @@ public class ChapterConveyers extends Chapter {
 				new TextWrapperObject(10, 170, 4210752, "guidebook.assemblyline.chapter.conveyers.p2l14"),
 				//
 				new TextWrapperObject(10, 180, 4210752, "guidebook.assemblyline.chapter.conveyers.p2l15") }));
-		
+
 		pages.add(new Page(new ImageWrapperObject[] {
 				//
 				new ImageWrapperObject(12, 38, 0, 0, 150, 79, 150, 79, References.ID + ":textures/screen/guidebook/conveyerhorizontal.png"),
 				//
 				new ImageWrapperObject(12, 117, 0, 0, 150, 79, 150, 79, References.ID + ":textures/screen/guidebook/conveyerdiagonalup.png") }));
-		
+
 		pages.add(new Page(new ImageWrapperObject[] {
 				//
 				new ImageWrapperObject(12, 38, 0, 0, 150, 79, 150, 79, References.ID + ":textures/screen/guidebook/conveyerdiagonaldown.png"),
 				//
 				new ImageWrapperObject(12, 117, 0, 0, 150, 79, 150, 79, References.ID + ":textures/screen/guidebook/conveyervertical.png") }));
-		
+
 		pages.add(new Page(new TextWrapperObject[] {
 				//
 				new TextWrapperObject(10, 40, 4210752, "guidebook.assemblyline.chapter.conveyers.p5l1"),
@@ -127,30 +127,30 @@ public class ChapterConveyers extends Chapter {
 				new TextWrapperObject(10, 170, 4210752, "guidebook.assemblyline.chapter.conveyers.p5l14"),
 				//
 				new TextWrapperObject(10, 180, 4210752, "guidebook.assemblyline.chapter.conveyers.p5l15") }));
-		
+
 		pages.add(new Page(new ImageWrapperObject[] {
 				//
-				new ImageWrapperObject(12, 117, 0, 0, 150, 79, 150, 79, References.ID + ":textures/screen/guidebook/sorterbelt1.png") 
-			}, new TextWrapperObject[] {
-				//
-				new TextWrapperObject(10, 40, 4210752, "guidebook.assemblyline.chapter.conveyers.p6l1"),
-				//
-				new TextWrapperObject(10, 50, 4210752, "guidebook.assemblyline.chapter.conveyers.p6l2"),
-				//
-				new TextWrapperObject(10, 60, 4210752, "guidebook.assemblyline.chapter.conveyers.p6l3"),
-				//
-				new TextWrapperObject(10, 70, 4210752, "guidebook.assemblyline.chapter.conveyers.p6l4"),
-				//
-				new TextWrapperObject(10, 80, 4210752, "guidebook.assemblyline.chapter.conveyers.p6l5"),
-				//
-				new TextWrapperObject(10, 90, 4210752, "guidebook.assemblyline.chapter.conveyers.p6l6")}));
-		
+				new ImageWrapperObject(12, 117, 0, 0, 150, 79, 150, 79, References.ID + ":textures/screen/guidebook/sorterbelt1.png") },
+				new TextWrapperObject[] {
+						//
+						new TextWrapperObject(10, 40, 4210752, "guidebook.assemblyline.chapter.conveyers.p6l1"),
+						//
+						new TextWrapperObject(10, 50, 4210752, "guidebook.assemblyline.chapter.conveyers.p6l2"),
+						//
+						new TextWrapperObject(10, 60, 4210752, "guidebook.assemblyline.chapter.conveyers.p6l3"),
+						//
+						new TextWrapperObject(10, 70, 4210752, "guidebook.assemblyline.chapter.conveyers.p6l4"),
+						//
+						new TextWrapperObject(10, 80, 4210752, "guidebook.assemblyline.chapter.conveyers.p6l5"),
+						//
+						new TextWrapperObject(10, 90, 4210752, "guidebook.assemblyline.chapter.conveyers.p6l6") }));
+
 		pages.add(new Page(new ImageWrapperObject[] {
 				//
 				new ImageWrapperObject(12, 38, 0, 0, 150, 79, 150, 79, References.ID + ":textures/screen/guidebook/sorterbelt2.png"),
 				//
 				new ImageWrapperObject(12, 117, 0, 0, 150, 79, 150, 79, References.ID + ":textures/screen/guidebook/sorterbelt3.png") }));
-		
+
 		pages.add(new Page(new TextWrapperObject[] {
 				//
 				new TextWrapperObject(10, 40, 4210752, "guidebook.assemblyline.chapter.conveyers.p8l1"),
@@ -167,14 +167,14 @@ public class ChapterConveyers extends Chapter {
 				//
 				new TextWrapperObject(10, 100, 4210752, "guidebook.assemblyline.chapter.conveyers.p8l7"),
 				//
-				new TextWrapperObject(10, 110, 4210752, "guidebook.assemblyline.chapter.conveyers.p8l8")}));
-		
+				new TextWrapperObject(10, 110, 4210752, "guidebook.assemblyline.chapter.conveyers.p8l8") }));
+
 		pages.add(new Page(new ImageWrapperObject[] {
 				//
 				new ImageWrapperObject(12, 38, 0, 0, 150, 79, 150, 79, References.ID + ":textures/screen/guidebook/detector1.png"),
 				//
 				new ImageWrapperObject(12, 117, 0, 0, 150, 79, 150, 79, References.ID + ":textures/screen/guidebook/detector2.png") }));
-		
+
 		return pages;
 	}
 

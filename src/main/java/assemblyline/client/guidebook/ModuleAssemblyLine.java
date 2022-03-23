@@ -13,7 +13,7 @@ import electrodynamics.client.guidebook.utils.components.Module;
 public class ModuleAssemblyLine extends Module {
 
 	private static final ImageWrapperObject LOGO = new ImageWrapperObject(10, 38, 0, 0, 32, 32, 32, 32, References.ID + ":textures/screen/guidebook/assemblylinelogo.png");
-	
+
 	@Override
 	protected List<Chapter> genChapters() {
 		List<Chapter> chapters = new ArrayList<>();

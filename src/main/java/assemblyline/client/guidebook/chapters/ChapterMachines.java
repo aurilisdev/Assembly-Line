@@ -14,11 +14,11 @@ import net.minecraft.ChatFormatting;
 public class ChapterMachines extends Chapter {
 
 	private static final ItemWrapperObject LOGO = new ItemWrapperObject(17, 60, 2.0F, ItemUtils.fromBlock(DeferredRegisters.blockFarmer));
-	
+
 	@Override
 	protected List<Page> genPages() {
 		List<Page> pages = new ArrayList<>();
-		
+
 		pages.add(new Page(new TextWrapperObject[] {
 				//
 				new TextWrapperObject(45, 53, 4210752, "guidebook.assemblyline.chapter.machines.blockbreaktitle").setTextStyles(ChatFormatting.UNDERLINE),
@@ -35,11 +35,11 @@ public class ChapterMachines extends Chapter {
 				//
 				new TextWrapperObject(10, 130, 4210752, "guidebook.assemblyline.chapter.machines.p1l6"),
 				//
-				new TextWrapperObject(10, 140, 4210752, "guidebook.assemblyline.chapter.machines.p1l7")},
+				new TextWrapperObject(10, 140, 4210752, "guidebook.assemblyline.chapter.machines.p1l7") },
 				new ItemWrapperObject[] {
 						//
 						new ItemWrapperObject(17, 50, 2.0F, ItemUtils.fromBlock(DeferredRegisters.blockBlockBreaker)) }));
-		
+
 		pages.add(new Page(new TextWrapperObject[] {
 				//
 				new TextWrapperObject(45, 53, 4210752, "guidebook.assemblyline.chapter.machines.blockplacetitle").setTextStyles(ChatFormatting.UNDERLINE),
@@ -56,11 +56,11 @@ public class ChapterMachines extends Chapter {
 				//
 				new TextWrapperObject(10, 130, 4210752, "guidebook.assemblyline.chapter.machines.p2l6"),
 				//
-				new TextWrapperObject(10, 140, 4210752, "guidebook.assemblyline.chapter.machines.p2l7")},
+				new TextWrapperObject(10, 140, 4210752, "guidebook.assemblyline.chapter.machines.p2l7") },
 				new ItemWrapperObject[] {
 						//
 						new ItemWrapperObject(17, 50, 2.0F, ItemUtils.fromBlock(DeferredRegisters.blockBlockPlacer)) }));
-		
+
 		pages.add(new Page(new TextWrapperObject[] {
 				//
 				new TextWrapperObject(45, 53, 4210752, "guidebook.assemblyline.chapter.machines.ranchertitle").setTextStyles(ChatFormatting.UNDERLINE),
@@ -81,11 +81,11 @@ public class ChapterMachines extends Chapter {
 				//
 				new TextWrapperObject(10, 150, 4210752, "guidebook.assemblyline.chapter.machines.p3l8"),
 				//
-				new TextWrapperObject(10, 160, 4210752, "guidebook.assemblyline.chapter.machines.p3l9")},
+				new TextWrapperObject(10, 160, 4210752, "guidebook.assemblyline.chapter.machines.p3l9") },
 				new ItemWrapperObject[] {
 						//
 						new ItemWrapperObject(17, 50, 2.0F, ItemUtils.fromBlock(DeferredRegisters.blockRancher)) }));
-		
+
 		pages.add(new Page(new TextWrapperObject[] {
 				//
 				new TextWrapperObject(45, 53, 4210752, "guidebook.assemblyline.chapter.machines.grindertitle").setTextStyles(ChatFormatting.UNDERLINE),
@@ -108,11 +108,11 @@ public class ChapterMachines extends Chapter {
 				//
 				new TextWrapperObject(10, 160, 4210752, "guidebook.assemblyline.chapter.machines.p4l9"),
 				//
-				new TextWrapperObject(10, 170, 4210752, "guidebook.assemblyline.chapter.machines.p4l10")},
+				new TextWrapperObject(10, 170, 4210752, "guidebook.assemblyline.chapter.machines.p4l10") },
 				new ItemWrapperObject[] {
 						//
 						new ItemWrapperObject(17, 50, 2.0F, ItemUtils.fromBlock(DeferredRegisters.blockMobGrinder)) }));
-		
+
 		pages.add(new Page(new TextWrapperObject[] {
 				//
 				new TextWrapperObject(45, 53, 4210752, "guidebook.assemblyline.chapter.machines.farmertitle").setTextStyles(ChatFormatting.UNDERLINE),
@@ -137,11 +137,11 @@ public class ChapterMachines extends Chapter {
 				//
 				new TextWrapperObject(10, 170, 4210752, "guidebook.assemblyline.chapter.machines.p5l10"),
 				//
-				new TextWrapperObject(10, 180, 4210752, "guidebook.assemblyline.chapter.machines.p5l11")},
+				new TextWrapperObject(10, 180, 4210752, "guidebook.assemblyline.chapter.machines.p5l11") },
 				new ItemWrapperObject[] {
 						//
 						new ItemWrapperObject(17, 50, 2.0F, ItemUtils.fromBlock(DeferredRegisters.blockFarmer)) }));
-		
+
 		pages.add(new Page(new TextWrapperObject[] {
 				//
 				new TextWrapperObject(10, 40, 4210752, "guidebook.assemblyline.chapter.machines.p6l1"),
@@ -172,8 +172,8 @@ public class ChapterMachines extends Chapter {
 				//
 				new TextWrapperObject(10, 170, 4210752, "guidebook.assemblyline.chapter.machines.p6l14"),
 				//
-				new TextWrapperObject(10, 180, 4210752, "guidebook.assemblyline.chapter.machines.p6l15")}));
-		
+				new TextWrapperObject(10, 180, 4210752, "guidebook.assemblyline.chapter.machines.p6l15") }));
+
 		return pages;
 	}
 
@@ -186,5 +186,5 @@ public class ChapterMachines extends Chapter {
 	public String getTitleKey() {
 		return "guidebook.assemblyline.chapter.machines";
 	}
-	
+
 }

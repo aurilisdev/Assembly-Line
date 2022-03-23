@@ -103,7 +103,7 @@ public class ClientRegister {
 		MenuScreens.register(DeferredRegisters.CONTAINER_BLOCKBREAKER.get(), ScreenBlockBreaker::new);
 		MenuScreens.register(DeferredRegisters.CONTAINER_HARVESTER.get(), ScreenFrontHarvester::new);
 		MenuScreens.register(DeferredRegisters.CONTAINER_FARMER.get(), ScreenFarmer::new);
-		
+
 		ScreenGuidebook.addGuidebookModule(new ModuleAssemblyLine());
 	}
 
