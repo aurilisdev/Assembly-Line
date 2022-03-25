@@ -53,10 +53,10 @@ public class RenderConveyorBelt implements BlockEntityRenderer<TileConveyorBelt>
 		case Horizontal:
 			matrixStackIn.translate(itemVec.x(), itemVec.y() + (stack.getItem() instanceof BlockItem ? 0.167 : 5.0f / 16.0f) + move.y(), itemVec.z());
 			matrixStackIn.scale(0.35f, 0.35f, 0.35f);
+			matrixStackIn.translate(0, 5.0f / (16.0f * 0.35f), 0);
 			if (!(stack.getItem() instanceof BlockItem)) {
 				matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(90));
 			}
-			matrixStackIn.translate(0, 5.0f / (16.0f * 0.35f), 0);
 			break;
 		case SlopedDown:
 			matrixStackIn.translate(itemVec.x(), itemVec.y() + (stack.getItem() instanceof BlockItem ? 0.167 : 2.0f / 16.0f), itemVec.z());
