@@ -106,9 +106,7 @@ public class ChapterMachines extends Chapter {
 				//
 				new TextWrapperObject(10, 150, 4210752, "guidebook.assemblyline.chapter.machines.p4l8"),
 				//
-				new TextWrapperObject(10, 160, 4210752, "guidebook.assemblyline.chapter.machines.p4l9"),
-				//
-				new TextWrapperObject(10, 170, 4210752, "guidebook.assemblyline.chapter.machines.p4l10") },
+				new TextWrapperObject(10, 160, 4210752, "guidebook.assemblyline.chapter.machines.p4l9")},
 				new ItemWrapperObject[] {
 						//
 						new ItemWrapperObject(17, 50, 2.0F, ItemUtils.fromBlock(DeferredRegisters.blockMobGrinder)) }));
