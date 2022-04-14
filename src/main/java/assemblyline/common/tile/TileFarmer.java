@@ -31,7 +31,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag.Named;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.ItemStack;
@@ -49,6 +49,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.IPlantable;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.tags.ITag;
 
 public class TileFarmer extends GenericTile {
 
@@ -213,15 +215,17 @@ public class TileFarmer extends GenericTile {
 				}
 			} else if (checkBlock instanceof NetherWartBlock wart && checkState.getValue(NetherWartBlock.AGE).intValue() == NetherWartBlock.MAX_AGE) {
 				breakBlock(checkState, world, checkPos, inv, electro, SoundEvents.NETHER_WART_BREAK);
-			} else if (BlockTags.LOGS.contains(checkBlock)) {
+			} else if (ForgeRegistries.BLOCKS.tags().getTag(BlockTags.LOGS).contains(checkBlock)) {
 				handleTree(world, checkPos, inv, electro);
 			}
 		}
 	}
 
 	private void handleTree(Level world, BlockPos checkPos, ComponentInventory inv, ComponentElectrodynamic electro) {
-		Named<Block> logs = BlockTags.LOGS;
-		Named<Block> leaves = BlockTags.LEAVES;
+		TagKey<Block> logsTag = BlockTags.LOGS;
+		TagKey<Block> leavesTag = BlockTags.LEAVES;
+		ITag<Block> logs = ForgeRegistries.BLOCKS.tags().getTag(logsTag);
+		ITag<Block> leaves = ForgeRegistries.BLOCKS.tags().getTag(leavesTag);
 		int heightOffset = 0;
 		int finalYOffset = 15;
 		BlockPos currPos = checkPos.above();

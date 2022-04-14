@@ -37,7 +37,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistryEntry;
+import net.minecraftforge.registries.ForgeRegistryEntry;
 import net.minecraftforge.registries.RegistryObject;
 
 public class DeferredRegisters {
@@ -45,13 +45,13 @@ public class DeferredRegisters {
 	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, References.ID);
 	public static final DeferredRegister<BlockEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, References.ID);
 	public static final DeferredRegister<MenuType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, References.ID);
-	public static BlockConveyorBelt blockConveyorBelt = new BlockConveyorBelt();
-	public static BlockSorterBelt blockSorterBelt = new BlockSorterBelt(false);
-	public static BlockSorterBelt blockSorterBeltRunning = new BlockSorterBelt(true);
-	public static BlockDetector blockDetector = new BlockDetector();
-	public static BlockCrate blockCrate = new BlockCrate(64);
-	public static BlockCrate blockCrateMedium = new BlockCrate(128);
-	public static BlockCrate blockCrateLarge = new BlockCrate(256);
+	public static BlockConveyorBelt blockConveyorBelt;
+	public static BlockSorterBelt blockSorterBelt;
+	public static BlockSorterBelt blockSorterBeltRunning;
+	public static BlockDetector blockDetector;
+	public static BlockCrate blockCrate;
+	public static BlockCrate blockCrateMedium;
+	public static BlockCrate blockCrateLarge;
 	public static GenericMachineBlock blockAutocrafter;
 	public static BlockBlockBreaker blockBlockBreaker;
 	public static BlockBlockPlacer blockBlockPlacer;
@@ -60,48 +60,48 @@ public class DeferredRegisters {
 	public static BlockFarmer blockFarmer;
 
 	static {
-		BLOCKS.register("conveyorbelt", supplier(blockConveyorBelt));
-		BLOCKS.register("sorterbelt", supplier(blockSorterBelt));
-		BLOCKS.register("sorterbeltrunning", supplier(blockSorterBeltRunning));
-		BLOCKS.register("detector", supplier(blockDetector));
-		BLOCKS.register("crate", supplier(blockCrate));
-		BLOCKS.register("cratemedium", supplier(blockCrateMedium));
-		BLOCKS.register("cratelarge", supplier(blockCrateLarge));
-		BLOCKS.register("autocrafter", supplier(blockAutocrafter = new GenericMachineBlock(TileAutocrafter::new)));
-		BLOCKS.register("blockbreaker", supplier(blockBlockBreaker = new BlockBlockBreaker()));
-		BLOCKS.register("blockplacer", supplier(blockBlockPlacer = new BlockBlockPlacer()));
-		BLOCKS.register("rancher", supplier(blockRancher = new BlockRancher()));
-		BLOCKS.register("mobgrinder", supplier(blockMobGrinder = new BlockMobGrinder()));
-		BLOCKS.register("farmer", supplier(blockFarmer = new BlockFarmer()));
-		ITEMS.register("conveyorbelt", supplier(new BlockItemDescriptable(blockConveyorBelt, new Properties().tab(References.ASSEMBLYLINETAB))));
-		ITEMS.register("sorterbelt", supplier(new BlockItemDescriptable(blockSorterBelt, new Properties().tab(References.ASSEMBLYLINETAB))));
-		ITEMS.register("sorterbeltrunning", supplier(new BlockItemDescriptable(blockSorterBeltRunning, new Properties())));
-		ITEMS.register("detector", supplier(new BlockItemDescriptable(blockDetector, new Properties().tab(References.ASSEMBLYLINETAB))));
-		ITEMS.register("crate", supplier(new BlockItemDescriptable(blockCrate, new Properties().tab(References.ASSEMBLYLINETAB))));
-		ITEMS.register("cratemedium", supplier(new BlockItemDescriptable(blockCrateMedium, new Properties().tab(References.ASSEMBLYLINETAB))));
-		ITEMS.register("cratelarge", supplier(new BlockItemDescriptable(blockCrateLarge, new Properties().tab(References.ASSEMBLYLINETAB))));
-		ITEMS.register("autocrafter", supplier(new BlockItemDescriptable(blockAutocrafter, new Properties().tab(References.ASSEMBLYLINETAB))));
-		ITEMS.register("blockbreaker", supplier(new BlockItemDescriptable(blockBlockBreaker, new Properties().tab(References.ASSEMBLYLINETAB))));
-		ITEMS.register("blockplacer", supplier(new BlockItemDescriptable(blockBlockPlacer, new Properties().tab(References.ASSEMBLYLINETAB))));
-		ITEMS.register("rancher", supplier(new BlockItemDescriptable(blockRancher, new Properties().tab(References.ASSEMBLYLINETAB))));
-		ITEMS.register("mobgrinder", supplier(new BlockItemDescriptable(blockMobGrinder, new Properties().tab(References.ASSEMBLYLINETAB))));
-		ITEMS.register("farmer", supplier(new BlockItemDescriptable(blockFarmer, new Properties().tab(References.ASSEMBLYLINETAB))));
+		BLOCKS.register("conveyorbelt", supplier(() -> blockConveyorBelt = new BlockConveyorBelt()));
+		BLOCKS.register("sorterbelt", supplier(() -> blockSorterBelt = new BlockSorterBelt(false)));
+		BLOCKS.register("sorterbeltrunning", supplier(() -> blockSorterBeltRunning = new BlockSorterBelt(true)));
+		BLOCKS.register("detector", supplier(() -> blockDetector = new BlockDetector()));
+		BLOCKS.register("crate", supplier(() -> blockCrate = new BlockCrate(64)));
+		BLOCKS.register("cratemedium", supplier(() -> blockCrateMedium = new BlockCrate(128)));
+		BLOCKS.register("cratelarge", supplier(() -> blockCrateLarge = new BlockCrate(256)));
+		BLOCKS.register("autocrafter", supplier(() -> blockAutocrafter = new GenericMachineBlock(TileAutocrafter::new)));
+		BLOCKS.register("blockbreaker", supplier(() -> blockBlockBreaker = new BlockBlockBreaker()));
+		BLOCKS.register("blockplacer", supplier(() -> blockBlockPlacer = new BlockBlockPlacer()));
+		BLOCKS.register("rancher", supplier(() -> blockRancher = new BlockRancher()));
+		BLOCKS.register("mobgrinder", supplier(() -> blockMobGrinder = new BlockMobGrinder()));
+		BLOCKS.register("farmer", supplier(() -> blockFarmer = new BlockFarmer()));
+		ITEMS.register("conveyorbelt", supplier(() -> new BlockItemDescriptable(() -> blockConveyorBelt, new Properties().tab(References.ASSEMBLYLINETAB))));
+		ITEMS.register("sorterbelt", supplier(() -> new BlockItemDescriptable(() -> blockSorterBelt, new Properties().tab(References.ASSEMBLYLINETAB))));
+		ITEMS.register("sorterbeltrunning", supplier(() -> new BlockItemDescriptable(() -> blockSorterBeltRunning, new Properties())));
+		ITEMS.register("detector", supplier(() -> new BlockItemDescriptable(() -> blockDetector, new Properties().tab(References.ASSEMBLYLINETAB))));
+		ITEMS.register("crate", supplier(() -> new BlockItemDescriptable(() -> blockCrate, new Properties().tab(References.ASSEMBLYLINETAB))));
+		ITEMS.register("cratemedium", supplier(() -> new BlockItemDescriptable(() -> blockCrateMedium, new Properties().tab(References.ASSEMBLYLINETAB))));
+		ITEMS.register("cratelarge", supplier(() -> new BlockItemDescriptable(() -> blockCrateLarge, new Properties().tab(References.ASSEMBLYLINETAB))));
+		ITEMS.register("autocrafter", supplier(() -> new BlockItemDescriptable(() -> blockAutocrafter, new Properties().tab(References.ASSEMBLYLINETAB))));
+		ITEMS.register("blockbreaker", supplier(() -> new BlockItemDescriptable(() -> blockBlockBreaker, new Properties().tab(References.ASSEMBLYLINETAB))));
+		ITEMS.register("blockplacer", supplier(() -> new BlockItemDescriptable(() -> blockBlockPlacer, new Properties().tab(References.ASSEMBLYLINETAB))));
+		ITEMS.register("rancher", supplier(() -> new BlockItemDescriptable(() -> blockRancher, new Properties().tab(References.ASSEMBLYLINETAB))));
+		ITEMS.register("mobgrinder", supplier(() -> new BlockItemDescriptable(() -> blockMobGrinder, new Properties().tab(References.ASSEMBLYLINETAB))));
+		ITEMS.register("farmer", supplier(() -> new BlockItemDescriptable(() -> blockFarmer, new Properties().tab(References.ASSEMBLYLINETAB))));
 
 		// MACHINES
-		BlockItemDescriptable.addDescription(blockConveyorBelt, "|translate|tooltip.voltage.120");
-		BlockItemDescriptable.addDescription(blockSorterBelt, "|translate|tooltip.voltage.120");
-		BlockItemDescriptable.addDescription(blockAutocrafter, "|translate|tooltip.voltage.120");
-		BlockItemDescriptable.addDescription(blockBlockPlacer, "|translate|tooltip.voltage.120");
-		BlockItemDescriptable.addDescription(blockBlockBreaker, "|translate|tooltip.voltage.120");
-		BlockItemDescriptable.addDescription(blockRancher, "|translate|tooltip.voltage.120");
-		BlockItemDescriptable.addDescription(blockMobGrinder, "|translate|tooltip.voltage.120");
-		BlockItemDescriptable.addDescription(blockFarmer, "|translate|tooltip.voltage.120");
+		BlockItemDescriptable.addDescription(() -> blockConveyorBelt, "|translate|tooltip.voltage.120");
+		BlockItemDescriptable.addDescription(() -> blockSorterBelt, "|translate|tooltip.voltage.120");
+		BlockItemDescriptable.addDescription(() -> blockAutocrafter, "|translate|tooltip.voltage.120");
+		BlockItemDescriptable.addDescription(() -> blockBlockPlacer, "|translate|tooltip.voltage.120");
+		BlockItemDescriptable.addDescription(() -> blockBlockBreaker, "|translate|tooltip.voltage.120");
+		BlockItemDescriptable.addDescription(() -> blockRancher, "|translate|tooltip.voltage.120");
+		BlockItemDescriptable.addDescription(() -> blockMobGrinder, "|translate|tooltip.voltage.120");
+		BlockItemDescriptable.addDescription(() -> blockFarmer, "|translate|tooltip.voltage.120");
 
 		// Misc
-		BlockItemDescriptable.addDescription(blockDetector, "|translate|tooltip.detector");
-		BlockItemDescriptable.addDescription(blockCrate, "|translate|tooltip.crate");
-		BlockItemDescriptable.addDescription(blockCrateMedium, "|translate|tooltip.cratemedium");
-		BlockItemDescriptable.addDescription(blockCrateLarge, "|translate|tooltip.cratelarge");
+		BlockItemDescriptable.addDescription(() -> blockDetector, "|translate|tooltip.detector");
+		BlockItemDescriptable.addDescription(() -> blockCrate, "|translate|tooltip.crate");
+		BlockItemDescriptable.addDescription(() -> blockCrateMedium, "|translate|tooltip.cratemedium");
+		BlockItemDescriptable.addDescription(() -> blockCrateLarge, "|translate|tooltip.cratelarge");
 	}
 	public static final RegistryObject<BlockEntityType<TileConveyorBelt>> TILE_BELT = TILES.register("belt", () -> new BlockEntityType<>(TileConveyorBelt::new, Sets.newHashSet(blockConveyorBelt), null));
 	public static final RegistryObject<BlockEntityType<TileDetector>> TILE_DETECTOR = TILES.register("detector", () -> new BlockEntityType<>(TileDetector::new, Sets.newHashSet(blockDetector), null));
@@ -121,7 +121,8 @@ public class DeferredRegisters {
 	public static final RegistryObject<MenuType<ContainerFrontHarvester>> CONTAINER_HARVESTER = CONTAINERS.register("harvester", () -> new MenuType<>(ContainerFrontHarvester::new));
 	public static final RegistryObject<MenuType<ContainerFarmer>> CONTAINER_FARMER = CONTAINERS.register("farmer", () -> new MenuType<>(ContainerFarmer::new));
 
-	private static <T extends IForgeRegistryEntry<T>> Supplier<? extends T> supplier(T entry) {
-		return () -> entry;
+	private static <T extends ForgeRegistryEntry<T>> Supplier<? extends T> supplier(Supplier<? extends T> entry) {
+		return entry;
 	}
+
 }
