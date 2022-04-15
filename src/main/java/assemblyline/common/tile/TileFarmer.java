@@ -155,6 +155,7 @@ public class TileFarmer extends GenericTile {
 		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
 		// faster starting speed, but the fastest speed is one block in area checked per tick
 		if (electro.getJoulesStored() >= Constants.MOBGRINDER_USAGE) {
+			electro.extractPower(TransferPack.joulesVoltage(Constants.MOBGRINDER_USAGE, electro.getVoltage()), false);
 			if (ticksSinceCheck == 0) {
 				BlockPos machinePos = getBlockPos();
 				BlockPos startPos = new BlockPos(machinePos.getX() - currentWidth / 2, machinePos.getY() + OPERATION_OFFSET, machinePos.getZ() - currentLength / 2);
