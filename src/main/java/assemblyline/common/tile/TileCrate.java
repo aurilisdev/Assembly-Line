@@ -37,6 +37,7 @@ public class TileCrate extends GenericTile {
 			set.add(i);
 		}
 		if (!updatingWithScheduler) {
+			updatingWithScheduler = true;
 			Scheduler.schedule(1, () -> {
 				this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
 				updatingWithScheduler = false;	
