@@ -19,7 +19,7 @@ public class TileCrate extends GenericTile {
 	private int lastCheckCount = 0;
 	private int count = 0;
 	private boolean updatingWithScheduler = false;
-	
+
 	public TileCrate(BlockPos worldPosition, BlockState blockState) {
 		this(64, worldPosition, blockState);
 	}
@@ -40,8 +40,8 @@ public class TileCrate extends GenericTile {
 			updatingWithScheduler = true;
 			Scheduler.schedule(1, () -> {
 				this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
-				updatingWithScheduler = false;	
-				});
+				updatingWithScheduler = false;
+			});
 		}
 		return set;
 	}
