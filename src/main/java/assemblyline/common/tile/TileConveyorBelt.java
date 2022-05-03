@@ -30,6 +30,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class TileConveyorBelt extends GenericTile {
 	public int currentSpread = 0;
+	public int wait = 0;
 	public boolean running;
 	public ConveyorType conveyorType = ConveyorType.Horizontal;
 	public ArrayList<TileConveyorBelt> inQueue = new ArrayList<>();
@@ -129,7 +130,6 @@ public class TileConveyorBelt extends GenericTile {
 						ItemStack returned = handler.extractItem(slot, 64, false);
 						if (!returned.isEmpty()) {
 							addItemOnBelt(returned);
-							break;
 						}
 					}
 				}
@@ -203,7 +203,13 @@ public class TileConveyorBelt extends GenericTile {
 					LazyOptional<IItemHandler> handlerOptional = nextBlockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction);
 					ComponentInventory inventory = getComponent(ComponentType.Inventory);
 					if (handlerOptional.isPresent()) {
-						putItemsIntoInventory(handlerOptional, inventory);
+						if (wait == 0) {
+							if (putItemsIntoInventory(handlerOptional, inventory) == 0) {
+								wait = 20;
+							}
+						} else {
+							wait--;
+						}
 					} else {
 						dropItem(stackOnBelt, move);
 						this.<ComponentInventory>getComponent(ComponentType.Inventory).setItem(0, ItemStack.EMPTY);
@@ -232,13 +238,15 @@ public class TileConveyorBelt extends GenericTile {
 		level.addFreshEntity(entity);
 	}
 
-	private static void putItemsIntoInventory(LazyOptional<IItemHandler> handlerOptional, ComponentInventory inventory) {
+	private static int putItemsIntoInventory(LazyOptional<IItemHandler> handlerOptional, ComponentInventory inventory) {
 		IItemHandler handler = handlerOptional.resolve().get();
+		int amount = 0;
 		for (int indexHere = 0; indexHere < inventory.getContainerSize(); indexHere++) {
 			ItemStack stackHere = inventory.getItem(indexHere);
 			if (!stackHere.isEmpty()) {
 				for (int indexThere = 0; indexThere < handler.getSlots(); indexThere++) {
 					ItemStack set = handler.insertItem(indexThere, stackHere, false);
+					amount += stackHere.getCount() - set.getCount();
 					inventory.setItem(indexHere, set);
 					stackHere = set;
 					if (inventory.getItem(indexHere).isEmpty()) {
@@ -247,6 +255,7 @@ public class TileConveyorBelt extends GenericTile {
 				}
 			}
 		}
+		return amount;
 	}
 
 	public BlockPos getNextPos() {
