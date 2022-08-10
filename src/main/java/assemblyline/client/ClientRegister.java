@@ -6,6 +6,7 @@ import assemblyline.client.guidebook.ModuleAssemblyLine;
 import assemblyline.client.render.tile.RenderBlockBreaker;
 import assemblyline.client.render.tile.RenderConveyorBelt;
 import assemblyline.client.render.tile.RenderCrate;
+import assemblyline.client.render.tile.RenderFarmer;
 import assemblyline.client.render.tile.RenderMobGrinder;
 import assemblyline.client.render.tile.RenderRancher;
 import assemblyline.client.screen.ScreenAutocrafter;
@@ -114,5 +115,6 @@ public class ClientRegister {
 		event.registerBlockEntityRenderer(DeferredRegisters.TILE_BLOCKBREAKER.get(), RenderBlockBreaker::new);
 		event.registerBlockEntityRenderer(DeferredRegisters.TILE_MOBGRINDER.get(), RenderMobGrinder::new);
 		event.registerBlockEntityRenderer(DeferredRegisters.TILE_RANCHER.get(), RenderRancher::new);
+		event.registerBlockEntityRenderer(DeferredRegisters.TILE_FARMER.get(), RenderFarmer::new);
 	}
 }
