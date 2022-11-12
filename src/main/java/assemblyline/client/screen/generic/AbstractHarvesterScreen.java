@@ -18,8 +18,6 @@ import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -44,8 +42,8 @@ public abstract class AbstractHarvesterScreen<T extends AbstractHarvesterContain
 		TileFrontHarvester harvester = menu.getHostFromIntArray();
 		if (harvester != null) {
 			ComponentElectrodynamic electro = harvester.getComponent(ComponentType.Electrodynamic);
-			list.add(new TranslatableComponent("gui.machine.usage", new TextComponent(ChatFormatter.getChatDisplayShort(harvester.getUsage() * harvester.clientUsageMultiplier * 20, DisplayUnit.WATT)).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
-			list.add(new TranslatableComponent("gui.machine.voltage", new TextComponent(ChatFormatter.getChatDisplayShort(electro.getVoltage(), DisplayUnit.VOLTAGE)).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
+			list.add(Component.translatable("gui.machine.usage", Component.literal(ChatFormatter.getChatDisplayShort(harvester.getUsage() * harvester.clientUsageMultiplier * 20, DisplayUnit.WATT)).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
+			list.add(Component.translatable("gui.machine.voltage", Component.literal(ChatFormatter.getChatDisplayShort(electro.getVoltage(), DisplayUnit.VOLTAGE)).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
 		}
 		return list;
 	}
@@ -69,15 +67,13 @@ public abstract class AbstractHarvesterScreen<T extends AbstractHarvesterContain
 	protected void initButtons() {
 		int i = (width - imageWidth) / 2;
 		int j = (height - imageHeight) / 2;
-		renderArea = new ButtonSwappableLabel(i + 10, j + 20, 60, 20, new TranslatableComponent("label.renderarea"), new TranslatableComponent("label.hidearea"), () -> {
+		renderArea = new ButtonSwappableLabel(i + 10, j + 20, 60, 20, Component.translatable("label.renderarea"), Component.translatable("label.hidearea"), () -> {
 			TileFrontHarvester harvester = menu.getHostFromIntArray();
 			if (harvester != null) {
 				return ClientEvents.outlines.containsKey(harvester.getBlockPos());
 			}
 			return false;
-		}, button -> {
-			toggleRendering();
-		});
+		}, button -> toggleRendering());
 		addRenderableWidget(renderArea);
 	}
 

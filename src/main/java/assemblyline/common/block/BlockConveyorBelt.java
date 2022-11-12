@@ -3,9 +3,9 @@ package assemblyline.common.block;
 import java.util.Arrays;
 import java.util.List;
 
-import assemblyline.DeferredRegisters;
 import assemblyline.common.tile.TileConveyorBelt;
 import assemblyline.common.tile.TileConveyorBelt.ConveyorType;
+import assemblyline.registers.AssemblyLineBlocks;
 import electrodynamics.prefab.block.GenericEntityBlock;
 import electrodynamics.prefab.block.GenericEntityBlockWaterloggable;
 import electrodynamics.prefab.tile.GenericTile;
@@ -49,7 +49,7 @@ public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
 
 	@Override
 	public List<ItemStack> getDrops(BlockState state, Builder builder) {
-		return Arrays.asList(new ItemStack(DeferredRegisters.blockConveyorBelt));
+		return Arrays.asList(new ItemStack(AssemblyLineBlocks.blockConveyorBelt));
 	}
 
 	@Override

@@ -1,12 +1,11 @@
 package assemblyline.common.tile;
 
-import assemblyline.DeferredRegisters;
 import assemblyline.common.inventory.container.ContainerBlockBreaker;
 import assemblyline.common.inventory.container.ContainerFrontHarvester;
 import assemblyline.common.inventory.container.generic.AbstractHarvesterContainer;
 import assemblyline.common.settings.Constants;
 import assemblyline.common.tile.generic.TileFrontHarvester;
-import electrodynamics.SoundRegister;
+import assemblyline.registers.AssemblyLineBlockTypes;
 import electrodynamics.api.capability.ElectrodynamicsCapabilities;
 import electrodynamics.api.particle.ParticleAPI;
 import electrodynamics.api.sound.SoundAPI;
@@ -17,6 +16,7 @@ import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
 import electrodynamics.prefab.utilities.object.TransferPack;
+import electrodynamics.registers.ElectrodynamicsSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
@@ -29,7 +29,7 @@ public class TileBlockBreaker extends TileFrontHarvester {
 	public float progress = 0;
 
 	public TileBlockBreaker(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_BLOCKBREAKER.get(), pos, state, Constants.BLOCKBREAKER_USAGE * 20, (int) ElectrodynamicsCapabilities.DEFAULT_VOLTAGE, "blockbreaker");
+		super(AssemblyLineBlockTypes.TILE_BLOCKBREAKER.get(), pos, state, Constants.BLOCKBREAKER_USAGE * 20, (int) ElectrodynamicsCapabilities.DEFAULT_VOLTAGE, "blockbreaker");
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class TileBlockBreaker extends TileFrontHarvester {
 			ComponentDirection direction = getComponent(ComponentType.Direction);
 			clientRunningTicks++;
 			if (component.getTicks() % 200 == 0) {
-				SoundAPI.playSound(SoundRegister.SOUND_MINERALGRINDER.get(), SoundSource.BLOCKS, 0.5f, 1, worldPosition);
+				SoundAPI.playSound(ElectrodynamicsSounds.SOUND_MINERALGRINDER.get(), SoundSource.BLOCKS, 0.5f, 1, worldPosition);
 			}
 			BlockPos offset = worldPosition.offset(direction.getDirection().getOpposite().getNormal());
 			Block block = level.getBlockState(offset).getBlock();

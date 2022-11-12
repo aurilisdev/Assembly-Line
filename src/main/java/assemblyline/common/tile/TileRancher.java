@@ -3,11 +3,11 @@ package assemblyline.common.tile;
 import java.util.ArrayList;
 import java.util.List;
 
-import assemblyline.DeferredRegisters;
 import assemblyline.common.inventory.container.ContainerFrontHarvester;
 import assemblyline.common.inventory.container.generic.AbstractHarvesterContainer;
 import assemblyline.common.settings.Constants;
 import assemblyline.common.tile.generic.TileFrontHarvester;
+import assemblyline.registers.AssemblyLineBlockTypes;
 import electrodynamics.api.capability.ElectrodynamicsCapabilities;
 import electrodynamics.common.item.ItemUpgrade;
 import electrodynamics.prefab.tile.components.ComponentType;
@@ -30,7 +30,7 @@ public class TileRancher extends TileFrontHarvester {
 	private static ItemStack SHEERS = new ItemStack(Items.SHEARS);
 
 	public TileRancher(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_RANCHER.get(), pos, state, Constants.RANCHER_USAGE * 20, (int) ElectrodynamicsCapabilities.DEFAULT_VOLTAGE, "rancher");
+		super(AssemblyLineBlockTypes.TILE_RANCHER.get(), pos, state, Constants.RANCHER_USAGE * 20, (int) ElectrodynamicsCapabilities.DEFAULT_VOLTAGE, "rancher");
 	}
 
 	@Override

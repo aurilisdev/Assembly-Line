@@ -1,7 +1,7 @@
 package assemblyline.common.inventory.container;
 
-import assemblyline.DeferredRegisters;
 import assemblyline.common.tile.TileAutocrafter;
+import assemblyline.registers.AssemblyLineMenuTypes;
 import electrodynamics.prefab.inventory.container.GenericContainerBlockEntity;
 import electrodynamics.prefab.inventory.container.slot.item.SlotGeneric;
 import net.minecraft.world.Container;
@@ -22,7 +22,7 @@ public class ContainerAutocrafter extends GenericContainerBlockEntity<TileAutocr
 	}
 
 	public ContainerAutocrafter(int id, Inventory playerinv, Container inventory, ContainerData inventorydata) {
-		super(DeferredRegisters.CONTAINER_AUTOCRAFTER.get(), id, playerinv, inventory, inventorydata);
+		super(AssemblyLineMenuTypes.CONTAINER_AUTOCRAFTER.get(), id, playerinv, inventory, inventorydata);
 	}
 
 	@Override

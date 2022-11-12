@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import com.mojang.math.Vector3f;
 
-import assemblyline.DeferredRegisters;
 import assemblyline.common.settings.Constants;
+import assemblyline.registers.AssemblyLineBlockTypes;
 import electrodynamics.prefab.tile.GenericTile;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentDirection;
@@ -41,7 +41,7 @@ public class TileConveyorBelt extends GenericTile {
 	public ConveyorObject object = new ConveyorObject();
 
 	public TileConveyorBelt(BlockPos worldPosition, BlockState blockState) {
-		super(DeferredRegisters.TILE_BELT.get(), worldPosition, blockState);
+		super(AssemblyLineBlockTypes.TILE_BELT.get(), worldPosition, blockState);
 		addComponent(new ComponentTickable().tickCommon(this::tickCommon));
 		addComponent(new ComponentDirection());
 		addComponent(new ComponentPacketHandler().guiPacketReader(this::loadFromNBT).guiPacketWriter(this::saveToNBT));

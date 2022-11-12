@@ -2,11 +2,11 @@ package assemblyline.common.tile;
 
 import java.util.List;
 
-import assemblyline.DeferredRegisters;
 import assemblyline.common.inventory.container.ContainerFrontHarvester;
 import assemblyline.common.inventory.container.generic.AbstractHarvesterContainer;
 import assemblyline.common.settings.Constants;
 import assemblyline.common.tile.generic.TileFrontHarvester;
+import assemblyline.registers.AssemblyLineBlockTypes;
 import electrodynamics.api.capability.ElectrodynamicsCapabilities;
 import electrodynamics.common.item.ItemUpgrade;
 import electrodynamics.prefab.tile.components.ComponentType;
@@ -25,7 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileMobGrinder extends TileFrontHarvester {
 
 	public TileMobGrinder(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_MOBGRINDER.get(), pos, state, Constants.MOBGRINDER_USAGE * 40, (int) ElectrodynamicsCapabilities.DEFAULT_VOLTAGE, "mobgrinder");
+		super(AssemblyLineBlockTypes.TILE_MOBGRINDER.get(), pos, state, Constants.MOBGRINDER_USAGE * 40, (int) ElectrodynamicsCapabilities.DEFAULT_VOLTAGE, "mobgrinder");
 	}
 
 	@Override

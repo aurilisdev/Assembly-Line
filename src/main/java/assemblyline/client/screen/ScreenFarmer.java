@@ -21,8 +21,6 @@ import electrodynamics.prefab.utilities.RenderingUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
@@ -52,8 +50,8 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 		TileFarmer farmer = menu.getHostFromIntArray();
 		if (farmer != null) {
 			ComponentElectrodynamic electro = farmer.getComponent(ComponentType.Electrodynamic);
-			list.add(new TranslatableComponent("gui.machine.usage", new TextComponent(ChatFormatter.getChatDisplayShort(Constants.FARMER_USAGE * farmer.clientUsageMultiplier * 20, DisplayUnit.WATT)).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
-			list.add(new TranslatableComponent("gui.machine.voltage", new TextComponent(ChatFormatter.getChatDisplayShort(electro.getVoltage(), DisplayUnit.VOLTAGE)).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
+			list.add(Component.translatable("gui.machine.usage", Component.literal(ChatFormatter.getChatDisplayShort(Constants.FARMER_USAGE * farmer.clientUsageMultiplier * 20, DisplayUnit.WATT)).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
+			list.add(Component.translatable("gui.machine.voltage", Component.literal(ChatFormatter.getChatDisplayShort(electro.getVoltage(), DisplayUnit.VOLTAGE)).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
 		}
 		return list;
 	}
@@ -88,21 +86,21 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 	protected void initButtons() {
 		int i = (width - imageWidth) / 2;
 		int j = (height - imageHeight) / 2;
-		fullBonemeal = new ButtonSwappableLabel(i + 10, j + 20, 60, 20, new TranslatableComponent("label.fullbonemeal"), new TranslatableComponent("label.regbonemeal"), () -> {
+		fullBonemeal = new ButtonSwappableLabel(i + 10, j + 20, 60, 20, Component.translatable("label.fullbonemeal"), Component.translatable("label.regbonemeal"), () -> {
 			TileFarmer farmer = menu.getHostFromIntArray();
 			if (farmer != null) {
 				return farmer.clientGrowBonemeal;
 			}
 			return false;
 		}, button -> menu.toggleBoolean(0));
-		refillEmpty = new ButtonSwappableLabel(i + 10, j + 20 + 30, 60, 20, new TranslatableComponent("label.refillempty"), new TranslatableComponent("label.ignoreempty"), () -> {
+		refillEmpty = new ButtonSwappableLabel(i + 10, j + 20 + 30, 60, 20, Component.translatable("label.refillempty"), Component.translatable("label.ignoreempty"), () -> {
 			TileFarmer farmer = menu.getHostFromIntArray();
 			if (farmer != null) {
 				return farmer.clientRefillEmpty;
 			}
 			return false;
 		}, button -> menu.toggleBoolean(1));
-		renderArea = new ButtonSwappableLabel(i + 10, j + 20 + 60, 60, 20, new TranslatableComponent("label.renderarea"), new TranslatableComponent("label.hidearea"), () -> {
+		renderArea = new ButtonSwappableLabel(i + 10, j + 20 + 60, 60, 20, Component.translatable("label.renderarea"), Component.translatable("label.hidearea"), () -> {
 			TileFarmer farmer = menu.getHostFromIntArray();
 			if (farmer != null) {
 				return ClientEvents.farmerLines.containsKey(farmer.getBlockPos());

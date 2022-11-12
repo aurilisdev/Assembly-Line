@@ -1,7 +1,7 @@
 package assemblyline.common.inventory.container;
 
-import assemblyline.DeferredRegisters;
 import assemblyline.common.tile.TileSorterBelt;
+import assemblyline.registers.AssemblyLineMenuTypes;
 import electrodynamics.prefab.inventory.container.GenericContainerBlockEntity;
 import electrodynamics.prefab.inventory.container.slot.item.SlotGeneric;
 import net.minecraft.world.Container;
@@ -21,7 +21,7 @@ public class ContainerSorterBelt extends GenericContainerBlockEntity<TileSorterB
 	}
 
 	public ContainerSorterBelt(int id, Inventory playerinv, Container inventory, ContainerData inventorydata) {
-		super(DeferredRegisters.CONTAINER_SORTERBELT.get(), id, playerinv, inventory, inventorydata);
+		super(AssemblyLineMenuTypes.CONTAINER_SORTERBELT.get(), id, playerinv, inventory, inventorydata);
 	}
 
 	@Override

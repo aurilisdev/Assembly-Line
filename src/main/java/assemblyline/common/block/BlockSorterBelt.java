@@ -3,8 +3,8 @@ package assemblyline.common.block;
 import java.util.Arrays;
 import java.util.List;
 
-import assemblyline.DeferredRegisters;
 import assemblyline.common.tile.TileSorterBelt;
+import assemblyline.registers.AssemblyLineBlocks;
 import electrodynamics.api.IWrenchItem;
 import electrodynamics.prefab.block.GenericEntityBlock;
 import electrodynamics.prefab.block.GenericEntityBlockWaterloggable;
@@ -53,7 +53,7 @@ public class BlockSorterBelt extends GenericEntityBlockWaterloggable {
 
 	@Override
 	public List<ItemStack> getDrops(BlockState state, Builder builder) {
-		return Arrays.asList(new ItemStack(DeferredRegisters.blockSorterBelt));
+		return Arrays.asList(new ItemStack(AssemblyLineBlocks.blockSorterBelt));
 	}
 
 	@Override

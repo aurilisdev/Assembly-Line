@@ -2,9 +2,9 @@ package assemblyline.common.tile;
 
 import java.util.List;
 
-import assemblyline.DeferredRegisters;
 import assemblyline.common.inventory.container.ContainerAutocrafter;
 import assemblyline.common.settings.Constants;
+import assemblyline.registers.AssemblyLineBlockTypes;
 import electrodynamics.prefab.tile.GenericTile;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentContainerProvider;
@@ -28,7 +28,7 @@ public class TileAutocrafter extends GenericTile {
 	public boolean isPowered = false;
 
 	public TileAutocrafter(BlockPos worldPosition, BlockState blockState) {
-		super(DeferredRegisters.TILE_AUTOCRAFTER.get(), worldPosition, blockState);
+		super(AssemblyLineBlockTypes.TILE_AUTOCRAFTER.get(), worldPosition, blockState);
 		addComponent(new ComponentDirection());
 		addComponent(new ComponentTickable().tickServer(this::tickServer));
 		addComponent(new ComponentElectrodynamic(this).maxJoules(Constants.AUTOCRAFTER_USAGE * 20).universalInput());

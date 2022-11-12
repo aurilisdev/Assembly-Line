@@ -8,10 +8,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.mojang.datafixers.util.Pair;
 
-import assemblyline.DeferredRegisters;
 import assemblyline.client.ClientEvents;
 import assemblyline.common.inventory.container.ContainerFarmer;
 import assemblyline.common.settings.Constants;
+import assemblyline.registers.AssemblyLineBlockTypes;
 import electrodynamics.api.capability.ElectrodynamicsCapabilities;
 import electrodynamics.api.item.ItemUtils;
 import electrodynamics.common.item.ItemUpgrade;
@@ -114,7 +114,7 @@ public class TileFarmer extends GenericTile {
 	}
 
 	public TileFarmer(BlockPos pos, BlockState state) {
-		super(DeferredRegisters.TILE_FARMER.get(), pos, state);
+		super(AssemblyLineBlockTypes.TILE_FARMER.get(), pos, state);
 		addComponent(new ComponentDirection());
 		addComponent(new ComponentPacketHandler().customPacketWriter(this::createPacket).guiPacketWriter(this::createPacket).customPacketReader(this::readPacket).guiPacketReader(this::readPacket));
 		addComponent(new ComponentTickable().tickServer(this::tickServer));

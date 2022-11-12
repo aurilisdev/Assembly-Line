@@ -1,9 +1,9 @@
 package assemblyline.common.inventory.container;
 
-import assemblyline.DeferredRegisters;
 import assemblyline.common.packet.NetworkHandler;
 import assemblyline.common.packet.types.PacketFarmer;
 import assemblyline.common.tile.TileFarmer;
+import assemblyline.registers.AssemblyLineMenuTypes;
 import electrodynamics.common.item.subtype.SubtypeItemUpgrade;
 import electrodynamics.prefab.inventory.container.GenericContainerBlockEntity;
 import electrodynamics.prefab.inventory.container.slot.item.SlotGeneric;
@@ -27,7 +27,7 @@ public class ContainerFarmer extends GenericContainerBlockEntity<TileFarmer> {
 	}
 
 	public ContainerFarmer(int id, Inventory playerinv, Container inventory, ContainerData inventorydata) {
-		super(DeferredRegisters.CONTAINER_FARMER.get(), id, playerinv, inventory, inventorydata);
+		super(AssemblyLineMenuTypes.CONTAINER_FARMER.get(), id, playerinv, inventory, inventorydata);
 	}
 
 	@Override

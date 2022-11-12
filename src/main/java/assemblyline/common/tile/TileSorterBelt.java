@@ -1,8 +1,9 @@
 package assemblyline.common.tile;
 
-import assemblyline.DeferredRegisters;
 import assemblyline.common.inventory.container.ContainerSorterBelt;
 import assemblyline.common.settings.Constants;
+import assemblyline.registers.AssemblyLineBlockTypes;
+import assemblyline.registers.AssemblyLineBlocks;
 import electrodynamics.prefab.block.GenericEntityBlock;
 import electrodynamics.prefab.tile.GenericTile;
 import electrodynamics.prefab.tile.components.ComponentType;
@@ -24,7 +25,7 @@ public class TileSorterBelt extends GenericTile {
 	public long lastTime = 0;
 
 	public TileSorterBelt(BlockPos worldPosition, BlockState blockState) {
-		super(DeferredRegisters.TILE_SORTERBELT.get(), worldPosition, blockState);
+		super(AssemblyLineBlockTypes.TILE_SORTERBELT.get(), worldPosition, blockState);
 		addComponent(new ComponentDirection());
 		addComponent(new ComponentElectrodynamic(this).maxJoules(Constants.CONVEYORBELT_USAGE * 20).input(Direction.DOWN));
 		addComponent(new ComponentInventory(this).size(18));
@@ -69,19 +70,19 @@ public class TileSorterBelt extends GenericTile {
 		if (currentSpread == 0 || currentSpread == 16) {
 			if (electro.getJoulesStored() < Constants.SORTERBELT_USAGE) {
 				if (running) {
-					level.setBlock(worldPosition, DeferredRegisters.blockSorterBelt.defaultBlockState().setValue(GenericEntityBlock.FACING, facing).setValue(BlockStateProperties.WATERLOGGED, getBlockState().getValue(BlockStateProperties.WATERLOGGED)), 2 | 16);
+					level.setBlock(worldPosition, AssemblyLineBlocks.blockSorterBelt.defaultBlockState().setValue(GenericEntityBlock.FACING, facing).setValue(BlockStateProperties.WATERLOGGED, getBlockState().getValue(BlockStateProperties.WATERLOGGED)), 2 | 16);
 					currentSpread = 0;
 				}
 			} else if (lastTime != level.getGameTime()) {
 				electro.joules(electro.getJoulesStored() - Constants.SORTERBELT_USAGE);
 				lastTime = level.getGameTime();
 				if (!running) {
-					level.setBlock(worldPosition, DeferredRegisters.blockSorterBeltRunning.defaultBlockState().setValue(GenericEntityBlock.FACING, facing).setValue(BlockStateProperties.WATERLOGGED, getBlockState().getValue(BlockStateProperties.WATERLOGGED)), 2 | 16);
+					level.setBlock(worldPosition, AssemblyLineBlocks.blockSorterBeltRunning.defaultBlockState().setValue(GenericEntityBlock.FACING, facing).setValue(BlockStateProperties.WATERLOGGED, getBlockState().getValue(BlockStateProperties.WATERLOGGED)), 2 | 16);
 				}
 				currentSpread = 16;
 			}
 		} else if (currentSpread > 0 && !running) {
-			level.setBlock(worldPosition, DeferredRegisters.blockSorterBeltRunning.defaultBlockState().setValue(GenericEntityBlock.FACING, facing).setValue(BlockStateProperties.WATERLOGGED, getBlockState().getValue(BlockStateProperties.WATERLOGGED)), 2 | 16);
+			level.setBlock(worldPosition, AssemblyLineBlocks.blockSorterBeltRunning.defaultBlockState().setValue(GenericEntityBlock.FACING, facing).setValue(BlockStateProperties.WATERLOGGED, getBlockState().getValue(BlockStateProperties.WATERLOGGED)), 2 | 16);
 		}
 	}
 

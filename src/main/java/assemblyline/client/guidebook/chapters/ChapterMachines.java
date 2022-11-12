@@ -3,7 +3,7 @@ package assemblyline.client.guidebook.chapters;
 import java.util.ArrayList;
 import java.util.List;
 
-import assemblyline.DeferredRegisters;
+import assemblyline.registers.AssemblyLineBlocks;
 import electrodynamics.api.item.ItemUtils;
 import electrodynamics.client.guidebook.utils.ItemWrapperObject;
 import electrodynamics.client.guidebook.utils.TextWrapperObject;
@@ -13,7 +13,7 @@ import net.minecraft.ChatFormatting;
 
 public class ChapterMachines extends Chapter {
 
-	private static final ItemWrapperObject LOGO = new ItemWrapperObject(17, 60, 2.0F, ItemUtils.fromBlock(DeferredRegisters.blockFarmer));
+	private static final ItemWrapperObject LOGO = new ItemWrapperObject(17, 60, 2.0F, ItemUtils.fromBlock(AssemblyLineBlocks.blockFarmer));
 
 	@Override
 	protected List<Page> genPages() {
@@ -38,7 +38,7 @@ public class ChapterMachines extends Chapter {
 				new TextWrapperObject(10, 140, 4210752, "guidebook.assemblyline.chapter.machines.p1l7") },
 				new ItemWrapperObject[] {
 						//
-						new ItemWrapperObject(17, 50, 2.0F, ItemUtils.fromBlock(DeferredRegisters.blockBlockBreaker)) }));
+						new ItemWrapperObject(17, 50, 2.0F, ItemUtils.fromBlock(AssemblyLineBlocks.blockBlockBreaker)) }));
 
 		pages.add(new Page(new TextWrapperObject[] {
 				//
@@ -59,7 +59,7 @@ public class ChapterMachines extends Chapter {
 				new TextWrapperObject(10, 140, 4210752, "guidebook.assemblyline.chapter.machines.p2l7") },
 				new ItemWrapperObject[] {
 						//
-						new ItemWrapperObject(17, 50, 2.0F, ItemUtils.fromBlock(DeferredRegisters.blockBlockPlacer)) }));
+						new ItemWrapperObject(17, 50, 2.0F, ItemUtils.fromBlock(AssemblyLineBlocks.blockBlockPlacer)) }));
 
 		pages.add(new Page(new TextWrapperObject[] {
 				//
@@ -84,7 +84,7 @@ public class ChapterMachines extends Chapter {
 				new TextWrapperObject(10, 160, 4210752, "guidebook.assemblyline.chapter.machines.p3l9") },
 				new ItemWrapperObject[] {
 						//
-						new ItemWrapperObject(17, 50, 2.0F, ItemUtils.fromBlock(DeferredRegisters.blockRancher)) }));
+						new ItemWrapperObject(17, 50, 2.0F, ItemUtils.fromBlock(AssemblyLineBlocks.blockRancher)) }));
 
 		pages.add(new Page(new TextWrapperObject[] {
 				//
@@ -109,7 +109,7 @@ public class ChapterMachines extends Chapter {
 				new TextWrapperObject(10, 160, 4210752, "guidebook.assemblyline.chapter.machines.p4l9") },
 				new ItemWrapperObject[] {
 						//
-						new ItemWrapperObject(17, 50, 2.0F, ItemUtils.fromBlock(DeferredRegisters.blockMobGrinder)) }));
+						new ItemWrapperObject(17, 50, 2.0F, ItemUtils.fromBlock(AssemblyLineBlocks.blockMobGrinder)) }));
 
 		pages.add(new Page(new TextWrapperObject[] {
 				//
@@ -138,7 +138,7 @@ public class ChapterMachines extends Chapter {
 				new TextWrapperObject(10, 180, 4210752, "guidebook.assemblyline.chapter.machines.p5l11") },
 				new ItemWrapperObject[] {
 						//
-						new ItemWrapperObject(17, 50, 2.0F, ItemUtils.fromBlock(DeferredRegisters.blockFarmer)) }));
+						new ItemWrapperObject(17, 50, 2.0F, ItemUtils.fromBlock(AssemblyLineBlocks.blockFarmer)) }));
 
 		pages.add(new Page(new TextWrapperObject[] {
 				//

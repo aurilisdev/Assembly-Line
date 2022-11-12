@@ -15,7 +15,7 @@ import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 
@@ -46,7 +46,7 @@ public class RenderCrate implements BlockEntityRenderer<TileCrate> {
 					default:
 						break;
 					}
-					TextComponent displayNameIn = new TextComponent(tileCrate.getCount() + "x" + tileCrate.<ComponentInventory>getComponent(ComponentType.Inventory).getItem(0).getHoverName().getString());
+					Component displayNameIn = Component.literal(tileCrate.getCount() + "x" + tileCrate.<ComponentInventory>getComponent(ComponentType.Inventory).getItem(0).getHoverName().getString());
 					Font fontrenderer = Minecraft.getInstance().font;
 					float scale = 0.025f / (fontrenderer.width(displayNameIn) / 32f);
 					matrixStackIn.scale(-scale, -scale, scale);

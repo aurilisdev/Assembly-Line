@@ -3,8 +3,8 @@ package assemblyline.client.guidebook.chapters;
 import java.util.ArrayList;
 import java.util.List;
 
-import assemblyline.DeferredRegisters;
 import assemblyline.References;
+import assemblyline.registers.AssemblyLineBlocks;
 import electrodynamics.api.item.ItemUtils;
 import electrodynamics.client.guidebook.utils.ImageWrapperObject;
 import electrodynamics.client.guidebook.utils.ItemWrapperObject;
@@ -14,7 +14,7 @@ import electrodynamics.client.guidebook.utils.components.Page;
 
 public class ChapterConveyers extends Chapter {
 
-	private static final ItemWrapperObject LOGO = new ItemWrapperObject(17, 60, 2.0F, ItemUtils.fromBlock(DeferredRegisters.blockConveyorBelt));
+	private static final ItemWrapperObject LOGO = new ItemWrapperObject(17, 60, 2.0F, ItemUtils.fromBlock(AssemblyLineBlocks.blockConveyorBelt));
 
 	@Override
 	protected List<Page> genPages() {

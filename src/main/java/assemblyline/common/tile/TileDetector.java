@@ -3,7 +3,7 @@ package assemblyline.common.tile;
 import java.util.List;
 import java.util.function.Predicate;
 
-import assemblyline.DeferredRegisters;
+import assemblyline.registers.AssemblyLineBlockTypes;
 import electrodynamics.prefab.tile.GenericTile;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentDirection;
@@ -18,7 +18,7 @@ public class TileDetector extends GenericTile {
 	public boolean isPowered = false;
 
 	public TileDetector(BlockPos worldPosition, BlockState blockState) {
-		super(DeferredRegisters.TILE_DETECTOR.get(), worldPosition, blockState);
+		super(AssemblyLineBlockTypes.TILE_DETECTOR.get(), worldPosition, blockState);
 		addComponent(new ComponentDirection());
 		addComponent(new ComponentTickable().tickServer(this::tickServer));
 	}

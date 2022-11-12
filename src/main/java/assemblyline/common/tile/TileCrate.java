@@ -2,7 +2,7 @@ package assemblyline.common.tile;
 
 import java.util.HashSet;
 
-import assemblyline.DeferredRegisters;
+import assemblyline.registers.AssemblyLineBlockTypes;
 import electrodynamics.prefab.tile.GenericTile;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
@@ -25,7 +25,7 @@ public class TileCrate extends GenericTile {
 	}
 
 	public TileCrate(int size, BlockPos worldPosition, BlockState blockState) {
-		super(DeferredRegisters.TILE_CRATE.get(), worldPosition, blockState);
+		super(AssemblyLineBlockTypes.TILE_CRATE.get(), worldPosition, blockState);
 		addComponent(new ComponentPacketHandler().guiPacketWriter(this::writeCustomPacket).guiPacketReader(this::readCustomPacket).customPacketReader(this::readCustomPacket).customPacketWriter(this::writeCustomPacket));
 		addComponent(new ComponentInventory(this).size(size).getSlots(this::getSlotsForFace).valid(this::isItemValidForSlot).slotFaces(0, Direction.values()));
 		addComponent(new ComponentTickable().tickServer(this::tickServer));
