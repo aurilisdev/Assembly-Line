@@ -21,7 +21,7 @@ import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 public class BlockCrate extends GenericEntityBlock {
 
@@ -52,7 +52,7 @@ public class BlockCrate extends GenericEntityBlock {
 				if (player.isShiftKeyDown()) {
 					ComponentInventory inv = tile.getComponent(ComponentType.Inventory);
 					for (int i = 0; i < inv.getContainerSize(); i++) {
-						ItemStack stack = inv.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).resolve().get().extractItem(i, inv.getMaxStackSize(), false);
+						ItemStack stack = inv.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.UP).resolve().get().extractItem(i, inv.getMaxStackSize(), false);
 						if (!stack.isEmpty()) {
 							ItemEntity item = new ItemEntity(worldIn, player.getX() + 0.5, player.getY() + 0.5, player.getZ() + 0.5, stack);
 							worldIn.addFreshEntity(item);

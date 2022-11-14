@@ -23,8 +23,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
@@ -98,7 +98,7 @@ public class TileConveyorBelt extends GenericTile {
 		Direction direction = this.<ComponentDirection>getComponent(ComponentType.Direction).getDirection();
 		isPusher = false;
 		if (nextBlockEntity != null && !(nextBlockEntity instanceof TileConveyorBelt)) {
-			LazyOptional<IItemHandler> handlerOptional = nextBlockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction);
+			LazyOptional<IItemHandler> handlerOptional = nextBlockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction);
 			isPusher = handlerOptional.isPresent();
 		}
 		if (currentSpread > 0) {
@@ -107,7 +107,7 @@ public class TileConveyorBelt extends GenericTile {
 		BlockEntity lastBlockEntity = level.getBlockEntity(worldPosition.offset(direction.getNormal()));
 		isPuller = false;
 		if (lastBlockEntity != null && !(lastBlockEntity instanceof TileConveyorBelt)) {
-			LazyOptional<IItemHandler> handlerOptional = lastBlockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction);
+			LazyOptional<IItemHandler> handlerOptional = lastBlockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction);
 			isPuller = handlerOptional.isPresent();
 		}
 		if (isQueueReady) {
@@ -123,7 +123,7 @@ public class TileConveyorBelt extends GenericTile {
 					}
 				}
 			} else if (lastBlockEntity != null && isPuller) {
-				LazyOptional<IItemHandler> cap = lastBlockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction.getOpposite());
+				LazyOptional<IItemHandler> cap = lastBlockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction.getOpposite());
 				if (cap.isPresent()) {
 					IItemHandler handler = cap.resolve().get();
 					for (int slot = 0; slot < handler.getSlots(); slot++) {
@@ -200,7 +200,7 @@ public class TileConveyorBelt extends GenericTile {
 			} else if (nextBlockEntity != null) {
 				if (shouldTransfer) {
 					Direction direction = this.<ComponentDirection>getComponent(ComponentType.Direction).getDirection();
-					LazyOptional<IItemHandler> handlerOptional = nextBlockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, direction);
+					LazyOptional<IItemHandler> handlerOptional = nextBlockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction);
 					ComponentInventory inventory = getComponent(ComponentType.Inventory);
 					if (handlerOptional.isPresent()) {
 						if (wait == 0) {
