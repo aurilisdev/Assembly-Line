@@ -1,9 +1,10 @@
 package assemblyline.common.tile.generic;
 
 import assemblyline.client.ClientEvents;
+import electrodynamics.prefab.properties.Property;
+import electrodynamics.prefab.properties.PropertyType;
 import electrodynamics.prefab.tile.GenericTile;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -16,12 +17,9 @@ public abstract class TileOutlineArea extends GenericTile {
 	protected static final int DEFAULT_CHECK_HEIGHT = 5;
 	protected static final int MAX_CHECK_WIDTH = 25;
 	protected static final int MAX_CHECK_LENGTH = 25;
-	protected int currentWidth;
-	protected int currentLength;
-	protected int currentHeight;
-	public int clientLength;
-	public int clientWidth;
-	public int clientHeight;
+	public Property<Integer> width = property(new Property<Integer>(PropertyType.Integer, "width")).set(0);
+	public Property<Integer> length = property(new Property<Integer>(PropertyType.Integer, "width")).set(0);
+	public Property<Integer> height = property(new Property<Integer>(PropertyType.Integer, "width")).set(0);
 	protected AABB checkArea;
 
 	protected TileOutlineArea(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -29,18 +27,6 @@ public abstract class TileOutlineArea extends GenericTile {
 	}
 
 	public abstract AABB getAABB(int width, int length, int height, boolean isFlipped, boolean isClient, TileOutlineArea tile);
-
-	protected void createPacket(CompoundTag nbt) {
-		nbt.putInt("clientLength", currentLength);
-		nbt.putInt("clientWidth", currentWidth);
-		nbt.putInt("clientHeight", currentHeight);
-	}
-
-	protected void readPacket(CompoundTag nbt) {
-		clientLength = nbt.getInt("clientLength");
-		clientWidth = nbt.getInt("clientWidth");
-		clientHeight = nbt.getInt("clientHeight");
-	}
 
 	@Override
 	public void setRemoved() {

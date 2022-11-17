@@ -21,7 +21,7 @@ public class ScreenBlockPlacer extends AbstractHarvesterScreen<ContainerBlockPla
 
 	@Override
 	protected double getProgress(TileFrontHarvester harvester) {
-		return 1 - harvester.clientProgress;
+		return 1 - harvester.getProgress();
 	}
 
 	@Override

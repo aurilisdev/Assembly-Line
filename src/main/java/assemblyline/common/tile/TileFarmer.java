@@ -116,7 +116,7 @@ public class TileFarmer extends GenericTile {
 	public TileFarmer(BlockPos pos, BlockState state) {
 		super(AssemblyLineBlockTypes.TILE_FARMER.get(), pos, state);
 		addComponent(new ComponentDirection());
-		addComponent(new ComponentPacketHandler().customPacketWriter(this::createPacket).guiPacketWriter(this::createPacket).customPacketReader(this::readPacket).guiPacketReader(this::readPacket));
+		addComponent(new ComponentPacketHandler());
 		addComponent(new ComponentTickable().tickServer(this::tickServer));
 		addComponent(new ComponentElectrodynamic(this).relativeInput(Direction.DOWN).voltage(ElectrodynamicsCapabilities.DEFAULT_VOLTAGE).maxJoules(Constants.FARMER_USAGE * 20));
 		addComponent(new ComponentInventory(this).size(22).inputs(10).outputs(9).upgrades(3).validUpgrades(ContainerFarmer.VALID_UPGRADES).valid(machineValidator()).shouldSendInfo());
@@ -202,7 +202,7 @@ public class TileFarmer extends GenericTile {
 			Block checkBlock = checkState.getBlock();
 			if (checkBlock instanceof CropBlock crop && crop.isMaxAge(checkState)) {
 				breakBlock(checkState, world, checkPos, inv, electro, SoundEvents.CROP_BREAK);
-			} else if (checkBlock instanceof StemGrownBlock stem) {
+			} else if (checkBlock instanceof StemGrownBlock) {
 				breakBlock(checkState, world, checkPos, inv, electro, SoundEvents.WOOD_BREAK);
 			} else if (checkBlock instanceof CactusBlock || checkBlock instanceof SugarCaneBlock) {
 				BlockPos above = checkPos.above();
@@ -222,7 +222,7 @@ public class TileFarmer extends GenericTile {
 						breakBlock(currState, world, currPos, inv, electro, SoundEvents.GRASS_BREAK);
 					}
 				}
-			} else if (checkBlock instanceof NetherWartBlock wart && checkState.getValue(NetherWartBlock.AGE).intValue() == NetherWartBlock.MAX_AGE) {
+			} else if (checkBlock instanceof NetherWartBlock && checkState.getValue(NetherWartBlock.AGE).intValue() == NetherWartBlock.MAX_AGE) {
 				breakBlock(checkState, world, checkPos, inv, electro, SoundEvents.NETHER_WART_BREAK);
 			} else if (ForgeRegistries.BLOCKS.tags().getTag(BlockTags.LOGS).contains(checkBlock)) {
 				handleTree(world, checkPos, inv, electro);
@@ -242,7 +242,7 @@ public class TileFarmer extends GenericTile {
 		BlockState currState = world.getBlockState(checkPos);
 		breakBlock(currState, world, checkPos, inv, electro, leaves.contains(currState.getBlock()) ? SoundEvents.GRASS_BREAK : SoundEvents.WOOD_BREAK);
 
-		while (toScan.size() > 0) {
+		while (!toScan.isEmpty()) {
 			BlockPos itemPos = toScan.remove();
 
 			for (int[] offset : TreeScanningGrid) {
@@ -281,7 +281,6 @@ public class TileFarmer extends GenericTile {
 		// Check block type
 		if (isAir && plantingContents.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof IPlantable plantable) {
 			Block block = blockItem.getBlock();
-			belowState = world.getBlockState(below);
 			// first we check if it can be planted
 			if (belowState.canSustainPlant(world, below, Direction.UP, plantable)) {
 				world.setBlockAndUpdate(checkPos, block.defaultBlockState());
@@ -347,7 +346,8 @@ public class TileFarmer extends GenericTile {
 		List<AABB> boundingBoxes = new ArrayList<>();
 		int xOffset = farmer.clientWidth / 2;
 		int zOffset = farmer.clientLength / 2;
-		BlockPos startPos, endPos;
+		BlockPos startPos;
+		BlockPos endPos;
 		if (multiplier == 1) {
 			for (int i = 0; i < 3; i++) {
 				for (int j = 0; j < 3; j++) {

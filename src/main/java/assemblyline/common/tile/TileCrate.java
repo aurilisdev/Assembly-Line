@@ -15,6 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
+//TODO: Make this use the property system...
 public class TileCrate extends GenericTile {
 	private int lastCheckCount = 0;
 	private int count = 0;
@@ -26,7 +27,7 @@ public class TileCrate extends GenericTile {
 
 	public TileCrate(int size, BlockPos worldPosition, BlockState blockState) {
 		super(AssemblyLineBlockTypes.TILE_CRATE.get(), worldPosition, blockState);
-		addComponent(new ComponentPacketHandler().guiPacketWriter(this::writeCustomPacket).guiPacketReader(this::readCustomPacket).customPacketReader(this::readCustomPacket).customPacketWriter(this::writeCustomPacket));
+		addComponent(new ComponentPacketHandler().addGuiPacketWriter(this::writeCustomPacket).addGuiPacketReader(this::readCustomPacket).addCustomPacketReader(this::readCustomPacket).addCustomPacketWriter(this::writeCustomPacket));
 		addComponent(new ComponentInventory(this).size(size).getSlots(this::getSlotsForFace).valid(this::isItemValidForSlot).slotFaces(0, Direction.values()));
 		addComponent(new ComponentTickable().tickServer(this::tickServer));
 	}

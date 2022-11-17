@@ -11,7 +11,6 @@ import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentDirection;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
-import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
 import electrodynamics.prefab.utilities.object.TransferPack;
 import net.minecraft.core.BlockPos;
@@ -36,11 +35,11 @@ public class TileBlockPlacer extends TileFrontHarvester {
 		ComponentInventory inv = getComponent(ComponentType.Inventory);
 		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
 		// ignore dims; for rendering purposes
-		currentLength = DEFAULT_CHECK_LENGTH;
-		currentWidth = DEFAULT_CHECK_WIDTH;
-		currentHeight = 2;
+		width.set(DEFAULT_CHECK_WIDTH);
+		length.set(DEFAULT_CHECK_LENGTH);
+		height.set(2);
 		// we can add speed upgrade functionality if you want
-		currentWaitTime = 20;
+		currentWaitTime.set(20);
 
 		for (ItemStack stack : inv.getUpgradeContents()) {
 			if (!stack.isEmpty()) {
@@ -54,11 +53,8 @@ public class TileBlockPlacer extends TileFrontHarvester {
 				}
 			}
 		}
-		if (tickable.getTicks() % 20 == 0) {
-			this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
-		}
 		if (!inv.areInputsEmpty() && electro.getJoulesStored() >= Constants.BLOCKPLACER_USAGE) {
-			if (ticksSinceCheck == 0) {
+			if (ticksSinceCheck.get() == 0) {
 				ComponentDirection dir = getComponent(ComponentType.Direction);
 				BlockPos off = worldPosition.offset(dir.getDirection().getOpposite().getNormal());
 				BlockState state = level.getBlockState(off);
@@ -75,9 +71,9 @@ public class TileBlockPlacer extends TileFrontHarvester {
 					}
 				}
 			}
-			ticksSinceCheck++;
-			if (ticksSinceCheck >= currentWaitTime) {
-				ticksSinceCheck = 0;
+			ticksSinceCheck.set(ticksSinceCheck.get() + 1);
+			if (ticksSinceCheck.get() >= currentWaitTime.get()) {
+				ticksSinceCheck.set(0);
 			}
 		}
 	}

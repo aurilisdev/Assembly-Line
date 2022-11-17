@@ -13,7 +13,6 @@ import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentDirection;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
-import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
 import electrodynamics.prefab.utilities.object.TransferPack;
 import electrodynamics.registers.ElectrodynamicsSounds;
@@ -36,16 +35,13 @@ public class TileBlockBreaker extends TileFrontHarvester {
 	public void tickCommon(ComponentTickable tickable) {
 		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
 		// ignore dims; for rendering purposes
-		currentLength = DEFAULT_CHECK_LENGTH;
-		currentWidth = DEFAULT_CHECK_WIDTH;
-		currentHeight = 2;
-		ticksSinceCheck = (int) (progress * 100);
-		currentWaitTime = 100;
-		powerUsageMultiplier = 1;
+		length.set(DEFAULT_CHECK_LENGTH);
+		width.set(DEFAULT_CHECK_WIDTH);
+		height.set(2);
+		ticksSinceCheck.set((int) (progress * 100));
+		currentWaitTime.set(100);
+		powerUsageMultiplier.set(1.0);
 
-		if (tickable.getTicks() % 20 == 0) {
-			this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
-		}
 		ComponentDirection direction = getComponent(ComponentType.Direction);
 		BlockPos block = worldPosition.offset(direction.getDirection().getOpposite().getNormal());
 		BlockState blockState = level.getBlockState(block);
@@ -57,8 +53,8 @@ public class TileBlockBreaker extends TileFrontHarvester {
 				electro.extractPower(TransferPack.joulesVoltage(Constants.BLOCKBREAKER_USAGE, ElectrodynamicsCapabilities.DEFAULT_VOLTAGE), false);
 			} else {
 				if (!level.isClientSide) {
-//		    Block block = state.getBlock();
-					level.destroyBlock(block, true);
+					// Block block = state.getBlock();
+					level.destroyBlock(block, true); // TODO: What are these comments above/below
 					progress = 0;
 					// output block here somewhere
 				}
@@ -71,10 +67,6 @@ public class TileBlockBreaker extends TileFrontHarvester {
 
 	@Override
 	public void tickServer(ComponentTickable component) {
-		if (component.getTicks() % 20 == 0) {
-			ComponentPacketHandler handler = getComponent(ComponentType.PacketHandler);
-			handler.sendGuiPacketToTracking();
-		}
 	}
 
 	@Override

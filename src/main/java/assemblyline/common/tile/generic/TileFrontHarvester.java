@@ -1,6 +1,8 @@
 package assemblyline.common.tile.generic;
 
 import assemblyline.common.inventory.container.generic.AbstractHarvesterContainer;
+import electrodynamics.prefab.properties.Property;
+import electrodynamics.prefab.properties.PropertyType;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentContainerProvider;
 import electrodynamics.prefab.tile.components.type.ComponentDirection;
@@ -10,7 +12,6 @@ import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -20,16 +21,18 @@ public abstract class TileFrontHarvester extends TileOutlineArea {
 
 	public static final int DEFAULT_WAIT_TICKS = 600;
 	public static final int FASTEST_WAIT_TICKS = 60;
-	protected int ticksSinceCheck = 0;
-	protected int currentWaitTime;
-	public double clientProgress;
-	protected double powerUsageMultiplier = 1;
-	public double clientUsageMultiplier;
+	public Property<Double> powerUsageMultiplier = property(new Property<Double>(PropertyType.Double, "powerUsageMultiplier")).set(1.0);
+	public Property<Integer> ticksSinceCheck = property(new Property<Integer>(PropertyType.Integer, "ticksSinceCheck")).set(0);
+	public Property<Integer> currentWaitTime = property(new Property<Integer>(PropertyType.Integer, "currentWaitTime")).set(0);
+
+	public double getProgress() {
+		return (double) ticksSinceCheck.get() / (double) currentWaitTime.get();
+	}
 
 	protected TileFrontHarvester(BlockEntityType<?> type, BlockPos pos, BlockState state, double maxJoules, int voltage, String name) {
 		super(type, pos, state);
 		addComponent(new ComponentDirection());
-		addComponent(new ComponentPacketHandler().customPacketWriter(this::createPacket).guiPacketWriter(this::createPacket).customPacketReader(this::readPacket).guiPacketReader(this::readPacket));
+		addComponent(new ComponentPacketHandler());
 		addComponent(new ComponentTickable().tickServer(this::tickServer).tickClient(this::tickClient).tickCommon(this::tickCommon));
 		addComponent(new ComponentElectrodynamic(this).relativeInput(getVoltageInput()).voltage(voltage).maxJoules(maxJoules));
 		addComponent(getInv(this));
@@ -85,20 +88,6 @@ public abstract class TileFrontHarvester extends TileOutlineArea {
 			return new AABB(startPos, endPos);
 		}
 		return new AABB(0, 0, 0, 0, 0, 0);
-	}
-
-	@Override
-	protected void createPacket(CompoundTag nbt) {
-		super.createPacket(nbt);
-		nbt.putDouble("clientProgress", (double) ticksSinceCheck / (double) currentWaitTime);
-		nbt.putDouble("clientMultiplier", powerUsageMultiplier);
-	}
-
-	@Override
-	protected void readPacket(CompoundTag nbt) {
-		super.readPacket(nbt);
-		clientProgress = nbt.getDouble("clientProgress");
-		clientUsageMultiplier = nbt.getDouble("clientMultiplier");
 	}
 
 	public abstract double getUsage();

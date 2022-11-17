@@ -19,7 +19,7 @@ public class ScreenBlockBreaker extends AbstractHarvesterScreen<ContainerBlockBr
 
 	@Override
 	protected double getProgress(TileFrontHarvester harvester) {
-		return harvester.clientProgress;
+		return harvester.getProgress();
 	}
 
 	@Override

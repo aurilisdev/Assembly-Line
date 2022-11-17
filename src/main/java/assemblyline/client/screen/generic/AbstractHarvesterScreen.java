@@ -23,8 +23,6 @@ import net.minecraft.world.entity.player.Inventory;
 
 public abstract class AbstractHarvesterScreen<T extends AbstractHarvesterContainer> extends GenericScreen<T> {
 
-	private ButtonSwappableLabel renderArea;
-
 	protected AbstractHarvesterScreen(T screenContainer, Inventory inv, Component titleIn) {
 		super(screenContainer, inv, titleIn);
 		components.add(new ScreenComponentCountdown(() -> {
@@ -42,7 +40,7 @@ public abstract class AbstractHarvesterScreen<T extends AbstractHarvesterContain
 		TileFrontHarvester harvester = menu.getHostFromIntArray();
 		if (harvester != null) {
 			ComponentElectrodynamic electro = harvester.getComponent(ComponentType.Electrodynamic);
-			list.add(Component.translatable("gui.machine.usage", Component.literal(ChatFormatter.getChatDisplayShort(harvester.getUsage() * harvester.clientUsageMultiplier * 20, DisplayUnit.WATT)).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
+			list.add(Component.translatable("gui.machine.usage", Component.literal(ChatFormatter.getChatDisplayShort(harvester.getUsage() * harvester.powerUsageMultiplier.get() * 20, DisplayUnit.WATT)).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
 			list.add(Component.translatable("gui.machine.voltage", Component.literal(ChatFormatter.getChatDisplayShort(electro.getVoltage(), DisplayUnit.VOLTAGE)).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
 		}
 		return list;
@@ -67,7 +65,7 @@ public abstract class AbstractHarvesterScreen<T extends AbstractHarvesterContain
 	protected void initButtons() {
 		int i = (width - imageWidth) / 2;
 		int j = (height - imageHeight) / 2;
-		renderArea = new ButtonSwappableLabel(i + 10, j + 20, 60, 20, Component.translatable("label.renderarea"), Component.translatable("label.hidearea"), () -> {
+		ButtonSwappableLabel renderArea = new ButtonSwappableLabel(i + 10, j + 20, 60, 20, Component.translatable("label.renderarea"), Component.translatable("label.hidearea"), () -> {
 			TileFrontHarvester harvester = menu.getHostFromIntArray();
 			if (harvester != null) {
 				return ClientEvents.outlines.containsKey(harvester.getBlockPos());
@@ -90,7 +88,7 @@ public abstract class AbstractHarvesterScreen<T extends AbstractHarvesterContain
 	}
 
 	private void updateBox(TileFrontHarvester harvester) {
-		ClientEvents.outlines.put(harvester.getBlockPos(), harvester.getAABB(harvester.clientWidth, harvester.clientLength, harvester.clientHeight, isFlipped(), true, harvester));
+		ClientEvents.outlines.put(harvester.getBlockPos(), harvester.getAABB(harvester.width.get(), harvester.length.get(), harvester.height.get(), isFlipped(), true, harvester));
 	}
 
 	protected abstract boolean isFlipped();

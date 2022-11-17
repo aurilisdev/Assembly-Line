@@ -12,7 +12,6 @@ import electrodynamics.common.item.ItemUpgrade;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
-import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
 import electrodynamics.prefab.utilities.object.TransferPack;
 import net.minecraft.core.BlockPos;
@@ -31,32 +30,32 @@ public class TileMobGrinder extends TileFrontHarvester {
 	@Override
 	public void tickServer(ComponentTickable tickable) {
 		ComponentInventory inv = getComponent(ComponentType.Inventory);
-		currentWaitTime = DEFAULT_WAIT_TICKS;
-		currentWidth = DEFAULT_CHECK_WIDTH;
-		currentLength = DEFAULT_CHECK_LENGTH;
-		currentHeight = DEFAULT_CHECK_HEIGHT;
-		powerUsageMultiplier = 1;
+		currentWaitTime.set(DEFAULT_WAIT_TICKS);
+		width.set(DEFAULT_CHECK_WIDTH, true);
+		length.set(DEFAULT_CHECK_LENGTH, true);
+		height.set(DEFAULT_CHECK_HEIGHT);
+		powerUsageMultiplier.set(1.0);
 		for (ItemStack stack : inv.getUpgradeContents()) {
 			if (!stack.isEmpty()) {
 				ItemUpgrade upgrade = (ItemUpgrade) stack.getItem();
 				switch (upgrade.subtype) {
 				case advancedspeed:
 					for (int i = 0; i < stack.getCount(); i++) {
-						currentWaitTime = Math.max(currentWaitTime / 3, FASTEST_WAIT_TICKS);
-						powerUsageMultiplier *= 1.5;
+						currentWaitTime.set(Math.max(currentWaitTime.get() / 3, FASTEST_WAIT_TICKS));
+						powerUsageMultiplier.set(powerUsageMultiplier.get() * 1.5);
 					}
 					break;
 				case basicspeed:
 					for (int i = 0; i < stack.getCount(); i++) {
-						currentWaitTime = (int) Math.max(currentWaitTime / 1.25, FASTEST_WAIT_TICKS);
-						powerUsageMultiplier *= 1.5;
+						currentWaitTime.set((int) Math.max(currentWaitTime.get() / 1.25, FASTEST_WAIT_TICKS));
+						powerUsageMultiplier.set(powerUsageMultiplier.get() * 1.5);
 					}
 					break;
 				case range:
 					for (int i = 0; i < stack.getCount(); i++) {
-						currentLength = Math.min(currentLength + 2, MAX_CHECK_LENGTH);
-						currentWidth = Math.min(currentWidth + 2, MAX_CHECK_WIDTH);
-						powerUsageMultiplier *= 1.3;
+						length.set(Math.min(length.get() + 2, MAX_CHECK_LENGTH));
+						width.set(Math.min(width.get() + 2, MAX_CHECK_WIDTH));
+						powerUsageMultiplier.set(powerUsageMultiplier.get() * 1.3);
 					}
 					break;
 				case itemoutput:
@@ -68,24 +67,21 @@ public class TileMobGrinder extends TileFrontHarvester {
 			}
 		}
 		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
-		if (tickable.getTicks() % 20 == 0) {
-			this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
-		}
 		if (inv.areOutputsEmpty() && electro.getJoulesStored() >= Constants.MOBGRINDER_USAGE) {
-			if (ticksSinceCheck == 0) {
-				checkArea = getAABB(currentWidth, currentLength, currentHeight, true, false, this);
+			if (ticksSinceCheck.get() == 0) {
+				checkArea = getAABB(width.get(), length.get(), height.get(), true, false, this);
 				List<Entity> entities = level.getEntities(null, checkArea);
 				for (Entity entity : entities) {
 					if (electro.getJoulesStored() >= Constants.RANCHER_USAGE && !(entity instanceof Player)) {
-						electro.extractPower(TransferPack.joulesVoltage(Constants.MOBGRINDER_USAGE * powerUsageMultiplier, electro.getVoltage()), false);
+						electro.extractPower(TransferPack.joulesVoltage(Constants.MOBGRINDER_USAGE * powerUsageMultiplier.get(), electro.getVoltage()), false);
 						entity.getCapability(ElectrodynamicsCapabilities.LOCATION_STORAGE_CAPABILITY).ifPresent(h -> h.setLocation(0, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()));
 						entity.kill();
 					}
 				}
 			}
-			ticksSinceCheck++;
-			if (ticksSinceCheck >= currentWaitTime) {
-				ticksSinceCheck = 0;
+			ticksSinceCheck.set(ticksSinceCheck.get() + 1);
+			if (ticksSinceCheck.get() >= currentWaitTime.get()) {
+				ticksSinceCheck.set(0);
 			}
 		}
 	}

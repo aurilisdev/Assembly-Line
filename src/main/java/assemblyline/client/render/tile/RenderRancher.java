@@ -19,7 +19,7 @@ public class RenderRancher implements BlockEntityRenderer<TileRancher> {
 
 	@Override
 	public void render(TileRancher tileEntityIn, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
-		double progress = tileEntityIn.clientProgress > 0 ? (tileEntityIn.getLevel().getDayTime() + (tileEntityIn.clientProgress > 0 ? partialTicks : 0)) * 30 : 0;
+		double progress = tileEntityIn.getProgress() > 0 ? (tileEntityIn.getLevel().getDayTime() + (tileEntityIn.getProgress() > 0 ? partialTicks : 0)) * 30 : 0;
 		progress = Math.sin(progress / 80) * 50;
 		BakedModel ibakedmodel = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_RANCHERLEFT);
 		matrixStackIn.pushPose();
