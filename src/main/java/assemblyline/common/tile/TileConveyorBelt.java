@@ -29,17 +29,17 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class TileConveyorBelt extends GenericTile {
-	
+
 	public final Property<Integer> currentSpread = property(new Property<>(PropertyType.Integer, "currentSpread", 0));
 	public final Property<Boolean> running = property(new Property<>(PropertyType.Boolean, "running", false));
 	public final Property<Boolean> isQueueReady = property(new Property<>(PropertyType.Boolean, "isQueueReady", false));
 	public final Property<Boolean> waiting = property(new Property<>(PropertyType.Boolean, "waiting", false));
 	public final Property<Location> conveyorObject = property(new Property<>(PropertyType.Location, "conveyorObject", new Location(0, 0, 0)));
 	public final Property<Integer> conveyorType = property(new Property<>(PropertyType.Integer, "conveyorType", ConveyorType.Horizontal.ordinal()));
-	
+
 	public int wait = 0;
 	public ArrayList<TileConveyorBelt> inQueue = new ArrayList<>();
-	
+
 	public boolean isPusher = false;
 	public boolean isPuller = false;
 
@@ -161,18 +161,18 @@ public class TileConveyorBelt extends GenericTile {
 		BlockPos pos = conveyorObject.get().toBlockPos();
 		Vector3f local = getObjectLocal();
 		Vector3f direction = getDirectionAsVector();
-		
+
 		float coordComponent = local.dot(direction);
 		ConveyorType type = ConveyorType.values()[conveyorType.get()];
 		if (type != ConveyorType.Horizontal) {
 			return type == ConveyorType.SlopedDown ? conveyorObject.get().y() <= worldPosition.getY() - 1 : conveyorObject.get().y() >= worldPosition.getY() + 1;
 		}
-		
+
 		float value = 1;
-		if(belt != null && (belt.inQueue.isEmpty() || belt.inQueue.get(0) == this) && belt.isQueueReady.get()) {
+		if (belt != null && (belt.inQueue.isEmpty() || belt.inQueue.get(0) == this) && belt.isQueueReady.get()) {
 			ConveyorType beltType = ConveyorType.values()[belt.conveyorType.get()];
 			value = beltType == ConveyorType.SlopedUp || type == ConveyorType.Vertical ? 1 : 1.25f;
-		} 
+		}
 
 		if (direction.x() + direction.y() + direction.z() > 0) {
 			return !pos.equals(worldPosition) && coordComponent >= value;

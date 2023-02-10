@@ -7,6 +7,6 @@ public class BlockBlockBreaker extends GenericMachineBlock {
 
 	public BlockBlockBreaker() {
 		super(TileBlockBreaker::new);
-		
+
 	}
 }

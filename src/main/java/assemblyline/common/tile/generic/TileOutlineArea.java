@@ -17,9 +17,9 @@ public abstract class TileOutlineArea extends GenericTile {
 	protected static final int DEFAULT_CHECK_HEIGHT = 5;
 	protected static final int MAX_CHECK_WIDTH = 25;
 	protected static final int MAX_CHECK_LENGTH = 25;
-	public Property<Integer> width = property(new Property<Integer>(PropertyType.Integer, "width", DEFAULT_CHECK_WIDTH));
-	public Property<Integer> length = property(new Property<Integer>(PropertyType.Integer, "length", DEFAULT_CHECK_LENGTH));
-	public Property<Integer> height = property(new Property<Integer>(PropertyType.Integer, "height", DEFAULT_CHECK_HEIGHT));
+	public Property<Integer> width = property(new Property<>(PropertyType.Integer, "width", DEFAULT_CHECK_WIDTH));
+	public Property<Integer> length = property(new Property<>(PropertyType.Integer, "length", DEFAULT_CHECK_LENGTH));
+	public Property<Integer> height = property(new Property<>(PropertyType.Integer, "height", DEFAULT_CHECK_HEIGHT));
 	protected AABB checkArea;
 
 	protected TileOutlineArea(BlockEntityType<?> type, BlockPos pos, BlockState state) {

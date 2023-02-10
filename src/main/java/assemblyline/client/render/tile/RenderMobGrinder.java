@@ -16,19 +16,19 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
 
 public class RenderMobGrinder extends AbstractTileRenderer<TileMobGrinder> {
-	
+
 	public RenderMobGrinder(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
 	public void render(TileMobGrinder grinder, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
-		
+
 		double progress = 0;
-		if(grinder.<ComponentElectrodynamic>getComponent(ComponentType.Electrodynamic).getJoulesStored() >= grinder.getUsage()) {
+		if (grinder.<ComponentElectrodynamic>getComponent(ComponentType.Electrodynamic).getJoulesStored() >= grinder.getUsage()) {
 			progress = grinder.getLevel().getDayTime() + partialTicks;
 		}
-		
+
 		BakedModel ibakedmodel = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_MOBGRINDERSIDEWHEEL);
 		matrixStackIn.pushPose();
 		RenderingUtils.prepareRotationalTileModel(grinder, matrixStackIn);
@@ -52,6 +52,6 @@ public class RenderMobGrinder extends AbstractTileRenderer<TileMobGrinder> {
 		matrixStackIn.mulPose(new Quaternion((float) progress, 0, 0, true));
 		RenderingUtils.renderModel(ibakedmodel, grinder, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 		matrixStackIn.popPose();
-		
+
 	}
 }

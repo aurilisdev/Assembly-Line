@@ -25,7 +25,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TileBlockBreaker extends TileFrontHarvester {
-	
+
 	public final Property<Boolean> works = property(new Property<>(PropertyType.Boolean, "works", false));
 	public final Property<Double> progress = property(new Property<>(PropertyType.Double, "progress", 0.0));
 
@@ -35,12 +35,12 @@ public class TileBlockBreaker extends TileFrontHarvester {
 
 	@Override
 	public void tickCommon(ComponentTickable tickable) {
-		
+
 	}
 
 	@Override
 	public void tickServer(ComponentTickable component) {
-		
+
 		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
 		// ignore dims; for rendering purposes
 		length.set(DEFAULT_CHECK_LENGTH);

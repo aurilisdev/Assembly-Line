@@ -60,7 +60,7 @@ public class TileCrate extends GenericTile {
 				count += stack.getCount();
 			}
 		}
-		
+
 		return count;
 	}
 

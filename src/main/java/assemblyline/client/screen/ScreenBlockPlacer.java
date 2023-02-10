@@ -35,11 +35,11 @@ public class ScreenBlockPlacer extends AbstractHarvesterScreen<ContainerBlockPla
 	protected List<? extends FormattedCharSequence> getTooltip() {
 		TileBlockPlacer placer = (TileBlockPlacer) menu.getHostFromIntArray();
 		List<FormattedCharSequence> tips = new ArrayList<>();
-		
-		if(placer != null) {
+
+		if (placer != null) {
 			tips.add(TextUtils.tooltip("cooldown", placer.currentWaitTime.get() - placer.ticksSinceCheck.get()).withStyle(ChatFormatting.GRAY).getVisualOrderText());
 		}
-		
+
 		return tips;
 	}
 

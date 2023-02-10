@@ -13,24 +13,21 @@ import net.minecraft.data.recipes.RecipeProvider;
 public class AssemblyLineRecipeProvider extends RecipeProvider {
 
 	public final List<AbstractRecipeGenerator> GENERATORS = new ArrayList<>();
-	
-	
+
 	public AssemblyLineRecipeProvider(DataGenerator gen) {
 		super(gen);
 		addRecipes();
 	}
-	
+
 	public void addRecipes() {
 		GENERATORS.add(new AssemblyLineCraftingTableRecipes());
 	}
 
 	@Override
 	protected void buildCraftingRecipes(Consumer<FinishedRecipe> consumer) {
-		for(AbstractRecipeGenerator generator : GENERATORS) {
+		for (AbstractRecipeGenerator generator : GENERATORS) {
 			generator.addRecipes(consumer);
 		}
 	}
-
-
 
 }

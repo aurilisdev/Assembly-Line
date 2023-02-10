@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TileSorterBelt extends GenericTile {
-	
+
 	public int currentSpread = 0;
 	public long lastTime = 0;
 

@@ -63,9 +63,9 @@ public class TextUtils {
 	public static boolean tooltipExists(String key) {
 		return translationExists(TOOLTIP_BASE, key);
 	}
-	
+
 	public static boolean translationExists(String base, String key) {
 		return I18n.exists(base + "." + References.ID + "." + key);
 	}
-	
+
 }

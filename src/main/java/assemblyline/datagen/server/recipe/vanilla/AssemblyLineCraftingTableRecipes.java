@@ -4,14 +4,10 @@ import java.util.function.Consumer;
 
 import assemblyline.References;
 import assemblyline.registers.AssemblyLineBlocks;
-import electrodynamics.common.block.subtype.SubtypeGlass;
-import electrodynamics.common.block.subtype.SubtypeMachine;
 import electrodynamics.common.block.subtype.SubtypeWire;
-import electrodynamics.common.item.subtype.SubtypeCeramic;
 import electrodynamics.common.tags.ElectrodynamicsTags;
 import electrodynamics.datagen.utils.recipe.AbstractRecipeGenerator;
 import electrodynamics.datagen.utils.recipe.ElectrodynamicsShapedCraftingRecipe;
-import electrodynamics.datagen.utils.recipe.ElectrodynamicsShapelessCraftingRecipe;
 import electrodynamics.registers.ElectrodynamicsItems;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.tags.ItemTags;

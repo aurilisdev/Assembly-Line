@@ -76,7 +76,7 @@ public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
 			super.onRemove(state, worldIn, pos, newState, isMoving);
 		}
 	}
-	
+
 	@Override
 	public List<ItemStack> getDrops(BlockState state, Builder builder) {
 		return Arrays.asList(new ItemStack(this));

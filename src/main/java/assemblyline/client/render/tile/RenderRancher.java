@@ -16,19 +16,19 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
 
 public class RenderRancher extends AbstractTileRenderer<TileRancher> {
-	
+
 	public RenderRancher(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
 	public void render(TileRancher rancher, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
-		
+
 		double progress = 0;
-		if(rancher.<ComponentElectrodynamic>getComponent(ComponentType.Electrodynamic).getJoulesStored() >= rancher.getUsage()) {
+		if (rancher.<ComponentElectrodynamic>getComponent(ComponentType.Electrodynamic).getJoulesStored() >= rancher.getUsage()) {
 			progress = rancher.getLevel().getDayTime() + partialTicks;
 		}
-	
+
 		progress = Math.sin(progress / 80) * 50;
 		BakedModel ibakedmodel = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_RANCHERLEFT);
 		matrixStackIn.pushPose();

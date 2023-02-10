@@ -32,10 +32,10 @@ public class ScreenFrontHarvester extends AbstractHarvesterScreen<ContainerFront
 	protected List<? extends FormattedCharSequence> getTooltip() {
 		List<FormattedCharSequence> tips = new ArrayList<>();
 		TileFrontHarvester harvester = menu.getHostFromIntArray();
-		if(harvester != null) {
+		if (harvester != null) {
 			tips.add(TextUtils.tooltip("cooldown", harvester.currentWaitTime.get() - harvester.ticksSinceCheck.get()).withStyle(ChatFormatting.GRAY).getVisualOrderText());
 		}
-		
+
 		return tips;
 	}
 

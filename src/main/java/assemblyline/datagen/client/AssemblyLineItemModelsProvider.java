@@ -5,6 +5,7 @@ import assemblyline.registers.AssemblyLineBlocks;
 import electrodynamics.datagen.client.ElectrodynamicsItemModelsProvider;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.common.data.ExistingFileHelper;
+
 public class AssemblyLineItemModelsProvider extends ElectrodynamicsItemModelsProvider {
 
 	public AssemblyLineItemModelsProvider(DataGenerator generator, ExistingFileHelper existingFileHelper) {

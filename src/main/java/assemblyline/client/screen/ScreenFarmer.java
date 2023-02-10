@@ -38,7 +38,7 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 		components.add(new ScreenComponentCountdown(() -> {
 			TileFarmer farmer = menu.getHostFromIntArray();
 			if (farmer != null) {
-				return 1 - ((float) farmer.ticksSinceCheck.get() / Math.max(farmer.currentWaitTime.get(), 1.0F));
+				return 1 - (float) farmer.ticksSinceCheck.get() / Math.max(farmer.currentWaitTime.get(), 1.0F);
 			}
 			return 0.0;
 		}, this, 10, 50 + 58));
@@ -122,7 +122,7 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 			}
 		}
 	}
-	
+
 	private void updateBox(TileFarmer farmer) {
 		HandlerFarmerLines.addRenderData(farmer.getBlockPos(), farmer.getLines(farmer));
 	}

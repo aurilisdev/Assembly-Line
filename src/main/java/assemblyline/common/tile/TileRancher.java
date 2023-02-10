@@ -37,16 +37,16 @@ public class TileRancher extends TileFrontHarvester {
 	public void tickServer(ComponentTickable tickable) {
 		ComponentInventory inv = getComponent(ComponentType.Inventory);
 		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
-		
+
 		for (ItemStack stack : inv.getUpgradeContents()) {
 			if (!stack.isEmpty()) {
 				ItemUpgrade upgrade = (ItemUpgrade) stack.getItem();
-				if(upgrade.subtype == SubtypeItemUpgrade.itemoutput) {
+				if (upgrade.subtype == SubtypeItemUpgrade.itemoutput) {
 					upgrade.subtype.applyUpgrade.accept(this, null, stack);
 				}
 			}
 		}
-		
+
 		if (inv.areOutputsEmpty() && electro.getJoulesStored() >= Constants.RANCHER_USAGE) {
 			if (ticksSinceCheck.get() == 0) {
 				checkArea = getAABB(width.get(), length.get(), height.get(), true, false, this);
@@ -92,18 +92,18 @@ public class TileRancher extends TileFrontHarvester {
 	public double getUsage() {
 		return Constants.RANCHER_USAGE;
 	}
-	
+
 	@Override
 	public void onInventoryChange(ComponentInventory inv, int slot) {
 		super.onInventoryChange(inv, slot);
-		
-		if(slot == -1 || slot >= inv.getUpgradeSlotStartIndex()) {
+
+		if (slot == -1 || slot >= inv.getUpgradeSlotStartIndex()) {
 			int waitTime = DEFAULT_WAIT_TICKS;
 			int newWidth = DEFAULT_CHECK_WIDTH;
 			int newHeight = DEFAULT_CHECK_HEIGHT;
 			int newLength = DEFAULT_CHECK_LENGTH;
 			double powerUsage = 1.0;
-			
+
 			for (ItemStack stack : inv.getUpgradeContents()) {
 				if (!stack.isEmpty()) {
 					ItemUpgrade upgrade = (ItemUpgrade) stack.getItem();
@@ -132,13 +132,13 @@ public class TileRancher extends TileFrontHarvester {
 					}
 				}
 			}
-			
+
 			currentWaitTime.set(waitTime);
 			width.set(newWidth);
 			length.set(newLength);
 			height.set(newHeight);
 			powerUsageMultiplier.set(powerUsage);
-			
+
 		}
 	}
 

@@ -89,12 +89,12 @@ public class BlockSorterBelt extends GenericEntityBlockWaterloggable {
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		return new TileSorterBelt(pos, state);
 	}
-	
+
 	@Override
 	public List<ItemStack> getDrops(BlockState state, Builder builder) {
 		return Arrays.asList(new ItemStack(this));
 	}
-	
+
 	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (!(newState.getBlock() instanceof BlockSorterBelt)) {
@@ -105,6 +105,5 @@ public class BlockSorterBelt extends GenericEntityBlockWaterloggable {
 			super.onRemove(state, worldIn, pos, newState, isMoving);
 		}
 	}
-	
-	
+
 }

@@ -37,7 +37,7 @@ public class ClientEvents {
 	public static void wipeRenderHashes(ClientPlayerNetworkEvent.LoggingOut event) {
 		Player player = event.getPlayer();
 		if (player != null) {
-			LEVEL_STAGE_RENDER_HANDLERS.forEach(handler -> handler.clear());
+			LEVEL_STAGE_RENDER_HANDLERS.forEach(AbstractLevelStageHandler::clear);
 		}
 	}
 

@@ -31,16 +31,16 @@ public class TileMobGrinder extends TileFrontHarvester {
 	@Override
 	public void tickServer(ComponentTickable tickable) {
 		ComponentInventory inv = getComponent(ComponentType.Inventory);
-		
+
 		for (ItemStack stack : inv.getUpgradeContents()) {
 			if (!stack.isEmpty()) {
 				ItemUpgrade upgrade = (ItemUpgrade) stack.getItem();
-				if(upgrade.subtype == SubtypeItemUpgrade.itemoutput) {
+				if (upgrade.subtype == SubtypeItemUpgrade.itemoutput) {
 					upgrade.subtype.applyUpgrade.accept(this, null, stack);
 				}
 			}
 		}
-		
+
 		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
 		if (inv.areOutputsEmpty() && electro.getJoulesStored() >= Constants.MOBGRINDER_USAGE) {
 			if (ticksSinceCheck.get() == 0) {
@@ -83,12 +83,12 @@ public class TileMobGrinder extends TileFrontHarvester {
 	public double getUsage() {
 		return Constants.MOBGRINDER_USAGE;
 	}
-	
+
 	@Override
 	public void onInventoryChange(ComponentInventory inv, int slot) {
 		super.onInventoryChange(inv, slot);
-		
-		if(slot == -1 || slot >= inv.getUpgradeSlotStartIndex()) {
+
+		if (slot == -1 || slot >= inv.getUpgradeSlotStartIndex()) {
 			int waitTime = DEFAULT_WAIT_TICKS;
 			int newWidth = DEFAULT_CHECK_WIDTH;
 			int newLength = DEFAULT_CHECK_LENGTH;
@@ -122,15 +122,14 @@ public class TileMobGrinder extends TileFrontHarvester {
 					}
 				}
 			}
-			
-			
+
 			currentWaitTime.set(waitTime);
 			width.set(newWidth);
 			length.set(newLength);
 			height.set(newHeight);
 			powerUsageMultiplier.set(powerMultiplier);
 		}
-		
+
 	}
 
 }

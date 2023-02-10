@@ -22,39 +22,39 @@ import net.minecraftforge.client.event.RenderLevelStageEvent.Stage;
 public class HandlerHarvesterLines extends AbstractLevelStageHandler {
 
 	public static final HandlerHarvesterLines INSTANCE = new HandlerHarvesterLines();
-	
+
 	private final HashMap<BlockPos, AABB> outlines = new HashMap<>();
-	
+
 	@Override
 	public void render(Camera camera, Frustum frustum, LevelRenderer renderer, PoseStack stack, Matrix4f projectionMatrix, Minecraft minecraft, int renderTick, float partialTick) {
-		
+
 		MultiBufferSource.BufferSource buffer = minecraft.renderBuffers().bufferSource();
 		VertexConsumer builder = buffer.getBuffer(RenderType.LINES);
 		Vec3 camPos = camera.getPosition();
-		
+
 		stack.pushPose();
 		stack.translate(-camPos.x, -camPos.y, -camPos.z);
-		
+
 		for (Entry<BlockPos, AABB> en : outlines.entrySet()) {
 			AABB box = en.getValue().deflate(0.001);
 			LevelRenderer.renderLineBox(stack, builder, box, 1.0F, 1.0F, 1.0F, 1.0F);
 		}
-		
+
 		buffer.endBatch(RenderType.LINES);
 		stack.popPose();
-		
+
 	}
 
 	@Override
 	public boolean shouldRender(Stage stage) {
 		return stage == Stage.AFTER_TRIPWIRE_BLOCKS;
 	}
-	
+
 	@Override
 	public void clear() {
 		outlines.clear();
 	}
-	
+
 	public static boolean containsLines(BlockPos pos) {
 		return INSTANCE.outlines.containsKey(pos);
 	}

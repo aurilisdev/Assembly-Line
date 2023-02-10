@@ -91,7 +91,7 @@ public abstract class AbstractHarvesterScreen<T extends AbstractHarvesterContain
 	protected abstract boolean isFlipped();
 
 	protected abstract double getProgress(TileFrontHarvester harvester);
-	
+
 	protected abstract List<? extends FormattedCharSequence> getTooltip();
 
 	private void updateBox(TileFrontHarvester harvester) {

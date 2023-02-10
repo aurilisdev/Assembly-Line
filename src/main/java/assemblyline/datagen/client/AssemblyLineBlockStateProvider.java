@@ -14,11 +14,11 @@ public class AssemblyLineBlockStateProvider extends ElectrodynamicsBlockStatePro
 
 	@Override
 	protected void registerStatesAndModels() {
-		
+
 		simpleColumnBlock(AssemblyLineBlocks.blockCrate, blockLoc("crate"), blockLoc("cratetop"), true);
 		simpleColumnBlock(AssemblyLineBlocks.blockCrateMedium, blockLoc("cratemedium"), blockLoc("cratetop"), true);
 		simpleColumnBlock(AssemblyLineBlocks.blockCrateLarge, blockLoc("cratelarge"), blockLoc("cratetop"), true);
-		
+
 		horrRotatedBlock(AssemblyLineBlocks.blockAutocrafter, existingBlock(AssemblyLineBlocks.blockAutocrafter), true);
 		horrRotatedBlock(AssemblyLineBlocks.blockBlockBreaker, existingBlock(blockLoc("blockbreakerbase")), 270, 90, false);
 		horrRotatedBlock(AssemblyLineBlocks.blockBlockPlacer, existingBlock(AssemblyLineBlocks.blockBlockPlacer), true);
@@ -28,8 +28,7 @@ public class AssemblyLineBlockStateProvider extends ElectrodynamicsBlockStatePro
 		horrRotatedBlock(AssemblyLineBlocks.blockMobGrinder, existingBlock(blockLoc("mobgrinderbase")), 270, 90, false);
 		horrRotatedBlock(AssemblyLineBlocks.blockRancher, existingBlock(AssemblyLineBlocks.blockRancher), 270, 90, true);
 		horrRotatedLitBlock(AssemblyLineBlocks.blockSorterBelt, existingBlock(AssemblyLineBlocks.blockSorterBelt), existingBlock(blockLoc("sorterbeltrunning")), true);
-	
+
 	}
-	
-	
+
 }

@@ -23,19 +23,19 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class RenderBlockBreaker extends AbstractTileRenderer<TileBlockBreaker> {
-	
+
 	public RenderBlockBreaker(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
 	public void render(TileBlockBreaker breaker, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
-		
+
 		double progress = 0;
-		if(breaker.getProgress() > 0) {
+		if (breaker.getProgress() > 0) {
 			progress = (breaker.<ComponentTickable>getComponent(ComponentType.Tickable).getTicks() + (breaker.works.get() ? partialTicks : 0)) * 20;
 		}
-		
+
 		BakedModel ibakedmodel = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_BLOCKBREAKERWHEEL);
 		matrixStackIn.pushPose();
 		RenderingUtils.prepareRotationalTileModel(breaker, matrixStackIn);
@@ -51,11 +51,11 @@ public class RenderBlockBreaker extends AbstractTileRenderer<TileBlockBreaker> {
 		matrixStackIn.mulPose(new Quaternion((float) progress, 0, 0, true));
 		RenderingUtils.renderModel(ibakedmodel, breaker, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 		matrixStackIn.popPose();
-		
-		if(breaker.getProgress() <= 0) {
+
+		if (breaker.getProgress() <= 0) {
 			return;
 		}
-		
+
 		matrixStackIn.pushPose();
 		ComponentDirection direction = breaker.getComponent(ComponentType.Direction);
 		Vec3i norm = direction.getDirection().getOpposite().getNormal();

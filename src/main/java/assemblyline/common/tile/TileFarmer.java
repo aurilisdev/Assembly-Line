@@ -81,29 +81,21 @@ public class TileFarmer extends GenericTile {
 
 	private final List<List<Integer>> quadrants = new ArrayList<>();
 
-	public final Property<Boolean> refillEmpty = property(new Property<Boolean>(PropertyType.Boolean, "refillempty", false));
-	public final Property<Boolean> fullGrowBonemeal = property(new Property<Boolean>(PropertyType.Boolean, "fullbonemeal", false)); 
+	public final Property<Boolean> refillEmpty = property(new Property<>(PropertyType.Boolean, "refillempty", false));
+	public final Property<Boolean> fullGrowBonemeal = property(new Property<>(PropertyType.Boolean, "fullbonemeal", false));
 
-	public final Property<Integer> ticksSinceCheck = property(new Property<Integer>(PropertyType.Integer, "ticks", 0));
-	public final Property<Integer> currentWaitTime = property(new Property<Integer>(PropertyType.Integer, "waitTime", DEFAULT_WAIT_TICKS));
+	public final Property<Integer> ticksSinceCheck = property(new Property<>(PropertyType.Integer, "ticks", 0));
+	public final Property<Integer> currentWaitTime = property(new Property<>(PropertyType.Integer, "waitTime", DEFAULT_WAIT_TICKS));
 
-	public final Property<Double> powerUsageMultiplier = property(new Property<Double>(PropertyType.Double, "powermultiplier", 1.0));
+	public final Property<Double> powerUsageMultiplier = property(new Property<>(PropertyType.Double, "powermultiplier", 1.0));
 
-	public final Property<Integer> currentWidth = property(new Property<Integer>(PropertyType.Integer, "currwidth", 1));
-	public final Property<Integer> currentLength = property(new Property<Integer>(PropertyType.Integer, "currlength", 1));
+	public final Property<Integer> currentWidth = property(new Property<>(PropertyType.Integer, "currwidth", 1));
+	public final Property<Integer> currentLength = property(new Property<>(PropertyType.Integer, "currlength", 1));
 
-	public static int[] COLORS = {   
-			
-			RenderingUtils.getRGBA(255, 0, 0, 0),
-			RenderingUtils.getRGBA(255, 255, 0, 0),
-			RenderingUtils.getRGBA(255, 120, 0, 255),
-			RenderingUtils.getRGBA(255, 0, 255, 0),
-			RenderingUtils.getRGBA(255, 220, 0, 255),
-			RenderingUtils.getRGBA(255, 255, 120, 0),
-			RenderingUtils.getRGBA(255, 0, 0, 255),
-			RenderingUtils.getRGBA(255, 240, 255, 0),
-			RenderingUtils.getRGBA(255, 0, 240, 255)
-			
+	public static int[] COLORS = {
+
+			RenderingUtils.getRGBA(255, 0, 0, 0), RenderingUtils.getRGBA(255, 255, 0, 0), RenderingUtils.getRGBA(255, 120, 0, 255), RenderingUtils.getRGBA(255, 0, 255, 0), RenderingUtils.getRGBA(255, 220, 0, 255), RenderingUtils.getRGBA(255, 255, 120, 0), RenderingUtils.getRGBA(255, 0, 0, 255), RenderingUtils.getRGBA(255, 240, 255, 0), RenderingUtils.getRGBA(255, 0, 240, 255)
+
 	};
 
 	public TileFarmer(BlockPos pos, BlockState state) {
@@ -394,17 +386,17 @@ public class TileFarmer extends GenericTile {
 		world.setBlockAndUpdate(checkPos, AIR);
 		world.playSound(null, checkPos, event, SoundSource.BLOCKS, 1.0F, 1.0F);
 	}
-	
+
 	@Override
 	public void onInventoryChange(ComponentInventory inv, int slot) {
 		super.onInventoryChange(inv, slot);
-		
-		if(slot == -1 || slot >= inv.getUpgradeSlotStartIndex()) {
+
+		if (slot == -1 || slot >= inv.getUpgradeSlotStartIndex()) {
 			int waitTime = DEFAULT_WAIT_TICKS;
 			int width = 3;
 			int length = 3;
 			double powerMultiplier = 1.0;
-			
+
 			for (ItemStack stack : inv.getUpgradeContents()) {
 				if (!stack.isEmpty()) {
 					ItemUpgrade upgrade = (ItemUpgrade) stack.getItem();
@@ -436,7 +428,7 @@ public class TileFarmer extends GenericTile {
 					}
 				}
 			}
-			
+
 			currentWaitTime.set(waitTime);
 			currentWidth.set(width);
 			currentLength.set(length);
