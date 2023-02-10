@@ -1,9 +1,15 @@
 package assemblyline.client.screen;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import assemblyline.client.screen.generic.AbstractHarvesterScreen;
 import assemblyline.common.inventory.container.ContainerFrontHarvester;
 import assemblyline.common.tile.generic.TileFrontHarvester;
+import assemblyline.prefab.utils.TextUtils;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 
 public class ScreenFrontHarvester extends AbstractHarvesterScreen<ContainerFrontHarvester> {
@@ -23,8 +29,14 @@ public class ScreenFrontHarvester extends AbstractHarvesterScreen<ContainerFront
 	}
 
 	@Override
-	protected String getLangKey() {
-		return "tooltip.countdown.cooldown";
+	protected List<? extends FormattedCharSequence> getTooltip() {
+		List<FormattedCharSequence> tips = new ArrayList<>();
+		TileFrontHarvester harvester = menu.getHostFromIntArray();
+		if(harvester != null) {
+			tips.add(TextUtils.tooltip("cooldown", harvester.currentWaitTime.get() - harvester.ticksSinceCheck.get()).withStyle(ChatFormatting.GRAY).getVisualOrderText());
+		}
+		
+		return tips;
 	}
 
 }

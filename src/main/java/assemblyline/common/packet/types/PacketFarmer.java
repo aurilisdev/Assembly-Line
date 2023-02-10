@@ -27,10 +27,10 @@ public class PacketFarmer {
 				if (farmer != null) {
 					switch (message.num) {
 					case 0:
-						farmer.fullGrowBonemeal = !farmer.fullGrowBonemeal;
+						farmer.fullGrowBonemeal.set(!farmer.fullGrowBonemeal.get());
 						break;
 					case 1:
-						farmer.refillEmpty = !farmer.refillEmpty;
+						farmer.refillEmpty.set(!farmer.refillEmpty.get());
 						break;
 					default:
 						break;

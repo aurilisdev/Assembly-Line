@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": {
+      "tag": "forge:cobblestone"
+    },
+    "M": {
+      "item": "electrodynamics:motor"
+    },
+    "O": {
+      "item": "minecraft:observer"
+    },
+    "P": {
+      "item": "minecraft:iron_pickaxe"
+    }
+  },
+  "pattern": [
+    "CPC",
+    "COC",
+    "CMC"
+  ],
+  "result": {
+    "item": "assemblyline:blockbreaker"
+  }
+}

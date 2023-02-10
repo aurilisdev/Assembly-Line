@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "M": {
+      "item": "electrodynamics:motor"
+    },
+    "S": {
+      "tag": "forge:ingots/steel"
+    },
+    "W": {
+      "tag": "minecraft:planks"
+    }
+  },
+  "pattern": [
+    "SSS",
+    "WMW"
+  ],
+  "result": {
+    "count": 12,
+    "item": "assemblyline:conveyorbelt"
+  }
+}

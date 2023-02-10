@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "assemblyline:block/blockplacer"
+    },
+    "facing=north": {
+      "model": "assemblyline:block/blockplacer",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "assemblyline:block/blockplacer",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "assemblyline:block/blockplacer",
+      "y": 180
+    }
+  }
+}

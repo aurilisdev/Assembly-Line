@@ -1,59 +1,43 @@
 package assemblyline.client;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map.Entry;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.datafixers.util.Pair;
-
+import assemblyline.client.render.event.levelstage.HandlerFarmerLines;
+import assemblyline.client.render.event.levelstage.HandlerHarvesterLines;
+import electrodynamics.client.render.event.levelstage.AbstractLevelStageHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
-import net.minecraftforge.client.event.RenderLevelStageEvent.Stage;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(Dist.CLIENT)
 public class ClientEvents {
 
-	public static HashMap<BlockPos, AABB> outlines = new HashMap<>();
-	public static HashMap<BlockPos, Pair<List<List<Integer>>, List<AABB>>> farmerLines = new HashMap<>();
+	private static final List<AbstractLevelStageHandler> LEVEL_STAGE_RENDER_HANDLERS = new ArrayList<>();
+
+	public static void init() {
+		LEVEL_STAGE_RENDER_HANDLERS.add(HandlerHarvesterLines.INSTANCE);
+		LEVEL_STAGE_RENDER_HANDLERS.add(HandlerFarmerLines.INSTANCE);
+	}
 
 	@SubscribeEvent
-	public static void renderSelectedBlocks(RenderLevelStageEvent event) {
-		if (event.getStage() == Stage.AFTER_WEATHER) {
-			PoseStack matrix = event.getPoseStack();
-			MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
-			VertexConsumer builder = buffer.getBuffer(RenderType.LINES);
-			Vec3 camera = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-			for (Entry<BlockPos, AABB> en : outlines.entrySet()) {
-				AABB box = en.getValue().deflate(0.001);
-				matrix.pushPose();
-				matrix.translate(-camera.x, -camera.y, -camera.z);
-				LevelRenderer.renderLineBox(matrix, builder, box, 1.0F, 1.0F, 1.0F, 1.0F);
-				matrix.popPose();
+	public static void handleRenderEvents(RenderLevelStageEvent event) {
+		LEVEL_STAGE_RENDER_HANDLERS.forEach(handler -> {
+			if (handler.shouldRender(event.getStage())) {
+				handler.render(event.getCamera(), event.getFrustum(), event.getLevelRenderer(), event.getPoseStack(), event.getProjectionMatrix(), Minecraft.getInstance(), event.getRenderTick(), event.getPartialTick());
 			}
-			for (Entry<BlockPos, Pair<List<List<Integer>>, List<AABB>>> en : farmerLines.entrySet()) {
-				List<List<Integer>> rgbaValues = en.getValue().getFirst();
-				List<AABB> lines = en.getValue().getSecond();
-				for (int i = 0; i < lines.size(); i++) {
-					AABB box = lines.get(i).deflate(0.01);
-					List<Integer> rgba = rgbaValues.get(i);
-					matrix.pushPose();
-					matrix.translate(-camera.x, -camera.y, -camera.z);
-					LevelRenderer.renderLineBox(matrix, builder, box, rgba.get(1) / 255.0F, rgba.get(2) / 255.0F, rgba.get(3) / 255.0F, rgba.get(0) / 255.0F);
-					matrix.popPose();
-				}
-			}
-			buffer.endBatch(RenderType.LINES);
+		});
+	}
+
+	@SubscribeEvent
+	public static void wipeRenderHashes(ClientPlayerNetworkEvent.LoggingOut event) {
+		Player player = event.getPlayer();
+		if (player != null) {
+			LEVEL_STAGE_RENDER_HANDLERS.forEach(handler -> handler.clear());
 		}
 	}
 

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": {
+      "tag": "forge:chests"
+    },
+    "S": {
+      "item": "assemblyline:crate"
+    }
+  },
+  "pattern": [
+    "SCS"
+  ],
+  "result": {
+    "item": "assemblyline:cratemedium"
+  }
+}

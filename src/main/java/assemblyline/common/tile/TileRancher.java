@@ -10,6 +10,7 @@ import assemblyline.common.tile.generic.TileFrontHarvester;
 import assemblyline.registers.AssemblyLineBlockTypes;
 import electrodynamics.api.capability.ElectrodynamicsCapabilities;
 import electrodynamics.common.item.ItemUpgrade;
+import electrodynamics.common.item.subtype.SubtypeItemUpgrade;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
@@ -36,42 +37,16 @@ public class TileRancher extends TileFrontHarvester {
 	public void tickServer(ComponentTickable tickable) {
 		ComponentInventory inv = getComponent(ComponentType.Inventory);
 		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
-		currentWaitTime.set(DEFAULT_WAIT_TICKS);
-		width.set(DEFAULT_CHECK_WIDTH, true);
-		length.set(DEFAULT_CHECK_LENGTH, true);
-		height.set(DEFAULT_CHECK_HEIGHT);
-		powerUsageMultiplier.set(1.0, true);
+		
 		for (ItemStack stack : inv.getUpgradeContents()) {
 			if (!stack.isEmpty()) {
 				ItemUpgrade upgrade = (ItemUpgrade) stack.getItem();
-				switch (upgrade.subtype) {
-				case advancedspeed:
-					for (int i = 0; i < stack.getCount(); i++) {
-						currentWaitTime.set(Math.max(currentWaitTime.get() / 3, FASTEST_WAIT_TICKS));
-						powerUsageMultiplier.set(powerUsageMultiplier.get() * 1.5);
-					}
-					break;
-				case basicspeed:
-					for (int i = 0; i < stack.getCount(); i++) {
-						currentWaitTime.set((int) Math.max(currentWaitTime.get() / 1.25, FASTEST_WAIT_TICKS));
-						powerUsageMultiplier.set(powerUsageMultiplier.get() * 1.5);
-					}
-					break;
-				case range:
-					for (int i = 0; i < stack.getCount(); i++) {
-						length.set(Math.min(length.get() + 2, MAX_CHECK_LENGTH));
-						width.set(Math.min(width.get() + 2, MAX_CHECK_WIDTH));
-						powerUsageMultiplier.set(powerUsageMultiplier.get() * 1.3);
-					}
-					break;
-				case itemoutput:
+				if(upgrade.subtype == SubtypeItemUpgrade.itemoutput) {
 					upgrade.subtype.applyUpgrade.accept(this, null, stack);
-					break;
-				default:
-					break;
 				}
 			}
 		}
+		
 		if (inv.areOutputsEmpty() && electro.getJoulesStored() >= Constants.RANCHER_USAGE) {
 			if (ticksSinceCheck.get() == 0) {
 				checkArea = getAABB(width.get(), length.get(), height.get(), true, false, this);
@@ -105,7 +80,7 @@ public class TileRancher extends TileFrontHarvester {
 
 	@Override
 	public ComponentInventory getInv(TileFrontHarvester harvester) {
-		return new ComponentInventory(this).size(12).outputs(9).upgrades(3).validUpgrades(ContainerFrontHarvester.VALID_UPGRADES).valid(machineValidator()).shouldSendInfo();
+		return new ComponentInventory(this).size(12).outputs(9).upgrades(3).validUpgrades(ContainerFrontHarvester.VALID_UPGRADES).valid(machineValidator());
 	}
 
 	@Override
@@ -116,6 +91,55 @@ public class TileRancher extends TileFrontHarvester {
 	@Override
 	public double getUsage() {
 		return Constants.RANCHER_USAGE;
+	}
+	
+	@Override
+	public void onInventoryChange(ComponentInventory inv, int slot) {
+		super.onInventoryChange(inv, slot);
+		
+		if(slot == -1 || slot >= inv.getUpgradeSlotStartIndex()) {
+			int waitTime = DEFAULT_WAIT_TICKS;
+			int newWidth = DEFAULT_CHECK_WIDTH;
+			int newHeight = DEFAULT_CHECK_HEIGHT;
+			int newLength = DEFAULT_CHECK_LENGTH;
+			double powerUsage = 1.0;
+			
+			for (ItemStack stack : inv.getUpgradeContents()) {
+				if (!stack.isEmpty()) {
+					ItemUpgrade upgrade = (ItemUpgrade) stack.getItem();
+					switch (upgrade.subtype) {
+					case advancedspeed:
+						for (int i = 0; i < stack.getCount(); i++) {
+							waitTime = Math.max(waitTime / 3, FASTEST_WAIT_TICKS);
+							powerUsage *= 1.5;
+						}
+						break;
+					case basicspeed:
+						for (int i = 0; i < stack.getCount(); i++) {
+							waitTime = (int) Math.max(waitTime / 1.25, FASTEST_WAIT_TICKS);
+							powerUsage *= 1.5;
+						}
+						break;
+					case range:
+						for (int i = 0; i < stack.getCount(); i++) {
+							newLength = Math.min(newLength + 2, MAX_CHECK_LENGTH);
+							newWidth = Math.min(newWidth + 2, MAX_CHECK_WIDTH);
+							powerUsage *= 1.3;
+						}
+						break;
+					default:
+						break;
+					}
+				}
+			}
+			
+			currentWaitTime.set(waitTime);
+			width.set(newWidth);
+			length.set(newLength);
+			height.set(newHeight);
+			powerUsageMultiplier.set(powerUsage);
+			
+		}
 	}
 
 }

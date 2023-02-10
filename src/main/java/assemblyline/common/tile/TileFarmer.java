@@ -1,20 +1,20 @@
 package assemblyline.common.tile;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.mojang.datafixers.util.Pair;
 
-import assemblyline.client.ClientEvents;
+import assemblyline.client.render.event.levelstage.HandlerFarmerLines;
 import assemblyline.common.inventory.container.ContainerFarmer;
 import assemblyline.common.settings.Constants;
 import assemblyline.registers.AssemblyLineBlockTypes;
 import electrodynamics.api.capability.ElectrodynamicsCapabilities;
-import electrodynamics.api.item.ItemUtils;
 import electrodynamics.common.item.ItemUpgrade;
+import electrodynamics.prefab.properties.Property;
+import electrodynamics.prefab.properties.PropertyType;
 import electrodynamics.prefab.tile.GenericTile;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentContainerProvider;
@@ -24,6 +24,8 @@ import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
 import electrodynamics.prefab.utilities.InventoryUtils;
+import electrodynamics.prefab.utilities.ItemUtils;
+import electrodynamics.prefab.utilities.RenderingUtils;
 import electrodynamics.prefab.utilities.object.TransferPack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -79,39 +81,30 @@ public class TileFarmer extends GenericTile {
 
 	private final List<List<Integer>> quadrants = new ArrayList<>();
 
-	public boolean refillEmpty = false;
-	public boolean fullGrowBonemeal = false;
+	public final Property<Boolean> refillEmpty = property(new Property<Boolean>(PropertyType.Boolean, "refillempty", false));
+	public final Property<Boolean> fullGrowBonemeal = property(new Property<Boolean>(PropertyType.Boolean, "fullbonemeal", false)); 
 
-	public boolean clientRefillEmpty;
-	public boolean clientGrowBonemeal;
+	public final Property<Integer> ticksSinceCheck = property(new Property<Integer>(PropertyType.Integer, "ticks", 0));
+	public final Property<Integer> currentWaitTime = property(new Property<Integer>(PropertyType.Integer, "waitTime", DEFAULT_WAIT_TICKS));
 
-	private int ticksSinceCheck;
-	private int currentWaitTime;
+	public final Property<Double> powerUsageMultiplier = property(new Property<Double>(PropertyType.Double, "powermultiplier", 1.0));
 
-	public double clientProgress;
+	public final Property<Integer> currentWidth = property(new Property<Integer>(PropertyType.Integer, "currwidth", 1));
+	public final Property<Integer> currentLength = property(new Property<Integer>(PropertyType.Integer, "currlength", 1));
 
-	private double powerUsageMultiplier = 1;
-	public double clientUsageMultiplier;
-
-	protected int currentWidth;
-	protected int currentLength;
-	public int clientLength;
-	public int clientWidth;
-
-	public static List<List<Integer>> COLORS = new ArrayList<>();
-
-	static {
-		// argb
-		COLORS.add(Arrays.asList(255, 0, 0, 0));
-		COLORS.add(Arrays.asList(255, 255, 0, 0));
-		COLORS.add(Arrays.asList(255, 120, 0, 255));
-		COLORS.add(Arrays.asList(255, 0, 255, 0));
-		COLORS.add(Arrays.asList(255, 220, 0, 255));
-		COLORS.add(Arrays.asList(255, 255, 120, 0));
-		COLORS.add(Arrays.asList(255, 0, 0, 255));
-		COLORS.add(Arrays.asList(255, 240, 255, 0));
-		COLORS.add(Arrays.asList(255, 0, 240, 255));
-	}
+	public static int[] COLORS = {   
+			
+			RenderingUtils.getRGBA(255, 0, 0, 0),
+			RenderingUtils.getRGBA(255, 255, 0, 0),
+			RenderingUtils.getRGBA(255, 120, 0, 255),
+			RenderingUtils.getRGBA(255, 0, 255, 0),
+			RenderingUtils.getRGBA(255, 220, 0, 255),
+			RenderingUtils.getRGBA(255, 255, 120, 0),
+			RenderingUtils.getRGBA(255, 0, 0, 255),
+			RenderingUtils.getRGBA(255, 240, 255, 0),
+			RenderingUtils.getRGBA(255, 0, 240, 255)
+			
+	};
 
 	public TileFarmer(BlockPos pos, BlockState state) {
 		super(AssemblyLineBlockTypes.TILE_FARMER.get(), pos, state);
@@ -119,54 +112,19 @@ public class TileFarmer extends GenericTile {
 		addComponent(new ComponentPacketHandler());
 		addComponent(new ComponentTickable().tickServer(this::tickServer));
 		addComponent(new ComponentElectrodynamic(this).relativeInput(Direction.DOWN).voltage(ElectrodynamicsCapabilities.DEFAULT_VOLTAGE).maxJoules(Constants.FARMER_USAGE * 20));
-		addComponent(new ComponentInventory(this).size(22).inputs(10).outputs(9).upgrades(3).validUpgrades(ContainerFarmer.VALID_UPGRADES).valid(machineValidator()).shouldSendInfo());
+		addComponent(new ComponentInventory(this).size(22).inputs(10).outputs(9).upgrades(3).validUpgrades(ContainerFarmer.VALID_UPGRADES).valid(machineValidator()));
 		addComponent(new ComponentContainerProvider("container.farmer").createMenu((id, player) -> new ContainerFarmer(id, player, getComponent(ComponentType.Inventory), getCoordsArray())));
 	}
 
 	public void tickServer(ComponentTickable tick) {
-		ComponentInventory inv = getComponent(ComponentType.Inventory);
-		currentWaitTime = DEFAULT_WAIT_TICKS;
-		currentWidth = 3;
-		currentLength = 3;
-		powerUsageMultiplier = 1;
-		for (ItemStack stack : inv.getUpgradeContents()) {
-			if (!stack.isEmpty()) {
-				ItemUpgrade upgrade = (ItemUpgrade) stack.getItem();
-				switch (upgrade.subtype) {
-				case advancedspeed:
-					for (int i = 0; i < stack.getCount(); i++) {
-						currentWaitTime = Math.max(currentWaitTime / 4, FASTEST_WAIT_TICKS);
-						powerUsageMultiplier *= 1.5;
-					}
-					break;
-				case basicspeed:
-					for (int i = 0; i < stack.getCount(); i++) {
-						currentWaitTime = (int) Math.max(currentWaitTime / 1.5, FASTEST_WAIT_TICKS);
-						powerUsageMultiplier *= 1.5;
-					}
-					break;
-				case range:
-					for (int i = 0; i < stack.getCount(); i++) {
-						currentLength = Math.min(currentLength + 6, MAX_LENGTH_FARMER);
-						currentWidth = Math.min(currentWidth + 6, MAX_WIDTH_FARMER);
-						powerUsageMultiplier *= 1.3;
-					}
-					break;
-				case itemoutput:
-					upgrade.subtype.applyUpgrade.accept(this, null, stack);
-					break;
-				default:
-					break;
-				}
-			}
-		}
+
 		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
 		// faster starting speed, but the fastest speed is one block in area checked per tick
 		if (electro.getJoulesStored() >= Constants.MOBGRINDER_USAGE) {
 			electro.extractPower(TransferPack.joulesVoltage(Constants.MOBGRINDER_USAGE, electro.getVoltage()), false);
-			if (ticksSinceCheck == 0) {
+			if (ticksSinceCheck.get() == 0) {
 				BlockPos machinePos = getBlockPos();
-				BlockPos startPos = new BlockPos(machinePos.getX() - currentWidth / 2, machinePos.getY() + OPERATION_OFFSET, machinePos.getZ() - currentLength / 2);
+				BlockPos startPos = new BlockPos(machinePos.getX() - currentWidth.get() / 2, machinePos.getY() + OPERATION_OFFSET, machinePos.getZ() - currentLength.get() / 2);
 				genQuadrants();
 				BlockPos checkPos = new BlockPos(startPos.getX() + prevXShift, startPos.getY(), startPos.getZ() + prevZShift);
 				int quadrant = getQuadrant(prevXShift, prevZShift);
@@ -176,18 +134,18 @@ public class TileFarmer extends GenericTile {
 				}
 				refillInputs();
 				prevZShift++;
-				if (prevZShift >= currentLength) {
+				if (prevZShift >= currentLength.get()) {
 					prevZShift = 0;
 					prevXShift++;
-					if (prevXShift >= currentWidth) {
+					if (prevXShift >= currentWidth.get()) {
 						prevXShift = 0;
 					}
 				}
 				quadrants.clear();
 			}
-			ticksSinceCheck++;
-			if (ticksSinceCheck >= currentWaitTime) {
-				ticksSinceCheck = 0;
+			ticksSinceCheck.set(ticksSinceCheck.get() + 1);
+			if (ticksSinceCheck.get() >= currentWaitTime.get()) {
+				ticksSinceCheck.set(0);
 			}
 		}
 
@@ -286,7 +244,7 @@ public class TileFarmer extends GenericTile {
 				world.setBlockAndUpdate(checkPos, block.defaultBlockState());
 				world.playSound(null, checkPos, SoundEvents.CROP_PLANTED, SoundSource.BLOCKS, 1.0F, 1.0F);
 				plantingContents.shrink(1);
-				electro.extractPower(TransferPack.joulesVoltage(Constants.FARMER_USAGE * powerUsageMultiplier, electro.getVoltage()), false);
+				electro.extractPower(TransferPack.joulesVoltage(Constants.FARMER_USAGE * powerUsageMultiplier.get(), electro.getVoltage()), false);
 				// then we check if it can be planted if the block becomes farmland
 			} else if (belowState.is(Blocks.DIRT) && farmland.canSustainPlant(world, below, Direction.UP, plantable)) {
 				world.setBlockAndUpdate(below, farmland);
@@ -294,13 +252,13 @@ public class TileFarmer extends GenericTile {
 				world.setBlockAndUpdate(checkPos, block.defaultBlockState());
 				world.playSound(null, checkPos, SoundEvents.CROP_PLANTED, SoundSource.BLOCKS, 1.0F, 1.0F);
 				plantingContents.shrink(1);
-				electro.extractPower(TransferPack.joulesVoltage(Constants.FARMER_USAGE * powerUsageMultiplier, electro.getVoltage()), false);
+				electro.extractPower(TransferPack.joulesVoltage(Constants.FARMER_USAGE * powerUsageMultiplier.get(), electro.getVoltage()), false);
 			}
 		}
 		// update checkState in case something has been planted
 		checkState = world.getBlockState(checkPos);
 		if (bonemeal.getItem() instanceof BoneMealItem && bonemeal.getCount() > 0) {
-			if (fullGrowBonemeal) {
+			if (fullGrowBonemeal.get()) {
 				while (bonemeal.getCount() > 0 && checkState.getBlock() instanceof BonemealableBlock bone && bone.isValidBonemealTarget(world, checkPos, checkState, false)) {
 					bone.performBonemeal((ServerLevel) world, world.getRandom(), checkPos, checkState);
 					bonemeal.shrink(1);
@@ -325,7 +283,7 @@ public class TileFarmer extends GenericTile {
 						int accepted = room > output.getCount() ? output.getCount() : room;
 						input.grow(accepted);
 						output.shrink(accepted);
-					} else if (refillEmpty && input.isEmpty() && output.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof IPlantable) {
+					} else if (refillEmpty.get() && input.isEmpty() && output.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof IPlantable) {
 						int room = inv.getMaxStackSize();
 						int amountAccepted = room > output.getCount() ? output.getCount() : room;
 						inv.setItem(i, new ItemStack(output.getItem(), amountAccepted).copy());
@@ -337,15 +295,15 @@ public class TileFarmer extends GenericTile {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public Pair<List<List<Integer>>, List<AABB>> getLines(TileFarmer farmer) {
+	public Pair<int[], List<AABB>> getLines(TileFarmer farmer) {
 		BlockPos machinePos = farmer.getBlockPos();
-		int multiplier = farmer.clientWidth / 3;
+		int multiplier = farmer.currentWidth.get() / 3;
 		int x = machinePos.getX();
 		int y = machinePos.getY() + OPERATION_OFFSET;
 		int z = machinePos.getZ();
 		List<AABB> boundingBoxes = new ArrayList<>();
-		int xOffset = farmer.clientWidth / 2;
-		int zOffset = farmer.clientLength / 2;
+		int xOffset = farmer.currentWidth.get() / 2;
+		int zOffset = farmer.currentLength.get() / 2;
 		BlockPos startPos;
 		BlockPos endPos;
 		if (multiplier == 1) {
@@ -368,29 +326,9 @@ public class TileFarmer extends GenericTile {
 		return Pair.of(COLORS, boundingBoxes);
 	}
 
-	protected void createPacket(CompoundTag nbt) {
-		nbt.putInt("clientLength", currentLength);
-		nbt.putInt("clientWidth", currentWidth);
-		nbt.putDouble("clientProgress", (double) ticksSinceCheck / (double) currentWaitTime);
-		nbt.putDouble("clientMultiplier", powerUsageMultiplier);
-		nbt.putBoolean("clientBonemeal", fullGrowBonemeal);
-		nbt.putBoolean("clientRefill", refillEmpty);
-	}
-
-	protected void readPacket(CompoundTag nbt) {
-		clientLength = nbt.getInt("clientLength");
-		clientWidth = nbt.getInt("clientWidth");
-		clientProgress = nbt.getDouble("clientProgress");
-		clientUsageMultiplier = nbt.getDouble("clientMultiplier");
-		clientGrowBonemeal = nbt.getBoolean("clientBonemeal");
-		clientRefillEmpty = nbt.getBoolean("clientRefill");
-	}
-
 	@Override
 	public void saveAdditional(CompoundTag nbt) {
 		super.saveAdditional(nbt);
-		nbt.putBoolean("bonemeal", fullGrowBonemeal);
-		nbt.putBoolean("refill", refillEmpty);
 		nbt.putInt("xPos", prevXShift);
 		nbt.putInt("zPos", prevZShift);
 	}
@@ -398,8 +336,6 @@ public class TileFarmer extends GenericTile {
 	@Override
 	public void load(CompoundTag nbt) {
 		super.load(nbt);
-		fullGrowBonemeal = nbt.getBoolean("bonemeal");
-		refillEmpty = nbt.getBoolean("refill");
 		prevXShift = nbt.getInt("xPos");
 		prevZShift = nbt.getInt("zPos");
 	}
@@ -408,7 +344,7 @@ public class TileFarmer extends GenericTile {
 	public void setRemoved() {
 		super.setRemoved();
 		if (getLevel().isClientSide) {
-			ClientEvents.farmerLines.remove(getBlockPos());
+			HandlerFarmerLines.remove(getBlockPos());
 		}
 	}
 
@@ -423,7 +359,7 @@ public class TileFarmer extends GenericTile {
 	}
 
 	private void genQuadrants() {
-		int multiplier = currentLength / 3;
+		int multiplier = currentLength.get() / 3;
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {
 				List<Integer> quadrant = new ArrayList<>();
@@ -452,11 +388,61 @@ public class TileFarmer extends GenericTile {
 	}
 
 	private void breakBlock(BlockState checkState, Level world, BlockPos checkPos, ComponentInventory inv, ComponentElectrodynamic electro, SoundEvent event) {
-		electro.extractPower(TransferPack.joulesVoltage(Constants.FARMER_USAGE * powerUsageMultiplier, electro.getVoltage()), false);
+		electro.extractPower(TransferPack.joulesVoltage(Constants.FARMER_USAGE * powerUsageMultiplier.get(), electro.getVoltage()), false);
 		List<ItemStack> drops = Block.getDrops(checkState, (ServerLevel) world, checkPos, null);
 		InventoryUtils.addItemsToInventory(inv, drops, inv.getOutputStartIndex(), inv.getOutputContents().size());
 		world.setBlockAndUpdate(checkPos, AIR);
 		world.playSound(null, checkPos, event, SoundSource.BLOCKS, 1.0F, 1.0F);
+	}
+	
+	@Override
+	public void onInventoryChange(ComponentInventory inv, int slot) {
+		super.onInventoryChange(inv, slot);
+		
+		if(slot == -1 || slot >= inv.getUpgradeSlotStartIndex()) {
+			int waitTime = DEFAULT_WAIT_TICKS;
+			int width = 3;
+			int length = 3;
+			double powerMultiplier = 1.0;
+			
+			for (ItemStack stack : inv.getUpgradeContents()) {
+				if (!stack.isEmpty()) {
+					ItemUpgrade upgrade = (ItemUpgrade) stack.getItem();
+					switch (upgrade.subtype) {
+					case advancedspeed:
+						for (int i = 0; i < stack.getCount(); i++) {
+							waitTime = Math.max(waitTime / 4, FASTEST_WAIT_TICKS);
+							powerMultiplier *= 1.5;
+						}
+						break;
+					case basicspeed:
+						for (int i = 0; i < stack.getCount(); i++) {
+							waitTime = (int) Math.max(waitTime / 1.5, FASTEST_WAIT_TICKS);
+							powerMultiplier *= 1.5;
+						}
+						break;
+					case range:
+						for (int i = 0; i < stack.getCount(); i++) {
+							length = Math.min(length + 6, MAX_LENGTH_FARMER);
+							width = Math.min(width + 6, MAX_WIDTH_FARMER);
+							powerMultiplier *= 1.3;
+						}
+						break;
+					case itemoutput:
+						upgrade.subtype.applyUpgrade.accept(this, null, stack);
+						break;
+					default:
+						break;
+					}
+				}
+			}
+			
+			currentWaitTime.set(waitTime);
+			currentWidth.set(width);
+			currentLength.set(length);
+			powerUsageMultiplier.set(powerMultiplier);
+		}
+
 	}
 
 }

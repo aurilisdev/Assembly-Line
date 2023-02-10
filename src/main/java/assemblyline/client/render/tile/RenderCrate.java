@@ -6,22 +6,23 @@ import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 
 import assemblyline.common.tile.TileCrate;
+import electrodynamics.client.render.tile.AbstractTileRenderer;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 
-public class RenderCrate implements BlockEntityRenderer<TileCrate> {
+public class RenderCrate extends AbstractTileRenderer<TileCrate> {
 
 	public RenderCrate(BlockEntityRendererProvider.Context context) {
+		super(context);
 	}
 
 	@Override

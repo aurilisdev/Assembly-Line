@@ -1,6 +1,6 @@
 package assemblyline.common.tile.generic;
 
-import assemblyline.client.ClientEvents;
+import assemblyline.client.render.event.levelstage.HandlerHarvesterLines;
 import electrodynamics.prefab.properties.Property;
 import electrodynamics.prefab.properties.PropertyType;
 import electrodynamics.prefab.tile.GenericTile;
@@ -17,9 +17,9 @@ public abstract class TileOutlineArea extends GenericTile {
 	protected static final int DEFAULT_CHECK_HEIGHT = 5;
 	protected static final int MAX_CHECK_WIDTH = 25;
 	protected static final int MAX_CHECK_LENGTH = 25;
-	public Property<Integer> width = property(new Property<Integer>(PropertyType.Integer, "width")).set(0);
-	public Property<Integer> length = property(new Property<Integer>(PropertyType.Integer, "width")).set(0);
-	public Property<Integer> height = property(new Property<Integer>(PropertyType.Integer, "width")).set(0);
+	public Property<Integer> width = property(new Property<Integer>(PropertyType.Integer, "width", DEFAULT_CHECK_WIDTH));
+	public Property<Integer> length = property(new Property<Integer>(PropertyType.Integer, "length", DEFAULT_CHECK_LENGTH));
+	public Property<Integer> height = property(new Property<Integer>(PropertyType.Integer, "height", DEFAULT_CHECK_HEIGHT));
 	protected AABB checkArea;
 
 	protected TileOutlineArea(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -32,7 +32,7 @@ public abstract class TileOutlineArea extends GenericTile {
 	public void setRemoved() {
 		super.setRemoved();
 		if (getLevel().isClientSide) {
-			ClientEvents.outlines.remove(getBlockPos());
+			HandlerHarvesterLines.removeLines(getBlockPos());
 		}
 	}
 

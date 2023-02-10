@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "item": "minecraft:iron_axe"
+    },
+    "C": {
+      "tag": "forge:circuits/basic"
+    },
+    "H": {
+      "item": "minecraft:iron_hoe"
+    },
+    "P": {
+      "tag": "forge:plates/steel"
+    },
+    "S": {
+      "item": "minecraft:shears"
+    },
+    "W": {
+      "item": "electrodynamics:wireinsulatedcopper"
+    }
+  },
+  "pattern": [
+    "PSP",
+    "ACH",
+    "PWP"
+  ],
+  "result": {
+    "item": "assemblyline:farmer"
+  }
+}

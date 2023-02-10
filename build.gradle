@@ -81,7 +81,7 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'assemblyline', '--all', '--output', file('src/generated/resources/')
+            args '--mod', 'assemblyline', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
                 assemblyline {
@@ -91,6 +91,8 @@ minecraft {
         }
     }
 }
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
 	def Folder = new File("C:/AmpzLibz")

@@ -2,12 +2,10 @@ package assemblyline.common.block;
 
 import assemblyline.common.tile.TileCrate;
 import electrodynamics.prefab.block.GenericEntityBlock;
-import electrodynamics.prefab.tile.GenericTile;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -30,18 +28,6 @@ public class BlockCrate extends GenericEntityBlock {
 	public BlockCrate(int size) {
 		super(Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL).requiresCorrectToolForDrops());
 		this.size = size;
-	}
-
-	@Override
-	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		BlockEntity tile = worldIn.getBlockEntity(pos);
-		if (tile instanceof GenericTile generic && !(state.getBlock() == newState.getBlock() && state.getValue(GenericEntityBlock.FACING) != newState.getValue(GenericEntityBlock.FACING))) {
-			if (generic.hasComponent(ComponentType.Inventory)) {
-				Containers.dropContents(worldIn, pos, generic.<ComponentInventory>getComponent(ComponentType.Inventory));
-			}
-		}
-		super.onRemove(state, worldIn, pos, newState, isMoving);
-
 	}
 
 	@Override

@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "C": {
+      "tag": "forge:circuits/basic"
+    },
+    "E": {
+      "tag": "forge:ender_pearls"
+    },
+    "I": {
+      "tag": "forge:ingots/steel"
+    }
+  },
+  "pattern": [
+    "IEI",
+    "ICI",
+    "I I"
+  ],
+  "result": {
+    "item": "assemblyline:detector"
+  }
+}

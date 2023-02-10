@@ -4,9 +4,10 @@ import assemblyline.common.inventory.container.ContainerAutocrafter;
 import assemblyline.common.settings.Constants;
 import electrodynamics.prefab.screen.GenericScreen;
 import electrodynamics.prefab.screen.component.ScreenComponentElectricInfo;
-import electrodynamics.prefab.screen.component.ScreenComponentInfo;
-import electrodynamics.prefab.screen.component.ScreenComponentProgress;
+import electrodynamics.prefab.screen.component.ScreenComponentGeneric;
 import electrodynamics.prefab.screen.component.ScreenComponentSlot;
+import electrodynamics.prefab.screen.component.utils.AbstractScreenComponentInfo;
+import electrodynamics.prefab.screen.component.ScreenComponentProgress.ProgressTextures;
 import electrodynamics.prefab.utilities.RenderingUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -18,8 +19,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class ScreenAutocrafter extends GenericScreen<ContainerAutocrafter> {
 	public ScreenAutocrafter(ContainerAutocrafter container, Inventory playerInventory, Component title) {
 		super(container, playerInventory, title);
-		components.add(new ScreenComponentProgress(() -> 0, this, 80, 34));
-		components.add(new ScreenComponentElectricInfo(this, -ScreenComponentInfo.SIZE + 1, 2).wattage(Constants.AUTOCRAFTER_USAGE));
+		components.add(new ScreenComponentGeneric(ProgressTextures.ARROW_RIGHT_OFF, this, 80, 34));
+		components.add(new ScreenComponentElectricInfo(this, -AbstractScreenComponentInfo.SIZE + 1, 2).wattage(Constants.AUTOCRAFTER_USAGE));
 	}
 
 	@Override
@@ -28,19 +29,19 @@ public class ScreenAutocrafter extends GenericScreen<ContainerAutocrafter> {
 		int index = slot.index;
 		switch (index) {
 		case 1:
-			component.color(RenderingUtils.getRGBA(255, 255, 0, 0));
+			component.setColor(RenderingUtils.getRGBA(255, 255, 0, 0));
 			break;
 		case 3:
-			component.color(RenderingUtils.getRGBA(255, 0, 255, 0));
+			component.setColor(RenderingUtils.getRGBA(255, 0, 255, 0));
 			break;
 		case 5:
-			component.color(RenderingUtils.getRGBA(255, 0, 0, 255));
+			component.setColor(RenderingUtils.getRGBA(255, 0, 0, 255));
 			break;
 		case 7:
-			component.color(RenderingUtils.getRGBA(255, 255, 255, 0));
+			component.setColor(RenderingUtils.getRGBA(255, 255, 255, 0));
 			break;
 		case 0, 2, 4, 6, 8:
-			component.color(RenderingUtils.getRGBA(255, 180, 180, 180));
+			component.setColor(RenderingUtils.getRGBA(255, 180, 180, 180));
 			break;
 		default:
 			break;
