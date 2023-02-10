@@ -21,9 +21,9 @@ public abstract class TileFrontHarvester extends TileOutlineArea {
 
 	public static final int DEFAULT_WAIT_TICKS = 600;
 	public static final int FASTEST_WAIT_TICKS = 60;
-	public Property<Double> powerUsageMultiplier = property(new Property<Double>(PropertyType.Double, "powerUsageMultiplier")).set(1.0);
-	public Property<Integer> ticksSinceCheck = property(new Property<Integer>(PropertyType.Integer, "ticksSinceCheck")).set(0);
-	public Property<Integer> currentWaitTime = property(new Property<Integer>(PropertyType.Integer, "currentWaitTime")).set(0);
+	public Property<Double> powerUsageMultiplier = property(new Property<Double>(PropertyType.Double, "powerUsageMultiplier", 1.0));
+	public Property<Integer> ticksSinceCheck = property(new Property<Integer>(PropertyType.Integer, "ticksSinceCheck", 0));
+	public Property<Integer> currentWaitTime = property(new Property<Integer>(PropertyType.Integer, "currentWaitTime", 0));
 
 	public double getProgress() {
 		return (double) ticksSinceCheck.get() / (double) currentWaitTime.get();

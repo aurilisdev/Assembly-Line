@@ -3,21 +3,21 @@ package assemblyline.client.screen;
 import java.util.ArrayList;
 import java.util.List;
 
-import assemblyline.client.ClientEvents;
+import assemblyline.client.render.event.levelstage.HandlerFarmerLines;
 import assemblyline.common.inventory.container.ContainerFarmer;
 import assemblyline.common.settings.Constants;
 import assemblyline.common.tile.TileFarmer;
+import assemblyline.prefab.utils.TextUtils;
 import electrodynamics.api.electricity.formatting.ChatFormatter;
 import electrodynamics.api.electricity.formatting.DisplayUnit;
 import electrodynamics.prefab.screen.GenericScreen;
 import electrodynamics.prefab.screen.component.ScreenComponentCountdown;
 import electrodynamics.prefab.screen.component.ScreenComponentElectricInfo;
-import electrodynamics.prefab.screen.component.ScreenComponentInfo;
 import electrodynamics.prefab.screen.component.ScreenComponentSlot;
 import electrodynamics.prefab.screen.component.button.ButtonSwappableLabel;
+import electrodynamics.prefab.screen.component.utils.AbstractScreenComponentInfo;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
-import electrodynamics.prefab.utilities.RenderingUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -38,11 +38,11 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 		components.add(new ScreenComponentCountdown(() -> {
 			TileFarmer farmer = menu.getHostFromIntArray();
 			if (farmer != null) {
-				return 1 - farmer.clientProgress;
+				return 1 - ((float) farmer.ticksSinceCheck.get() / Math.max(farmer.currentWaitTime.get(), 1.0F));
 			}
 			return 0.0;
-		}, this, 10, 50 + 58, "tooltip.countdown.cooldown"));
-		components.add(new ScreenComponentElectricInfo(this::getElectricInformation, this, -ScreenComponentInfo.SIZE + 1, 2));
+		}, this, 10, 50 + 58));
+		components.add(new ScreenComponentElectricInfo(this::getElectricInformation, this, -AbstractScreenComponentInfo.SIZE + 1, 2));
 	}
 
 	private List<? extends FormattedCharSequence> getElectricInformation() {
@@ -50,10 +50,20 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 		TileFarmer farmer = menu.getHostFromIntArray();
 		if (farmer != null) {
 			ComponentElectrodynamic electro = farmer.getComponent(ComponentType.Electrodynamic);
-			list.add(Component.translatable("gui.machine.usage", Component.literal(ChatFormatter.getChatDisplayShort(Constants.FARMER_USAGE * farmer.clientUsageMultiplier * 20, DisplayUnit.WATT)).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
-			list.add(Component.translatable("gui.machine.voltage", Component.literal(ChatFormatter.getChatDisplayShort(electro.getVoltage(), DisplayUnit.VOLTAGE)).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
+			list.add(TextUtils.gui("machine.usage", Component.literal(ChatFormatter.getChatDisplayShort(Constants.FARMER_USAGE * farmer.powerUsageMultiplier.get() * 20, DisplayUnit.WATT)).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
+			list.add(TextUtils.gui("machine.voltage", Component.literal(ChatFormatter.getChatDisplayShort(electro.getVoltage(), DisplayUnit.VOLTAGE)).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
 		}
 		return list;
+	}
+
+	@Override
+	protected void containerTick() {
+		super.containerTick();
+		TileFarmer farmer = menu.getHostFromIntArray();
+		if (farmer != null && HandlerFarmerLines.isBeingRendered(farmer.getBlockPos())) {
+			HandlerFarmerLines.remove(farmer.getBlockPos());
+			updateBox(farmer);
+		}
 	}
 
 	@Override
@@ -61,20 +71,9 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 		ScreenComponentSlot component = super.createScreenSlot(slot);
 		int index = slot.index;
 		if (index < 9) {
-			List<Integer> rgba = TileFarmer.COLORS.get(index);
-			component.color(RenderingUtils.getRGBA(rgba.get(0), rgba.get(1), rgba.get(2), rgba.get(3)));
+			component.setColor(TileFarmer.COLORS[index]);
 		}
 		return component;
-	}
-
-	@Override
-	protected void containerTick() {
-		super.containerTick();
-		TileFarmer farmer = menu.getHostFromIntArray();
-		if (farmer != null && ClientEvents.farmerLines.containsKey(farmer.getBlockPos())) {
-			ClientEvents.farmerLines.remove(farmer.getBlockPos());
-			updateBox(farmer);
-		}
 	}
 
 	@Override
@@ -86,24 +85,24 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 	protected void initButtons() {
 		int i = (width - imageWidth) / 2;
 		int j = (height - imageHeight) / 2;
-		fullBonemeal = new ButtonSwappableLabel(i + 10, j + 20, 60, 20, Component.translatable("label.fullbonemeal"), Component.translatable("label.regbonemeal"), () -> {
+		fullBonemeal = new ButtonSwappableLabel(i + 10, j + 20, 60, 20, TextUtils.gui("fullbonemeal"), TextUtils.gui("regbonemeal"), () -> {
 			TileFarmer farmer = menu.getHostFromIntArray();
 			if (farmer != null) {
-				return farmer.clientGrowBonemeal;
+				return farmer.fullGrowBonemeal.get();
 			}
 			return false;
 		}, button -> menu.toggleBoolean(0));
-		refillEmpty = new ButtonSwappableLabel(i + 10, j + 20 + 30, 60, 20, Component.translatable("label.refillempty"), Component.translatable("label.ignoreempty"), () -> {
+		refillEmpty = new ButtonSwappableLabel(i + 10, j + 20 + 30, 60, 20, TextUtils.gui("refillempty"), TextUtils.gui("ignoreempty"), () -> {
 			TileFarmer farmer = menu.getHostFromIntArray();
 			if (farmer != null) {
-				return farmer.clientRefillEmpty;
+				return farmer.refillEmpty.get();
 			}
 			return false;
 		}, button -> menu.toggleBoolean(1));
-		renderArea = new ButtonSwappableLabel(i + 10, j + 20 + 60, 60, 20, Component.translatable("label.renderarea"), Component.translatable("label.hidearea"), () -> {
+		renderArea = new ButtonSwappableLabel(i + 10, j + 20 + 60, 60, 20, TextUtils.gui("renderarea"), TextUtils.gui("hidearea"), () -> {
 			TileFarmer farmer = menu.getHostFromIntArray();
 			if (farmer != null) {
-				return ClientEvents.farmerLines.containsKey(farmer.getBlockPos());
+				return HandlerFarmerLines.isBeingRendered(farmer.getBlockPos());
 			}
 			return false;
 		}, button -> toggleRendering());
@@ -113,19 +112,19 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 	}
 
 	private void toggleRendering() {
-		TileFarmer harvester = menu.getHostFromIntArray();
-		if (harvester != null) {
-			BlockPos pos = harvester.getBlockPos();
-			if (ClientEvents.farmerLines.containsKey(pos)) {
-				ClientEvents.farmerLines.remove(pos);
+		TileFarmer farmer = menu.getHostFromIntArray();
+		if (farmer != null) {
+			BlockPos pos = farmer.getBlockPos();
+			if (HandlerFarmerLines.isBeingRendered(pos)) {
+				HandlerFarmerLines.remove(pos);
 			} else {
-				updateBox(harvester);
+				updateBox(farmer);
 			}
 		}
 	}
-
-	private static void updateBox(TileFarmer farmer) {
-		ClientEvents.farmerLines.put(farmer.getBlockPos(), farmer.getLines(farmer));
+	
+	private void updateBox(TileFarmer farmer) {
+		HandlerFarmerLines.addRenderData(farmer.getBlockPos(), farmer.getLines(farmer));
 	}
 
 }

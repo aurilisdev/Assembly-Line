@@ -4,13 +4,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import assemblyline.common.tile.TileSorterBelt;
-import assemblyline.registers.AssemblyLineBlocks;
 import electrodynamics.api.IWrenchItem;
+import electrodynamics.common.block.BlockMachine;
 import electrodynamics.prefab.block.GenericEntityBlock;
 import electrodynamics.prefab.block.GenericEntityBlockWaterloggable;
 import electrodynamics.prefab.tile.GenericTile;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
+import electrodynamics.prefab.utilities.BlockEntityUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.stats.Stats;
@@ -38,12 +39,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BlockSorterBelt extends GenericEntityBlockWaterloggable {
 	private static final VoxelShape shape = Shapes.or(Shapes.box(0, 14.0 / 16.0, 0, 1, 1, 1), Shapes.box(0, 0, 0, 1, 5.0 / 16.0, 1));
-	public final boolean running;
 
-	public BlockSorterBelt(boolean running) {
+	public BlockSorterBelt() {
 		super(Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion());
-		registerDefaultState(stateDefinition.any().setValue(GenericEntityBlock.FACING, Direction.NORTH));
-		this.running = running;
+		registerDefaultState(stateDefinition.any().setValue(GenericEntityBlock.FACING, Direction.NORTH).setValue(BlockMachine.ON, false));
 	}
 
 	@Override
@@ -52,15 +51,10 @@ public class BlockSorterBelt extends GenericEntityBlockWaterloggable {
 	}
 
 	@Override
-	public List<ItemStack> getDrops(BlockState state, Builder builder) {
-		return Arrays.asList(new ItemStack(AssemblyLineBlocks.blockSorterBelt));
-	}
-
-	@Override
 	public void entityInside(BlockState state, Level world, BlockPos pos, Entity entityIn) {
 		BlockEntity tile = world.getBlockEntity(pos);
 		if (!world.isClientSide && tile instanceof TileSorterBelt belt) {
-			belt.onEntityCollision(entityIn, running);
+			belt.onEntityCollision(entityIn, BlockEntityUtils.isLit(belt));
 		}
 	}
 
@@ -80,6 +74,28 @@ public class BlockSorterBelt extends GenericEntityBlockWaterloggable {
 	}
 
 	@Override
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		return super.getStateForPlacement(context).setValue(FACING, context.getHorizontalDirection().getOpposite()).setValue(BlockMachine.ON, false);
+	}
+
+	@Override
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
+		builder.add(FACING);
+		builder.add(BlockMachine.ON);
+	}
+
+	@Override
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return new TileSorterBelt(pos, state);
+	}
+	
+	@Override
+	public List<ItemStack> getDrops(BlockState state, Builder builder) {
+		return Arrays.asList(new ItemStack(this));
+	}
+	
+	@Override
 	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
 		if (!(newState.getBlock() instanceof BlockSorterBelt)) {
 			BlockEntity tile = worldIn.getBlockEntity(pos);
@@ -89,20 +105,6 @@ public class BlockSorterBelt extends GenericEntityBlockWaterloggable {
 			super.onRemove(state, worldIn, pos, newState, isMoving);
 		}
 	}
-
-	@Override
-	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return super.getStateForPlacement(context).setValue(FACING, context.getHorizontalDirection().getOpposite());
-	}
-
-	@Override
-	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		super.createBlockStateDefinition(builder);
-		builder.add(FACING);
-	}
-
-	@Override
-	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return new TileSorterBelt(pos, state);
-	}
+	
+	
 }

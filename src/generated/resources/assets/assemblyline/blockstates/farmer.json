@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "assemblyline:block/farmer"
+    },
+    "facing=north": {
+      "model": "assemblyline:block/farmer",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "assemblyline:block/farmer",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "assemblyline:block/farmer",
+      "y": 180
+    }
+  }
+}

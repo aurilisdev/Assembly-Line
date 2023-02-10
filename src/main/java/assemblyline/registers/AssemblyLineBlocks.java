@@ -22,7 +22,6 @@ public class AssemblyLineBlocks {
 	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, References.ID);
 	public static BlockConveyorBelt blockConveyorBelt;
 	public static BlockSorterBelt blockSorterBelt;
-	public static BlockSorterBelt blockSorterBeltRunning;
 	public static BlockDetector blockDetector;
 	public static BlockCrate blockCrate;
 	public static BlockCrate blockCrateMedium;
@@ -35,8 +34,7 @@ public class AssemblyLineBlocks {
 	public static BlockFarmer blockFarmer;
 	static {
 		BLOCKS.register("conveyorbelt", supplier(() -> blockConveyorBelt = new BlockConveyorBelt()));
-		BLOCKS.register("sorterbelt", supplier(() -> blockSorterBelt = new BlockSorterBelt(false)));
-		BLOCKS.register("sorterbeltrunning", supplier(() -> blockSorterBeltRunning = new BlockSorterBelt(true)));
+		BLOCKS.register("sorterbelt", supplier(() -> blockSorterBelt = new BlockSorterBelt()));
 		BLOCKS.register("detector", supplier(() -> blockDetector = new BlockDetector()));
 		BLOCKS.register("crate", supplier(() -> blockCrate = new BlockCrate(64)));
 		BLOCKS.register("cratemedium", supplier(() -> blockCrateMedium = new BlockCrate(128)));

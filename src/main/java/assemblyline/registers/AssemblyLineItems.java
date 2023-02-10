@@ -12,7 +12,6 @@ import static assemblyline.registers.AssemblyLineBlocks.blockFarmer;
 import static assemblyline.registers.AssemblyLineBlocks.blockMobGrinder;
 import static assemblyline.registers.AssemblyLineBlocks.blockRancher;
 import static assemblyline.registers.AssemblyLineBlocks.blockSorterBelt;
-import static assemblyline.registers.AssemblyLineBlocks.blockSorterBeltRunning;
 import static electrodynamics.registers.UnifiedElectrodynamicsRegister.supplier;
 
 import assemblyline.References;
@@ -27,7 +26,6 @@ public class AssemblyLineItems {
 	static {
 		ITEMS.register("conveyorbelt", supplier(() -> new BlockItemDescriptable(() -> blockConveyorBelt, new Properties().tab(References.ASSEMBLYLINETAB))));
 		ITEMS.register("sorterbelt", supplier(() -> new BlockItemDescriptable(() -> blockSorterBelt, new Properties().tab(References.ASSEMBLYLINETAB))));
-		ITEMS.register("sorterbeltrunning", supplier(() -> new BlockItemDescriptable(() -> blockSorterBeltRunning, new Properties())));
 		ITEMS.register("detector", supplier(() -> new BlockItemDescriptable(() -> blockDetector, new Properties().tab(References.ASSEMBLYLINETAB))));
 		ITEMS.register("crate", supplier(() -> new BlockItemDescriptable(() -> blockCrate, new Properties().tab(References.ASSEMBLYLINETAB))));
 		ITEMS.register("cratemedium", supplier(() -> new BlockItemDescriptable(() -> blockCrateMedium, new Properties().tab(References.ASSEMBLYLINETAB))));

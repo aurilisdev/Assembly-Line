@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "B": {
+      "item": "minecraft:iron_bars"
+    },
+    "C": {
+      "tag": "forge:chests"
+    },
+    "I": {
+      "tag": "forge:ingots/iron"
+    }
+  },
+  "pattern": [
+    "IBI",
+    "ICI",
+    "IBI"
+  ],
+  "result": {
+    "item": "assemblyline:crate"
+  }
+}

@@ -13,6 +13,7 @@ import static assemblyline.registers.AssemblyLineBlocks.blockMobGrinder;
 import static assemblyline.registers.AssemblyLineBlocks.blockRancher;
 import static assemblyline.registers.AssemblyLineBlocks.blockSorterBelt;
 
+import assemblyline.prefab.utils.TextUtils;
 import electrodynamics.common.blockitem.BlockItemDescriptable;
 import net.minecraftforge.eventbus.api.IEventBus;
 
@@ -21,20 +22,20 @@ public class UnifiedAssemblyLineRegister {
 	static {
 
 		// MACHINES
-		BlockItemDescriptable.addDescription(() -> blockConveyorBelt, "|translate|tooltip.voltage.120");
-		BlockItemDescriptable.addDescription(() -> blockSorterBelt, "|translate|tooltip.voltage.120");
-		BlockItemDescriptable.addDescription(() -> blockAutocrafter, "|translate|tooltip.voltage.120");
-		BlockItemDescriptable.addDescription(() -> blockBlockPlacer, "|translate|tooltip.voltage.120");
-		BlockItemDescriptable.addDescription(() -> blockBlockBreaker, "|translate|tooltip.voltage.120");
-		BlockItemDescriptable.addDescription(() -> blockRancher, "|translate|tooltip.voltage.120");
-		BlockItemDescriptable.addDescription(() -> blockMobGrinder, "|translate|tooltip.voltage.120");
-		BlockItemDescriptable.addDescription(() -> blockFarmer, "|translate|tooltip.voltage.120");
+		BlockItemDescriptable.addDescription(() -> blockConveyorBelt, TextUtils.tooltip("voltage.120"));
+		BlockItemDescriptable.addDescription(() -> blockSorterBelt, TextUtils.tooltip("voltage.120"));
+		BlockItemDescriptable.addDescription(() -> blockAutocrafter, TextUtils.tooltip("voltage.120"));
+		BlockItemDescriptable.addDescription(() -> blockBlockPlacer, TextUtils.tooltip("voltage.120"));
+		BlockItemDescriptable.addDescription(() -> blockBlockBreaker, TextUtils.tooltip("voltage.120"));
+		BlockItemDescriptable.addDescription(() -> blockRancher, TextUtils.tooltip("voltage.120"));
+		BlockItemDescriptable.addDescription(() -> blockMobGrinder, TextUtils.tooltip("voltage.120"));
+		BlockItemDescriptable.addDescription(() -> blockFarmer, TextUtils.tooltip("voltage.120"));
 
 		// Misc
-		BlockItemDescriptable.addDescription(() -> blockDetector, "|translate|tooltip.detector");
-		BlockItemDescriptable.addDescription(() -> blockCrate, "|translate|tooltip.crate");
-		BlockItemDescriptable.addDescription(() -> blockCrateMedium, "|translate|tooltip.cratemedium");
-		BlockItemDescriptable.addDescription(() -> blockCrateLarge, "|translate|tooltip.cratelarge");
+		BlockItemDescriptable.addDescription(() -> blockDetector, TextUtils.tooltip("detector"));
+		BlockItemDescriptable.addDescription(() -> blockCrate, TextUtils.tooltip("crate"));
+		BlockItemDescriptable.addDescription(() -> blockCrateMedium, TextUtils.tooltip("cratemedium"));
+		BlockItemDescriptable.addDescription(() -> blockCrateLarge, TextUtils.tooltip("cratelarge"));
 	}
 
 	public static void register(IEventBus bus) {

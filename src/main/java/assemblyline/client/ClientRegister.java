@@ -56,11 +56,8 @@ public class ClientRegister {
 		event.register(MODEL_ELEVATORBOTTOMRUNNING);
 		event.register(MODEL_MANIPULATOR);
 		event.register(MODEL_BLOCKBREAKERWHEEL);
-		event.register(MODEL_BLOCKBREAKERBASE);
-		event.register(MODEL_MOBGRINDERBASE);
 		event.register(MODEL_MOBGRINDERCENTERWHEEL);
 		event.register(MODEL_MOBGRINDERSIDEWHEEL);
-		event.register(MODEL_RANCHER);
 		event.register(MODEL_RANCHERLEFT);
 		event.register(MODEL_RANCHERRIGHT);
 	}
@@ -89,15 +86,14 @@ public class ClientRegister {
 	public static final ResourceLocation MODEL_ELEVATORBOTTOMRUNNING = new ResourceLocation(References.ID + ":block/elevatorbeltbottomrunning");
 	public static final ResourceLocation MODEL_MANIPULATOR = new ResourceLocation(References.ID + ":block/manipulator");
 	public static final ResourceLocation MODEL_BLOCKBREAKERWHEEL = new ResourceLocation(References.ID + ":block/blockbreakerwheel");
-	public static final ResourceLocation MODEL_BLOCKBREAKERBASE = new ResourceLocation(References.ID + ":block/blockbreakerbase");
-	public static final ResourceLocation MODEL_MOBGRINDERBASE = new ResourceLocation(References.ID + ":block/mobgrinderbase");
 	public static final ResourceLocation MODEL_MOBGRINDERSIDEWHEEL = new ResourceLocation(References.ID + ":block/mobgrindersidewheel");
 	public static final ResourceLocation MODEL_MOBGRINDERCENTERWHEEL = new ResourceLocation(References.ID + ":block/mobgrindercenterwheel");
-	public static final ResourceLocation MODEL_RANCHER = new ResourceLocation(References.ID + ":block/rancher");
 	public static final ResourceLocation MODEL_RANCHERLEFT = new ResourceLocation(References.ID + ":block/rancherleft");
 	public static final ResourceLocation MODEL_RANCHERRIGHT = new ResourceLocation(References.ID + ":block/rancherright");
 
 	public static void setup() {
+		ClientEvents.init();
+		
 		MenuScreens.register(AssemblyLineMenuTypes.CONTAINER_SORTERBELT.get(), ScreenSorterBelt::new);
 		MenuScreens.register(AssemblyLineMenuTypes.CONTAINER_AUTOCRAFTER.get(), ScreenAutocrafter::new);
 		MenuScreens.register(AssemblyLineMenuTypes.CONTAINER_BLOCKPLACER.get(), ScreenBlockPlacer::new);

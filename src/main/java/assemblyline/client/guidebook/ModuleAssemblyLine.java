@@ -6,9 +6,11 @@ import java.util.List;
 import assemblyline.References;
 import assemblyline.client.guidebook.chapters.ChapterConveyers;
 import assemblyline.client.guidebook.chapters.ChapterMachines;
+import assemblyline.prefab.utils.TextUtils;
 import electrodynamics.client.guidebook.utils.ImageWrapperObject;
 import electrodynamics.client.guidebook.utils.components.Chapter;
 import electrodynamics.client.guidebook.utils.components.Module;
+import net.minecraft.network.chat.MutableComponent;
 
 public class ModuleAssemblyLine extends Module {
 
@@ -28,8 +30,8 @@ public class ModuleAssemblyLine extends Module {
 	}
 
 	@Override
-	public String getTitleCat() {
-		return References.ID;
+	public MutableComponent getTitle() {
+		return TextUtils.guidebook(References.ID);
 	}
 
 	@Override

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "assemblyline:block/cratetop",
+    "side": "assemblyline:block/cratemedium"
+  }
+}

@@ -12,7 +12,6 @@ import static assemblyline.registers.AssemblyLineBlocks.blockFarmer;
 import static assemblyline.registers.AssemblyLineBlocks.blockMobGrinder;
 import static assemblyline.registers.AssemblyLineBlocks.blockRancher;
 import static assemblyline.registers.AssemblyLineBlocks.blockSorterBelt;
-import static assemblyline.registers.AssemblyLineBlocks.blockSorterBeltRunning;
 
 import com.google.common.collect.Sets;
 
@@ -36,7 +35,7 @@ public class AssemblyLineBlockTypes {
 	public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, References.ID);
 	public static final RegistryObject<BlockEntityType<TileConveyorBelt>> TILE_BELT = BLOCK_ENTITY_TYPES.register("belt", () -> new BlockEntityType<>(TileConveyorBelt::new, Sets.newHashSet(blockConveyorBelt), null));
 	public static final RegistryObject<BlockEntityType<TileDetector>> TILE_DETECTOR = BLOCK_ENTITY_TYPES.register("detector", () -> new BlockEntityType<>(TileDetector::new, Sets.newHashSet(blockDetector), null));
-	public static final RegistryObject<BlockEntityType<TileSorterBelt>> TILE_SORTERBELT = BLOCK_ENTITY_TYPES.register("sorterbelt", () -> new BlockEntityType<>(TileSorterBelt::new, Sets.newHashSet(blockSorterBelt, blockSorterBeltRunning), null));
+	public static final RegistryObject<BlockEntityType<TileSorterBelt>> TILE_SORTERBELT = BLOCK_ENTITY_TYPES.register("sorterbelt", () -> new BlockEntityType<>(TileSorterBelt::new, Sets.newHashSet(blockSorterBelt), null));
 	public static final RegistryObject<BlockEntityType<TileCrate>> TILE_CRATE = BLOCK_ENTITY_TYPES.register("crate", () -> new BlockEntityType<>(TileCrate::new, Sets.newHashSet(blockCrate, blockCrateMedium, blockCrateLarge), null));
 	public static final RegistryObject<BlockEntityType<TileAutocrafter>> TILE_AUTOCRAFTER = BLOCK_ENTITY_TYPES.register("autocrafter", () -> new BlockEntityType<>(TileAutocrafter::new, Sets.newHashSet(blockAutocrafter), null));
 	public static final RegistryObject<BlockEntityType<TileBlockBreaker>> TILE_BLOCKBREAKER = BLOCK_ENTITY_TYPES.register("blockbreaker", () -> new BlockEntityType<>(TileBlockBreaker::new, Sets.newHashSet(blockBlockBreaker), null));

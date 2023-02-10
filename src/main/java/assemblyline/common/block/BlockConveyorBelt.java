@@ -5,13 +5,11 @@ import java.util.List;
 
 import assemblyline.common.tile.TileConveyorBelt;
 import assemblyline.common.tile.TileConveyorBelt.ConveyorType;
-import assemblyline.registers.AssemblyLineBlocks;
 import electrodynamics.prefab.block.GenericEntityBlock;
 import electrodynamics.prefab.block.GenericEntityBlockWaterloggable;
 import electrodynamics.prefab.tile.GenericTile;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
-import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Containers;
@@ -48,11 +46,6 @@ public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
 	}
 
 	@Override
-	public List<ItemStack> getDrops(BlockState state, Builder builder) {
-		return Arrays.asList(new ItemStack(AssemblyLineBlocks.blockConveyorBelt));
-	}
-
-	@Override
 	public void entityInside(BlockState state, Level world, BlockPos pos, Entity entityIn) {
 		BlockEntity tile = world.getBlockEntity(pos);
 		if (!world.isClientSide && tile instanceof TileConveyorBelt belt && entityIn instanceof ItemEntity item && entityIn.tickCount > 5) {
@@ -63,12 +56,11 @@ public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
 	@Override
 	public void onRotate(ItemStack stack, BlockPos pos, Player player) {
 		if (player.level.getBlockEntity(pos) instanceof TileConveyorBelt belt) {
-			if (belt.conveyorType.ordinal() + 1 <= ConveyorType.values().length - 1) {
-				belt.conveyorType = ConveyorType.values()[belt.conveyorType.ordinal() + 1];
+			if (belt.conveyorType.get() + 1 <= ConveyorType.values().length - 1) {
+				belt.conveyorType.set(ConveyorType.values()[belt.conveyorType.get() + 1].ordinal());
 			} else {
-				belt.conveyorType = ConveyorType.values()[0];
+				belt.conveyorType.set(ConveyorType.values()[0].ordinal());
 			}
-			belt.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
 		}
 	}
 
@@ -83,6 +75,11 @@ public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
 			}
 			super.onRemove(state, worldIn, pos, newState, isMoving);
 		}
+	}
+	
+	@Override
+	public List<ItemStack> getDrops(BlockState state, Builder builder) {
+		return Arrays.asList(new ItemStack(this));
 	}
 
 	@Override

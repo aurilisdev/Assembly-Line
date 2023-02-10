@@ -38,7 +38,7 @@ public class ContainerFarmer extends GenericContainerBlockEntity<TileFarmer> {
 				addSlot(new SlotGeneric(inv, nextIndex(), 85 + j * 18, 17 + i * 18));
 			}
 		}
-		addSlot(new SlotRestricted(inv, nextIndex(), 153, 17, BoneMealItem.class));
+		addSlot(new SlotRestricted(inv, nextIndex(), 153, 17).setRestriction(BoneMealItem.class));
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 3; ++j) {
 				addSlot(new SlotRestricted(inv, nextIndex(), 85 + j * 18, 75 + i * 18));

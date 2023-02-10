@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "assemblyline:block/detector"
+    },
+    "facing=north": {
+      "model": "assemblyline:block/detector",
+      "y": 270
+    },
+    "facing=south": {
+      "model": "assemblyline:block/detector",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "assemblyline:block/detector",
+      "y": 180
+    }
+  }
+}
