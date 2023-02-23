@@ -125,10 +125,10 @@ public class RenderConveyorBelt extends AbstractTileRenderer<TileConveyorBelt> {
 		RenderingUtils.renderModel(model, tile, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 		matrixStackIn.popPose();
 
-		if (tile.isPusher || tile.isPuller) {
+		if (tile.isPusher.get() || tile.isPuller.get()) {
 			model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_MANIPULATOR);
 			move = tile.getDirectionAsVector();
-			if (tile.isPusher) {
+			if (tile.isPusher.get()) {
 				BlockPos nextBlockPos = tile.getNextPos().subtract(tile.getBlockPos());
 				matrixStackIn.pushPose();
 				matrixStackIn.translate(0, 1 / 16.0, 0);
@@ -140,7 +140,7 @@ public class RenderConveyorBelt extends AbstractTileRenderer<TileConveyorBelt> {
 				RenderingUtils.renderModel(model, tile, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 				matrixStackIn.popPose();
 			}
-			if (tile.isPuller) {
+			if (tile.isPuller.get()) {
 				matrixStackIn.pushPose();
 				matrixStackIn.translate(0, 1 / 16.0, 0);
 				RenderingUtils.prepareRotationalTileModel(tile, matrixStackIn);
