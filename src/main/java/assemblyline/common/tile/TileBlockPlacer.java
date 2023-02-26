@@ -28,16 +28,14 @@ public class TileBlockPlacer extends TileFrontHarvester {
 
 	public TileBlockPlacer(BlockPos pos, BlockState state) {
 		super(AssemblyLineBlockTypes.TILE_BLOCKPLACER.get(), pos, state, Constants.BLOCKPLACER_USAGE * 20, (int) ElectrodynamicsCapabilities.DEFAULT_VOLTAGE, "blockplacer");
+		height.set(2);
 	}
 
 	@Override
 	public void tickServer(ComponentTickable tickable) {
 		ComponentInventory inv = getComponent(ComponentType.Inventory);
 		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
-		// ignore dims; for rendering purposes
-		width.set(DEFAULT_CHECK_WIDTH);
-		length.set(DEFAULT_CHECK_LENGTH);
-		height.set(2);
+
 		// we can add speed upgrade functionality if you want
 		currentWaitTime.set(20);
 

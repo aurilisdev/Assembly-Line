@@ -31,6 +31,7 @@ public class TileBlockBreaker extends TileFrontHarvester {
 
 	public TileBlockBreaker(BlockPos pos, BlockState state) {
 		super(AssemblyLineBlockTypes.TILE_BLOCKBREAKER.get(), pos, state, Constants.BLOCKBREAKER_USAGE * 20, (int) ElectrodynamicsCapabilities.DEFAULT_VOLTAGE, "blockbreaker");
+		height.set(2);
 	}
 
 	@Override
@@ -42,13 +43,8 @@ public class TileBlockBreaker extends TileFrontHarvester {
 	public void tickServer(ComponentTickable component) {
 
 		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
-		// ignore dims; for rendering purposes
-		length.set(DEFAULT_CHECK_LENGTH);
-		width.set(DEFAULT_CHECK_WIDTH);
-		height.set(2);
 		ticksSinceCheck.set((int) (progress.get() * 100));
 		currentWaitTime.set(100);
-		powerUsageMultiplier.set(1.0);
 
 		ComponentDirection direction = getComponent(ComponentType.Direction);
 		BlockPos block = worldPosition.offset(direction.getDirection().getOpposite().getNormal());
@@ -62,7 +58,7 @@ public class TileBlockBreaker extends TileFrontHarvester {
 			} else {
 				if (!level.isClientSide) {
 					// Block block = state.getBlock();
-					level.destroyBlock(block, true); // TODO: What are these comments above/below
+					level.destroyBlock(block, true); // TODO: What are these comments above/below ; They were left here by you originally I think
 					progress.set(0.0);
 					// output block here somewhere
 				}

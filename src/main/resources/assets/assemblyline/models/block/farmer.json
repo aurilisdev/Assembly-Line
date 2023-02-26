@@ -8,7 +8,7 @@
 	"textures": {
 		"0": "assemblyline:model/block/farmer",
 		"1" : "electrodynamics:fluid/water",
-		"particle": "assemblyline:model/block/farmer"
+		"particle": "minecraft:block/birch_planks"
 	},
 	"elements": [
 		{

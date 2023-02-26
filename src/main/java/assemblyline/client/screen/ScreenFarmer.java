@@ -3,6 +3,8 @@ package assemblyline.client.screen;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mojang.datafixers.util.Pair;
+
 import assemblyline.client.render.event.levelstage.HandlerFarmerLines;
 import assemblyline.common.inventory.container.ContainerFarmer;
 import assemblyline.common.settings.Constants;
@@ -18,6 +20,7 @@ import electrodynamics.prefab.screen.component.button.ButtonSwappableLabel;
 import electrodynamics.prefab.screen.component.utils.AbstractScreenComponentInfo;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
+import electrodynamics.prefab.utilities.RenderingUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -26,6 +29,12 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 
 public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
+
+	public static int[] COLORS = {
+
+			RenderingUtils.getRGBA(255, 0, 0, 0), RenderingUtils.getRGBA(255, 255, 0, 0), RenderingUtils.getRGBA(255, 120, 0, 255), RenderingUtils.getRGBA(255, 0, 255, 0), RenderingUtils.getRGBA(255, 220, 0, 255), RenderingUtils.getRGBA(255, 255, 120, 0), RenderingUtils.getRGBA(255, 0, 0, 255), RenderingUtils.getRGBA(255, 240, 255, 0), RenderingUtils.getRGBA(255, 0, 240, 255)
+
+	};
 
 	private ButtonSwappableLabel renderArea;
 	private ButtonSwappableLabel fullBonemeal;
@@ -71,7 +80,7 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 		ScreenComponentSlot component = super.createScreenSlot(slot);
 		int index = slot.index;
 		if (index < 9) {
-			component.setColor(TileFarmer.COLORS[index]);
+			component.setColor(COLORS[index]);
 		}
 		return component;
 	}
@@ -124,7 +133,7 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 	}
 
 	private void updateBox(TileFarmer farmer) {
-		HandlerFarmerLines.addRenderData(farmer.getBlockPos(), farmer.getLines(farmer));
+		HandlerFarmerLines.addRenderData(farmer.getBlockPos(), Pair.of(COLORS, farmer.getLines(farmer)));
 	}
 
 }
