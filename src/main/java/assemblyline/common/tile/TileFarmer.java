@@ -21,6 +21,7 @@ import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
+import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryBuilder;
 import electrodynamics.prefab.utilities.InventoryUtils;
 import electrodynamics.prefab.utilities.ItemUtils;
 import electrodynamics.prefab.utilities.object.TransferPack;
@@ -93,7 +94,7 @@ public class TileFarmer extends GenericTile {
 		addComponent(new ComponentPacketHandler());
 		addComponent(new ComponentTickable().tickServer(this::tickServer));
 		addComponent(new ComponentElectrodynamic(this).relativeInput(Direction.DOWN).voltage(ElectrodynamicsCapabilities.DEFAULT_VOLTAGE).maxJoules(Constants.FARMER_USAGE * 20));
-		addComponent(new ComponentInventory(this).size(22).inputs(10).outputs(9).upgrades(3).validUpgrades(ContainerFarmer.VALID_UPGRADES).valid(machineValidator()));
+		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().inputs(10).outputs(9).upgrades(3)).validUpgrades(ContainerFarmer.VALID_UPGRADES).valid(machineValidator()));
 		addComponent(new ComponentContainerProvider("container.farmer").createMenu((id, player) -> new ContainerFarmer(id, player, getComponent(ComponentType.Inventory), getCoordsArray())));
 	}
 
@@ -209,7 +210,7 @@ public class TileFarmer extends GenericTile {
 		Level world = getLevel();
 		ComponentInventory inv = getComponent(ComponentType.Inventory);
 		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
-		List<ItemStack> inputs = inv.getInputContents().get(0);
+		List<ItemStack> inputs = inv.getInputContents();
 		ItemStack plantingContents = inputs.get(quadrant);
 		ItemStack bonemeal = inputs.get(9);
 		BlockState checkState = world.getBlockState(checkPos);
@@ -254,7 +255,7 @@ public class TileFarmer extends GenericTile {
 
 	private void refillInputs() {
 		ComponentInventory inv = getComponent(ComponentType.Inventory);
-		List<ItemStack> inputs = inv.getInputContents().get(0);
+		List<ItemStack> inputs = inv.getInputContents();
 		for (int i = 0; i < inputs.size(); i++) {
 			ItemStack input = inputs.get(i);
 			for (ItemStack output : inv.getOutputContents()) {

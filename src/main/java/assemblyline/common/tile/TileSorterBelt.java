@@ -10,6 +10,7 @@ import electrodynamics.prefab.tile.components.type.ComponentContainerProvider;
 import electrodynamics.prefab.tile.components.type.ComponentDirection;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
+import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryBuilder;
 import electrodynamics.prefab.utilities.BlockEntityUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -28,7 +29,7 @@ public class TileSorterBelt extends GenericTile {
 		super(AssemblyLineBlockTypes.TILE_SORTERBELT.get(), worldPosition, blockState);
 		addComponent(new ComponentDirection());
 		addComponent(new ComponentElectrodynamic(this).maxJoules(Constants.CONVEYORBELT_USAGE * 20).input(Direction.DOWN));
-		addComponent(new ComponentInventory(this).size(18));
+		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().forceSize(18)));
 		addComponent(new ComponentContainerProvider("container.sorterbelt").createMenu((id, player) -> new ContainerSorterBelt(id, player, getComponent(ComponentType.Inventory), getCoordsArray())));
 	}
 

@@ -12,6 +12,7 @@ import electrodynamics.prefab.tile.components.type.ComponentDirection;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
+import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryBuilder;
 import electrodynamics.prefab.utilities.object.TransferPack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -86,7 +87,7 @@ public class TileBlockPlacer extends TileFrontHarvester {
 
 	@Override
 	public ComponentInventory getInv(TileFrontHarvester harvester) {
-		return new ComponentInventory(harvester).size(4).inputs(1).upgrades(3).validUpgrades(ContainerBlockPlacer.VALID_UPGRADES).valid(machineValidator());
+		return new ComponentInventory(harvester, InventoryBuilder.newInv().inputs(1).upgrades(3)).validUpgrades(ContainerBlockPlacer.VALID_UPGRADES).valid(machineValidator());
 	}
 
 	@Override

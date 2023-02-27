@@ -8,6 +8,7 @@ import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
+import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -22,7 +23,7 @@ public class TileCrate extends GenericTile {
 	public TileCrate(int size, BlockPos worldPosition, BlockState blockState) {
 		super(AssemblyLineBlockTypes.TILE_CRATE.get(), worldPosition, blockState);
 		addComponent(new ComponentPacketHandler());
-		addComponent(new ComponentInventory(this).size(size).getSlots(this::getSlotsForFace).valid(this::isItemValidForSlot).slotFaces(0, Direction.values()));
+		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().forceSize(size)).getSlots(this::getSlotsForFace).valid(this::isItemValidForSlot).slotFaces(0, Direction.values()));
 		addComponent(new ComponentTickable());
 	}
 
