@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
-import com.mojang.datafixers.util.Pair;
-
 import assemblyline.client.render.event.levelstage.HandlerFarmerLines;
 import assemblyline.common.inventory.container.ContainerFarmer;
 import assemblyline.common.settings.Constants;
@@ -23,9 +21,9 @@ import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
+import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryBuilder;
 import electrodynamics.prefab.utilities.InventoryUtils;
 import electrodynamics.prefab.utilities.ItemUtils;
-import electrodynamics.prefab.utilities.RenderingUtils;
 import electrodynamics.prefab.utilities.object.TransferPack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -49,8 +47,6 @@ import net.minecraft.world.level.block.StemGrownBlock;
 import net.minecraft.world.level.block.SugarCaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.tags.ITag;
@@ -92,19 +88,13 @@ public class TileFarmer extends GenericTile {
 	public final Property<Integer> currentWidth = property(new Property<>(PropertyType.Integer, "currwidth", 1));
 	public final Property<Integer> currentLength = property(new Property<>(PropertyType.Integer, "currlength", 1));
 
-	public static int[] COLORS = {
-
-			RenderingUtils.getRGBA(255, 0, 0, 0), RenderingUtils.getRGBA(255, 255, 0, 0), RenderingUtils.getRGBA(255, 120, 0, 255), RenderingUtils.getRGBA(255, 0, 255, 0), RenderingUtils.getRGBA(255, 220, 0, 255), RenderingUtils.getRGBA(255, 255, 120, 0), RenderingUtils.getRGBA(255, 0, 0, 255), RenderingUtils.getRGBA(255, 240, 255, 0), RenderingUtils.getRGBA(255, 0, 240, 255)
-
-	};
-
 	public TileFarmer(BlockPos pos, BlockState state) {
 		super(AssemblyLineBlockTypes.TILE_FARMER.get(), pos, state);
 		addComponent(new ComponentDirection());
 		addComponent(new ComponentPacketHandler());
 		addComponent(new ComponentTickable().tickServer(this::tickServer));
 		addComponent(new ComponentElectrodynamic(this).relativeInput(Direction.DOWN).voltage(ElectrodynamicsCapabilities.DEFAULT_VOLTAGE).maxJoules(Constants.FARMER_USAGE * 20));
-		addComponent(new ComponentInventory(this).size(22).inputs(10).outputs(9).upgrades(3).validUpgrades(ContainerFarmer.VALID_UPGRADES).valid(machineValidator()));
+		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().inputs(10).outputs(9).upgrades(3)).validUpgrades(ContainerFarmer.VALID_UPGRADES).valid(machineValidator()));
 		addComponent(new ComponentContainerProvider("container.farmer").createMenu((id, player) -> new ContainerFarmer(id, player, getComponent(ComponentType.Inventory), getCoordsArray())));
 	}
 
@@ -220,7 +210,7 @@ public class TileFarmer extends GenericTile {
 		Level world = getLevel();
 		ComponentInventory inv = getComponent(ComponentType.Inventory);
 		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
-		List<ItemStack> inputs = inv.getInputContents().get(0);
+		List<ItemStack> inputs = inv.getInputContents();
 		ItemStack plantingContents = inputs.get(quadrant);
 		ItemStack bonemeal = inputs.get(9);
 		BlockState checkState = world.getBlockState(checkPos);
@@ -265,7 +255,7 @@ public class TileFarmer extends GenericTile {
 
 	private void refillInputs() {
 		ComponentInventory inv = getComponent(ComponentType.Inventory);
-		List<ItemStack> inputs = inv.getInputContents().get(0);
+		List<ItemStack> inputs = inv.getInputContents();
 		for (int i = 0; i < inputs.size(); i++) {
 			ItemStack input = inputs.get(i);
 			for (ItemStack output : inv.getOutputContents()) {
@@ -286,8 +276,7 @@ public class TileFarmer extends GenericTile {
 		}
 	}
 
-	@OnlyIn(Dist.CLIENT)
-	public Pair<int[], List<AABB>> getLines(TileFarmer farmer) {
+	public List<AABB> getLines(TileFarmer farmer) {
 		BlockPos machinePos = farmer.getBlockPos();
 		int multiplier = farmer.currentWidth.get() / 3;
 		int x = machinePos.getX();
@@ -298,11 +287,11 @@ public class TileFarmer extends GenericTile {
 		int zOffset = farmer.currentLength.get() / 2;
 		BlockPos startPos;
 		BlockPos endPos;
-		if (multiplier == 1) {
+		if (multiplier == 0) {
 			for (int i = 0; i < 3; i++) {
 				for (int j = 0; j < 3; j++) {
-					startPos = new BlockPos(x - xOffset + i, y + 1, z - zOffset + j);
-					endPos = new BlockPos(x - xOffset + i + 1, y, z - zOffset + j + 1);
+					startPos = new BlockPos(x - 1 + i, y + 1, z - 1 + j);
+					endPos = new BlockPos(x - 1 + i + 1, y, z - 1 + j + 1);
 					boundingBoxes.add(new AABB(startPos, endPos));
 				}
 			}
@@ -315,7 +304,7 @@ public class TileFarmer extends GenericTile {
 				}
 			}
 		}
-		return Pair.of(COLORS, boundingBoxes);
+		return boundingBoxes;
 	}
 
 	@Override

@@ -1,185 +1,26 @@
 package assemblyline.client.guidebook.chapters;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import assemblyline.References;
 import assemblyline.prefab.utils.TextUtils;
 import assemblyline.registers.AssemblyLineBlocks;
-import electrodynamics.client.guidebook.utils.ImageWrapperObject;
-import electrodynamics.client.guidebook.utils.ItemWrapperObject;
-import electrodynamics.client.guidebook.utils.TextWrapperObject;
+import electrodynamics.client.guidebook.ScreenGuidebook;
 import electrodynamics.client.guidebook.utils.components.Chapter;
-import electrodynamics.client.guidebook.utils.components.Page;
-import electrodynamics.prefab.utilities.ItemUtils;
+import electrodynamics.client.guidebook.utils.components.Module;
+import electrodynamics.client.guidebook.utils.pagedata.ImageWrapperObject;
+import electrodynamics.client.guidebook.utils.pagedata.ItemWrapperObject;
+import electrodynamics.client.guidebook.utils.pagedata.TextWrapperObject;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 
 public class ChapterConveyers extends Chapter {
 
-	private static final ItemWrapperObject LOGO = new ItemWrapperObject(17, 60, 2.0F, ItemUtils.fromBlock(AssemblyLineBlocks.blockConveyorBelt));
-
-	@Override
-	protected List<Page> genPages() {
-		List<Page> pages = new ArrayList<>();
-
-		pages.add(new Page(new TextWrapperObject[] {
-				//
-				new TextWrapperObject(10, 40, 4210752, TextUtils.guidebook("chapter.conveyers.p1l1")),
-				//
-				new TextWrapperObject(10, 50, 4210752, TextUtils.guidebook("chapter.conveyers.p1l2")),
-				//
-				new TextWrapperObject(10, 60, 4210752, TextUtils.guidebook("chapter.conveyers.p1l3")),
-				//
-				new TextWrapperObject(10, 70, 4210752, TextUtils.guidebook("chapter.conveyers.p1l4")),
-				//
-				new TextWrapperObject(10, 80, 4210752, TextUtils.guidebook("chapter.conveyers.p1l5")),
-				//
-				new TextWrapperObject(10, 90, 4210752, TextUtils.guidebook("chapter.conveyers.p1l6")),
-				//
-				new TextWrapperObject(10, 100, 4210752, TextUtils.guidebook("chapter.conveyers.p1l7")),
-				//
-				new TextWrapperObject(10, 110, 4210752, TextUtils.guidebook("chapter.conveyers.p1l8")),
-				//
-				new TextWrapperObject(10, 120, 4210752, TextUtils.guidebook("chapter.conveyers.p1l9")),
-				//
-				new TextWrapperObject(10, 130, 4210752, TextUtils.guidebook("chapter.conveyers.p1l10")),
-				//
-				new TextWrapperObject(10, 140, 4210752, TextUtils.guidebook("chapter.conveyers.p1l11")),
-				//
-				new TextWrapperObject(10, 150, 4210752, TextUtils.guidebook("chapter.conveyers.p1l12")),
-				//
-				new TextWrapperObject(10, 160, 4210752, TextUtils.guidebook("chapter.conveyers.p1l13")),
-				//
-				new TextWrapperObject(10, 170, 4210752, TextUtils.guidebook("chapter.conveyers.p1l14")),
-				//
-				new TextWrapperObject(10, 180, 4210752, TextUtils.guidebook("chapter.conveyers.p1l15")) }));
-
-		pages.add(new Page(new TextWrapperObject[] {
-				//
-				new TextWrapperObject(10, 40, 4210752, TextUtils.guidebook("chapter.conveyers.p2l1")),
-				//
-				new TextWrapperObject(10, 50, 4210752, TextUtils.guidebook("chapter.conveyers.p2l2")),
-				//
-				new TextWrapperObject(10, 60, 4210752, TextUtils.guidebook("chapter.conveyers.p2l3")),
-				//
-				new TextWrapperObject(10, 70, 4210752, TextUtils.guidebook("chapter.conveyers.p2l4")),
-				//
-				new TextWrapperObject(10, 80, 4210752, TextUtils.guidebook("chapter.conveyers.p2l5")),
-				//
-				new TextWrapperObject(10, 90, 4210752, TextUtils.guidebook("chapter.conveyers.p2l6")),
-				//
-				new TextWrapperObject(10, 100, 4210752, TextUtils.guidebook("chapter.conveyers.p2l7")),
-				//
-				new TextWrapperObject(10, 110, 4210752, TextUtils.guidebook("chapter.conveyers.p2l8")),
-				//
-				new TextWrapperObject(10, 120, 4210752, TextUtils.guidebook("chapter.conveyers.p2l9")),
-				//
-				new TextWrapperObject(10, 130, 4210752, TextUtils.guidebook("chapter.conveyers.p2l10")),
-				//
-				new TextWrapperObject(10, 140, 4210752, TextUtils.guidebook("chapter.conveyers.p2l11")),
-				//
-				new TextWrapperObject(10, 150, 4210752, TextUtils.guidebook("chapter.conveyers.p2l12")),
-				//
-				new TextWrapperObject(10, 160, 4210752, TextUtils.guidebook("chapter.conveyers.p2l13")),
-				//
-				new TextWrapperObject(10, 170, 4210752, TextUtils.guidebook("chapter.conveyers.p2l14")),
-				//
-				new TextWrapperObject(10, 180, 4210752, TextUtils.guidebook("chapter.conveyers.p2l15")) }));
-
-		pages.add(new Page(new ImageWrapperObject[] {
-				//
-				new ImageWrapperObject(12, 38, 0, 0, 150, 79, 150, 79, References.ID + ":textures/screen/guidebook/conveyerhorizontal.png"),
-				//
-				new ImageWrapperObject(12, 117, 0, 0, 150, 79, 150, 79, References.ID + ":textures/screen/guidebook/conveyerdiagonalup.png") }));
-
-		pages.add(new Page(new ImageWrapperObject[] {
-				//
-				new ImageWrapperObject(12, 38, 0, 0, 150, 79, 150, 79, References.ID + ":textures/screen/guidebook/conveyerdiagonaldown.png"),
-				//
-				new ImageWrapperObject(12, 117, 0, 0, 150, 79, 150, 79, References.ID + ":textures/screen/guidebook/conveyervertical.png") }));
-
-		pages.add(new Page(new TextWrapperObject[] {
-				//
-				new TextWrapperObject(10, 40, 4210752, TextUtils.guidebook("chapter.conveyers.p5l1")),
-				//
-				new TextWrapperObject(10, 50, 4210752, TextUtils.guidebook("chapter.conveyers.p5l2")),
-				//
-				new TextWrapperObject(10, 60, 4210752, TextUtils.guidebook("chapter.conveyers.p5l3")),
-				//
-				new TextWrapperObject(10, 70, 4210752, TextUtils.guidebook("chapter.conveyers.p5l4")),
-				//
-				new TextWrapperObject(10, 80, 4210752, TextUtils.guidebook("chapter.conveyers.p5l5")),
-				//
-				new TextWrapperObject(10, 90, 4210752, TextUtils.guidebook("chapter.conveyers.p5l6")),
-				//
-				new TextWrapperObject(10, 100, 4210752, TextUtils.guidebook("chapter.conveyers.p5l7")),
-				//
-				new TextWrapperObject(10, 110, 4210752, TextUtils.guidebook("chapter.conveyers.p5l8")),
-				//
-				new TextWrapperObject(10, 120, 4210752, TextUtils.guidebook("chapter.conveyers.p5l9")),
-				//
-				new TextWrapperObject(10, 130, 4210752, TextUtils.guidebook("chapter.conveyers.p5l10")),
-				//
-				new TextWrapperObject(10, 140, 4210752, TextUtils.guidebook("chapter.conveyers.p5l11")),
-				//
-				new TextWrapperObject(10, 150, 4210752, TextUtils.guidebook("chapter.conveyers.p5l12")),
-				//
-				new TextWrapperObject(10, 160, 4210752, TextUtils.guidebook("chapter.conveyers.p5l13")),
-				//
-				new TextWrapperObject(10, 170, 4210752, TextUtils.guidebook("chapter.conveyers.p5l14")),
-				//
-				new TextWrapperObject(10, 180, 4210752, TextUtils.guidebook("chapter.conveyers.p5l15")) }));
-
-		pages.add(new Page(new ImageWrapperObject[] {
-				//
-				new ImageWrapperObject(12, 117, 0, 0, 150, 79, 150, 79, References.ID + ":textures/screen/guidebook/sorterbelt1.png") },
-				new TextWrapperObject[] {
-						//
-						new TextWrapperObject(10, 40, 4210752, TextUtils.guidebook("chapter.conveyers.p6l1")),
-						//
-						new TextWrapperObject(10, 50, 4210752, TextUtils.guidebook("chapter.conveyers.p6l2")),
-						//
-						new TextWrapperObject(10, 60, 4210752, TextUtils.guidebook("chapter.conveyers.p6l3")),
-						//
-						new TextWrapperObject(10, 70, 4210752, TextUtils.guidebook("chapter.conveyers.p6l4")),
-						//
-						new TextWrapperObject(10, 80, 4210752, TextUtils.guidebook("chapter.conveyers.p6l5")),
-						//
-						new TextWrapperObject(10, 90, 4210752, TextUtils.guidebook("chapter.conveyers.p6l6")) }));
-
-		pages.add(new Page(new ImageWrapperObject[] {
-				//
-				new ImageWrapperObject(12, 38, 0, 0, 150, 79, 150, 79, References.ID + ":textures/screen/guidebook/sorterbelt2.png"),
-				//
-				new ImageWrapperObject(12, 117, 0, 0, 150, 79, 150, 79, References.ID + ":textures/screen/guidebook/sorterbelt3.png") }));
-
-		pages.add(new Page(new TextWrapperObject[] {
-				//
-				new TextWrapperObject(10, 40, 4210752, TextUtils.guidebook("chapter.conveyers.p8l1")),
-				//
-				new TextWrapperObject(10, 50, 4210752, TextUtils.guidebook("chapter.conveyers.p8l2")),
-				//
-				new TextWrapperObject(10, 60, 4210752, TextUtils.guidebook("chapter.conveyers.p8l3")),
-				//
-				new TextWrapperObject(10, 70, 4210752, TextUtils.guidebook("chapter.conveyers.p8l4")),
-				//
-				new TextWrapperObject(10, 80, 4210752, TextUtils.guidebook("chapter.conveyers.p8l5")),
-				//
-				new TextWrapperObject(10, 90, 4210752, TextUtils.guidebook("chapter.conveyers.p8l6")),
-				//
-				new TextWrapperObject(10, 100, 4210752, TextUtils.guidebook("chapter.conveyers.p8l7")),
-				//
-				new TextWrapperObject(10, 110, 4210752, TextUtils.guidebook("chapter.conveyers.p8l8")) }));
-
-		pages.add(new Page(new ImageWrapperObject[] {
-				//
-				new ImageWrapperObject(12, 38, 0, 0, 150, 79, 150, 79, References.ID + ":textures/screen/guidebook/detector1.png"),
-				//
-				new ImageWrapperObject(12, 117, 0, 0, 150, 79, 150, 79, References.ID + ":textures/screen/guidebook/detector2.png") }));
-
-		return pages;
+	private static final ItemWrapperObject LOGO = new ItemWrapperObject(7, 10, 2.0F, 32, 32, AssemblyLineBlocks.blockConveyorBelt.asItem());
+	
+	public ChapterConveyers(Module module) {
+		super(module);
 	}
-
+	
 	@Override
 	public ItemWrapperObject getLogo() {
 		return LOGO;
@@ -188,6 +29,39 @@ public class ChapterConveyers extends Chapter {
 	@Override
 	public MutableComponent getTitle() {
 		return TextUtils.guidebook("chapter.conveyers");
+	}
+
+	@Override
+	public void addData() {
+		
+		//Default Conveyor Belts
+		pageData.add(new TextWrapperObject(TextUtils.guidebook("chapter.conveyers.l1")).setIndentions(1).setSeparateStart());
+		pageData.add(new TextWrapperObject(TextUtils.guidebook("chapter.conveyers.l2")).setIndentions(1).setSeparateStart());
+		pageData.add(new TextWrapperObject(TextUtils.guidebook("chapter.conveyers.horizontal")).setIndentions(1).setSeparateStart());
+		pageData.add(new TextWrapperObject(TextUtils.guidebook("chapter.conveyers.diagonalup")).setIndentions(1).setSeparateStart());
+		pageData.add(new TextWrapperObject(TextUtils.guidebook("chapter.conveyers.diagonaldown")).setIndentions(1).setSeparateStart());
+		pageData.add(new TextWrapperObject(TextUtils.guidebook("chapter.conveyers.vertical")).setIndentions(1).setSeparateStart());
+		pageData.add(new TextWrapperObject(TextUtils.guidebook("chapter.conveyers.l3")).setSeparateStart());
+		pageData.add(new ImageWrapperObject(0, 0, 0, 0, 150, 75, 150, 75, new ResourceLocation(References.ID, "textures/screen/guidebook/conveyerhorizontal.png")));
+		pageData.add(new ImageWrapperObject(0, 0, 0, 0, 150, 75, 150, 75, new ResourceLocation(References.ID, "textures/screen/guidebook/conveyerdiagonalup.png")));	
+		pageData.add(new ImageWrapperObject(0, 0, 0, 0, 150, 75, 150, 75, new ResourceLocation(References.ID, "textures/screen/guidebook/conveyerdiagonaldown.png")));
+		pageData.add(new ImageWrapperObject(0, 0, 0, 0, 150, 75, 150, 75, new ResourceLocation(References.ID, "textures/screen/guidebook/conveyervertical.png")));	
+		
+		//Sorter Belt
+		pageData.add(new TextWrapperObject(AssemblyLineBlocks.blockSorterBelt.asItem().getDescription().copy().withStyle(ChatFormatting.BOLD)).setCentered().setNewPage());
+		pageData.add(new ItemWrapperObject(7 + ScreenGuidebook.TEXT_WIDTH / 2 - 16, 10, 2.0F, 32, 32, AssemblyLineBlocks.blockSorterBelt.asItem()));
+		pageData.add(new TextWrapperObject(TextUtils.guidebook("chapter.conveyers.l4")).setIndentions(1).setSeparateStart());
+		pageData.add(new ImageWrapperObject(0, 0, 0, 0, 150, 75, 150, 75, new ResourceLocation(References.ID, "textures/screen/guidebook/sorterbelt1.png")));
+		pageData.add(new ImageWrapperObject(0, 0, 0, 0, 150, 75, 150, 75, new ResourceLocation(References.ID, "textures/screen/guidebook/sorterbelt2.png")));
+		pageData.add(new ImageWrapperObject(0, 0, 0, 0, 150, 75, 150, 75, new ResourceLocation(References.ID, "textures/screen/guidebook/sorterbelt3.png")));
+		
+		//Detector
+		pageData.add(new TextWrapperObject(AssemblyLineBlocks.blockDetector.asItem().getDescription().copy().withStyle(ChatFormatting.BOLD)).setCentered().setNewPage());
+		pageData.add(new ItemWrapperObject(7 + ScreenGuidebook.TEXT_WIDTH / 2 - 16, 10, 2.0F, 32, 32, AssemblyLineBlocks.blockDetector.asItem()));
+		pageData.add(new TextWrapperObject(TextUtils.guidebook("chapter.conveyers.l5")).setIndentions(1).setSeparateStart());
+		pageData.add(new ImageWrapperObject(0, 0, 0, 0, 150, 75, 150, 75, new ResourceLocation(References.ID, "textures/screen/guidebook/detector1.png")));
+		pageData.add(new ImageWrapperObject(0, 0, 0, 0, 150, 75, 150, 75, new ResourceLocation(References.ID, "textures/screen/guidebook/detector2.png")));
+		
 	}
 
 }

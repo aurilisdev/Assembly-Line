@@ -12,6 +12,7 @@ import electrodynamics.prefab.tile.components.type.ComponentDirection;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
+import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryBuilder;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -32,7 +33,7 @@ public class TileAutocrafter extends GenericTile {
 		addComponent(new ComponentDirection());
 		addComponent(new ComponentTickable().tickServer(this::tickServer));
 		addComponent(new ComponentElectrodynamic(this).maxJoules(Constants.AUTOCRAFTER_USAGE * 20).universalInput());
-		addComponent(new ComponentInventory(this).size(10).faceSlots(Direction.DOWN, 9).faceSlots(Direction.UP, 1, 3, 4, 5, 7).relativeFaceSlots(Direction.SOUTH, 6, 7, 8).relativeFaceSlots(Direction.NORTH, 0, 1, 2).relativeFaceSlots(Direction.WEST, 2, 5, 8).relativeFaceSlots(Direction.EAST, 0, 3, 6));
+		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().inputs(9).outputs(1)).faceSlots(Direction.DOWN, 9).faceSlots(Direction.UP, 1, 3, 4, 5, 7).relativeFaceSlots(Direction.SOUTH, 6, 7, 8).relativeFaceSlots(Direction.NORTH, 0, 1, 2).relativeFaceSlots(Direction.WEST, 2, 5, 8).relativeFaceSlots(Direction.EAST, 0, 3, 6));
 		addComponent(new ComponentContainerProvider("container.autocrafter").createMenu((id, player) -> new ContainerAutocrafter(id, player, getComponent(ComponentType.Inventory), getCoordsArray())));
 	}
 

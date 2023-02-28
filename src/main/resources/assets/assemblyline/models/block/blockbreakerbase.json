@@ -4,7 +4,7 @@
 	"texture_size": [64, 64],
 	"textures": {
 		"0": "assemblyline:model/block/blockbreaker",
-		"particle": "assemblyline:model/block/blockbreaker"
+		"particle": "minecraft:block/cobblestone"
 	},
 	"elements": [
 		{
