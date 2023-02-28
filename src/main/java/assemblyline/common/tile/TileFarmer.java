@@ -50,6 +50,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.tags.ITag;
+import org.jetbrains.annotations.NotNull;
 
 public class TileFarmer extends GenericTile {
 
@@ -308,14 +309,14 @@ public class TileFarmer extends GenericTile {
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag nbt) {
+	public void saveAdditional(@NotNull CompoundTag nbt) {
 		super.saveAdditional(nbt);
 		nbt.putInt("xPos", prevXShift);
 		nbt.putInt("zPos", prevZShift);
 	}
 
 	@Override
-	public void load(CompoundTag nbt) {
+	public void load(@NotNull CompoundTag nbt) {
 		super.load(nbt);
 		prevXShift = nbt.getInt("xPos");
 		prevZShift = nbt.getInt("zPos");

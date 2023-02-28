@@ -29,6 +29,7 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
+import org.jetbrains.annotations.NotNull;
 
 public class TileConveyorBelt extends GenericTile {
 
@@ -74,20 +75,16 @@ public class TileConveyorBelt extends GenericTile {
 		return add;
 	}
 
-	public ItemStack addItemOnBelt(ItemStack add, Location object) {
+	public void addItemOnBelt(ItemStack add, Location object) {
 		if (!add.isEmpty()) {
 			ComponentInventory inventory = getComponent(ComponentType.Inventory);
-			ItemStack returner = new InvWrapper(inventory).insertItem(0, add, false);
+			new InvWrapper(inventory).insertItem(0, add, false);
 			conveyorObject.set(new Location(object));
 			if (ConveyorType.values()[conveyorType.get()] == ConveyorType.Vertical) {
 				Vector3f vec = getDirectionAsVector();
 				conveyorObject.set(conveyorObject.get().add(-vec.x(), -vec.y(), -vec.z()));
 			}
-			if (returner.getCount() != add.getCount()) {
-				return returner;
-			}
 		}
-		return add;
 	}
 
 	protected void tickCommon(ComponentTickable tickable) {
@@ -318,13 +315,13 @@ public class TileConveyorBelt extends GenericTile {
 	}
 
 	@Override
-	public void saveAdditional(CompoundTag tag) {
+	public void saveAdditional(@NotNull CompoundTag tag) {
 		super.saveAdditional(tag);
 		tag.putInt("conveyorwait", wait);
 	}
 
 	@Override
-	public void load(CompoundTag tag) {
+	public void load(@NotNull CompoundTag tag) {
 		super.load(tag);
 		wait = tag.getInt("conveyorwait");
 	}
