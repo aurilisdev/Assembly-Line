@@ -82,7 +82,7 @@ public class AssemblyLineLangKeyProvider extends ElectrodynamicsLangKeyProvider 
 					+ 
 					"be supplied to the bottom or from an adjacent belt with power.");
 
-			addGuidebook("chapter.conveyers.l5", "Another useful block is the Detector. The Detector will output a 15 redstone signal if an item on a Conveyer Belt passes in front of the green square of the Detector, or an item is laying on the ground in front of said square.");
+			addGuidebook("chapter.conveyers.l5", "Another useful block is the Detector. The Detector will output a 15 redstone signal if an item on a Conveyer Belt passes in front of the green square of the Detector, or if an item is laying on the ground in front of said square.");
 
 			addGuidebook("chapter.machines", "Machines");
 			addGuidebook("chapter.machines.blockbreaker", "The Block Breaker will break any block placed in front of it as long as it is minable with a pickaxe. Use the \"Show Area\" button to view the block it is mining. The progress bar counts down the break time left on the block that is being mined.");
