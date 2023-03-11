@@ -86,8 +86,8 @@ public class TileFarmer extends GenericTile {
 
 	public final Property<Double> powerUsageMultiplier = property(new Property<>(PropertyType.Double, "powermultiplier", 1.0));
 
-	public final Property<Integer> currentWidth = property(new Property<>(PropertyType.Integer, "currwidth", 1));
-	public final Property<Integer> currentLength = property(new Property<>(PropertyType.Integer, "currlength", 1));
+	public final Property<Integer> currentWidth = property(new Property<>(PropertyType.Integer, "currwidth", 3));
+	public final Property<Integer> currentLength = property(new Property<>(PropertyType.Integer, "currlength", 3));
 
 	public TileFarmer(BlockPos pos, BlockState state) {
 		super(AssemblyLineBlockTypes.TILE_FARMER.get(), pos, state);
@@ -218,7 +218,7 @@ public class TileFarmer extends GenericTile {
 		BlockPos below = checkPos.below();
 		BlockState belowState = world.getBlockState(below);
 		BlockState farmland = Blocks.FARMLAND.defaultBlockState();
-		boolean isAir = checkState.is(Blocks.AIR);
+		boolean isAir = checkState.isAir();
 		// Check block type
 		if (isAir && plantingContents.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof IPlantable plantable) {
 			Block block = blockItem.getBlock();
@@ -341,6 +341,7 @@ public class TileFarmer extends GenericTile {
 	}
 
 	private void genQuadrants() {
+		quadrants.clear();
 		int multiplier = currentLength.get() / 3;
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 3; j++) {

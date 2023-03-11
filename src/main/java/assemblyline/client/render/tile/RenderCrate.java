@@ -47,7 +47,16 @@ public class RenderCrate extends AbstractTileRenderer<TileCrate> {
 					default:
 						break;
 					}
-					Component displayNameIn = Component.literal(tileCrate.getCount() + "x" + tileCrate.<ComponentInventory>getComponent(ComponentType.Inventory).getItem(0).getHoverName().getString());
+					
+					ItemStack item = ItemStack.EMPTY;
+					
+					for(ItemStack stack : tileCrate.<ComponentInventory>getComponent(ComponentType.Inventory).getItems()) {
+						if(!stack.isEmpty()) {
+							item = stack;
+							break;
+						}
+					}
+					Component displayNameIn = Component.literal(tileCrate.getCount() + "x" + item.getHoverName().getString());
 					Font fontrenderer = Minecraft.getInstance().font;
 					float scale = 0.025f / (fontrenderer.width(displayNameIn) / 32f);
 					matrixStackIn.scale(-scale, -scale, scale);
