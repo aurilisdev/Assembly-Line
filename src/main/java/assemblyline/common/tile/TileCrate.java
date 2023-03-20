@@ -64,5 +64,11 @@ public class TileCrate extends GenericTile {
 
 		return count;
 	}
+	
+	@Override
+	public int getComparatorSignal() {
+		ComponentInventory inv = getComponent(ComponentType.Inventory);
+		return (int) (((double) getCount() / (double) Math.max(1, inv.getContainerSize())) * 15.0);
+	}
 
 }
