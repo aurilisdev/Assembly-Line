@@ -101,4 +101,10 @@ public class TileBlockBreaker extends TileFrontHarvester {
 	public AbstractHarvesterContainer getContainer(int id, Inventory player) {
 		return new ContainerBlockBreaker(id, player, getComponent(ComponentType.Inventory), getCoordsArray());
 	}
+	
+	@Override
+	public int getComparatorSignal() {
+		return works.get() ? 15 : 0;
+	}
+	
 }
