@@ -1,13 +1,14 @@
 package assemblyline.prefab.utils;
 
-import static electrodynamics.prefab.utilities.TextUtils.BLOCK_BASE;
-import static electrodynamics.prefab.utilities.TextUtils.GUIDEBOOK_BASE;
-import static electrodynamics.prefab.utilities.TextUtils.GUI_BASE;
-import static electrodynamics.prefab.utilities.TextUtils.JEI_BASE;
-import static electrodynamics.prefab.utilities.TextUtils.JEI_INFO_FLUID;
-import static electrodynamics.prefab.utilities.TextUtils.JEI_INFO_ITEM;
-import static electrodynamics.prefab.utilities.TextUtils.MESSAGE_BASE;
-import static electrodynamics.prefab.utilities.TextUtils.TOOLTIP_BASE;
+import static electrodynamics.prefab.utilities.ElectroTextUtils.BLOCK_BASE;
+import static electrodynamics.prefab.utilities.ElectroTextUtils.GUIDEBOOK_BASE;
+import static electrodynamics.prefab.utilities.ElectroTextUtils.GUI_BASE;
+import static electrodynamics.prefab.utilities.ElectroTextUtils.JEI_BASE;
+import static electrodynamics.prefab.utilities.ElectroTextUtils.JEI_INFO_FLUID;
+import static electrodynamics.prefab.utilities.ElectroTextUtils.JEI_INFO_ITEM;
+import static electrodynamics.prefab.utilities.ElectroTextUtils.MESSAGE_BASE;
+import static electrodynamics.prefab.utilities.ElectroTextUtils.TOOLTIP_BASE;
+import static electrodynamics.prefab.utilities.ElectroTextUtils.ADVANCEMENT_BASE;
 
 import java.text.DecimalFormat;
 
@@ -16,7 +17,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public class TextUtils {
+public class AssemblyTextUtils {
 
 	public static final DecimalFormat FORMATTER = new DecimalFormat("0.0##");
 
@@ -50,6 +51,10 @@ public class TextUtils {
 
 	public static MutableComponent block(String key, Object... additional) {
 		return translated(BLOCK_BASE, key, additional);
+	}
+	
+	public static MutableComponent advancement(String key, Object...additional) {
+		return translated(ADVANCEMENT_BASE, key, additional);
 	}
 
 	public static MutableComponent translated(String base, String key, Object... additional) {

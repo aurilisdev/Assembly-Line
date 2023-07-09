@@ -50,13 +50,21 @@ public class AssemblyLineLangKeyProvider extends ElectrodynamicsLangKeyProvider 
 			addGuiLabel("refillempty", "Refill Empty");
 			addGuiLabel("ignoreempty", "Skip Empty");
 
-			addTooltip("voltage.120", "Voltage: 120 Volts");
 			addTooltip("detector", "Emits redstone signal when an item is in front of it");
 			addTooltip("crate", "Stores 4096 of one item");
 			addTooltip("cratemedium", "Stores 8192 of one item");
 			addTooltip("cratelarge", "Stores 16384 of one item");
 			addTooltip("breakingprogress", "Mining Progress: %s");
 			addTooltip("cooldown", "Cooldown: %s ticks");
+			
+			addAdvancement("root.title", "Assembly Line");
+			addAdvancement("root.desc", "Wow you made a conveyor belt");
+			addAdvancement("sorter.title", "Organizer");
+			addAdvancement("sorter.desc",  "Make a Sorter Belt");
+			addAdvancement("detector.title", "Always Watching");
+			addAdvancement("detector.desc", "Make a Detector");
+			addAdvancement("crate.title", "No More Chests");
+			addAdvancement("crate.desc", "Make a Crate");
 
 			addGuidebook(References.ID, "Assembly Line");
 

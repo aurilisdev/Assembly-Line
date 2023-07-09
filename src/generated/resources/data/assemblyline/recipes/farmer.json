@@ -17,7 +17,7 @@
       "item": "minecraft:shears"
     },
     "W": {
-      "item": "electrodynamics:wireinsulatedcopper"
+      "tag": "forge:wires/insulated_copper"
     }
   },
   "pattern": [

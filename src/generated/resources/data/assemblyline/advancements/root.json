@@ -1,0 +1,42 @@
+{
+  "__author": "pyro206",
+  "criteria": {
+    "getaconveyerbelt": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "assemblyline:conveyorbelt"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png",
+    "description": {
+      "color": "gray",
+      "translate": "advancement.assemblyline.root.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "assemblyline:conveyorbelt"
+    },
+    "show_toast": true,
+    "title": {
+      "bold": true,
+      "color": "yellow",
+      "italic": true,
+      "translate": "advancement.assemblyline.root.title"
+    }
+  },
+  "requirements": [
+    [
+      "getaconveyerbelt"
+    ]
+  ]
+}

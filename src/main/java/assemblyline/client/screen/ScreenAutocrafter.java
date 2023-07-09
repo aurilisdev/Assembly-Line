@@ -3,10 +3,10 @@ package assemblyline.client.screen;
 import assemblyline.common.inventory.container.ContainerAutocrafter;
 import assemblyline.common.settings.Constants;
 import electrodynamics.prefab.screen.GenericScreen;
-import electrodynamics.prefab.screen.component.ScreenComponentElectricInfo;
-import electrodynamics.prefab.screen.component.ScreenComponentGeneric;
-import electrodynamics.prefab.screen.component.ScreenComponentProgress.ProgressTextures;
-import electrodynamics.prefab.screen.component.ScreenComponentSlot;
+import electrodynamics.prefab.screen.component.types.ScreenComponentGeneric;
+import electrodynamics.prefab.screen.component.types.ScreenComponentProgress.ProgressTextures;
+import electrodynamics.prefab.screen.component.types.ScreenComponentSlot;
+import electrodynamics.prefab.screen.component.types.guitab.ScreenComponentElectricInfo;
 import electrodynamics.prefab.screen.component.utils.AbstractScreenComponentInfo;
 import electrodynamics.prefab.utilities.RenderingUtils;
 import net.minecraft.network.chat.Component;
@@ -17,10 +17,16 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class ScreenAutocrafter extends GenericScreen<ContainerAutocrafter> {
+
+	public static final int RED = RenderingUtils.getRGBA(255, 255, 0, 0);
+	public static final int GREEN = RenderingUtils.getRGBA(255, 0, 255, 0);
+	public static final int BLUE = RenderingUtils.getRGBA(255, 0, 0, 255);
+	public static final int YELLOW = RenderingUtils.getRGBA(255, 255, 255, 0);
+
 	public ScreenAutocrafter(ContainerAutocrafter container, Inventory playerInventory, Component title) {
 		super(container, playerInventory, title);
-		components.add(new ScreenComponentGeneric(ProgressTextures.ARROW_RIGHT_OFF, this, 80, 34));
-		components.add(new ScreenComponentElectricInfo(this, -AbstractScreenComponentInfo.SIZE + 1, 2).wattage(Constants.AUTOCRAFTER_USAGE));
+		addComponent(new ScreenComponentGeneric(ProgressTextures.ARROW_RIGHT_OFF, 80, 34));
+		addComponent(new ScreenComponentElectricInfo(-AbstractScreenComponentInfo.SIZE + 1, 2).wattage(Constants.AUTOCRAFTER_USAGE));
 	}
 
 	@Override
@@ -29,19 +35,16 @@ public class ScreenAutocrafter extends GenericScreen<ContainerAutocrafter> {
 		int index = slot.index;
 		switch (index) {
 		case 1:
-			component.setColor(RenderingUtils.getRGBA(255, 255, 0, 0));
+			component.setColor(RED);
 			break;
 		case 3:
-			component.setColor(RenderingUtils.getRGBA(255, 0, 255, 0));
+			component.setColor(GREEN);
 			break;
 		case 5:
-			component.setColor(RenderingUtils.getRGBA(255, 0, 0, 255));
+			component.setColor(BLUE);
 			break;
 		case 7:
-			component.setColor(RenderingUtils.getRGBA(255, 255, 255, 0));
-			break;
-		case 0, 2, 4, 6, 8:
-			component.setColor(RenderingUtils.getRGBA(255, 180, 180, 180));
+			component.setColor(YELLOW);
 			break;
 		default:
 			break;

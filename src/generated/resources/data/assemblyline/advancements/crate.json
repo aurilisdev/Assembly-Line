@@ -1,0 +1,41 @@
+{
+  "parent": "assemblyline:root",
+  "__author": "pyro206",
+  "criteria": {
+    "HasCrate": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "assemblyline:crate"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "color": "gray",
+      "translate": "advancement.assemblyline.crate.desc"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "assemblyline:crate"
+    },
+    "show_toast": true,
+    "title": {
+      "bold": true,
+      "color": "gold",
+      "translate": "advancement.assemblyline.crate.title"
+    }
+  },
+  "requirements": [
+    [
+      "HasCrate"
+    ]
+  ]
+}

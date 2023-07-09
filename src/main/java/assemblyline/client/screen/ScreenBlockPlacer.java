@@ -7,7 +7,7 @@ import assemblyline.client.screen.generic.AbstractHarvesterScreen;
 import assemblyline.common.inventory.container.ContainerBlockPlacer;
 import assemblyline.common.tile.TileBlockPlacer;
 import assemblyline.common.tile.generic.TileFrontHarvester;
-import assemblyline.prefab.utils.TextUtils;
+import assemblyline.prefab.utils.AssemblyTextUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
@@ -37,7 +37,7 @@ public class ScreenBlockPlacer extends AbstractHarvesterScreen<ContainerBlockPla
 		List<FormattedCharSequence> tips = new ArrayList<>();
 
 		if (placer != null) {
-			tips.add(TextUtils.tooltip("cooldown", placer.currentWaitTime.get() - placer.ticksSinceCheck.get()).withStyle(ChatFormatting.GRAY).getVisualOrderText());
+			tips.add(AssemblyTextUtils.tooltip("cooldown", placer.currentWaitTime.get() - placer.ticksSinceCheck.get()).withStyle(ChatFormatting.GRAY).getVisualOrderText());
 		}
 
 		return tips;
