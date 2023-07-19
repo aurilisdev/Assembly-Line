@@ -10,16 +10,12 @@ import static electrodynamics.prefab.utilities.ElectroTextUtils.MESSAGE_BASE;
 import static electrodynamics.prefab.utilities.ElectroTextUtils.TOOLTIP_BASE;
 import static electrodynamics.prefab.utilities.ElectroTextUtils.ADVANCEMENT_BASE;
 
-import java.text.DecimalFormat;
-
 import assemblyline.References;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public class AssemblyTextUtils {
-
-	public static final DecimalFormat FORMATTER = new DecimalFormat("0.0##");
 
 	public static MutableComponent tooltip(String key, Object... additional) {
 		return translated(TOOLTIP_BASE, key, additional);
