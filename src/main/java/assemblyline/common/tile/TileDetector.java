@@ -19,8 +19,8 @@ public class TileDetector extends GenericTile {
 
 	public TileDetector(BlockPos worldPosition, BlockState blockState) {
 		super(AssemblyLineBlockTypes.TILE_DETECTOR.get(), worldPosition, blockState);
-		addComponent(new ComponentDirection());
-		addComponent(new ComponentTickable().tickServer(this::tickServer));
+		addComponent(new ComponentDirection(this));
+		addComponent(new ComponentTickable(this).tickServer(this::tickServer));
 	}
 
 	public void tickServer(ComponentTickable component) {

@@ -35,6 +35,7 @@ public class TileConveyorBelt extends GenericTile {
 
 	public final Property<Integer> currentSpread = property(new Property<>(PropertyType.Integer, "currentSpread", 0));
 	public final Property<Boolean> running = property(new Property<>(PropertyType.Boolean, "running", false));
+	//public final Property<Boolean> hasPlaceToDrop = property(new Property<>(PropertyType.Boolean, "hasplacetodrop", true));
 	public final Property<Boolean> isQueueReady = property(new Property<>(PropertyType.Boolean, "isQueueReady", false));
 	public final Property<Boolean> waiting = property(new Property<>(PropertyType.Boolean, "waiting", false));
 	public final Property<Location> conveyorObject = property(new Property<>(PropertyType.Location, "conveyorObject", new Location(0, 0, 0)));
@@ -48,15 +49,23 @@ public class TileConveyorBelt extends GenericTile {
 
 	public TileConveyorBelt(BlockPos worldPosition, BlockState blockState) {
 		super(AssemblyLineBlockTypes.TILE_BELT.get(), worldPosition, blockState);
-		addComponent(new ComponentTickable().tickCommon(this::tickCommon));
-		addComponent(new ComponentDirection());
-		addComponent(new ComponentPacketHandler());
+		addComponent(new ComponentTickable(this).tickCommon(this::tickCommon));
+		addComponent(new ComponentDirection(this));
+		addComponent(new ComponentPacketHandler(this));
 		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().forceSize(1)));
 		addComponent(new ComponentElectrodynamic(this).input(Direction.DOWN).relativeInput(Direction.EAST).relativeInput(Direction.WEST).maxJoules(Constants.CONVEYORBELT_USAGE * 100));
 	}
+	
+	public ComponentInventory getInventory() {
+		return getComponent(ComponentType.Inventory);
+	}
 
 	public ItemStack getStackOnBelt() {
-		return this.<ComponentInventory>getComponent(ComponentType.Inventory).getItem(0);
+		return getInventory().getItem(0);
+	}
+	
+	public void setInvToEmpty() {
+		getInventory().setItem(0, ItemStack.EMPTY);
 	}
 
 	public ItemStack addItemOnBelt(ItemStack add) {
@@ -77,7 +86,7 @@ public class TileConveyorBelt extends GenericTile {
 
 	public void addItemOnBelt(ItemStack add, Location object) {
 		if (!add.isEmpty()) {
-			ComponentInventory inventory = getComponent(ComponentType.Inventory);
+			ComponentInventory inventory = getInventory();
 			new InvWrapper(inventory).insertItem(0, add, false);
 			conveyorObject.set(new Location(object));
 			if (ConveyorType.values()[conveyorType.get()] == ConveyorType.Vertical) {
@@ -195,7 +204,7 @@ public class TileConveyorBelt extends GenericTile {
 						waiting.set(false);
 						belt.inQueue.remove(0);
 						belt.addItemOnBelt(getStackOnBelt(), conveyorObject.get());
-						this.<ComponentInventory>getComponent(ComponentType.Inventory).setItem(0, ItemStack.EMPTY);
+						setInvToEmpty();
 					} else {
 						waiting.set(true);
 					}
@@ -209,18 +218,19 @@ public class TileConveyorBelt extends GenericTile {
 						if (wait == 0) {
 							if (putItemsIntoInventory(handlerOptional, inventory) == 0) {
 								wait = 20;
+							} else {
 							}
 						} else {
 							wait--;
 						}
 					} else {
 						dropItem(stackOnBelt, move);
-						this.<ComponentInventory>getComponent(ComponentType.Inventory).setItem(0, ItemStack.EMPTY);
+						setInvToEmpty();
 					}
 				}
 			} else {
 				dropItem(stackOnBelt, move);
-				this.<ComponentInventory>getComponent(ComponentType.Inventory).setItem(0, ItemStack.EMPTY);
+				setInvToEmpty();
 			}
 			if (!shouldTransfer) {
 				move.mul(1 / 16.0f);
@@ -242,24 +252,42 @@ public class TileConveyorBelt extends GenericTile {
 		level.addFreshEntity(entity);
 	}
 
-	private static int putItemsIntoInventory(LazyOptional<IItemHandler> handlerOptional, ComponentInventory inventory) {
+	private int putItemsIntoInventory(LazyOptional<IItemHandler> handlerOptional, ComponentInventory inventory) {
+		
 		IItemHandler handler = handlerOptional.resolve().get();
-		int amount = 0;
-		for (int indexHere = 0; indexHere < inventory.getContainerSize(); indexHere++) {
-			ItemStack stackHere = inventory.getItem(indexHere);
-			if (!stackHere.isEmpty()) {
-				for (int indexThere = 0; indexThere < handler.getSlots(); indexThere++) {
-					ItemStack set = handler.insertItem(indexThere, stackHere, false);
-					amount += stackHere.getCount() - set.getCount();
-					inventory.setItem(indexHere, set);
-					stackHere = set;
-					if (inventory.getItem(indexHere).isEmpty()) {
+		int amtTaken = 0;
+
+		ItemStack conveyerStack, remainder;
+
+		for (int conveyerIndex = 0; conveyerIndex < inventory.getContainerSize(); conveyerIndex++) {
+
+			conveyerStack = inventory.getItem(conveyerIndex);
+
+			for (int targetIndex = 0; targetIndex < handler.getSlots(); targetIndex++) {
+
+				remainder = handler.insertItem(targetIndex, conveyerStack, false);
+
+				int taken = conveyerStack.getCount() - remainder.getCount();
+
+				if (taken > 0) {
+
+					amtTaken += taken;
+
+					conveyerStack.shrink(taken);
+
+					inventory.setItem(conveyerIndex, conveyerStack);
+
+					if (conveyerStack.isEmpty()) {
 						break;
 					}
+
 				}
+
 			}
+
 		}
-		return amount;
+
+		return amtTaken;
 	}
 
 	public BlockPos getNextPos() {

@@ -1,4 +1,12 @@
 {
+  "advancement.assemblyline.crate.desc": "Make a Crate",
+  "advancement.assemblyline.crate.title": "No More Chests",
+  "advancement.assemblyline.detector.desc": "Make a Detector",
+  "advancement.assemblyline.detector.title": "Always Watching",
+  "advancement.assemblyline.root.desc": "Wow you made a conveyor belt",
+  "advancement.assemblyline.root.title": "Assembly Line",
+  "advancement.assemblyline.sorter.desc": "Make a Sorter Belt",
+  "advancement.assemblyline.sorter.title": "Organizer",
   "block.assemblyline.autocrafter": "Autocrafter",
   "block.assemblyline.blockbreaker": "Block Breaker",
   "block.assemblyline.blockplacer": "Block Placer",
@@ -50,6 +58,5 @@
   "tooltip.assemblyline.crate": "Stores 4096 of one item",
   "tooltip.assemblyline.cratelarge": "Stores 16384 of one item",
   "tooltip.assemblyline.cratemedium": "Stores 8192 of one item",
-  "tooltip.assemblyline.detector": "Emits redstone signal when an item is in front of it",
-  "tooltip.assemblyline.voltage.120": "Voltage: 120 Volts"
+  "tooltip.assemblyline.detector": "Emits redstone signal when an item is in front of it"
 }

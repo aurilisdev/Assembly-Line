@@ -38,7 +38,7 @@ public class BlockCrate extends GenericEntityBlock {
 				if (player.isShiftKeyDown()) {
 					ComponentInventory inv = tile.getComponent(ComponentType.Inventory);
 					for (int i = 0; i < inv.getContainerSize(); i++) {
-						ItemStack stack = inv.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.UP).resolve().get().extractItem(i, inv.getMaxStackSize(), false);
+						ItemStack stack = inv.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.UP, null).resolve().get().extractItem(i, inv.getMaxStackSize(), false);
 						if (!stack.isEmpty()) {
 							ItemEntity item = new ItemEntity(worldIn, player.getX() + 0.5, player.getY() + 0.5, player.getZ() + 0.5, stack);
 							worldIn.addFreshEntity(item);

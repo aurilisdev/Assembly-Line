@@ -27,10 +27,10 @@ public class TileSorterBelt extends GenericTile {
 
 	public TileSorterBelt(BlockPos worldPosition, BlockState blockState) {
 		super(AssemblyLineBlockTypes.TILE_SORTERBELT.get(), worldPosition, blockState);
-		addComponent(new ComponentDirection());
+		addComponent(new ComponentDirection(this));
 		addComponent(new ComponentElectrodynamic(this).maxJoules(Constants.CONVEYORBELT_USAGE * 20).input(Direction.DOWN));
 		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().forceSize(18)));
-		addComponent(new ComponentContainerProvider("container.sorterbelt").createMenu((id, player) -> new ContainerSorterBelt(id, player, getComponent(ComponentType.Inventory), getCoordsArray())));
+		addComponent(new ComponentContainerProvider("container.sorterbelt", this).createMenu((id, player) -> new ContainerSorterBelt(id, player, getComponent(ComponentType.Inventory), getCoordsArray())));
 	}
 
 	public void onEntityCollision(Entity entityIn, boolean running) {

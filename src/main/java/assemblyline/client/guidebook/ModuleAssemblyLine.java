@@ -3,9 +3,9 @@ package assemblyline.client.guidebook;
 import assemblyline.References;
 import assemblyline.client.guidebook.chapters.ChapterConveyers;
 import assemblyline.client.guidebook.chapters.ChapterMachines;
-import assemblyline.prefab.utils.TextUtils;
+import assemblyline.prefab.utils.AssemblyTextUtils;
 import electrodynamics.client.guidebook.utils.components.Module;
-import electrodynamics.client.guidebook.utils.pagedata.ImageWrapperObject;
+import electrodynamics.client.guidebook.utils.pagedata.graphics.ImageWrapperObject;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
@@ -20,7 +20,7 @@ public class ModuleAssemblyLine extends Module {
 
 	@Override
 	public MutableComponent getTitle() {
-		return TextUtils.guidebook(References.ID);
+		return AssemblyTextUtils.guidebook(References.ID);
 	}
 
 	@Override

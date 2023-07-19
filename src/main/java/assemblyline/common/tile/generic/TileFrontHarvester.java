@@ -31,12 +31,12 @@ public abstract class TileFrontHarvester extends TileOutlineArea {
 
 	protected TileFrontHarvester(BlockEntityType<?> type, BlockPos pos, BlockState state, double maxJoules, int voltage, String name) {
 		super(type, pos, state);
-		addComponent(new ComponentDirection());
-		addComponent(new ComponentPacketHandler());
-		addComponent(new ComponentTickable().tickServer(this::tickServer).tickClient(this::tickClient).tickCommon(this::tickCommon));
+		addComponent(new ComponentDirection(this));
+		addComponent(new ComponentPacketHandler(this));
+		addComponent(new ComponentTickable(this).tickServer(this::tickServer).tickClient(this::tickClient).tickCommon(this::tickCommon));
 		addComponent(new ComponentElectrodynamic(this).relativeInput(getVoltageInput()).voltage(voltage).maxJoules(maxJoules));
 		addComponent(getInv(this));
-		addComponent(new ComponentContainerProvider("container." + name).createMenu(this::getContainer));
+		addComponent(new ComponentContainerProvider("container." + name, this).createMenu(this::getContainer));
 	}
 
 	public abstract void tickServer(ComponentTickable tickable);

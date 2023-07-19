@@ -167,7 +167,7 @@ public class AssemblyLineCraftingTableRecipes extends AbstractRecipeGenerator {
 				//
 				.addKey('H', Items.IRON_HOE)
 				//
-				.addKey('W', ElectrodynamicsItems.getItem(SubtypeWire.insulatedcopper))
+				.addKey('W', ElectrodynamicsTags.Items.INSULATED_COPPER_WIRES)
 				//
 				.complete(References.ID, "farmer", consumer);
 
@@ -185,7 +185,7 @@ public class AssemblyLineCraftingTableRecipes extends AbstractRecipeGenerator {
 				//
 				.addKey('C', ElectrodynamicsTags.Items.CIRCUITS_BASIC)
 				//
-				.addKey('W', ElectrodynamicsItems.getItem(SubtypeWire.insulatedcopper))
+				.addKey('W', ElectrodynamicsTags.Items.INSULATED_COPPER_WIRES)
 				//
 				.complete(References.ID, "mobgrinder", consumer);
 
@@ -203,7 +203,7 @@ public class AssemblyLineCraftingTableRecipes extends AbstractRecipeGenerator {
 				//
 				.addKey('C', ElectrodynamicsTags.Items.CIRCUITS_BASIC)
 				//
-				.addKey('W', ElectrodynamicsItems.getItem(SubtypeWire.insulatedcopper))
+				.addKey('W', ElectrodynamicsTags.Items.INSULATED_COPPER_WIRES)
 				//
 				.complete(References.ID, "rancher", consumer);
 

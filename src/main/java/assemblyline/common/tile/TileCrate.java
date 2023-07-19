@@ -22,9 +22,9 @@ public class TileCrate extends GenericTile {
 
 	public TileCrate(int size, BlockPos worldPosition, BlockState blockState) {
 		super(AssemblyLineBlockTypes.TILE_CRATE.get(), worldPosition, blockState);
-		addComponent(new ComponentPacketHandler());
+		addComponent(new ComponentPacketHandler(this));
 		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().forceSize(size)).getSlots(this::getSlotsForFace).valid(this::isItemValidForSlot).slotFaces(0, Direction.values()));
-		addComponent(new ComponentTickable());
+		addComponent(new ComponentTickable(this));
 	}
 
 	public HashSet<Integer> getSlotsForFace(Direction side) {

@@ -26,15 +26,16 @@ import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TileAutocrafter extends GenericTile {
-	public boolean isPowered = false;
+	
+	//public boolean isPowered = false;
 
 	public TileAutocrafter(BlockPos worldPosition, BlockState blockState) {
 		super(AssemblyLineBlockTypes.TILE_AUTOCRAFTER.get(), worldPosition, blockState);
-		addComponent(new ComponentDirection());
-		addComponent(new ComponentTickable().tickServer(this::tickServer));
+		addComponent(new ComponentDirection(this));
+		addComponent(new ComponentTickable(this).tickServer(this::tickServer));
 		addComponent(new ComponentElectrodynamic(this).maxJoules(Constants.AUTOCRAFTER_USAGE * 20).universalInput());
 		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().inputs(9).outputs(1)).faceSlots(Direction.DOWN, 9).faceSlots(Direction.UP, 1, 3, 4, 5, 7).relativeFaceSlots(Direction.SOUTH, 6, 7, 8).relativeFaceSlots(Direction.NORTH, 0, 1, 2).relativeFaceSlots(Direction.WEST, 2, 5, 8).relativeFaceSlots(Direction.EAST, 0, 3, 6));
-		addComponent(new ComponentContainerProvider("container.autocrafter").createMenu((id, player) -> new ContainerAutocrafter(id, player, getComponent(ComponentType.Inventory), getCoordsArray())));
+		addComponent(new ComponentContainerProvider("container.autocrafter", this).createMenu((id, player) -> new ContainerAutocrafter(id, player, getComponent(ComponentType.Inventory), getCoordsArray())));
 	}
 
 	public static boolean shapedMatches(ComponentInventory inv, ShapedRecipe shaped) {
