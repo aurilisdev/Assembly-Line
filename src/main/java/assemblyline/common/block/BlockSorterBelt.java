@@ -62,7 +62,8 @@ public class BlockSorterBelt extends GenericEntityBlockWaterloggable {
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
 		if (worldIn.isClientSide) {
 			return InteractionResult.SUCCESS;
-		} else if (!(player.getItemInHand(handIn).getItem() instanceof IWrenchItem)) {
+		}
+		if (!(player.getItemInHand(handIn).getItem() instanceof IWrenchItem)) {
 			BlockEntity tileentity = worldIn.getBlockEntity(pos);
 			if (tileentity instanceof GenericTile) {
 				player.openMenu((MenuProvider) ((GenericTile) tileentity).getComponent(ComponentType.ContainerProvider));

@@ -11,8 +11,8 @@ import electrodynamics.prefab.tile.components.type.ComponentContainerProvider;
 import electrodynamics.prefab.tile.components.type.ComponentDirection;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
-import electrodynamics.prefab.tile.components.type.ComponentTickable;
 import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryBuilder;
+import electrodynamics.prefab.tile.components.type.ComponentTickable;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -26,8 +26,8 @@ import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class TileAutocrafter extends GenericTile {
-	
-	//public boolean isPowered = false;
+
+	// public boolean isPowered = false;
 
 	public TileAutocrafter(BlockPos worldPosition, BlockState blockState) {
 		super(AssemblyLineBlockTypes.TILE_AUTOCRAFTER.get(), worldPosition, blockState);

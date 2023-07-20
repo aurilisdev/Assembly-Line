@@ -2,6 +2,8 @@ package assemblyline.common.tile;
 
 import java.util.ArrayList;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.mojang.math.Vector3f;
 
 import assemblyline.common.settings.Constants;
@@ -13,9 +15,9 @@ import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentDirection;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
+import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryBuilder;
 import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
-import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryBuilder;
 import electrodynamics.prefab.utilities.object.Location;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -29,13 +31,12 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
-import org.jetbrains.annotations.NotNull;
 
 public class TileConveyorBelt extends GenericTile {
 
 	public final Property<Integer> currentSpread = property(new Property<>(PropertyType.Integer, "currentSpread", 0));
 	public final Property<Boolean> running = property(new Property<>(PropertyType.Boolean, "running", false));
-	//public final Property<Boolean> hasPlaceToDrop = property(new Property<>(PropertyType.Boolean, "hasplacetodrop", true));
+	// public final Property<Boolean> hasPlaceToDrop = property(new Property<>(PropertyType.Boolean, "hasplacetodrop", true));
 	public final Property<Boolean> isQueueReady = property(new Property<>(PropertyType.Boolean, "isQueueReady", false));
 	public final Property<Boolean> waiting = property(new Property<>(PropertyType.Boolean, "waiting", false));
 	public final Property<Location> conveyorObject = property(new Property<>(PropertyType.Location, "conveyorObject", new Location(0, 0, 0)));
@@ -55,7 +56,7 @@ public class TileConveyorBelt extends GenericTile {
 		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().forceSize(1)));
 		addComponent(new ComponentElectrodynamic(this).input(Direction.DOWN).relativeInput(Direction.EAST).relativeInput(Direction.WEST).maxJoules(Constants.CONVEYORBELT_USAGE * 100));
 	}
-	
+
 	public ComponentInventory getInventory() {
 		return getComponent(ComponentType.Inventory);
 	}
@@ -63,7 +64,7 @@ public class TileConveyorBelt extends GenericTile {
 	public ItemStack getStackOnBelt() {
 		return getInventory().getItem(0);
 	}
-	
+
 	public void setInvToEmpty() {
 		getInventory().setItem(0, ItemStack.EMPTY);
 	}
@@ -253,7 +254,7 @@ public class TileConveyorBelt extends GenericTile {
 	}
 
 	private int putItemsIntoInventory(LazyOptional<IItemHandler> handlerOptional, ComponentInventory inventory) {
-		
+
 		IItemHandler handler = handlerOptional.resolve().get();
 		int amtTaken = 0;
 
@@ -375,6 +376,9 @@ public class TileConveyorBelt extends GenericTile {
 	}
 
 	public enum ConveyorType {
-		Horizontal, SlopedUp, SlopedDown, Vertical;
+		Horizontal,
+		SlopedUp,
+		SlopedDown,
+		Vertical;
 	}
 }
