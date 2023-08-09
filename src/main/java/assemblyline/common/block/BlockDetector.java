@@ -5,7 +5,6 @@ import electrodynamics.prefab.block.GenericEntityBlockWaterloggable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -27,20 +26,6 @@ public class BlockDetector extends GenericEntityBlockWaterloggable {
 	@Override
 	public boolean isSignalSource(BlockState state) {
 		return true;
-	}
-
-	@Override
-	public int getDirectSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
-		return blockState.getSignal(blockAccess, pos, side);
-	}
-
-	@Override
-	public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
-		BlockEntity tile = blockAccess.getBlockEntity(pos);
-		if (tile instanceof TileDetector det) {
-			return det.isPowered ? 15 : 0;
-		}
-		return 0;
 	}
 
 	@Override

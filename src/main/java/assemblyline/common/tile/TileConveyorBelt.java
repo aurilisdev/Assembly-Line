@@ -20,8 +20,11 @@ import electrodynamics.prefab.utilities.object.Location;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.Containers;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -35,7 +38,7 @@ public class TileConveyorBelt extends GenericTile {
 
 	public final Property<Integer> currentSpread = property(new Property<>(PropertyType.Integer, "currentSpread", 0));
 	public final Property<Boolean> running = property(new Property<>(PropertyType.Boolean, "running", false));
-	//public final Property<Boolean> hasPlaceToDrop = property(new Property<>(PropertyType.Boolean, "hasplacetodrop", true));
+	// public final Property<Boolean> hasPlaceToDrop = property(new Property<>(PropertyType.Boolean, "hasplacetodrop", true));
 	public final Property<Boolean> isQueueReady = property(new Property<>(PropertyType.Boolean, "isQueueReady", false));
 	public final Property<Boolean> waiting = property(new Property<>(PropertyType.Boolean, "waiting", false));
 	public final Property<Location> conveyorObject = property(new Property<>(PropertyType.Location, "conveyorObject", new Location(0, 0, 0)));
@@ -55,7 +58,19 @@ public class TileConveyorBelt extends GenericTile {
 		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().forceSize(1)));
 		addComponent(new ComponentElectrodynamic(this).input(Direction.DOWN).relativeInput(Direction.EAST).relativeInput(Direction.WEST).maxJoules(Constants.CONVEYORBELT_USAGE * 100));
 	}
-	
+
+	@Override
+	public void onEntityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+		if (entity instanceof ItemEntity item && entity.tickCount > 5) {
+			item.setItem(addItemOnBelt(item.getItem()));
+		}
+	}
+
+	@Override
+	public void onBlockDestroyed() {
+		Containers.dropContents(level, getBlockPos(), (ComponentInventory) getComponent(ComponentType.Inventory));
+	}
+
 	public ComponentInventory getInventory() {
 		return getComponent(ComponentType.Inventory);
 	}
@@ -63,7 +78,7 @@ public class TileConveyorBelt extends GenericTile {
 	public ItemStack getStackOnBelt() {
 		return getInventory().getItem(0);
 	}
-	
+
 	public void setInvToEmpty() {
 		getInventory().setItem(0, ItemStack.EMPTY);
 	}
@@ -253,7 +268,7 @@ public class TileConveyorBelt extends GenericTile {
 	}
 
 	private int putItemsIntoInventory(LazyOptional<IItemHandler> handlerOptional, ComponentInventory inventory) {
-		
+
 		IItemHandler handler = handlerOptional.resolve().get();
 		int amtTaken = 0;
 

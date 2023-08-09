@@ -4,23 +4,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import assemblyline.common.tile.TileSorterBelt;
-import electrodynamics.api.IWrenchItem;
 import electrodynamics.common.block.BlockMachine;
 import electrodynamics.prefab.block.GenericEntityBlock;
 import electrodynamics.prefab.block.GenericEntityBlockWaterloggable;
-import electrodynamics.prefab.tile.GenericTile;
-import electrodynamics.prefab.tile.components.ComponentType;
-import electrodynamics.prefab.tile.components.type.ComponentInventory;
-import electrodynamics.prefab.utilities.BlockEntityUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.stats.Stats;
-import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -32,7 +20,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.storage.loot.LootContext.Builder;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -48,29 +35,6 @@ public class BlockSorterBelt extends GenericEntityBlockWaterloggable {
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return worldIn instanceof Level lvl && lvl.isClientSide ? Shapes.block() : shape;
-	}
-
-	@Override
-	public void entityInside(BlockState state, Level world, BlockPos pos, Entity entityIn) {
-		BlockEntity tile = world.getBlockEntity(pos);
-		if (!world.isClientSide && tile instanceof TileSorterBelt belt) {
-			belt.onEntityCollision(entityIn, BlockEntityUtils.isLit(belt));
-		}
-	}
-
-	@Override
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-		if (worldIn.isClientSide) {
-			return InteractionResult.SUCCESS;
-		} else if (!(player.getItemInHand(handIn).getItem() instanceof IWrenchItem)) {
-			BlockEntity tileentity = worldIn.getBlockEntity(pos);
-			if (tileentity instanceof GenericTile) {
-				player.openMenu((MenuProvider) ((GenericTile) tileentity).getComponent(ComponentType.ContainerProvider));
-			}
-			player.awardStat(Stats.INTERACT_WITH_FURNACE);
-			return InteractionResult.CONSUME;
-		}
-		return InteractionResult.FAIL;
 	}
 
 	@Override
@@ -93,17 +57,6 @@ public class BlockSorterBelt extends GenericEntityBlockWaterloggable {
 	@Override
 	public List<ItemStack> getDrops(BlockState state, Builder builder) {
 		return Arrays.asList(new ItemStack(this));
-	}
-
-	@Override
-	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!(newState.getBlock() instanceof BlockSorterBelt)) {
-			BlockEntity tile = worldIn.getBlockEntity(pos);
-			if (tile instanceof GenericTile gen && !(state.getBlock() == newState.getBlock() && state.getValue(FACING) != newState.getValue(FACING))) {
-				Containers.dropContents(worldIn, pos, gen.<ComponentInventory>getComponent(ComponentType.Inventory));
-			}
-			super.onRemove(state, worldIn, pos, newState, isMoving);
-		}
 	}
 
 }
