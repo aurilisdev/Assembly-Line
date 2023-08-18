@@ -50,7 +50,7 @@ public class ChapterMachines extends Chapter {
 		pageData.add(new TextWrapperObject(AssemblyLineBlocks.blockMobGrinder.asItem().getDescription().copy().withStyle(ChatFormatting.BOLD)).setCentered().setNewPage());
 		pageData.add(new ItemWrapperObject(7 + ScreenGuidebook.TEXT_WIDTH / 2 - 16, 5, 32, 30, 30, 2.0F, AssemblyLineBlocks.blockMobGrinder.asItem()));
 		pageData.add(new TextWrapperObject(AssemblyTextUtils.guidebook("chapter.machines.mobgrinder")).setSeparateStart().setIndentions(1));
-		
+
 		// Farmer
 		pageData.add(new TextWrapperObject(AssemblyLineBlocks.blockFarmer.asItem().getDescription().copy().withStyle(ChatFormatting.BOLD)).setCentered().setNewPage());
 		pageData.add(new ItemWrapperObject(7 + ScreenGuidebook.TEXT_WIDTH / 2 - 16, 5, 32, 30, 30, 2.0F, AssemblyLineBlocks.blockFarmer.asItem()));

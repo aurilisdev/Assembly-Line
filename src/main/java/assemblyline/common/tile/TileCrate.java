@@ -6,9 +6,9 @@ import assemblyline.registers.AssemblyLineBlockTypes;
 import electrodynamics.prefab.tile.GenericTile;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
+import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryBuilder;
 import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
-import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -71,7 +71,7 @@ public class TileCrate extends GenericTile {
 
 		return count;
 	}
-	
+
 	@Override
 	public int getComparatorSignal() {
 		ComponentInventory inv = getComponent(ComponentType.Inventory);

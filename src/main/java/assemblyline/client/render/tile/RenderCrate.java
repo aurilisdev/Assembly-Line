@@ -47,11 +47,11 @@ public class RenderCrate extends AbstractTileRenderer<TileCrate> {
 					default:
 						break;
 					}
-					
+
 					ItemStack item = ItemStack.EMPTY;
-					
-					for(ItemStack stack : tileCrate.<ComponentInventory>getComponent(ComponentType.Inventory).getItems()) {
-						if(!stack.isEmpty()) {
+
+					for (ItemStack stack : tileCrate.<ComponentInventory>getComponent(ComponentType.Inventory).getItems()) {
+						if (!stack.isEmpty()) {
 							item = stack;
 							break;
 						}

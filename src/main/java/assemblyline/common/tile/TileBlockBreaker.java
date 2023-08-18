@@ -15,8 +15,8 @@ import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentDirection;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
-import electrodynamics.prefab.tile.components.type.ComponentTickable;
 import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryBuilder;
+import electrodynamics.prefab.tile.components.type.ComponentTickable;
 import electrodynamics.prefab.utilities.object.TransferPack;
 import electrodynamics.registers.ElectrodynamicsSounds;
 import net.minecraft.core.BlockPos;
@@ -101,10 +101,10 @@ public class TileBlockBreaker extends TileFrontHarvester {
 	public AbstractHarvesterContainer getContainer(int id, Inventory player) {
 		return new ContainerBlockBreaker(id, player, getComponent(ComponentType.Inventory), getCoordsArray());
 	}
-	
+
 	@Override
 	public int getComparatorSignal() {
 		return works.get() ? 15 : 0;
 	}
-	
+
 }

@@ -65,7 +65,8 @@ public abstract class TileFrontHarvester extends TileOutlineArea {
 				startPos = new BlockPos(blockInFront.getX() + (isClient && deltaZ < 0 ? xShift + 1 : xShift), blockInFront.getY() + yShift, blockInFront.getZ() + (isClient && deltaZ < 0 ? zShift + 1 : zShift));
 				endPos = new BlockPos(blockInFront.getX() - (isClient && deltaZ > 0 ? xShift - 1 : xShift), blockInFront.getY(), blockInFront.getZ() - (isClient && deltaZ > 0 ? deltaZ - 1 : deltaZ));
 				return new AABB(startPos, endPos);
-			} else if (deltaZ == 0) {
+			}
+			if (deltaZ == 0) {
 				xShift = deltaX * width;
 				zShift = deltaX * (length + 2) / 2;
 				startPos = new BlockPos(blockInFront.getX() + (isClient && deltaX < 0 ? xShift + 1 : xShift), blockInFront.getY() + yShift, blockInFront.getZ() + (isClient && deltaX < 0 ? zShift + 1 : zShift));
