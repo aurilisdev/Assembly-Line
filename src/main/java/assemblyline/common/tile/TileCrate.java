@@ -11,8 +11,15 @@ import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 public class TileCrate extends GenericTile {
 
@@ -69,6 +76,28 @@ public class TileCrate extends GenericTile {
 	public int getComparatorSignal() {
 		ComponentInventory inv = getComponent(ComponentType.Inventory);
 		return (int) (((double) getCount() / (double) Math.max(1, inv.getContainerSize())) * 15.0);
+	}
+	
+	@Override
+	public InteractionResult use(Player player, InteractionHand hand, BlockHitResult result) {
+		if (player.isShiftKeyDown()) {
+			ComponentInventory inv = getComponent(ComponentType.Inventory);
+			for (int i = 0; i < inv.getContainerSize(); i++) {
+				ItemStack stack = inv.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.UP, null).resolve().get().extractItem(i, inv.getMaxStackSize(), level.isClientSide());
+				if (!stack.isEmpty()) {
+					if(!level.isClientSide()) {
+						ItemEntity item = new ItemEntity(level, player.getX() + 0.5, player.getY() + 0.5, player.getZ() + 0.5, stack);
+						level.addFreshEntity(item);
+					}
+					return InteractionResult.CONSUME;
+				}
+			}
+
+		} else {
+			player.setItemInHand(hand, HopperBlockEntity.addItem(player.getInventory(), getComponent(ComponentType.Inventory), player.getItemInHand(hand), Direction.EAST));
+			return InteractionResult.CONSUME;
+		}
+		return InteractionResult.FAIL;
 	}
 
 }

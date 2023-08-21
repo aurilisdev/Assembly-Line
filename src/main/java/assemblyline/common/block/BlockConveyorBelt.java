@@ -7,19 +7,12 @@ import assemblyline.common.tile.TileConveyorBelt;
 import assemblyline.common.tile.TileConveyorBelt.ConveyorType;
 import electrodynamics.prefab.block.GenericEntityBlock;
 import electrodynamics.prefab.block.GenericEntityBlockWaterloggable;
-import electrodynamics.prefab.tile.GenericTile;
-import electrodynamics.prefab.tile.components.ComponentType;
-import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.Containers;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
@@ -46,14 +39,6 @@ public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
 	}
 
 	@Override
-	public void entityInside(BlockState state, Level world, BlockPos pos, Entity entityIn) {
-		BlockEntity tile = world.getBlockEntity(pos);
-		if (!world.isClientSide && tile instanceof TileConveyorBelt belt && entityIn instanceof ItemEntity item && entityIn.tickCount > 5) {
-			item.setItem(belt.addItemOnBelt(item.getItem()));
-		}
-	}
-
-	@Override
 	public void onRotate(ItemStack stack, BlockPos pos, Player player) {
 		if (player.level.getBlockEntity(pos) instanceof TileConveyorBelt belt) {
 			if (belt.conveyorType.get() + 1 <= ConveyorType.values().length - 1) {
@@ -61,19 +46,6 @@ public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
 			} else {
 				belt.conveyorType.set(ConveyorType.values()[0].ordinal());
 			}
-		}
-	}
-
-	@Override
-	public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-		if (!(newState.getBlock() instanceof BlockConveyorBelt)) {
-			BlockEntity tile = worldIn.getBlockEntity(pos);
-			if (!(state.getBlock() == newState.getBlock() && state.getValue(GenericEntityBlock.FACING) != newState.getValue(GenericEntityBlock.FACING)) && tile instanceof GenericTile generic) {
-				if (generic.hasComponent(ComponentType.Inventory)) {
-					Containers.dropContents(worldIn, pos, generic.<ComponentInventory>getComponent(ComponentType.Inventory));
-				}
-			}
-			super.onRemove(state, worldIn, pos, newState, isMoving);
 		}
 	}
 

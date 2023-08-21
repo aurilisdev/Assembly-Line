@@ -14,9 +14,11 @@ import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryB
 import electrodynamics.prefab.utilities.BlockEntityUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.Containers;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -32,14 +34,26 @@ public class TileSorterBelt extends GenericTile {
 		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().forceSize(18)));
 		addComponent(new ComponentContainerProvider("container.sorterbelt", this).createMenu((id, player) -> new ContainerSorterBelt(id, player, getComponent(ComponentType.Inventory), getCoordsArray())));
 	}
+	
+	@Override
+	public void onBlockDestroyed() {
+		Containers.dropContents(level, getBlockPos(), (ComponentInventory) getComponent(ComponentType.Inventory));
+	}
 
-	public void onEntityCollision(Entity entityIn, boolean running) {
+	@Override
+	public void onEntityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+		if(level.isClientSide()) {
+			return;
+		}
+		
+		boolean running = BlockEntityUtils.isLit(this);
+		
 		ComponentInventory inv = getComponent(ComponentType.Inventory);
 		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
 		Direction facing = getBlockState().getValue(GenericEntityBlock.FACING);
-		if (running && entityIn.getY() > worldPosition.getY() + 4.0 / 16.0) {
+		if (running && entity.getY() > worldPosition.getY() + 4.0 / 16.0) {
 			Direction dir = facing.getOpposite();
-			if (entityIn instanceof ItemEntity itemEntity) {
+			if (entity instanceof ItemEntity itemEntity) {
 				boolean hasRight = false;
 				boolean hasLeft = false;
 				for (int i = 0; i < 9; i++) {
@@ -57,14 +71,14 @@ public class TileSorterBelt extends GenericTile {
 					}
 				}
 				if (hasLeft) {
-					entityIn.push(dir.getCounterClockWise().getStepX() / 20.0, 0, dir.getCounterClockWise().getStepZ() / 20.0);
+					entity.push(dir.getCounterClockWise().getStepX() / 20.0, 0, dir.getCounterClockWise().getStepZ() / 20.0);
 				} else if (hasRight) {
-					entityIn.push(dir.getClockWise().getStepX() / 20.0, 0, dir.getClockWise().getStepZ() / 20.0);
+					entity.push(dir.getClockWise().getStepX() / 20.0, 0, dir.getClockWise().getStepZ() / 20.0);
 				} else {
-					entityIn.push(dir.getStepX() / 20.0, 0, dir.getStepZ() / 20.0);
+					entity.push(dir.getStepX() / 20.0, 0, dir.getStepZ() / 20.0);
 				}
 			} else {
-				entityIn.push(dir.getStepX() / 20.0, 0, dir.getStepZ() / 20.0);
+				entity.push(dir.getStepX() / 20.0, 0, dir.getStepZ() / 20.0);
 			}
 		}
 		checkForSpread();
