@@ -14,7 +14,7 @@ import static assemblyline.registers.AssemblyLineBlocks.blockRancher;
 import static assemblyline.registers.AssemblyLineBlocks.blockSorterBelt;
 
 import assemblyline.prefab.utils.AssemblyTextUtils;
-import electrodynamics.common.blockitem.BlockItemDescriptable;
+import electrodynamics.common.blockitem.types.BlockItemDescriptable;
 import electrodynamics.prefab.utilities.ElectroTextUtils;
 import net.minecraftforge.eventbus.api.IEventBus;
 
@@ -44,5 +44,6 @@ public class UnifiedAssemblyLineRegister {
 		AssemblyLineItems.ITEMS.register(bus);
 		AssemblyLineBlockTypes.BLOCK_ENTITY_TYPES.register(bus);
 		AssemblyLineMenuTypes.MENU_TYPES.register(bus);
+		AssemblyLineCreativeTabs.CREATIVE_TABS.register(bus);
 	}
 }

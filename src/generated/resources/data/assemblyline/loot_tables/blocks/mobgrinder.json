@@ -49,5 +49,6 @@
       "name": "mobgrinder",
       "rolls": 1.0
     }
-  ]
+  ],
+  "random_sequence": "assemblyline:blocks/mobgrinder"
 }

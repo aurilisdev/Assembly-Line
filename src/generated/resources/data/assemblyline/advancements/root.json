@@ -1,5 +1,4 @@
 {
-  "__author": "pyro206",
   "criteria": {
     "getaconveyerbelt": {
       "conditions": {
@@ -38,5 +37,6 @@
     [
       "getaconveyerbelt"
     ]
-  ]
+  ],
+  "sends_telemetry_event": false
 }

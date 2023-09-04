@@ -3,8 +3,8 @@
 	"parent": "block/cube_all",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "assemblyline:model/block/conveyorbeltrunning",
-		"particle": "assemblyline:model/block/conveyorbeltrunning"
+		"0": "assemblyline:block/model/conveyorbeltrunning",
+		"particle": "assemblyline:block/model/conveyorbeltrunning"
 	},
 	"elements": [
 		{

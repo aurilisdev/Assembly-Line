@@ -3,13 +3,13 @@ package assemblyline.datagen.client;
 import assemblyline.References;
 import assemblyline.registers.AssemblyLineBlocks;
 import electrodynamics.datagen.client.ElectrodynamicsBlockStateProvider;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.ExistingFileHelper;
 
 public class AssemblyLineBlockStateProvider extends ElectrodynamicsBlockStateProvider {
 
-	public AssemblyLineBlockStateProvider(DataGenerator gen, ExistingFileHelper exFileHelper) {
-		super(gen, exFileHelper, References.ID);
+	public AssemblyLineBlockStateProvider(PackOutput output, ExistingFileHelper exFileHelper) {
+		super(output, exFileHelper, References.ID);
 	}
 
 	@Override

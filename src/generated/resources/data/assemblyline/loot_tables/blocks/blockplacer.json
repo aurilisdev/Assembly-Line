@@ -49,5 +49,6 @@
       "name": "blockplacer",
       "rolls": 1.0
     }
-  ]
+  ],
+  "random_sequence": "assemblyline:blocks/blockplacer"
 }

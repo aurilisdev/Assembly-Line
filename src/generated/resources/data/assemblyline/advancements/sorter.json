@@ -1,6 +1,5 @@
 {
   "parent": "assemblyline:root",
-  "__author": "pyro206",
   "criteria": {
     "HasSorterBelt": {
       "conditions": {
@@ -36,5 +35,6 @@
     [
       "HasSorterBelt"
     ]
-  ]
+  ],
+  "sends_telemetry_event": false
 }

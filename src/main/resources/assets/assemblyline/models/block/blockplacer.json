@@ -3,7 +3,7 @@
 	"parent": "block/cube_all",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "assemblyline:model/block/blockplacer",
+		"0": "assemblyline:block/model/blockplacer",
 		"particle": "minecraft:block/cobblestone"
 	},
 	"elements": [

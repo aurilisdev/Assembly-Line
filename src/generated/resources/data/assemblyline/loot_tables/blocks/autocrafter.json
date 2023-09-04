@@ -49,5 +49,6 @@
       "name": "autocrafter",
       "rolls": 1.0
     }
-  ]
+  ],
+  "random_sequence": "assemblyline:blocks/autocrafter"
 }

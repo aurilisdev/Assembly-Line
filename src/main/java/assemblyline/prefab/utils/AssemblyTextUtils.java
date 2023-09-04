@@ -2,6 +2,7 @@ package assemblyline.prefab.utils;
 
 import static electrodynamics.prefab.utilities.ElectroTextUtils.ADVANCEMENT_BASE;
 import static electrodynamics.prefab.utilities.ElectroTextUtils.BLOCK_BASE;
+import static electrodynamics.prefab.utilities.ElectroTextUtils.CREATIVE_TAB;
 import static electrodynamics.prefab.utilities.ElectroTextUtils.GUIDEBOOK_BASE;
 import static electrodynamics.prefab.utilities.ElectroTextUtils.GUI_BASE;
 import static electrodynamics.prefab.utilities.ElectroTextUtils.JEI_BASE;
@@ -51,6 +52,10 @@ public class AssemblyTextUtils {
 
 	public static MutableComponent advancement(String key, Object... additional) {
 		return translated(ADVANCEMENT_BASE, key, additional);
+	}
+
+	public static MutableComponent creativeTab(String key, Object... additional) {
+		return translated(CREATIVE_TAB, key, additional);
 	}
 
 	public static MutableComponent translated(String base, String key, Object... additional) {

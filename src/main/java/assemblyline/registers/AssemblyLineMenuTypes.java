@@ -7,7 +7,10 @@ import assemblyline.common.inventory.container.ContainerBlockPlacer;
 import assemblyline.common.inventory.container.ContainerFarmer;
 import assemblyline.common.inventory.container.ContainerFrontHarvester;
 import assemblyline.common.inventory.container.ContainerSorterBelt;
+import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.MenuType.MenuSupplier;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -15,11 +18,15 @@ import net.minecraftforge.registries.RegistryObject;
 public class AssemblyLineMenuTypes {
 	public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(ForgeRegistries.MENU_TYPES, References.ID);
 
-	public static final RegistryObject<MenuType<ContainerSorterBelt>> CONTAINER_SORTERBELT = MENU_TYPES.register("sorterbelt", () -> new MenuType<>(ContainerSorterBelt::new));
-	public static final RegistryObject<MenuType<ContainerAutocrafter>> CONTAINER_AUTOCRAFTER = MENU_TYPES.register("autocrafter", () -> new MenuType<>(ContainerAutocrafter::new));
-	public static final RegistryObject<MenuType<ContainerBlockPlacer>> CONTAINER_BLOCKPLACER = MENU_TYPES.register("blockplacer", () -> new MenuType<>(ContainerBlockPlacer::new));
-	public static final RegistryObject<MenuType<ContainerBlockBreaker>> CONTAINER_BLOCKBREAKER = MENU_TYPES.register("blockbreaker", () -> new MenuType<>(ContainerBlockBreaker::new));
-	public static final RegistryObject<MenuType<ContainerFrontHarvester>> CONTAINER_HARVESTER = MENU_TYPES.register("harvester", () -> new MenuType<>(ContainerFrontHarvester::new));
-	public static final RegistryObject<MenuType<ContainerFarmer>> CONTAINER_FARMER = MENU_TYPES.register("farmer", () -> new MenuType<>(ContainerFarmer::new));
+	public static final RegistryObject<MenuType<ContainerSorterBelt>> CONTAINER_SORTERBELT = register("sorterbelt", ContainerSorterBelt::new);
+	public static final RegistryObject<MenuType<ContainerAutocrafter>> CONTAINER_AUTOCRAFTER = register("autocrafter", ContainerAutocrafter::new);
+	public static final RegistryObject<MenuType<ContainerBlockPlacer>> CONTAINER_BLOCKPLACER = register("blockplacer", ContainerBlockPlacer::new);
+	public static final RegistryObject<MenuType<ContainerBlockBreaker>> CONTAINER_BLOCKBREAKER = register("blockbreaker", ContainerBlockBreaker::new);
+	public static final RegistryObject<MenuType<ContainerFrontHarvester>> CONTAINER_HARVESTER = register("harvester", ContainerFrontHarvester::new);
+	public static final RegistryObject<MenuType<ContainerFarmer>> CONTAINER_FARMER = register("farmer", ContainerFarmer::new);
+	
+	private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> register(String id, MenuSupplier<T> supplier) {
+		return MENU_TYPES.register(id, () -> new MenuType<T>(supplier, FeatureFlags.VANILLA_SET));
+	}
 
 }

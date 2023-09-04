@@ -3,8 +3,7 @@ package assemblyline.common.tile;
 import java.util.ArrayList;
 
 import org.jetbrains.annotations.NotNull;
-
-import com.mojang.math.Vector3f;
+import org.joml.Vector3f;
 
 import assemblyline.common.settings.Constants;
 import assemblyline.registers.AssemblyLineBlockTypes;
