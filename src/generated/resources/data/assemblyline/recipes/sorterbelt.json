@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "C": {
       "item": "assemblyline:conveyorbelt"
@@ -17,5 +18,6 @@
   ],
   "result": {
     "item": "assemblyline:sorterbelt"
-  }
+  },
+  "show_notification": false
 }

@@ -14,13 +14,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.storage.loot.LootContext.Builder;
+import net.minecraft.world.level.storage.loot.LootParams.Builder;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -29,7 +29,7 @@ public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
 	private static final VoxelShape shape = Shapes.box(0, 0, 0, 1, 5.0 / 16.0, 1);
 
 	public BlockConveyorBelt() {
-		super(Properties.of(Material.METAL).strength(3.5F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion());
+		super(Properties.copy(Blocks.IRON_BLOCK).strength(3.5F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion());
 		registerDefaultState(stateDefinition.any().setValue(GenericEntityBlock.FACING, Direction.NORTH));
 	}
 
@@ -40,7 +40,7 @@ public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
 
 	@Override
 	public void onRotate(ItemStack stack, BlockPos pos, Player player) {
-		if (player.level.getBlockEntity(pos) instanceof TileConveyorBelt belt) {
+		if (player.level().getBlockEntity(pos) instanceof TileConveyorBelt belt) {
 			if (belt.conveyorType.get() + 1 <= ConveyorType.values().length - 1) {
 				belt.conveyorType.set(ConveyorType.values()[belt.conveyorType.get() + 1].ordinal());
 			} else {

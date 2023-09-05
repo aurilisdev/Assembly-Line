@@ -109,7 +109,7 @@ public class TileAutocrafter extends GenericTile {
 					ItemStack result = ItemStack.EMPTY;
 					canContinue = false;
 					for (CraftingRecipe recipe : recipes) {
-						result = recipe.getResultItem();
+						result = recipe.getResultItem(level.registryAccess());
 						if (recipe instanceof ShapedRecipe shapedRecipe) {
 							if (shapedMatches(inventory, shapedRecipe)) {
 								canContinue = true;
@@ -124,7 +124,7 @@ public class TileAutocrafter extends GenericTile {
 					}
 					if (canContinue) {
 						ItemStack currentItemStack = inventory.getItem(9);
-						if (currentItemStack.isEmpty() || ItemStack.isSame(result, currentItemStack) && currentItemStack.getCount() + result.getCount() <= result.getMaxStackSize()) {
+						if (currentItemStack.isEmpty() || ItemStack.isSameItem(result, currentItemStack) && currentItemStack.getCount() + result.getCount() <= result.getMaxStackSize()) {
 							for (int i = 0; i < 9; i++) {
 								inventory.getItem(i).shrink(1);
 							}

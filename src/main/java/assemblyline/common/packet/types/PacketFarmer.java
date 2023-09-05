@@ -21,7 +21,7 @@ public class PacketFarmer {
 	public static void handle(PacketFarmer message, Supplier<Context> context) {
 		Context ctx = context.get();
 		ctx.enqueueWork(() -> {
-			ServerLevel world = context.get().getSender().getLevel();
+			ServerLevel world = (ServerLevel) context.get().getSender().level();
 			if (world != null) {
 				TileFarmer farmer = (TileFarmer) world.getBlockEntity(message.pos);
 				if (farmer != null) {

@@ -1,6 +1,5 @@
 {
   "parent": "assemblyline:root",
-  "__author": "pyro206",
   "criteria": {
     "HasDetector": {
       "conditions": {
@@ -39,5 +38,6 @@
     [
       "HasDetector"
     ]
-  ]
+  ],
+  "sends_telemetry_event": false
 }

@@ -3,12 +3,12 @@ package assemblyline.datagen.client;
 import assemblyline.References;
 import assemblyline.registers.AssemblyLineBlocks;
 import electrodynamics.datagen.client.ElectrodynamicsLangKeyProvider;
-import net.minecraft.data.DataGenerator;
+import net.minecraft.data.PackOutput;
 
 public class AssemblyLineLangKeyProvider extends ElectrodynamicsLangKeyProvider {
 
-	public AssemblyLineLangKeyProvider(DataGenerator gen, Locale locale) {
-		super(gen, locale, References.ID);
+	public AssemblyLineLangKeyProvider(PackOutput output, Locale locale) {
+		super(output, locale, References.ID);
 	}
 
 	@Override
@@ -18,7 +18,7 @@ public class AssemblyLineLangKeyProvider extends ElectrodynamicsLangKeyProvider 
 		case EN_US:
 		default:
 
-			add("itemGroup.itemgroup" + References.ID, "Assembly Line");
+			addCreativeTab("main", "Assembly Line");
 
 			addBlock(AssemblyLineBlocks.blockConveyorBelt, "Conveyor Belt");
 			addBlock(AssemblyLineBlocks.blockSorterBelt, "Sorter Belt");

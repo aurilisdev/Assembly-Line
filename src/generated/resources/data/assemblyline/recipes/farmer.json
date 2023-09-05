@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "A": {
       "item": "minecraft:iron_axe"
@@ -27,5 +28,6 @@
   ],
   "result": {
     "item": "assemblyline:farmer"
-  }
+  },
+  "show_notification": false
 }

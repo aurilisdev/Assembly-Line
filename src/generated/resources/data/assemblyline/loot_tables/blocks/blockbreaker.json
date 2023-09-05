@@ -49,5 +49,6 @@
       "name": "blockbreaker",
       "rolls": 1.0
     }
-  ]
+  ],
+  "random_sequence": "assemblyline:blocks/blockbreaker"
 }

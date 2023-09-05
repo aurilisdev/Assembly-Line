@@ -1,7 +1,6 @@
 package assemblyline.client.render.tile;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Quaternion;
 
 import assemblyline.client.ClientRegister;
 import assemblyline.common.tile.TileRancher;
@@ -9,6 +8,7 @@ import electrodynamics.client.render.tile.AbstractTileRenderer;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.utilities.RenderingUtils;
+import electrodynamics.prefab.utilities.math.MathUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -33,17 +33,21 @@ public class RenderRancher extends AbstractTileRenderer<TileRancher> {
 		BakedModel ibakedmodel = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_RANCHERLEFT);
 		matrixStackIn.pushPose();
 		RenderingUtils.prepareRotationalTileModel(rancher, matrixStackIn);
-		matrixStackIn.mulPose(new Quaternion(0, 0, 90, true));
+		matrixStackIn.mulPose(MathUtils.rotQuaternionDeg(0, 0, 90));
+		//matrixStackIn.mulPose(new Quaternion(0, 0, 90, true));
 		matrixStackIn.translate(9.0 / 16.0, 3 / 16.0, 2.5 / 16.0);
-		matrixStackIn.mulPose(new Quaternion((float) -progress - 50f, 0, 0, true));
+		matrixStackIn.mulPose(MathUtils.rotQuaternionDeg((float) -progress - 50f, 0, 0));
+		//matrixStackIn.mulPose(new Quaternion((float) -progress - 50f, 0, 0, true));
 		RenderingUtils.renderModel(ibakedmodel, rancher, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 		matrixStackIn.popPose();
 		ibakedmodel = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_RANCHERRIGHT);
 		matrixStackIn.pushPose();
 		RenderingUtils.prepareRotationalTileModel(rancher, matrixStackIn);
-		matrixStackIn.mulPose(new Quaternion(0, 0, 90, true));
+		matrixStackIn.mulPose(MathUtils.rotQuaternionDeg(0, 0, 90));
+		//matrixStackIn.mulPose(new Quaternion(0, 0, 90, true));
 		matrixStackIn.translate(1.0 / 16.0, 3 / 16.0, -2.5 / 16.0);
-		matrixStackIn.mulPose(new Quaternion((float) progress + 50f, 0, 0, true));
+		matrixStackIn.mulPose(MathUtils.rotQuaternionDeg((float) progress + 50f, 0, 0));
+		//matrixStackIn.mulPose(new Quaternion((float) progress + 50f, 0, 0, true));
 		RenderingUtils.renderModel(ibakedmodel, rancher, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 		matrixStackIn.popPose();
 	}

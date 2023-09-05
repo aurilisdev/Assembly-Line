@@ -1,5 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
+  "category": "misc",
   "key": {
     "B": {
       "tag": "forge:circuits/basic"
@@ -27,5 +28,6 @@
   ],
   "result": {
     "item": "assemblyline:autocrafter"
-  }
+  },
+  "show_notification": false
 }

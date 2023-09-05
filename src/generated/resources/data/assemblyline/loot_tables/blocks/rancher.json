@@ -49,5 +49,6 @@
       "name": "rancher",
       "rolls": 1.0
     }
-  ]
+  ],
+  "random_sequence": "assemblyline:blocks/rancher"
 }

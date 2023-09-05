@@ -38,11 +38,11 @@ public class EventHandler {
 		Entity entity = event.getEntity();
 		LazyOptional<ILocationStorage> lazyOptional = entity.getCapability(ElectrodynamicsCapabilities.LOCATION_STORAGE_CAPABILITY);
 		if (lazyOptional.isPresent()) {
-			Level level = entity.getLevel();
+			Level level = entity.level();
 			ILocationStorage storage = lazyOptional.resolve().get();
 			Location location = storage.getLocation(0);
 			BlockEntity machine = level.getBlockEntity(new BlockPos(location.intX(), location.intY(), location.intZ()));
-			if (machine != null && machine instanceof TileMobGrinder grinder) {
+			if (machine instanceof TileMobGrinder grinder) {
 				List<ItemStack> droppedItems = new ArrayList<>();
 				event.getDrops().forEach(h -> droppedItems.add(h.getItem()));
 				ComponentInventory inv = grinder.getComponent(ComponentType.Inventory);
