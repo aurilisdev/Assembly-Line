@@ -11,7 +11,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 
 import electrodynamics.client.render.event.levelstage.AbstractLevelStageHandler;
-import electrodynamics.prefab.utilities.RenderingUtils;
+import electrodynamics.prefab.utilities.math.Color;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -27,7 +27,7 @@ public class HandlerFarmerLines extends AbstractLevelStageHandler {
 
 	public static final HandlerFarmerLines INSTANCE = new HandlerFarmerLines();
 
-	private final HashMap<BlockPos, Pair<int[], List<AABB>>> farmerLines = new HashMap<>();
+	private final HashMap<BlockPos, Pair<Color[], List<AABB>>> farmerLines = new HashMap<>();
 
 	@Override
 	public void render(Camera camera, Frustum frustum, LevelRenderer renderer, PoseStack stack, Matrix4f projectionMatrix, Minecraft minecraft, int renderTick, float partialTick) {
@@ -40,12 +40,12 @@ public class HandlerFarmerLines extends AbstractLevelStageHandler {
 
 		stack.translate(-camPos.x, -camPos.y, -camPos.z);
 
-		for (Entry<BlockPos, Pair<int[], List<AABB>>> en : farmerLines.entrySet()) {
-			int[] rgbaValues = en.getValue().getFirst();
+		for (Entry<BlockPos, Pair<Color[], List<AABB>>> en : farmerLines.entrySet()) {
+			Color[] rgbaValues = en.getValue().getFirst();
 			List<AABB> lines = en.getValue().getSecond();
 			for (int i = 0; i < lines.size(); i++) {
 				AABB box = lines.get(i).deflate(0.01);
-				float[] rgba = RenderingUtils.getColorArray(rgbaValues[i]);
+				float[] rgba = rgbaValues[i].colorFloatArr();
 
 				LevelRenderer.renderLineBox(stack, builder, box, rgba[0], rgba[1], rgba[2], rgba[3]);
 
@@ -74,7 +74,7 @@ public class HandlerFarmerLines extends AbstractLevelStageHandler {
 		INSTANCE.farmerLines.remove(pos);
 	}
 
-	public static void addRenderData(BlockPos pos, Pair<int[], List<AABB>> data) {
+	public static void addRenderData(BlockPos pos, Pair<Color[], List<AABB>> data) {
 		INSTANCE.farmerLines.put(pos, data);
 	}
 

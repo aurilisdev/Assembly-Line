@@ -20,7 +20,7 @@ import electrodynamics.prefab.screen.component.types.guitab.ScreenComponentElect
 import electrodynamics.prefab.screen.component.utils.AbstractScreenComponentInfo;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
-import electrodynamics.prefab.utilities.RenderingUtils;
+import electrodynamics.prefab.utilities.math.Color;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -30,9 +30,9 @@ import net.minecraft.world.inventory.Slot;
 
 public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 
-	public static final int[] COLORS = {
+	public static final Color[] COLORS = {
 
-			RenderingUtils.getRGBA(255, 0, 0, 0), RenderingUtils.getRGBA(255, 255, 0, 0), RenderingUtils.getRGBA(255, 120, 0, 255), RenderingUtils.getRGBA(255, 0, 255, 0), RenderingUtils.getRGBA(255, 220, 0, 255), RenderingUtils.getRGBA(255, 255, 120, 0), RenderingUtils.getRGBA(255, 0, 0, 255), RenderingUtils.getRGBA(255, 240, 255, 0), RenderingUtils.getRGBA(255, 0, 240, 255)
+			new Color(0, 0, 0, 255), new Color(255, 0, 0, 255), new Color(120, 0, 255, 255), new Color(0, 255, 0, 255), new Color(220, 0, 255, 255), new Color(255, 120, 0, 255), new Color(0, 0, 255, 255), new Color(240, 255, 0, 255), new Color(0, 240, 255, 255)
 
 	};
 

@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import assemblyline.client.ClientRegister;
 import assemblyline.common.tile.TileConveyorBelt;
 import assemblyline.common.tile.TileConveyorBelt.ConveyorType;
+import electrodynamics.Electrodynamics;
 import electrodynamics.client.render.tile.AbstractTileRenderer;
 import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentDirection;

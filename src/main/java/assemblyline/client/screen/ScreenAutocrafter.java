@@ -8,7 +8,7 @@ import electrodynamics.prefab.screen.component.types.ScreenComponentProgress.Pro
 import electrodynamics.prefab.screen.component.types.ScreenComponentSlot;
 import electrodynamics.prefab.screen.component.types.guitab.ScreenComponentElectricInfo;
 import electrodynamics.prefab.screen.component.utils.AbstractScreenComponentInfo;
-import electrodynamics.prefab.utilities.RenderingUtils;
+import electrodynamics.prefab.utilities.math.Color;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
@@ -18,10 +18,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class ScreenAutocrafter extends GenericScreen<ContainerAutocrafter> {
 
-	public static final int RED = RenderingUtils.getRGBA(255, 255, 0, 0);
-	public static final int GREEN = RenderingUtils.getRGBA(255, 0, 255, 0);
-	public static final int BLUE = RenderingUtils.getRGBA(255, 0, 0, 255);
-	public static final int YELLOW = RenderingUtils.getRGBA(255, 255, 255, 0);
+	public static final Color RED = new Color(255, 0, 0, 255);
+	public static final Color GREEN = new Color(0, 255, 0, 255);
+	public static final Color BLUE = new Color(0, 0, 255, 255);
+	public static final Color YELLOW = new Color( 255, 255, 0, 255);
 
 	public ScreenAutocrafter(ContainerAutocrafter container, Inventory playerInventory, Component title) {
 		super(container, playerInventory, title);
