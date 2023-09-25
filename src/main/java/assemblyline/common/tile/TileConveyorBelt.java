@@ -36,6 +36,8 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class TileConveyorBelt extends GenericTile {
 
+	public static final int INVENTORY_INDEX = 0;
+	
 	public final Property<Integer> currentSpread = property(new Property<>(PropertyType.Integer, "currentSpread", 0));
 	public final Property<Boolean> running = property(new Property<>(PropertyType.Boolean, "running", false));
 	// public final Property<Boolean> hasPlaceToDrop = property(new Property<>(PropertyType.Boolean, "hasplacetodrop", true));
@@ -58,7 +60,7 @@ public class TileConveyorBelt extends GenericTile {
 		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().forceSize(1)));
 		addComponent(new ComponentElectrodynamic(this).input(Direction.DOWN).relativeInput(Direction.EAST).relativeInput(Direction.WEST).maxJoules(Constants.CONVEYORBELT_USAGE * 100));
 	}
-	
+
 	@Override
 	public void onEntityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
 		if (entity instanceof ItemEntity item && entity.tickCount > 5) {
@@ -76,11 +78,15 @@ public class TileConveyorBelt extends GenericTile {
 	}
 
 	public ItemStack getStackOnBelt() {
-		return getInventory().getItem(0);
+		return getInventory().getItem(INVENTORY_INDEX);
 	}
 
 	public void setInvToEmpty() {
-		getInventory().setItem(0, ItemStack.EMPTY);
+		setItemOnBelt(ItemStack.EMPTY);
+	}
+	
+	public void setItemOnBelt(ItemStack stack) {
+		getInventory().setItem(INVENTORY_INDEX, stack);
 	}
 
 	public ItemStack addItemOnBelt(ItemStack add) {
@@ -118,19 +124,20 @@ public class TileConveyorBelt extends GenericTile {
 		running.set(currentSpread.get() > 0 && isQueueReady.get());
 		BlockEntity nextBlockEntity = getNextEntity();
 		Direction direction = this.<ComponentDirection>getComponent(ComponentType.Direction).getDirection();
-		isPusher.set(false);
 		if (nextBlockEntity != null && !(nextBlockEntity instanceof TileConveyorBelt)) {
-			LazyOptional<IItemHandler> handlerOptional = nextBlockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction);
-			isPusher.set(handlerOptional.isPresent());
+			isPusher.set(nextBlockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction).isPresent());
+		} else {
+			isPusher.set(false);
 		}
 		if (currentSpread.get() > 0) {
 			attemptMove();
 		}
 		BlockEntity lastBlockEntity = level.getBlockEntity(worldPosition.offset(direction.getNormal()));
-		isPuller.set(false);
 		if (lastBlockEntity != null && !(lastBlockEntity instanceof TileConveyorBelt)) {
 			LazyOptional<IItemHandler> handlerOptional = lastBlockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction);
 			isPuller.set(handlerOptional.isPresent());
+		} else {
+			isPuller.set(false);
 		}
 		if (isQueueReady.get()) {
 			if (!inQueue.isEmpty()) {
@@ -192,11 +199,7 @@ public class TileConveyorBelt extends GenericTile {
 			return type == ConveyorType.SlopedDown ? conveyorObject.get().y() <= worldPosition.getY() - 1 : conveyorObject.get().y() >= worldPosition.getY() + 1;
 		}
 
-		float value = 1;
-		if (belt != null && (belt.inQueue.isEmpty() || belt.inQueue.get(0) == this) && belt.isQueueReady.get()) {
-			ConveyorType beltType = ConveyorType.values()[belt.conveyorType.get()];
-			value = beltType == ConveyorType.SlopedUp || type == ConveyorType.Vertical ? 1 : 1.25f;
-		}
+		float value = belt != null && (belt.inQueue.isEmpty() || belt.inQueue.get(0) == this) && belt.isQueueReady.get() ? ConveyorType.values()[belt.conveyorType.get()] == ConveyorType.SlopedUp || ConveyorType.values()[conveyorType.get()] == ConveyorType.Vertical ? 1 : 1.25f : 1;
 
 		if (direction.x() + direction.y() + direction.z() > 0) {
 			return !pos.equals(worldPosition) && coordComponent >= value;
@@ -228,12 +231,12 @@ public class TileConveyorBelt extends GenericTile {
 				if (shouldTransfer) {
 					Direction direction = this.<ComponentDirection>getComponent(ComponentType.Direction).getDirection();
 					LazyOptional<IItemHandler> handlerOptional = nextBlockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction);
-					ComponentInventory inventory = getComponent(ComponentType.Inventory);
 					if (handlerOptional.isPresent()) {
 						if (wait == 0) {
-							if (putItemsIntoInventory(handlerOptional, inventory) == 0) {
+							if (putItemsIntoInventory(handlerOptional.resolve().get()) == 0) {
 								wait = 20;
 							} else {
+
 							}
 						} else {
 							wait--;
@@ -267,40 +270,41 @@ public class TileConveyorBelt extends GenericTile {
 		level.addFreshEntity(entity);
 	}
 
-	private int putItemsIntoInventory(LazyOptional<IItemHandler> handlerOptional, ComponentInventory inventory) {
+	private int putItemsIntoInventory(IItemHandler handler) {
 
-		IItemHandler handler = handlerOptional.resolve().get();
 		int amtTaken = 0;
 
-		ItemStack conveyerStack, remainder;
+		ItemStack conveyerStack = getStackOnBelt();
+		
+		ItemStack remainder;
 
-		for (int conveyerIndex = 0; conveyerIndex < inventory.getContainerSize(); conveyerIndex++) {
+		for (int targetIndex = 0; targetIndex < handler.getSlots(); targetIndex++) {
 
-			conveyerStack = inventory.getItem(conveyerIndex);
+			remainder = handler.insertItem(targetIndex, conveyerStack, false);
 
-			for (int targetIndex = 0; targetIndex < handler.getSlots(); targetIndex++) {
+			int taken = conveyerStack.getCount() - remainder.getCount();
 
-				remainder = handler.insertItem(targetIndex, conveyerStack, false);
+			if (taken <= 0) {
 
-				int taken = conveyerStack.getCount() - remainder.getCount();
-
-				if (taken > 0) {
-
-					amtTaken += taken;
-
-					conveyerStack.shrink(taken);
-
-					inventory.setItem(conveyerIndex, conveyerStack);
-
-					if (conveyerStack.isEmpty()) {
-						break;
-					}
-
-				}
+				continue;
 
 			}
 
+			amtTaken += taken;
+
+			conveyerStack = conveyerStack.copy();
+
+			conveyerStack.shrink(taken);
+
+			if (conveyerStack.isEmpty()) {
+				break;
+			}
+
 		}
+		
+		conveyerStack.shrink(amtTaken);
+		
+		setItemOnBelt(conveyerStack);
 
 		return amtTaken;
 	}
@@ -390,9 +394,6 @@ public class TileConveyorBelt extends GenericTile {
 	}
 
 	public enum ConveyorType {
-		Horizontal,
-		SlopedUp,
-		SlopedDown,
-		Vertical;
+		Horizontal, SlopedUp, SlopedDown, Vertical;
 	}
 }
