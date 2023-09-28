@@ -37,7 +37,7 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 public class TileConveyorBelt extends GenericTile {
 
 	public static final int INVENTORY_INDEX = 0;
-	
+
 	public final Property<Integer> currentSpread = property(new Property<>(PropertyType.Integer, "currentSpread", 0));
 	public final Property<Boolean> running = property(new Property<>(PropertyType.Boolean, "running", false));
 	// public final Property<Boolean> hasPlaceToDrop = property(new Property<>(PropertyType.Boolean, "hasplacetodrop", true));
@@ -84,7 +84,7 @@ public class TileConveyorBelt extends GenericTile {
 	public void setInvToEmpty() {
 		setItemOnBelt(ItemStack.EMPTY);
 	}
-	
+
 	public void setItemOnBelt(ItemStack stack) {
 		getInventory().setItem(INVENTORY_INDEX, stack);
 	}
@@ -275,7 +275,7 @@ public class TileConveyorBelt extends GenericTile {
 		int amtTaken = 0;
 
 		ItemStack conveyerStack = getStackOnBelt();
-		
+
 		ItemStack remainder;
 
 		for (int targetIndex = 0; targetIndex < handler.getSlots(); targetIndex++) {
@@ -301,9 +301,9 @@ public class TileConveyorBelt extends GenericTile {
 			}
 
 		}
-		
+
 		conveyerStack.shrink(amtTaken);
-		
+
 		setItemOnBelt(conveyerStack);
 
 		return amtTaken;
@@ -394,6 +394,9 @@ public class TileConveyorBelt extends GenericTile {
 	}
 
 	public enum ConveyorType {
-		Horizontal, SlopedUp, SlopedDown, Vertical;
+		Horizontal,
+		SlopedUp,
+		SlopedDown,
+		Vertical;
 	}
 }

@@ -34,20 +34,20 @@ public class RenderRancher extends AbstractTileRenderer<TileRancher> {
 		matrixStackIn.pushPose();
 		RenderingUtils.prepareRotationalTileModel(rancher, matrixStackIn);
 		matrixStackIn.mulPose(MathUtils.rotQuaternionDeg(0, 0, 90));
-		//matrixStackIn.mulPose(new Quaternion(0, 0, 90, true));
+		// matrixStackIn.mulPose(new Quaternion(0, 0, 90, true));
 		matrixStackIn.translate(9.0 / 16.0, 3 / 16.0, 2.5 / 16.0);
 		matrixStackIn.mulPose(MathUtils.rotQuaternionDeg((float) -progress - 50f, 0, 0));
-		//matrixStackIn.mulPose(new Quaternion((float) -progress - 50f, 0, 0, true));
+		// matrixStackIn.mulPose(new Quaternion((float) -progress - 50f, 0, 0, true));
 		RenderingUtils.renderModel(ibakedmodel, rancher, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 		matrixStackIn.popPose();
 		ibakedmodel = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_RANCHERRIGHT);
 		matrixStackIn.pushPose();
 		RenderingUtils.prepareRotationalTileModel(rancher, matrixStackIn);
 		matrixStackIn.mulPose(MathUtils.rotQuaternionDeg(0, 0, 90));
-		//matrixStackIn.mulPose(new Quaternion(0, 0, 90, true));
+		// matrixStackIn.mulPose(new Quaternion(0, 0, 90, true));
 		matrixStackIn.translate(1.0 / 16.0, 3 / 16.0, -2.5 / 16.0);
 		matrixStackIn.mulPose(MathUtils.rotQuaternionDeg((float) progress + 50f, 0, 0));
-		//matrixStackIn.mulPose(new Quaternion((float) progress + 50f, 0, 0, true));
+		// matrixStackIn.mulPose(new Quaternion((float) progress + 50f, 0, 0, true));
 		RenderingUtils.renderModel(ibakedmodel, rancher, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 		matrixStackIn.popPose();
 	}

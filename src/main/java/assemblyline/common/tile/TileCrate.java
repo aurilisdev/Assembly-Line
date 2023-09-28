@@ -77,25 +77,23 @@ public class TileCrate extends GenericTile {
 		ComponentInventory inv = getComponent(ComponentType.Inventory);
 		return (int) (((double) getCount() / (double) Math.max(1, inv.getContainerSize())) * 15.0);
 	}
-	
+
 	@Override
 	public InteractionResult use(Player player, InteractionHand hand, BlockHitResult result) {
-		if (player.isShiftKeyDown()) {
-			ComponentInventory inv = getComponent(ComponentType.Inventory);
-			for (int i = 0; i < inv.getContainerSize(); i++) {
-				ItemStack stack = inv.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.UP, null).resolve().get().extractItem(i, inv.getMaxStackSize(), level.isClientSide());
-				if (!stack.isEmpty()) {
-					if(!level.isClientSide()) {
-						ItemEntity item = new ItemEntity(level, player.getX() + 0.5, player.getY() + 0.5, player.getZ() + 0.5, stack);
-						level.addFreshEntity(item);
-					}
-					return InteractionResult.CONSUME;
-				}
-			}
-
-		} else {
+		if (!player.isShiftKeyDown()) {
 			player.setItemInHand(hand, HopperBlockEntity.addItem(player.getInventory(), getComponent(ComponentType.Inventory), player.getItemInHand(hand), Direction.EAST));
 			return InteractionResult.CONSUME;
+		}
+		ComponentInventory inv = getComponent(ComponentType.Inventory);
+		for (int i = 0; i < inv.getContainerSize(); i++) {
+			ItemStack stack = inv.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.UP, null).resolve().get().extractItem(i, inv.getMaxStackSize(), level.isClientSide());
+			if (!stack.isEmpty()) {
+				if (!level.isClientSide()) {
+					ItemEntity item = new ItemEntity(level, player.getX() + 0.5, player.getY() + 0.5, player.getZ() + 0.5, stack);
+					level.addFreshEntity(item);
+				}
+				return InteractionResult.CONSUME;
+			}
 		}
 		return InteractionResult.FAIL;
 	}

@@ -83,7 +83,7 @@ public class RenderCrate extends AbstractTileRenderer<TileCrate> {
 				matrixStackIn.pushPose();
 
 				matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(-180, MathUtils.YP));
-				//matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-180));
+				// matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-180));
 
 				if (dir == Direction.NORTH) {
 					matrixStackIn.translate(-1, 0, 0);
@@ -92,18 +92,18 @@ public class RenderCrate extends AbstractTileRenderer<TileCrate> {
 				if (dir == Direction.EAST) {
 					matrixStackIn.translate(-1, 0, -1);
 					matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(-90, MathUtils.YP));
-					//matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-90));
+					// matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-90));
 				}
 
 				if (dir == Direction.SOUTH) {
 					matrixStackIn.translate(0, 0, -1);
 					matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(-180, MathUtils.YP));
-					//matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-180));
+					// matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-180));
 				}
 
 				if (dir == Direction.WEST) {
 					matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(90, MathUtils.YP));
-					//matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90));
+					// matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90));
 				}
 
 				matrixStackIn.translate(0.5, 0.6, 0);

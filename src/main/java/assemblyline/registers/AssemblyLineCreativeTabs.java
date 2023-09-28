@@ -13,5 +13,5 @@ public class AssemblyLineCreativeTabs {
 	public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, References.ID);
 
 	public static final RegistryObject<CreativeModeTab> MAIN = CREATIVE_TABS.register("main", () -> CreativeModeTab.builder().title(AssemblyTextUtils.creativeTab("main")).icon(() -> new ItemStack(AssemblyLineBlocks.blockConveyorBelt)).build());
-	
+
 }

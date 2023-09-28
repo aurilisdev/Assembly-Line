@@ -40,19 +40,19 @@ public class RenderBlockBreaker extends AbstractTileRenderer<TileBlockBreaker> {
 		matrixStackIn.pushPose();
 		RenderingUtils.prepareRotationalTileModel(breaker, matrixStackIn);
 		matrixStackIn.mulPose(MathUtils.rotQuaternionDeg(0, 0, 90));
-		//matrixStackIn.mulPose(new Quaternion(0, 0, 90, true));
+		// matrixStackIn.mulPose(new Quaternion(0, 0, 90, true));
 		matrixStackIn.translate(1.0 / 16.0, 6.0 / 16.0, 2.5 / 16.0);
 		matrixStackIn.mulPose(MathUtils.rotQuaternionDeg((float) -progress, 0, 0));
-		//matrixStackIn.mulPose(new Quaternion((float) -progress, 0, 0, true));
+		// matrixStackIn.mulPose(new Quaternion((float) -progress, 0, 0, true));
 		RenderingUtils.renderModel(ibakedmodel, breaker, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 		matrixStackIn.popPose();
 		matrixStackIn.pushPose();
 		RenderingUtils.prepareRotationalTileModel(breaker, matrixStackIn);
 		matrixStackIn.mulPose(MathUtils.rotQuaternionDeg(0, 0, 90));
-		//matrixStackIn.mulPose(new Quaternion(0, 0, 90, true));
+		// matrixStackIn.mulPose(new Quaternion(0, 0, 90, true));
 		matrixStackIn.translate(1.0 / 16.0, 6.0 / 16.0, -2.5 / 16.0);
 		matrixStackIn.mulPose(MathUtils.rotQuaternionDeg((float) progress, 0, 0));
-		//matrixStackIn.mulPose(new Quaternion((float) progress, 0, 0, true));
+		// matrixStackIn.mulPose(new Quaternion((float) progress, 0, 0, true));
 		RenderingUtils.renderModel(ibakedmodel, breaker, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 		matrixStackIn.popPose();
 

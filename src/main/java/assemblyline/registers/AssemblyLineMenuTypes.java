@@ -24,9 +24,9 @@ public class AssemblyLineMenuTypes {
 	public static final RegistryObject<MenuType<ContainerBlockBreaker>> CONTAINER_BLOCKBREAKER = register("blockbreaker", ContainerBlockBreaker::new);
 	public static final RegistryObject<MenuType<ContainerFrontHarvester>> CONTAINER_HARVESTER = register("harvester", ContainerFrontHarvester::new);
 	public static final RegistryObject<MenuType<ContainerFarmer>> CONTAINER_FARMER = register("farmer", ContainerFarmer::new);
-	
+
 	private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> register(String id, MenuSupplier<T> supplier) {
-		return MENU_TYPES.register(id, () -> new MenuType<T>(supplier, FeatureFlags.VANILLA_SET));
+		return MENU_TYPES.register(id, () -> new MenuType<>(supplier, FeatureFlags.VANILLA_SET));
 	}
 
 }

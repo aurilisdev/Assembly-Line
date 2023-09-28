@@ -34,7 +34,7 @@ public class TileSorterBelt extends GenericTile {
 		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().forceSize(18)));
 		addComponent(new ComponentContainerProvider("container.sorterbelt", this).createMenu((id, player) -> new ContainerSorterBelt(id, player, getComponent(ComponentType.Inventory), getCoordsArray())));
 	}
-	
+
 	@Override
 	public void onBlockDestroyed() {
 		Containers.dropContents(level, getBlockPos(), (ComponentInventory) getComponent(ComponentType.Inventory));
@@ -42,12 +42,12 @@ public class TileSorterBelt extends GenericTile {
 
 	@Override
 	public void onEntityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
-		if(level.isClientSide()) {
+		if (level.isClientSide()) {
 			return;
 		}
-		
+
 		boolean running = BlockEntityUtils.isLit(this);
-		
+
 		ComponentInventory inv = getComponent(ComponentType.Inventory);
 		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
 		Direction facing = getBlockState().getValue(GenericEntityBlock.FACING);

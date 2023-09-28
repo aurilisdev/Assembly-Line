@@ -42,17 +42,17 @@ public class TileDetector extends GenericTile {
 			}
 		}
 	}
-	
+
 	@Override
 	public InteractionResult use(Player arg0, InteractionHand arg1, BlockHitResult arg2) {
 		return InteractionResult.FAIL;
 	}
-	
+
 	@Override
 	public int getSignal(Direction dir) {
 		return isPowered ? 15 : 0;
 	}
-	
+
 	@Override
 	public int getDirectSignal(Direction dir) {
 		return getSignal(dir);

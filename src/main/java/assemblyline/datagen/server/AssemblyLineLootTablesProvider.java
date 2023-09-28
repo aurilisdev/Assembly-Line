@@ -31,7 +31,7 @@ public class AssemblyLineLootTablesProvider extends ElectrodynamicsLootTablesPro
 		addMachineTable(AssemblyLineBlocks.blockFarmer, AssemblyLineBlockTypes.TILE_FARMER, true, false, false, true, false);
 
 	}
-	
+
 	@Override
 	public List<Block> getExcludedBlocks() {
 		return List.of(AssemblyLineBlocks.blockConveyorBelt, AssemblyLineBlocks.blockSorterBelt);
