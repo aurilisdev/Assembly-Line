@@ -6,7 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import assemblyline.common.tile.TileCrate;
 import electrodynamics.client.render.tile.AbstractTileRenderer;
-import electrodynamics.prefab.tile.components.ComponentType;
+import electrodynamics.prefab.tile.components.IComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.utilities.math.MathUtils;
 import net.minecraft.client.Minecraft;
@@ -56,7 +56,7 @@ public class RenderCrate extends AbstractTileRenderer<TileCrate> {
 
 				ItemStack item = ItemStack.EMPTY;
 
-				for (ItemStack stack : tileCrate.<ComponentInventory>getComponent(ComponentType.Inventory).getItems()) {
+				for (ItemStack stack : tileCrate.<ComponentInventory>getComponent(IComponentType.Inventory).getItems()) {
 					if (!stack.isEmpty()) {
 						item = stack;
 						break;
@@ -78,7 +78,7 @@ public class RenderCrate extends AbstractTileRenderer<TileCrate> {
 
 				matrixStackIn.popPose();
 
-				ItemStack stack = tileCrate.<ComponentInventory>getComponent(ComponentType.Inventory).getItem(0);
+				ItemStack stack = tileCrate.<ComponentInventory>getComponent(IComponentType.Inventory).getItem(0);
 
 				matrixStackIn.pushPose();
 

@@ -10,8 +10,7 @@ import assemblyline.registers.AssemblyLineBlockTypes;
 import electrodynamics.prefab.properties.Property;
 import electrodynamics.prefab.properties.PropertyType;
 import electrodynamics.prefab.tile.GenericTile;
-import electrodynamics.prefab.tile.components.ComponentType;
-import electrodynamics.prefab.tile.components.type.ComponentDirection;
+import electrodynamics.prefab.tile.components.IComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryBuilder;
@@ -55,10 +54,9 @@ public class TileConveyorBelt extends GenericTile {
 	public TileConveyorBelt(BlockPos worldPosition, BlockState blockState) {
 		super(AssemblyLineBlockTypes.TILE_BELT.get(), worldPosition, blockState);
 		addComponent(new ComponentTickable(this).tickCommon(this::tickCommon));
-		addComponent(new ComponentDirection(this));
 		addComponent(new ComponentPacketHandler(this));
 		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().forceSize(1)));
-		addComponent(new ComponentElectrodynamic(this).input(Direction.DOWN).relativeInput(Direction.EAST).relativeInput(Direction.WEST).maxJoules(Constants.CONVEYORBELT_USAGE * 100));
+		addComponent(new ComponentElectrodynamic(this, false, true).setInputDirections(Direction.DOWN, Direction.EAST, Direction.WEST).maxJoules(Constants.CONVEYORBELT_USAGE * 100));
 	}
 
 	@Override
@@ -70,11 +68,11 @@ public class TileConveyorBelt extends GenericTile {
 
 	@Override
 	public void onBlockDestroyed() {
-		Containers.dropContents(level, getBlockPos(), (ComponentInventory) getComponent(ComponentType.Inventory));
+		Containers.dropContents(level, getBlockPos(), (ComponentInventory) getComponent(IComponentType.Inventory));
 	}
 
 	public ComponentInventory getInventory() {
-		return getComponent(ComponentType.Inventory);
+		return getComponent(IComponentType.Inventory);
 	}
 
 	public ItemStack getStackOnBelt() {
@@ -96,7 +94,7 @@ public class TileConveyorBelt extends GenericTile {
 			conveyorObject.set(new Location(0.5f + worldPosition.getX(), worldPosition.getY() + (type == ConveyorType.SlopedDown ? -4.0f / 16.0f : type == ConveyorType.SlopedUp ? 8.0f / 16.0f : 0), 0.5f + worldPosition.getZ()));
 		}
 		if (!add.isEmpty()) {
-			ComponentInventory inventory = getComponent(ComponentType.Inventory);
+			ComponentInventory inventory = getComponent(IComponentType.Inventory);
 			ItemStack returner = new InvWrapper(inventory).insertItem(0, add, false);
 			if (returner.getCount() != add.getCount()) {
 				return returner;
@@ -118,12 +116,12 @@ public class TileConveyorBelt extends GenericTile {
 	}
 
 	protected void tickCommon(ComponentTickable tickable) {
-		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
+		ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
 		ItemStack stackOnBelt = getStackOnBelt();
 		isQueueReady.set(stackOnBelt.isEmpty());
 		running.set(currentSpread.get() > 0 && isQueueReady.get());
 		BlockEntity nextBlockEntity = getNextEntity();
-		Direction direction = this.<ComponentDirection>getComponent(ComponentType.Direction).getDirection();
+		Direction direction = getFacing();
 		if (nextBlockEntity != null && !(nextBlockEntity instanceof TileConveyorBelt)) {
 			isPusher.set(nextBlockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction).isPresent());
 		} else {
@@ -183,7 +181,7 @@ public class TileConveyorBelt extends GenericTile {
 	}
 
 	public Vector3f getDirectionAsVector() {
-		Direction direction = this.<ComponentDirection>getComponent(ComponentType.Direction).getDirection().getOpposite();
+		Direction direction = getFacing().getOpposite();
 		return new Vector3f(direction.getStepX(), direction.getStepY(), direction.getStepZ());
 	}
 
@@ -229,7 +227,7 @@ public class TileConveyorBelt extends GenericTile {
 				}
 			} else if (nextBlockEntity != null) {
 				if (shouldTransfer) {
-					Direction direction = this.<ComponentDirection>getComponent(ComponentType.Direction).getDirection();
+					Direction direction = getFacing();
 					LazyOptional<IItemHandler> handlerOptional = nextBlockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction);
 					if (handlerOptional.isPresent()) {
 						if (wait == 0) {
@@ -310,7 +308,7 @@ public class TileConveyorBelt extends GenericTile {
 	}
 
 	public BlockPos getNextPos() {
-		Direction direction = this.<ComponentDirection>getComponent(ComponentType.Direction).getDirection().getOpposite();
+		Direction direction = getFacing().getOpposite();
 		return switch (ConveyorType.values()[conveyorType.get()]) {
 		case Horizontal -> worldPosition.relative(direction);
 		case SlopedDown -> worldPosition.relative(direction).below();

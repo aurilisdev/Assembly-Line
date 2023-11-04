@@ -8,8 +8,7 @@ import assemblyline.client.ClientRegister;
 import assemblyline.common.tile.TileConveyorBelt;
 import assemblyline.common.tile.TileConveyorBelt.ConveyorType;
 import electrodynamics.client.render.tile.AbstractTileRenderer;
-import electrodynamics.prefab.tile.components.ComponentType;
-import electrodynamics.prefab.tile.components.type.ComponentDirection;
+import electrodynamics.prefab.tile.components.IComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.utilities.RenderingUtils;
 import electrodynamics.prefab.utilities.math.MathUtils;
@@ -36,7 +35,7 @@ public class RenderConveyorBelt extends AbstractTileRenderer<TileConveyorBelt> {
 
 		matrixStackIn.pushPose();
 
-		ComponentInventory inv = tile.getComponent(ComponentType.Inventory);
+		ComponentInventory inv = tile.getComponent(IComponentType.Inventory);
 
 		ItemStack stack = inv.getItem(0);
 
@@ -44,7 +43,7 @@ public class RenderConveyorBelt extends AbstractTileRenderer<TileConveyorBelt> {
 
 		Vector3f move = tile.getDirectionAsVector();
 
-		Direction direct = tile.<ComponentDirection>getComponent(ComponentType.Direction).getDirection().getOpposite();
+		Direction direct = tile.getFacing().getOpposite();
 
 		if (ConveyorType.values()[tile.conveyorType.get()] != ConveyorType.Horizontal) {
 

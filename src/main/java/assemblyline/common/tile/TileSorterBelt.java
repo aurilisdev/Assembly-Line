@@ -5,9 +5,8 @@ import assemblyline.common.settings.Constants;
 import assemblyline.registers.AssemblyLineBlockTypes;
 import electrodynamics.prefab.block.GenericEntityBlock;
 import electrodynamics.prefab.tile.GenericTile;
-import electrodynamics.prefab.tile.components.ComponentType;
+import electrodynamics.prefab.tile.components.IComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentContainerProvider;
-import electrodynamics.prefab.tile.components.type.ComponentDirection;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryBuilder;
@@ -29,15 +28,14 @@ public class TileSorterBelt extends GenericTile {
 
 	public TileSorterBelt(BlockPos worldPosition, BlockState blockState) {
 		super(AssemblyLineBlockTypes.TILE_SORTERBELT.get(), worldPosition, blockState);
-		addComponent(new ComponentDirection(this));
-		addComponent(new ComponentElectrodynamic(this).maxJoules(Constants.CONVEYORBELT_USAGE * 20).input(Direction.DOWN));
+		addComponent(new ComponentElectrodynamic(this, false, true).maxJoules(Constants.CONVEYORBELT_USAGE * 20).setInputDirections(Direction.DOWN));
 		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().forceSize(18)));
-		addComponent(new ComponentContainerProvider("container.sorterbelt", this).createMenu((id, player) -> new ContainerSorterBelt(id, player, getComponent(ComponentType.Inventory), getCoordsArray())));
+		addComponent(new ComponentContainerProvider("container.sorterbelt", this).createMenu((id, player) -> new ContainerSorterBelt(id, player, getComponent(IComponentType.Inventory), getCoordsArray())));
 	}
 
 	@Override
 	public void onBlockDestroyed() {
-		Containers.dropContents(level, getBlockPos(), (ComponentInventory) getComponent(ComponentType.Inventory));
+		Containers.dropContents(level, getBlockPos(), (ComponentInventory) getComponent(IComponentType.Inventory));
 	}
 
 	@Override
@@ -48,8 +46,8 @@ public class TileSorterBelt extends GenericTile {
 
 		boolean running = BlockEntityUtils.isLit(this);
 
-		ComponentInventory inv = getComponent(ComponentType.Inventory);
-		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
+		ComponentInventory inv = getComponent(IComponentType.Inventory);
+		ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
 		Direction facing = getBlockState().getValue(GenericEntityBlock.FACING);
 		if (running && entity.getY() > worldPosition.getY() + 4.0 / 16.0) {
 			Direction dir = facing.getOpposite();

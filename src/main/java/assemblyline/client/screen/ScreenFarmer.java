@@ -17,8 +17,9 @@ import electrodynamics.prefab.screen.component.button.type.ButtonSwappableLabel;
 import electrodynamics.prefab.screen.component.types.ScreenComponentCountdown;
 import electrodynamics.prefab.screen.component.types.ScreenComponentSlot;
 import electrodynamics.prefab.screen.component.types.guitab.ScreenComponentElectricInfo;
+import electrodynamics.prefab.screen.component.types.wrapper.InventoryIOWrapper;
 import electrodynamics.prefab.screen.component.utils.AbstractScreenComponentInfo;
-import electrodynamics.prefab.tile.components.ComponentType;
+import electrodynamics.prefab.tile.components.IComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.utilities.math.Color;
 import net.minecraft.ChatFormatting;
@@ -32,7 +33,7 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 
 	public static final Color[] COLORS = {
 
-			new Color(0, 0, 0, 255), new Color(255, 0, 0, 255), new Color(120, 0, 255, 255), new Color(0, 255, 0, 255), new Color(220, 0, 255, 255), new Color(255, 120, 0, 255), new Color(0, 0, 255, 255), new Color(240, 255, 0, 255), new Color(0, 240, 255, 255)
+			new Color(50, 50, 50, 255), new Color(255, 0, 0, 255), new Color(120, 0, 255, 255), new Color(0, 240, 0, 255), new Color(220, 0, 255, 255), new Color(255, 120, 0, 255), new Color(0, 0, 255, 255), new Color(240, 255, 0, 255), new Color(0, 240, 255, 255)
 
 	};
 
@@ -76,6 +77,7 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 			}
 			return false;
 		}).setOnPress(button -> toggleRendering()));
+		new InventoryIOWrapper(this, -AbstractScreenComponentInfo.SIZE + 1, AbstractScreenComponentInfo.SIZE + 2, 75, 82 + 58, 8, 72 + 58);
 
 	}
 
@@ -83,7 +85,7 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 		ArrayList<FormattedCharSequence> list = new ArrayList<>();
 		TileFarmer farmer = menu.getHostFromIntArray();
 		if (farmer != null) {
-			ComponentElectrodynamic electro = farmer.getComponent(ComponentType.Electrodynamic);
+			ComponentElectrodynamic electro = farmer.getComponent(IComponentType.Electrodynamic);
 			list.add(AssemblyTextUtils.gui("machine.usage", ChatFormatter.getChatDisplayShort(Constants.FARMER_USAGE * farmer.powerUsageMultiplier.get() * 20, DisplayUnit.WATT).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
 			list.add(AssemblyTextUtils.gui("machine.voltage", ChatFormatter.getChatDisplayShort(electro.getVoltage(), DisplayUnit.VOLTAGE).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
 		}
