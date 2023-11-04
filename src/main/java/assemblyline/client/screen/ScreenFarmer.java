@@ -77,7 +77,12 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 			}
 			return false;
 		}).setOnPress(button -> toggleRendering()));
-		new InventoryIOWrapper(this, -AbstractScreenComponentInfo.SIZE + 1, AbstractScreenComponentInfo.SIZE + 2, 75, 82 + 58, 8, 72 + 58);
+		new InventoryIOWrapper(this, -AbstractScreenComponentInfo.SIZE + 1, AbstractScreenComponentInfo.SIZE + 2, 75, 82 + 58, 8, 72 + 58, (slot, index) -> {
+			if(index < 9) {
+				return COLORS[index];
+			}
+			return Color.WHITE;
+		});
 
 	}
 
