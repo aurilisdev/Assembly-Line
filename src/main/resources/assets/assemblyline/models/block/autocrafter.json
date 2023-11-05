@@ -4,7 +4,7 @@
 	"texture_size": [64, 64],
 	"textures": {
 		"0": "assemblyline:block/model/autocrafter",
-		"particle": "assemblyline:block/model/autocrafter"
+		"particle": "minecraft:crafting_table"
 	},
 	"elements": [
 		{
