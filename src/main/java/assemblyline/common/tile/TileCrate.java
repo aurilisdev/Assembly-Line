@@ -4,7 +4,7 @@ import java.util.HashSet;
 
 import assemblyline.registers.AssemblyLineBlockTypes;
 import electrodynamics.prefab.tile.GenericTile;
-import electrodynamics.prefab.tile.components.ComponentType;
+import electrodynamics.prefab.tile.components.IComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryBuilder;
 import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
@@ -30,13 +30,13 @@ public class TileCrate extends GenericTile {
 	public TileCrate(int size, BlockPos worldPosition, BlockState blockState) {
 		super(AssemblyLineBlockTypes.TILE_CRATE.get(), worldPosition, blockState);
 		addComponent(new ComponentPacketHandler(this));
-		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().forceSize(size)).getSlots(this::getSlotsForFace).valid(this::isItemValidForSlot).slotFaces(0, Direction.values()));
+		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().forceSize(size)).getSlots(this::getSlotsForFace).valid(this::isItemValidForSlot).setSlotsForAllDirections(0));
 		addComponent(new ComponentTickable(this));
 	}
 
 	public HashSet<Integer> getSlotsForFace(Direction side) {
 		HashSet<Integer> set = new HashSet<>();
-		for (int i = 0; i < this.<ComponentInventory>getComponent(ComponentType.Inventory).getContainerSize(); i++) {
+		for (int i = 0; i < this.<ComponentInventory>getComponent(IComponentType.Inventory).getContainerSize(); i++) {
 			set.add(i);
 		}
 		return set;
@@ -60,7 +60,7 @@ public class TileCrate extends GenericTile {
 
 	public int getCount() {
 		int count = 0;
-		ComponentInventory inv = getComponent(ComponentType.Inventory);
+		ComponentInventory inv = getComponent(IComponentType.Inventory);
 		count = 0;
 		for (int i = 0; i < inv.getContainerSize(); i++) {
 			ItemStack stack = inv.getItem(i);
@@ -74,17 +74,17 @@ public class TileCrate extends GenericTile {
 
 	@Override
 	public int getComparatorSignal() {
-		ComponentInventory inv = getComponent(ComponentType.Inventory);
+		ComponentInventory inv = getComponent(IComponentType.Inventory);
 		return (int) (((double) getCount() / (double) Math.max(1, inv.getContainerSize())) * 15.0);
 	}
 
 	@Override
 	public InteractionResult use(Player player, InteractionHand hand, BlockHitResult result) {
 		if (!player.isShiftKeyDown()) {
-			player.setItemInHand(hand, HopperBlockEntity.addItem(player.getInventory(), getComponent(ComponentType.Inventory), player.getItemInHand(hand), Direction.EAST));
+			player.setItemInHand(hand, HopperBlockEntity.addItem(player.getInventory(), getComponent(IComponentType.Inventory), player.getItemInHand(hand), Direction.EAST));
 			return InteractionResult.CONSUME;
 		}
-		ComponentInventory inv = getComponent(ComponentType.Inventory);
+		ComponentInventory inv = getComponent(IComponentType.Inventory);
 		for (int i = 0; i < inv.getContainerSize(); i++) {
 			ItemStack stack = inv.getCapability(ForgeCapabilities.ITEM_HANDLER, Direction.UP, null).resolve().get().extractItem(i, inv.getMaxStackSize(), level.isClientSide());
 			if (!stack.isEmpty()) {

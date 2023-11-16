@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import assemblyline.client.ClientRegister;
 import assemblyline.common.tile.TileMobGrinder;
 import electrodynamics.client.render.tile.AbstractTileRenderer;
-import electrodynamics.prefab.tile.components.ComponentType;
+import electrodynamics.prefab.tile.components.IComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.utilities.RenderingUtils;
 import electrodynamics.prefab.utilities.math.MathUtils;
@@ -25,7 +25,7 @@ public class RenderMobGrinder extends AbstractTileRenderer<TileMobGrinder> {
 	public void render(TileMobGrinder grinder, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
 		double progress = 0;
-		if (grinder.<ComponentElectrodynamic>getComponent(ComponentType.Electrodynamic).getJoulesStored() >= grinder.getUsage()) {
+		if (grinder.<ComponentElectrodynamic>getComponent(IComponentType.Electrodynamic).getJoulesStored() >= grinder.getUsage()) {
 			progress = grinder.getLevel().getDayTime() + partialTicks;
 		}
 

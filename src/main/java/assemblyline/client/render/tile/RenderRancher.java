@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import assemblyline.client.ClientRegister;
 import assemblyline.common.tile.TileRancher;
 import electrodynamics.client.render.tile.AbstractTileRenderer;
-import electrodynamics.prefab.tile.components.ComponentType;
+import electrodynamics.prefab.tile.components.IComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.utilities.RenderingUtils;
 import electrodynamics.prefab.utilities.math.MathUtils;
@@ -25,7 +25,7 @@ public class RenderRancher extends AbstractTileRenderer<TileRancher> {
 	public void render(TileRancher rancher, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
 		double progress = 0;
-		if (rancher.<ComponentElectrodynamic>getComponent(ComponentType.Electrodynamic).getJoulesStored() >= rancher.getUsage()) {
+		if (rancher.<ComponentElectrodynamic>getComponent(IComponentType.Electrodynamic).getJoulesStored() >= rancher.getUsage()) {
 			progress = rancher.getLevel().getDayTime() + partialTicks;
 		}
 

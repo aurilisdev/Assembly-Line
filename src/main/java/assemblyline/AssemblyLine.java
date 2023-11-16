@@ -1,6 +1,7 @@
 package assemblyline;
 
 import assemblyline.client.ClientRegister;
+import assemblyline.common.block.AssemblyLineVoxelShapesRegistry;
 import assemblyline.common.packet.NetworkHandler;
 import assemblyline.common.settings.Constants;
 import assemblyline.registers.UnifiedAssemblyLineRegister;
@@ -29,6 +30,7 @@ public class AssemblyLine {
 	@SubscribeEvent
 	public static void onCommonSetup(FMLCommonSetupEvent event) {
 		NetworkHandler.init();
+		AssemblyLineVoxelShapesRegistry.init();
 	}
 
 	@SubscribeEvent

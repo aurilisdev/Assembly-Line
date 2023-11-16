@@ -5,6 +5,7 @@ import assemblyline.registers.AssemblyLineMenuTypes;
 import electrodynamics.common.item.subtype.SubtypeItemUpgrade;
 import electrodynamics.prefab.inventory.container.slot.item.SlotGeneric;
 import electrodynamics.prefab.inventory.container.slot.item.type.SlotUpgrade;
+import electrodynamics.prefab.utilities.math.Color;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -25,7 +26,7 @@ public class ContainerBlockPlacer extends AbstractHarvesterContainer {
 
 	@Override
 	public void addInventorySlots(Container inv, Inventory playerinv) {
-		addSlot(new SlotGeneric(inv, nextIndex(), 103, 35));
+		addSlot(new SlotGeneric(inv, nextIndex(), 103, 35).setIOColor(new Color(0, 240, 255, 255)));
 		addSlot(new SlotUpgrade(inv, nextIndex(), 153, 14, VALID_UPGRADES));
 		addSlot(new SlotUpgrade(inv, nextIndex(), 153, 34, VALID_UPGRADES));
 		addSlot(new SlotUpgrade(inv, nextIndex(), 153, 54, VALID_UPGRADES));

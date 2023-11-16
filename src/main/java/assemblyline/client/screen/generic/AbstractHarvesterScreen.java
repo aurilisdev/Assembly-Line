@@ -14,7 +14,7 @@ import electrodynamics.prefab.screen.component.button.type.ButtonSwappableLabel;
 import electrodynamics.prefab.screen.component.types.ScreenComponentCountdown;
 import electrodynamics.prefab.screen.component.types.guitab.ScreenComponentElectricInfo;
 import electrodynamics.prefab.screen.component.utils.AbstractScreenComponentInfo;
-import electrodynamics.prefab.tile.components.ComponentType;
+import electrodynamics.prefab.tile.components.IComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -49,7 +49,7 @@ public abstract class AbstractHarvesterScreen<T extends AbstractHarvesterContain
 		ArrayList<FormattedCharSequence> list = new ArrayList<>();
 		TileFrontHarvester harvester = menu.getHostFromIntArray();
 		if (harvester != null) {
-			ComponentElectrodynamic electro = harvester.getComponent(ComponentType.Electrodynamic);
+			ComponentElectrodynamic electro = harvester.getComponent(IComponentType.Electrodynamic);
 			list.add(AssemblyTextUtils.gui("machine.usage", ChatFormatter.getChatDisplayShort(harvester.getUsage() * harvester.powerUsageMultiplier.get() * 20, DisplayUnit.WATT)).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
 			list.add(AssemblyTextUtils.gui("machine.voltage", ChatFormatter.getChatDisplayShort(electro.getVoltage(), DisplayUnit.VOLTAGE)).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
 		}
