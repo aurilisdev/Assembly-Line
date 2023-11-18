@@ -1,0 +1,2 @@
+* Update to new electrodynamics direction system
+* polishing
