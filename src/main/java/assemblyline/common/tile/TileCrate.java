@@ -3,6 +3,7 @@ package assemblyline.common.tile;
 import java.util.HashSet;
 
 import assemblyline.registers.AssemblyLineBlockTypes;
+import assemblyline.registers.AssemblyLineBlocks;
 import electrodynamics.prefab.tile.GenericTile;
 import electrodynamics.prefab.tile.components.IComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
@@ -22,15 +23,28 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 
 public class TileCrate extends GenericTile {
+	
+	public final int size;
 
 	public TileCrate(BlockPos worldPosition, BlockState blockState) {
-		this(64, worldPosition, blockState);
-	}
-
-	public TileCrate(int size, BlockPos worldPosition, BlockState blockState) {
 		super(AssemblyLineBlockTypes.TILE_CRATE.get(), worldPosition, blockState);
+		
+		//TODO unique tiles
+		
+		int size = 64;
+		
+		if(blockState.is(AssemblyLineBlocks.blockCrate)) {
+			size = 64;
+		} else if (blockState.is(AssemblyLineBlocks.blockCrateMedium)) {
+			size = 128;
+		} else if (blockState.is(AssemblyLineBlocks.blockCrateLarge)) {
+			size = 256;
+		}
+		
+		this.size = size;
+		
 		addComponent(new ComponentPacketHandler(this));
-		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().forceSize(size)).getSlots(this::getSlotsForFace).valid(this::isItemValidForSlot).setSlotsForAllDirections(0));
+		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().forceSize(this.size)).getSlots(this::getSlotsForFace).valid(this::isItemValidForSlot).setSlotsForAllDirections(0));
 		addComponent(new ComponentTickable(this));
 	}
 
