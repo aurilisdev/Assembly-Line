@@ -18,7 +18,7 @@ public class AssemblyLineLangKeyProvider extends ElectrodynamicsLangKeyProvider 
 		case EN_US:
 		default:
 
-			addCreativeTab("main", "Assembly Line");
+			add("itemGroup.itemgroup" + References.ID, "Assembly Line");
 
 			addBlock(AssemblyLineBlocks.blockConveyorBelt, "Conveyor Belt");
 			addBlock(AssemblyLineBlocks.blockSorterBelt, "Sorter Belt");
