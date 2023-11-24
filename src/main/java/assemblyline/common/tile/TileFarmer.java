@@ -14,9 +14,8 @@ import electrodynamics.common.item.ItemUpgrade;
 import electrodynamics.prefab.properties.Property;
 import electrodynamics.prefab.properties.PropertyType;
 import electrodynamics.prefab.tile.GenericTile;
-import electrodynamics.prefab.tile.components.ComponentType;
+import electrodynamics.prefab.tile.components.IComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentContainerProvider;
-import electrodynamics.prefab.tile.components.type.ComponentDirection;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
@@ -91,17 +90,17 @@ public class TileFarmer extends GenericTile {
 
 	public TileFarmer(BlockPos pos, BlockState state) {
 		super(AssemblyLineBlockTypes.TILE_FARMER.get(), pos, state);
-		addComponent(new ComponentDirection());
-		addComponent(new ComponentPacketHandler());
-		addComponent(new ComponentTickable().tickServer(this::tickServer));
-		addComponent(new ComponentElectrodynamic(this).relativeInput(Direction.DOWN).voltage(ElectrodynamicsCapabilities.DEFAULT_VOLTAGE).maxJoules(Constants.FARMER_USAGE * 20));
-		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().inputs(10).outputs(9).upgrades(3)).validUpgrades(ContainerFarmer.VALID_UPGRADES).valid(machineValidator()));
-		addComponent(new ComponentContainerProvider("container.farmer").createMenu((id, player) -> new ContainerFarmer(id, player, getComponent(ComponentType.Inventory), getCoordsArray())));
+		addComponent(new ComponentPacketHandler(this));
+		addComponent(new ComponentTickable(this).tickServer(this::tickServer));
+		addComponent(new ComponentElectrodynamic(this, false, true).setInputDirections(Direction.DOWN).voltage(ElectrodynamicsCapabilities.DEFAULT_VOLTAGE).maxJoules(Constants.FARMER_USAGE * 20));
+		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().inputs(10).outputs(9).upgrades(3)).setSlotsByDirection(Direction.EAST, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18).setSlotsByDirection(Direction.WEST, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18)
+				.setSlotsByDirection(Direction.NORTH, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18).setSlotsByDirection(Direction.SOUTH, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18).validUpgrades(ContainerFarmer.VALID_UPGRADES).valid(machineValidator()));
+		addComponent(new ComponentContainerProvider("container.farmer", this).createMenu((id, player) -> new ContainerFarmer(id, player, getComponent(IComponentType.Inventory), getCoordsArray())));
 	}
 
 	public void tickServer(ComponentTickable tick) {
 
-		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
+		ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
 		// faster starting speed, but the fastest speed is one block in area checked per tick
 		if (electro.getJoulesStored() >= Constants.MOBGRINDER_USAGE) {
 			electro.extractPower(TransferPack.joulesVoltage(Constants.MOBGRINDER_USAGE, electro.getVoltage()), false);
@@ -135,8 +134,8 @@ public class TileFarmer extends GenericTile {
 	}
 
 	private void handleHarvest(BlockPos checkPos, int quadrant) {
-		ComponentInventory inv = getComponent(ComponentType.Inventory);
-		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
+		ComponentInventory inv = getComponent(IComponentType.Inventory);
+		ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
 		if (inv.areOutputsEmpty()) {
 			Level world = getLevel();
 			BlockState checkState = world.getBlockState(checkPos);
@@ -209,8 +208,8 @@ public class TileFarmer extends GenericTile {
 
 	private void handlePlanting(BlockPos checkPos, int quadrant) {
 		Level world = getLevel();
-		ComponentInventory inv = getComponent(ComponentType.Inventory);
-		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
+		ComponentInventory inv = getComponent(IComponentType.Inventory);
+		ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
 		List<ItemStack> inputs = inv.getInputContents();
 		ItemStack plantingContents = inputs.get(quadrant);
 		ItemStack bonemeal = inputs.get(9);
@@ -255,7 +254,7 @@ public class TileFarmer extends GenericTile {
 	}
 
 	private void refillInputs() {
-		ComponentInventory inv = getComponent(ComponentType.Inventory);
+		ComponentInventory inv = getComponent(IComponentType.Inventory);
 		List<ItemStack> inputs = inv.getInputContents();
 		for (int i = 0; i < inputs.size(); i++) {
 			ItemStack input = inputs.get(i);
@@ -427,5 +426,6 @@ public class TileFarmer extends GenericTile {
 		}
 
 	}
+
 
 }

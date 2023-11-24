@@ -1,18 +1,16 @@
 package assemblyline.registers;
 
-import static electrodynamics.registers.UnifiedElectrodynamicsRegister.supplier;
-
 import assemblyline.References;
-import assemblyline.common.block.BlockBlockBreaker;
-import assemblyline.common.block.BlockBlockPlacer;
 import assemblyline.common.block.BlockConveyorBelt;
-import assemblyline.common.block.BlockCrate;
 import assemblyline.common.block.BlockDetector;
-import assemblyline.common.block.BlockFarmer;
-import assemblyline.common.block.BlockMobGrinder;
-import assemblyline.common.block.BlockRancher;
 import assemblyline.common.block.BlockSorterBelt;
 import assemblyline.common.tile.TileAutocrafter;
+import assemblyline.common.tile.TileBlockBreaker;
+import assemblyline.common.tile.TileBlockPlacer;
+import assemblyline.common.tile.TileCrate;
+import assemblyline.common.tile.TileFarmer;
+import assemblyline.common.tile.TileMobGrinder;
+import assemblyline.common.tile.TileRancher;
 import electrodynamics.prefab.block.GenericMachineBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.DeferredRegister;
@@ -23,28 +21,27 @@ public class AssemblyLineBlocks {
 	public static BlockConveyorBelt blockConveyorBelt;
 	public static BlockSorterBelt blockSorterBelt;
 	public static BlockDetector blockDetector;
-	public static BlockCrate blockCrate;
-	public static BlockCrate blockCrateMedium;
-	public static BlockCrate blockCrateLarge;
+	public static GenericMachineBlock blockCrate;
+	public static GenericMachineBlock blockCrateMedium;
+	public static GenericMachineBlock blockCrateLarge;
 	public static GenericMachineBlock blockAutocrafter;
-	public static BlockBlockBreaker blockBlockBreaker;
-	public static BlockBlockPlacer blockBlockPlacer;
-	public static BlockRancher blockRancher;
-	public static BlockMobGrinder blockMobGrinder;
-	public static BlockFarmer blockFarmer;
+	public static GenericMachineBlock blockBlockBreaker;
+	public static GenericMachineBlock blockBlockPlacer;
+	public static GenericMachineBlock blockRancher;
+	public static GenericMachineBlock blockMobGrinder;
+	public static GenericMachineBlock blockFarmer;
 	static {
-		BLOCKS.register("conveyorbelt", supplier(() -> blockConveyorBelt = new BlockConveyorBelt()));
-		BLOCKS.register("sorterbelt", supplier(() -> blockSorterBelt = new BlockSorterBelt()));
-		BLOCKS.register("detector", supplier(() -> blockDetector = new BlockDetector()));
-		BLOCKS.register("crate", supplier(() -> blockCrate = new BlockCrate(64)));
-		BLOCKS.register("cratemedium", supplier(() -> blockCrateMedium = new BlockCrate(128)));
-		BLOCKS.register("cratelarge", supplier(() -> blockCrateLarge = new BlockCrate(256)));
-		BLOCKS.register("autocrafter", supplier(() -> blockAutocrafter = new GenericMachineBlock(TileAutocrafter::new)));
-		BLOCKS.register("blockbreaker", supplier(() -> blockBlockBreaker = new BlockBlockBreaker()));
-		BLOCKS.register("blockplacer", supplier(() -> blockBlockPlacer = new BlockBlockPlacer()));
-		BLOCKS.register("rancher", supplier(() -> blockRancher = new BlockRancher()));
-		BLOCKS.register("mobgrinder", supplier(() -> blockMobGrinder = new BlockMobGrinder()));
-		BLOCKS.register("farmer", supplier(() -> blockFarmer = new BlockFarmer()));
-
+		BLOCKS.register("conveyorbelt", () -> blockConveyorBelt = new BlockConveyorBelt());
+		BLOCKS.register("sorterbelt", () -> blockSorterBelt = new BlockSorterBelt());
+		BLOCKS.register("detector", () -> blockDetector = new BlockDetector());
+		BLOCKS.register("crate", () -> blockCrate = new GenericMachineBlock(TileCrate::new));
+		BLOCKS.register("cratemedium", () -> blockCrateMedium = new GenericMachineBlock(TileCrate::new));
+		BLOCKS.register("cratelarge", () -> blockCrateLarge = new GenericMachineBlock(TileCrate::new));
+		BLOCKS.register("autocrafter", () -> blockAutocrafter = new GenericMachineBlock(TileAutocrafter::new));
+		BLOCKS.register("blockbreaker", () -> blockBlockBreaker = new GenericMachineBlock(TileBlockBreaker::new));
+		BLOCKS.register("blockplacer", () -> blockBlockPlacer = new GenericMachineBlock(TileBlockPlacer::new));
+		BLOCKS.register("rancher", () -> blockRancher = new GenericMachineBlock(TileRancher::new));
+		BLOCKS.register("mobgrinder", () -> blockMobGrinder = new GenericMachineBlock(TileMobGrinder::new));
+		BLOCKS.register("farmer", () -> blockFarmer = new GenericMachineBlock(TileFarmer::new));
 	}
 }

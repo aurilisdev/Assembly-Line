@@ -4,6 +4,7 @@ import assemblyline.References;
 import assemblyline.datagen.client.AssemblyLineBlockStateProvider;
 import assemblyline.datagen.client.AssemblyLineItemModelsProvider;
 import assemblyline.datagen.client.AssemblyLineLangKeyProvider;
+import assemblyline.datagen.server.AssemblyLineAdvancementProvider;
 import assemblyline.datagen.server.AssemblyLineBlockTagsProvider;
 import assemblyline.datagen.server.AssemblyLineLootTablesProvider;
 import assemblyline.datagen.server.recipe.AssemblyLineRecipeProvider;
@@ -25,6 +26,7 @@ public class DataGenerators {
 			generator.addProvider(true, new AssemblyLineBlockTagsProvider(generator, event.getExistingFileHelper()));
 			generator.addProvider(true, new AssemblyLineLootTablesProvider(generator));
 			generator.addProvider(true, new AssemblyLineRecipeProvider(generator));
+			generator.addProvider(true, new AssemblyLineAdvancementProvider(generator));
 
 		}
 		if (event.includeClient()) {

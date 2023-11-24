@@ -7,7 +7,9 @@ import assemblyline.client.screen.generic.AbstractHarvesterScreen;
 import assemblyline.common.inventory.container.ContainerBlockPlacer;
 import assemblyline.common.tile.TileBlockPlacer;
 import assemblyline.common.tile.generic.TileFrontHarvester;
-import assemblyline.prefab.utils.TextUtils;
+import assemblyline.prefab.utils.AssemblyTextUtils;
+import electrodynamics.prefab.screen.component.types.wrapper.InventoryIOWrapper;
+import electrodynamics.prefab.screen.component.utils.AbstractScreenComponentInfo;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
@@ -19,6 +21,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class ScreenBlockPlacer extends AbstractHarvesterScreen<ContainerBlockPlacer> {
 	public ScreenBlockPlacer(ContainerBlockPlacer container, Inventory playerInventory, Component title) {
 		super(container, playerInventory, title);
+		new InventoryIOWrapper(this, -AbstractScreenComponentInfo.SIZE + 1, AbstractScreenComponentInfo.SIZE + 2, 75, 82, 8, 72);
 	}
 
 	@Override
@@ -37,7 +40,7 @@ public class ScreenBlockPlacer extends AbstractHarvesterScreen<ContainerBlockPla
 		List<FormattedCharSequence> tips = new ArrayList<>();
 
 		if (placer != null) {
-			tips.add(TextUtils.tooltip("cooldown", placer.currentWaitTime.get() - placer.ticksSinceCheck.get()).withStyle(ChatFormatting.GRAY).getVisualOrderText());
+			tips.add(AssemblyTextUtils.tooltip("cooldown", placer.currentWaitTime.get() - placer.ticksSinceCheck.get()).withStyle(ChatFormatting.GRAY).getVisualOrderText());
 		}
 
 		return tips;

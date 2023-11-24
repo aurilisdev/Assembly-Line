@@ -11,7 +11,7 @@ import assemblyline.registers.AssemblyLineBlockTypes;
 import electrodynamics.api.capability.ElectrodynamicsCapabilities;
 import electrodynamics.common.item.ItemUpgrade;
 import electrodynamics.common.item.subtype.SubtypeItemUpgrade;
-import electrodynamics.prefab.tile.components.ComponentType;
+import electrodynamics.prefab.tile.components.IComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
@@ -19,6 +19,7 @@ import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryB
 import electrodynamics.prefab.utilities.InventoryUtils;
 import electrodynamics.prefab.utilities.object.TransferPack;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -36,8 +37,8 @@ public class TileRancher extends TileFrontHarvester {
 
 	@Override
 	public void tickServer(ComponentTickable tickable) {
-		ComponentInventory inv = getComponent(ComponentType.Inventory);
-		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
+		ComponentInventory inv = getComponent(IComponentType.Inventory);
+		ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
 
 		for (ItemStack stack : inv.getUpgradeContents()) {
 			if (!stack.isEmpty()) {
@@ -81,12 +82,15 @@ public class TileRancher extends TileFrontHarvester {
 
 	@Override
 	public ComponentInventory getInv(TileFrontHarvester harvester) {
-		return new ComponentInventory(this, InventoryBuilder.newInv().outputs(9).upgrades(3)).validUpgrades(ContainerFrontHarvester.VALID_UPGRADES).valid(machineValidator());
+		return new ComponentInventory(this, InventoryBuilder.newInv().outputs(9).upgrades(3)).setDirectionsBySlot(0, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST).setDirectionsBySlot(1, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST)
+				.setDirectionsBySlot(2, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST).setDirectionsBySlot(3, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST).setDirectionsBySlot(4, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST)
+				.setDirectionsBySlot(5, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST).setDirectionsBySlot(6, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST).setDirectionsBySlot(7, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST)
+				.setDirectionsBySlot(8, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST).validUpgrades(ContainerFrontHarvester.VALID_UPGRADES).valid(machineValidator());
 	}
 
 	@Override
 	public AbstractHarvesterContainer getContainer(int id, Inventory player) {
-		return new ContainerFrontHarvester(id, player, getComponent(ComponentType.Inventory), getCoordsArray());
+		return new ContainerFrontHarvester(id, player, getComponent(IComponentType.Inventory), getCoordsArray());
 	}
 
 	@Override

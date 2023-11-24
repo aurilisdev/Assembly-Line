@@ -3,8 +3,8 @@
 	"parent": "block/cube_all",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "assemblyline:model/block/autocrafter",
-		"particle": "assemblyline:model/block/autocrafter"
+		"0": "assemblyline:block/model/autocrafter",
+		"particle": "minecraft:block/crafting_table_front"
 	},
 	"elements": [
 		{

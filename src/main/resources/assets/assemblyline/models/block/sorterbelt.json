@@ -3,8 +3,8 @@
 	"parent": "block/cube_all",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "assemblyline:model/block/sorterbelt",
-		"particle": "assemblyline:model/block/sorterbelt"
+		"0": "assemblyline:block/model/sorterbelt",
+		"particle": "assemblyline:block/model/sorterbelt"
 	},
 	"elements": [
 		{

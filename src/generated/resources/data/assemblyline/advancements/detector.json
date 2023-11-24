@@ -1,0 +1,43 @@
+{
+  "parent": "assemblyline:root",
+  "__author": "pyro206",
+  "criteria": {
+    "HasDetector": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "assemblyline:detector"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "color": "gray",
+      "translate": "advancement.assemblyline.detector.desc"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "item": "assemblyline:detector"
+    },
+    "show_toast": true,
+    "title": {
+      "bold": true,
+      "color": "dark_red",
+      "italic": true,
+      "translate": "advancement.assemblyline.detector.title",
+      "underlined": true
+    }
+  },
+  "requirements": [
+    [
+      "HasDetector"
+    ]
+  ]
+}

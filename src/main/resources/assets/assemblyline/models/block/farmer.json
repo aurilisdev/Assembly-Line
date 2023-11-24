@@ -6,7 +6,7 @@
 		64
 	],
 	"textures": {
-		"0": "assemblyline:model/block/farmer",
+		"0": "assemblyline:block/model/farmer",
 		"1" : "electrodynamics:fluid/water",
 		"particle": "minecraft:block/birch_planks"
 	},

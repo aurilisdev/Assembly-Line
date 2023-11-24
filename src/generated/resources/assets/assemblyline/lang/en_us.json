@@ -1,4 +1,12 @@
 {
+  "advancement.assemblyline.crate.desc": "Make a Crate",
+  "advancement.assemblyline.crate.title": "No More Chests",
+  "advancement.assemblyline.detector.desc": "Make a Detector",
+  "advancement.assemblyline.detector.title": "Always Watching",
+  "advancement.assemblyline.root.desc": "Wow you made a conveyor belt",
+  "advancement.assemblyline.root.title": "Assembly Line",
+  "advancement.assemblyline.sorter.desc": "Make a Sorter Belt",
+  "advancement.assemblyline.sorter.title": "Organizer",
   "block.assemblyline.autocrafter": "Autocrafter",
   "block.assemblyline.blockbreaker": "Block Breaker",
   "block.assemblyline.blockplacer": "Block Placer",
@@ -18,6 +26,7 @@
   "container.mobgrinder": "Mob Grinder",
   "container.rancher": "Energized Rancher",
   "container.sorterbelt": "Sorter Belt",
+  "creativetab.assemblyline.main": "Assembly Line",
   "gui.assemblyline.fullbonemeal": "Bone Full",
   "gui.assemblyline.hidearea": "Hide Area",
   "gui.assemblyline.ignoreempty": "Skip Empty",
@@ -44,12 +53,10 @@
   "guidebook.assemblyline.chapter.machines.farmer1": "The Farmer will plant and harvest crops and trees within its working area. The colors of the input slots corrospond to the regions the items will be planted in. The Farmer must be placed underneath the land it is working. The top right slot is for Bone Meal.",
   "guidebook.assemblyline.chapter.machines.farmer2": "The \"Show Area\" button will display the working area of the Farmer. The \"Bone Full\" button toggles whether or not the Farmer will use one Bone Meal per crop, or keep using Bone Meal until the crop is fully grown. The \"Refill Empty\" button toggles whether or not the Farmer will add the seeds from harvested crops back into the planting slots. The Farmer can use up to 4 Range Upgrades to increase its working area. Note the upgrades increase the range by multiples of 3.",
   "guidebook.assemblyline.chapter.machines.mobgrinder": "The Mob Grinder will kill any mobs in its working area. Use the \"Show Area\" button to view the area it is currently covering. The progress bar counts down the time between checks. The Grinder can use up to 12 Range Upgrades to expand its working area.",
-  "itemGroup.itemgroupassemblyline": "Assembly Line",
   "tooltip.assemblyline.breakingprogress": "Mining Progress: %s",
   "tooltip.assemblyline.cooldown": "Cooldown: %s ticks",
   "tooltip.assemblyline.crate": "Stores 4096 of one item",
   "tooltip.assemblyline.cratelarge": "Stores 16384 of one item",
   "tooltip.assemblyline.cratemedium": "Stores 8192 of one item",
-  "tooltip.assemblyline.detector": "Emits redstone signal when an item is in front of it",
-  "tooltip.assemblyline.voltage.120": "Voltage: 120 Volts"
+  "tooltip.assemblyline.detector": "Emits redstone signal when an item is in front of it"
 }

@@ -6,15 +6,15 @@ import java.util.List;
 import assemblyline.client.render.event.levelstage.HandlerHarvesterLines;
 import assemblyline.common.inventory.container.generic.AbstractHarvesterContainer;
 import assemblyline.common.tile.generic.TileFrontHarvester;
-import assemblyline.prefab.utils.TextUtils;
+import assemblyline.prefab.utils.AssemblyTextUtils;
 import electrodynamics.api.electricity.formatting.ChatFormatter;
 import electrodynamics.api.electricity.formatting.DisplayUnit;
 import electrodynamics.prefab.screen.GenericScreen;
-import electrodynamics.prefab.screen.component.ScreenComponentCountdown;
-import electrodynamics.prefab.screen.component.ScreenComponentElectricInfo;
-import electrodynamics.prefab.screen.component.button.ButtonSwappableLabel;
+import electrodynamics.prefab.screen.component.button.type.ButtonSwappableLabel;
+import electrodynamics.prefab.screen.component.types.ScreenComponentCountdown;
+import electrodynamics.prefab.screen.component.types.guitab.ScreenComponentElectricInfo;
 import electrodynamics.prefab.screen.component.utils.AbstractScreenComponentInfo;
-import electrodynamics.prefab.tile.components.ComponentType;
+import electrodynamics.prefab.tile.components.IComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -24,25 +24,34 @@ import net.minecraft.world.entity.player.Inventory;
 
 public abstract class AbstractHarvesterScreen<T extends AbstractHarvesterContainer> extends GenericScreen<T> {
 
-	protected AbstractHarvesterScreen(T screenContainer, Inventory inv, Component titleIn) {
+	public ButtonSwappableLabel renderArea;
+
+	public AbstractHarvesterScreen(T screenContainer, Inventory inv, Component titleIn) {
 		super(screenContainer, inv, titleIn);
-		components.add(new ScreenComponentCountdown(this::getTooltip, () -> {
+		addComponent(new ScreenComponentCountdown(this::getTooltip, () -> {
 			TileFrontHarvester harvester = menu.getHostFromIntArray();
 			if (harvester != null) {
 				return getProgress(harvester);
 			}
 			return 0.0;
-		}, this, 10, 50));
-		components.add(new ScreenComponentElectricInfo(this::getElectricInformation, this, -AbstractScreenComponentInfo.SIZE + 1, 2));
+		}, 10, 50));
+		addComponent(new ScreenComponentElectricInfo(this::getElectricInformation, -AbstractScreenComponentInfo.SIZE + 1, 2));
+		addComponent(renderArea = new ButtonSwappableLabel(10, 20, 60, 20, AssemblyTextUtils.gui("renderarea"), AssemblyTextUtils.gui("hidearea"), () -> {
+			TileFrontHarvester harvester = menu.getHostFromIntArray();
+			if (harvester != null) {
+				return HandlerHarvesterLines.containsLines(harvester.getBlockPos());
+			}
+			return false;
+		}).setOnPress(button -> toggleRendering()));
 	}
 
 	private List<? extends FormattedCharSequence> getElectricInformation() {
 		ArrayList<FormattedCharSequence> list = new ArrayList<>();
 		TileFrontHarvester harvester = menu.getHostFromIntArray();
 		if (harvester != null) {
-			ComponentElectrodynamic electro = harvester.getComponent(ComponentType.Electrodynamic);
-			list.add(TextUtils.gui("machine.usage", Component.literal(ChatFormatter.getChatDisplayShort(harvester.getUsage() * harvester.powerUsageMultiplier.get() * 20, DisplayUnit.WATT)).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
-			list.add(TextUtils.gui("machine.voltage", Component.literal(ChatFormatter.getChatDisplayShort(electro.getVoltage(), DisplayUnit.VOLTAGE)).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
+			ComponentElectrodynamic electro = harvester.getComponent(IComponentType.Electrodynamic);
+			list.add(AssemblyTextUtils.gui("machine.usage", ChatFormatter.getChatDisplayShort(harvester.getUsage() * harvester.powerUsageMultiplier.get() * 20, DisplayUnit.WATT)).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
+			list.add(AssemblyTextUtils.gui("machine.voltage", ChatFormatter.getChatDisplayShort(electro.getVoltage(), DisplayUnit.VOLTAGE)).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
 		}
 		return list;
 	}
@@ -55,25 +64,6 @@ public abstract class AbstractHarvesterScreen<T extends AbstractHarvesterContain
 			HandlerHarvesterLines.removeLines(harvester.getBlockPos());
 			updateBox(harvester);
 		}
-	}
-
-	@Override
-	protected void init() {
-		super.init();
-		initButtons();
-	}
-
-	protected void initButtons() {
-		int i = (width - imageWidth) / 2;
-		int j = (height - imageHeight) / 2;
-		ButtonSwappableLabel renderArea = new ButtonSwappableLabel(i + 10, j + 20, 60, 20, TextUtils.gui("renderarea"), TextUtils.gui("hidearea"), () -> {
-			TileFrontHarvester harvester = menu.getHostFromIntArray();
-			if (harvester != null) {
-				return HandlerHarvesterLines.containsLines(harvester.getBlockPos());
-			}
-			return false;
-		}, button -> toggleRendering());
-		addRenderableWidget(renderArea);
 	}
 
 	private void toggleRendering() {

@@ -3,9 +3,7 @@ package assemblyline.common.tile.generic;
 import assemblyline.common.inventory.container.generic.AbstractHarvesterContainer;
 import electrodynamics.prefab.properties.Property;
 import electrodynamics.prefab.properties.PropertyType;
-import electrodynamics.prefab.tile.components.ComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentContainerProvider;
-import electrodynamics.prefab.tile.components.type.ComponentDirection;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
@@ -31,12 +29,11 @@ public abstract class TileFrontHarvester extends TileOutlineArea {
 
 	protected TileFrontHarvester(BlockEntityType<?> type, BlockPos pos, BlockState state, double maxJoules, int voltage, String name) {
 		super(type, pos, state);
-		addComponent(new ComponentDirection());
-		addComponent(new ComponentPacketHandler());
-		addComponent(new ComponentTickable().tickServer(this::tickServer).tickClient(this::tickClient).tickCommon(this::tickCommon));
-		addComponent(new ComponentElectrodynamic(this).relativeInput(getVoltageInput()).voltage(voltage).maxJoules(maxJoules));
+		addComponent(new ComponentPacketHandler(this));
+		addComponent(new ComponentTickable(this).tickServer(this::tickServer).tickClient(this::tickClient).tickCommon(this::tickCommon));
+		addComponent(new ComponentElectrodynamic(this, false, true).setInputDirections(getVoltageInput()).voltage(voltage).maxJoules(maxJoules));
 		addComponent(getInv(this));
-		addComponent(new ComponentContainerProvider("container." + name).createMenu(this::getContainer));
+		addComponent(new ComponentContainerProvider("container." + name, this).createMenu(this::getContainer));
 	}
 
 	public abstract void tickServer(ComponentTickable tickable);
@@ -47,9 +44,8 @@ public abstract class TileFrontHarvester extends TileOutlineArea {
 
 	@Override
 	public AABB getAABB(int width, int length, int height, boolean isFlipped, boolean isClient, TileOutlineArea grinder) {
-		ComponentDirection dir = grinder.getComponent(ComponentType.Direction);
 		BlockPos machinePos = grinder.getBlockPos();
-		BlockPos blockInFront = machinePos.relative(isFlipped ? dir.getDirection().getOpposite() : dir.getDirection());
+		BlockPos blockInFront = machinePos.relative(isFlipped ? getFacing().getOpposite() : getFacing());
 		BlockPos startPos;
 		BlockPos endPos;
 		int deltaX = blockInFront.getX() - machinePos.getX();
@@ -65,7 +61,8 @@ public abstract class TileFrontHarvester extends TileOutlineArea {
 				startPos = new BlockPos(blockInFront.getX() + (isClient && deltaZ < 0 ? xShift + 1 : xShift), blockInFront.getY() + yShift, blockInFront.getZ() + (isClient && deltaZ < 0 ? zShift + 1 : zShift));
 				endPos = new BlockPos(blockInFront.getX() - (isClient && deltaZ > 0 ? xShift - 1 : xShift), blockInFront.getY(), blockInFront.getZ() - (isClient && deltaZ > 0 ? deltaZ - 1 : deltaZ));
 				return new AABB(startPos, endPos);
-			} else if (deltaZ == 0) {
+			}
+			if (deltaZ == 0) {
 				xShift = deltaX * width;
 				zShift = deltaX * (length + 2) / 2;
 				startPos = new BlockPos(blockInFront.getX() + (isClient && deltaX < 0 ? xShift + 1 : xShift), blockInFront.getY() + yShift, blockInFront.getZ() + (isClient && deltaX < 0 ? zShift + 1 : zShift));

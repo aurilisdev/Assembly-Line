@@ -11,8 +11,7 @@ import electrodynamics.api.particle.ParticleAPI;
 import electrodynamics.api.sound.SoundAPI;
 import electrodynamics.prefab.properties.Property;
 import electrodynamics.prefab.properties.PropertyType;
-import electrodynamics.prefab.tile.components.ComponentType;
-import electrodynamics.prefab.tile.components.type.ComponentDirection;
+import electrodynamics.prefab.tile.components.IComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
@@ -20,6 +19,7 @@ import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryB
 import electrodynamics.prefab.utilities.object.TransferPack;
 import electrodynamics.registers.ElectrodynamicsSounds;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.block.Block;
@@ -43,12 +43,12 @@ public class TileBlockBreaker extends TileFrontHarvester {
 	@Override
 	public void tickServer(ComponentTickable component) {
 
-		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
+		ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
 		ticksSinceCheck.set((int) (progress.get() * 100));
 		currentWaitTime.set(100);
 
-		ComponentDirection direction = getComponent(ComponentType.Direction);
-		BlockPos block = worldPosition.offset(direction.getDirection().getOpposite().getNormal());
+		Direction facing = getFacing();
+		BlockPos block = worldPosition.offset(facing.getOpposite().getNormal());
 		BlockState blockState = level.getBlockState(block);
 		works.set(!blockState.isAir() && blockState.getDestroySpeed(level, block) > 0 && electro.getJoulesStored() >= Constants.BLOCKBREAKER_USAGE);
 		if (works.get()) {
@@ -75,11 +75,10 @@ public class TileBlockBreaker extends TileFrontHarvester {
 		if (!works.get()) {
 			return;
 		}
-		ComponentDirection direction = getComponent(ComponentType.Direction);
 		if (component.getTicks() % 200 == 0) {
 			SoundAPI.playSound(ElectrodynamicsSounds.SOUND_MINERALGRINDER.get(), SoundSource.BLOCKS, 0.5f, 1, worldPosition);
 		}
-		BlockPos offset = worldPosition.offset(direction.getDirection().getOpposite().getNormal());
+		BlockPos offset = worldPosition.offset(getFacing().getOpposite().getNormal());
 		Block block = level.getBlockState(offset).getBlock();
 		double d4 = level.random.nextDouble() * 1.2 + offset.getX() - 0.1;
 		double d5 = level.random.nextDouble() * 1.2 + offset.getY() - 0.1;
@@ -99,9 +98,9 @@ public class TileBlockBreaker extends TileFrontHarvester {
 
 	@Override
 	public AbstractHarvesterContainer getContainer(int id, Inventory player) {
-		return new ContainerBlockBreaker(id, player, getComponent(ComponentType.Inventory), getCoordsArray());
+		return new ContainerBlockBreaker(id, player, getComponent(IComponentType.Inventory), getCoordsArray());
 	}
-	
+
 	@Override
 	public int getComparatorSignal() {
 		return works.get() ? 15 : 0;

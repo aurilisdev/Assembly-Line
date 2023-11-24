@@ -8,8 +8,7 @@ import com.mojang.math.Quaternion;
 import assemblyline.client.ClientRegister;
 import assemblyline.common.tile.TileBlockBreaker;
 import electrodynamics.client.render.tile.AbstractTileRenderer;
-import electrodynamics.prefab.tile.components.ComponentType;
-import electrodynamics.prefab.tile.components.type.ComponentDirection;
+import electrodynamics.prefab.tile.components.IComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
 import electrodynamics.prefab.utilities.RenderingUtils;
 import net.minecraft.client.Minecraft;
@@ -33,7 +32,7 @@ public class RenderBlockBreaker extends AbstractTileRenderer<TileBlockBreaker> {
 
 		double progress = 0;
 		if (breaker.getProgress() > 0) {
-			progress = (breaker.<ComponentTickable>getComponent(ComponentType.Tickable).getTicks() + (breaker.works.get() ? partialTicks : 0)) * 20;
+			progress = (breaker.<ComponentTickable>getComponent(IComponentType.Tickable).getTicks() + (breaker.works.get() ? partialTicks : 0)) * 20;
 		}
 
 		BakedModel ibakedmodel = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_BLOCKBREAKERWHEEL);
@@ -57,8 +56,7 @@ public class RenderBlockBreaker extends AbstractTileRenderer<TileBlockBreaker> {
 		}
 
 		matrixStackIn.pushPose();
-		ComponentDirection direction = breaker.getComponent(ComponentType.Direction);
-		Vec3i norm = direction.getDirection().getOpposite().getNormal();
+		Vec3i norm = breaker.getFacing().getOpposite().getNormal();
 		BlockPos off = breaker.getBlockPos().offset(norm);
 		BlockState state = breaker.getLevel().getBlockState(off);
 		PoseStack.Pose pose = matrixStackIn.last();
