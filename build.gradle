@@ -28,9 +28,9 @@ libsDirName = "../output"
 distsDirName = "../output"
 
 def version_minor='4'
-def version_revision='2'
+def version_revision='3'
 def	minecraft_version='1.18.2'
-def version_build='5'
+def version_build='0'
 def version_major='0'
 
 version = minecraft_version+'-'+version_major+'.'+version_minor+'.'+version_revision+'-'+version_build
@@ -83,7 +83,7 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
-            args '--mod', 'assemblyline', '--all', '--output', file('src/generated/resources/')
+            args '--mod', 'assemblyline', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {
                 assemblyline {
@@ -93,6 +93,8 @@ minecraft {
         }
     }
 }
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
 	def Folder = new File("C:/AmpzLibz")
@@ -104,9 +106,10 @@ dependencies {
         implementation fileTree(Folder2)
     }
     //makes testing easier; no JEI plugin for mod currently
-	minecraft 'net.minecraftforge:forge:1.18.2-40.1.73'
-    compileOnly fg.deobf("mezz.jei:jei-1.18.2:9.7.1.232:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.18.2:9.7.1.232")
+	minecraft 'net.minecraftforge:forge:1.18.2-40.2.14'
+    compileOnly fg.deobf("mezz.jei:jei-1.18.2-common-api:10.2.1.283")
+    compileOnly fg.deobf("mezz.jei:jei-1.18.2-forge-api:10.2.1.283")
+    runtimeOnly fg.deobf("mezz.jei:jei-1.18.2-forge:10.2.1.283")
 
     annotationProcessor 'org.spongepowered:mixin:0.8.4:processor'
 }

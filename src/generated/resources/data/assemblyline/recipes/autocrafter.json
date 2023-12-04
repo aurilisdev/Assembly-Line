@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GBG",
+    "CTC",
+    "PWP"
+  ],
+  "key": {
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "B": {
+      "tag": "forge:circuits/basic"
+    },
+    "C": {
+      "tag": "forge:chests"
+    },
+    "T": {
+      "item": "minecraft:crafting_table"
+    },
+    "G": {
+      "tag": "forge:gears/steel"
+    },
+    "W": {
+      "item": "electrodynamics:wirecopper"
+    }
+  },
+  "result": {
+    "item": "assemblyline:autocrafter"
+  }
+}

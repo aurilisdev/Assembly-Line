@@ -8,7 +8,7 @@ import assemblyline.common.tile.TileMobGrinder;
 import electrodynamics.api.capability.ElectrodynamicsCapabilities;
 import electrodynamics.api.capability.types.locationstorage.CapabilityLocationStorage;
 import electrodynamics.api.capability.types.locationstorage.ILocationStorage;
-import electrodynamics.prefab.tile.components.ComponentType;
+import electrodynamics.prefab.tile.components.IComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.utilities.InventoryUtils;
 import electrodynamics.prefab.utilities.object.Location;
@@ -45,7 +45,7 @@ public class EventHandler {
 			if (machine != null && machine instanceof TileMobGrinder grinder) {
 				List<ItemStack> droppedItems = new ArrayList<>();
 				event.getDrops().forEach(h -> droppedItems.add(h.getItem()));
-				ComponentInventory inv = grinder.getComponent(ComponentType.Inventory);
+				ComponentInventory inv = grinder.getComponent(IComponentType.Inventory);
 				InventoryUtils.addItemsToInventory(inv, droppedItems, inv.getOutputStartIndex(), inv.getOutputContents().size());
 				event.setCanceled(true);
 			}

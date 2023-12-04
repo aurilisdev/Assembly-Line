@@ -3,8 +3,8 @@
 	"parent": "block/cube_all",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "assemblyline:model/block/mobgrinder",
-		"particle": "assemblyline:model/block/mobgrinder"
+		"0": "assemblyline:block/model/mobgrinder",
+		"particle": "minecraft:block/cobblestone"
 	},
 	"elements": [
 		{

@@ -1,8 +1,10 @@
 package assemblyline;
 
 import assemblyline.client.ClientRegister;
+import assemblyline.common.block.AssemblyLineVoxelShapeRegistry;
 import assemblyline.common.packet.NetworkHandler;
 import assemblyline.common.settings.Constants;
+import assemblyline.registers.UnifiedAssemblyLineRegister;
 import electrodynamics.prefab.configuration.ConfigurationHandler;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -22,21 +24,21 @@ public class AssemblyLine {
 	public AssemblyLine() {
 		ConfigurationHandler.registerConfig(Constants.class);
 		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-		DeferredRegisters.BLOCKS.register(bus);
-		DeferredRegisters.ITEMS.register(bus);
-		DeferredRegisters.TILES.register(bus);
-		DeferredRegisters.CONTAINERS.register(bus);
+		UnifiedAssemblyLineRegister.register(bus);
 	}
 
 	@SubscribeEvent
 	public static void onCommonSetup(FMLCommonSetupEvent event) {
 		NetworkHandler.init();
+		AssemblyLineVoxelShapeRegistry.init();
 	}
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void onClientSetup(FMLClientSetupEvent event) {
-		ClientRegister.setup();
+		event.enqueueWork(() -> {
+			ClientRegister.setup();
+		});
 	}
 
 }

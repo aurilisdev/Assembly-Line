@@ -1,0 +1,40 @@
+{
+  "__author": "pyro206",
+  "parent": "assemblyline:root",
+  "display": {
+    "icon": {
+      "item": "assemblyline:sorterbelt"
+    },
+    "title": {
+      "color": "aqua",
+      "translate": "advancement.assemblyline.sorter.title"
+    },
+    "description": {
+      "color": "gray",
+      "translate": "advancement.assemblyline.sorter.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "HasSorterBelt": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "assemblyline:sorterbelt"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "HasSorterBelt"
+    ]
+  ]
+}

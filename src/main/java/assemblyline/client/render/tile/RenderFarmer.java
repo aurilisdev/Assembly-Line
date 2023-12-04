@@ -4,17 +4,17 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import assemblyline.common.tile.TileFarmer;
+import electrodynamics.client.render.tile.AbstractTileRenderer;
 import electrodynamics.prefab.utilities.RenderingUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.fluids.FluidStack;
 
-public class RenderFarmer implements BlockEntityRenderer<TileFarmer> {
+public class RenderFarmer extends AbstractTileRenderer<TileFarmer> {
 
 	private static final float MIN_X = 3.0F / 16.0F;
 	private static final float MAX_X = 13.0F / 16.0F;
@@ -25,6 +25,7 @@ public class RenderFarmer implements BlockEntityRenderer<TileFarmer> {
 	private static final FluidStack WATERSTACK = new FluidStack(Fluids.WATER, 10);
 
 	public RenderFarmer(BlockEntityRendererProvider.Context context) {
+		super(context);
 	}
 
 	@Override

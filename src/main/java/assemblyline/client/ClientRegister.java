@@ -1,6 +1,5 @@
 package assemblyline.client;
 
-import assemblyline.DeferredRegisters;
 import assemblyline.References;
 import assemblyline.client.guidebook.ModuleAssemblyLine;
 import assemblyline.client.render.tile.RenderBlockBreaker;
@@ -15,6 +14,8 @@ import assemblyline.client.screen.ScreenBlockPlacer;
 import assemblyline.client.screen.ScreenFarmer;
 import assemblyline.client.screen.ScreenFrontHarvester;
 import assemblyline.client.screen.ScreenSorterBelt;
+import assemblyline.registers.AssemblyLineBlockTypes;
+import assemblyline.registers.AssemblyLineMenuTypes;
 import electrodynamics.client.guidebook.ScreenGuidebook;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.resources.ResourceLocation;
@@ -98,23 +99,25 @@ public class ClientRegister {
 	public static final ResourceLocation MODEL_RANCHERRIGHT = new ResourceLocation(References.ID + ":block/rancherright");
 
 	public static void setup() {
-		MenuScreens.register(DeferredRegisters.CONTAINER_SORTERBELT.get(), ScreenSorterBelt::new);
-		MenuScreens.register(DeferredRegisters.CONTAINER_AUTOCRAFTER.get(), ScreenAutocrafter::new);
-		MenuScreens.register(DeferredRegisters.CONTAINER_BLOCKPLACER.get(), ScreenBlockPlacer::new);
-		MenuScreens.register(DeferredRegisters.CONTAINER_BLOCKBREAKER.get(), ScreenBlockBreaker::new);
-		MenuScreens.register(DeferredRegisters.CONTAINER_HARVESTER.get(), ScreenFrontHarvester::new);
-		MenuScreens.register(DeferredRegisters.CONTAINER_FARMER.get(), ScreenFarmer::new);
+		ClientEvents.init();
+
+		MenuScreens.register(AssemblyLineMenuTypes.CONTAINER_SORTERBELT.get(), ScreenSorterBelt::new);
+		MenuScreens.register(AssemblyLineMenuTypes.CONTAINER_AUTOCRAFTER.get(), ScreenAutocrafter::new);
+		MenuScreens.register(AssemblyLineMenuTypes.CONTAINER_BLOCKPLACER.get(), ScreenBlockPlacer::new);
+		MenuScreens.register(AssemblyLineMenuTypes.CONTAINER_BLOCKBREAKER.get(), ScreenBlockBreaker::new);
+		MenuScreens.register(AssemblyLineMenuTypes.CONTAINER_HARVESTER.get(), ScreenFrontHarvester::new);
+		MenuScreens.register(AssemblyLineMenuTypes.CONTAINER_FARMER.get(), ScreenFarmer::new);
 
 		ScreenGuidebook.addGuidebookModule(new ModuleAssemblyLine());
 	}
 
 	@SubscribeEvent
 	public static void registerEntities(EntityRenderersEvent.RegisterRenderers event) {
-		event.registerBlockEntityRenderer(DeferredRegisters.TILE_CRATE.get(), RenderCrate::new);
-		event.registerBlockEntityRenderer(DeferredRegisters.TILE_BELT.get(), RenderConveyorBelt::new);
-		event.registerBlockEntityRenderer(DeferredRegisters.TILE_BLOCKBREAKER.get(), RenderBlockBreaker::new);
-		event.registerBlockEntityRenderer(DeferredRegisters.TILE_MOBGRINDER.get(), RenderMobGrinder::new);
-		event.registerBlockEntityRenderer(DeferredRegisters.TILE_RANCHER.get(), RenderRancher::new);
-		event.registerBlockEntityRenderer(DeferredRegisters.TILE_FARMER.get(), RenderFarmer::new);
+		event.registerBlockEntityRenderer(AssemblyLineBlockTypes.TILE_CRATE.get(), RenderCrate::new);
+		event.registerBlockEntityRenderer(AssemblyLineBlockTypes.TILE_BELT.get(), RenderConveyorBelt::new);
+		event.registerBlockEntityRenderer(AssemblyLineBlockTypes.TILE_BLOCKBREAKER.get(), RenderBlockBreaker::new);
+		event.registerBlockEntityRenderer(AssemblyLineBlockTypes.TILE_MOBGRINDER.get(), RenderMobGrinder::new);
+		event.registerBlockEntityRenderer(AssemblyLineBlockTypes.TILE_RANCHER.get(), RenderRancher::new);
+		event.registerBlockEntityRenderer(AssemblyLineBlockTypes.TILE_FARMER.get(), RenderFarmer::new);
 	}
 }

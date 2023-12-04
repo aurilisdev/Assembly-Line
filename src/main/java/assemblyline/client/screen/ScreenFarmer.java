@@ -1,61 +1,111 @@
 package assemblyline.client.screen;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
-import assemblyline.client.ClientEvents;
+import com.mojang.datafixers.util.Pair;
+
+import assemblyline.client.render.event.levelstage.HandlerFarmerLines;
 import assemblyline.common.inventory.container.ContainerFarmer;
 import assemblyline.common.settings.Constants;
 import assemblyline.common.tile.TileFarmer;
+import assemblyline.prefab.utils.AssemblyTextUtils;
 import electrodynamics.api.electricity.formatting.ChatFormatter;
 import electrodynamics.api.electricity.formatting.DisplayUnit;
 import electrodynamics.prefab.screen.GenericScreen;
-import electrodynamics.prefab.screen.component.ScreenComponentCountdown;
-import electrodynamics.prefab.screen.component.ScreenComponentElectricInfo;
-import electrodynamics.prefab.screen.component.ScreenComponentInfo;
-import electrodynamics.prefab.screen.component.ScreenComponentSlot;
-import electrodynamics.prefab.screen.component.button.ButtonSwappableLabel;
-import electrodynamics.prefab.tile.components.ComponentType;
+import electrodynamics.prefab.screen.component.button.type.ButtonSwappableLabel;
+import electrodynamics.prefab.screen.component.types.ScreenComponentCountdown;
+import electrodynamics.prefab.screen.component.types.ScreenComponentSlot;
+import electrodynamics.prefab.screen.component.types.guitab.ScreenComponentElectricInfo;
+import electrodynamics.prefab.screen.component.types.wrapper.InventoryIOWrapper;
+import electrodynamics.prefab.screen.component.utils.AbstractScreenComponentInfo;
+import electrodynamics.prefab.tile.components.IComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
-import electrodynamics.prefab.utilities.RenderingUtils;
+import electrodynamics.prefab.utilities.math.Color;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 
 public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 
-	private ButtonSwappableLabel renderArea;
-	private ButtonSwappableLabel fullBonemeal;
-	private ButtonSwappableLabel refillEmpty;
+	public static final Color[] COLORS = {
+
+			new Color(50, 50, 50, 255), new Color(255, 0, 0, 255), new Color(120, 0, 255, 255), new Color(0, 240, 0, 255), new Color(220, 0, 255, 255), new Color(255, 120, 0, 255), new Color(0, 0, 255, 255), new Color(240, 255, 0, 255), new Color(0, 240, 255, 255)
+
+	};
+
+	public ButtonSwappableLabel renderArea;
+	public ButtonSwappableLabel fullBonemeal;
+	public ButtonSwappableLabel refillEmpty;
 
 	public ScreenFarmer(ContainerFarmer container, Inventory inv, Component titleIn) {
 		super(container, inv, titleIn);
 		imageHeight += 58;
 		inventoryLabelY += 58;
-		components.add(new ScreenComponentCountdown(() -> {
+		addComponent(new ScreenComponentCountdown(() -> {
 			TileFarmer farmer = menu.getHostFromIntArray();
 			if (farmer != null) {
-				return 1 - farmer.clientProgress;
+				return 1 - (float) farmer.ticksSinceCheck.get() / Math.max(farmer.currentWaitTime.get(), 1.0F);
 			}
 			return 0.0;
-		}, this, 10, 50 + 58, "tooltip.countdown.cooldown"));
-		components.add(new ScreenComponentElectricInfo(this::getElectricInformation, this, -ScreenComponentInfo.SIZE + 1, 2));
+		}, 10, 50 + 58));
+		addComponent(new ScreenComponentElectricInfo(this::getElectricInformation, -AbstractScreenComponentInfo.SIZE + 1, 2));
+
+		addComponent(fullBonemeal = new ButtonSwappableLabel(10, 20, 60, 20, AssemblyTextUtils.gui("fullbonemeal"), AssemblyTextUtils.gui("regbonemeal"), () -> {
+			TileFarmer farmer = menu.getHostFromIntArray();
+			if (farmer != null) {
+				return farmer.fullGrowBonemeal.get();
+			}
+			return false;
+		}).setOnPress(button -> menu.toggleBoolean(0)));
+
+		addComponent(refillEmpty = new ButtonSwappableLabel(10, 50, 60, 20, AssemblyTextUtils.gui("refillempty"), AssemblyTextUtils.gui("ignoreempty"), () -> {
+			TileFarmer farmer = menu.getHostFromIntArray();
+			if (farmer != null) {
+				return farmer.refillEmpty.get();
+			}
+			return false;
+		}).setOnPress(button -> menu.toggleBoolean(1)));
+
+		addComponent(renderArea = new ButtonSwappableLabel(10, 80, 60, 20, AssemblyTextUtils.gui("renderarea"), AssemblyTextUtils.gui("hidearea"), () -> {
+			TileFarmer farmer = menu.getHostFromIntArray();
+			if (farmer != null) {
+				return HandlerFarmerLines.isBeingRendered(farmer.getBlockPos());
+			}
+			return false;
+		}).setOnPress(button -> toggleRendering()));
+		new InventoryIOWrapper(this, -AbstractScreenComponentInfo.SIZE + 1, AbstractScreenComponentInfo.SIZE + 2, 75, 82 + 58, 8, 72 + 58, (slot, index) -> {
+			if(index < 9) {
+				return COLORS[index];
+			}
+			return Color.WHITE;
+		});
+
 	}
 
 	private List<? extends FormattedCharSequence> getElectricInformation() {
 		ArrayList<FormattedCharSequence> list = new ArrayList<>();
 		TileFarmer farmer = menu.getHostFromIntArray();
 		if (farmer != null) {
-			ComponentElectrodynamic electro = farmer.getComponent(ComponentType.Electrodynamic);
-			list.add(new TranslatableComponent("gui.machine.usage", new TextComponent(ChatFormatter.getChatDisplayShort(Constants.FARMER_USAGE * farmer.clientUsageMultiplier * 20, DisplayUnit.WATT)).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
-			list.add(new TranslatableComponent("gui.machine.voltage", new TextComponent(ChatFormatter.getChatDisplayShort(electro.getVoltage(), DisplayUnit.VOLTAGE)).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
+			ComponentElectrodynamic electro = farmer.getComponent(IComponentType.Electrodynamic);
+			list.add(AssemblyTextUtils.gui("machine.usage", ChatFormatter.getChatDisplayShort(Constants.FARMER_USAGE * farmer.powerUsageMultiplier.get() * 20, DisplayUnit.WATT).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
+			list.add(AssemblyTextUtils.gui("machine.voltage", ChatFormatter.getChatDisplayShort(electro.getVoltage(), DisplayUnit.VOLTAGE).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
 		}
 		return list;
+	}
+
+	@Override
+	protected void containerTick() {
+		super.containerTick();
+		TileFarmer farmer = menu.getHostFromIntArray();
+		if (farmer != null && HandlerFarmerLines.isBeingRendered(farmer.getBlockPos())) {
+			HandlerFarmerLines.remove(farmer.getBlockPos());
+			updateBox(farmer);
+		}
 	}
 
 	@Override
@@ -63,71 +113,25 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 		ScreenComponentSlot component = super.createScreenSlot(slot);
 		int index = slot.index;
 		if (index < 9) {
-			List<Integer> rgba = TileFarmer.COLORS.get(index);
-			component.color(RenderingUtils.getRGBA(rgba.get(0), rgba.get(1), rgba.get(2), rgba.get(3)));
+			component.setColor(COLORS[index]);
 		}
 		return component;
 	}
 
-	@Override
-	protected void containerTick() {
-		super.containerTick();
-		TileFarmer farmer = menu.getHostFromIntArray();
-		if (farmer != null && ClientEvents.farmerLines.containsKey(farmer.getBlockPos())) {
-			ClientEvents.farmerLines.remove(farmer.getBlockPos());
-			updateBox(farmer);
-		}
-	}
-
-	@Override
-	protected void init() {
-		super.init();
-		initButtons();
-	}
-
-	protected void initButtons() {
-		int i = (width - imageWidth) / 2;
-		int j = (height - imageHeight) / 2;
-		fullBonemeal = new ButtonSwappableLabel(i + 10, j + 20, 60, 20, new TranslatableComponent("label.fullbonemeal"), new TranslatableComponent("label.regbonemeal"), () -> {
-			TileFarmer farmer = menu.getHostFromIntArray();
-			if (farmer != null) {
-				return farmer.clientGrowBonemeal;
-			}
-			return false;
-		}, button -> menu.toggleBoolean(0));
-		refillEmpty = new ButtonSwappableLabel(i + 10, j + 20 + 30, 60, 20, new TranslatableComponent("label.refillempty"), new TranslatableComponent("label.ignoreempty"), () -> {
-			TileFarmer farmer = menu.getHostFromIntArray();
-			if (farmer != null) {
-				return farmer.clientRefillEmpty;
-			}
-			return false;
-		}, button -> menu.toggleBoolean(1));
-		renderArea = new ButtonSwappableLabel(i + 10, j + 20 + 60, 60, 20, new TranslatableComponent("label.renderarea"), new TranslatableComponent("label.hidearea"), () -> {
-			TileFarmer farmer = menu.getHostFromIntArray();
-			if (farmer != null) {
-				return ClientEvents.farmerLines.containsKey(farmer.getBlockPos());
-			}
-			return false;
-		}, button -> toggleRendering());
-		addRenderableWidget(fullBonemeal);
-		addRenderableWidget(refillEmpty);
-		addRenderableWidget(renderArea);
-	}
-
 	private void toggleRendering() {
-		TileFarmer harvester = menu.getHostFromIntArray();
-		if (harvester != null) {
-			BlockPos pos = harvester.getBlockPos();
-			if (ClientEvents.farmerLines.containsKey(pos)) {
-				ClientEvents.farmerLines.remove(pos);
+		TileFarmer farmer = menu.getHostFromIntArray();
+		if (farmer != null) {
+			BlockPos pos = farmer.getBlockPos();
+			if (HandlerFarmerLines.isBeingRendered(pos)) {
+				HandlerFarmerLines.remove(pos);
 			} else {
-				updateBox(harvester);
+				updateBox(farmer);
 			}
 		}
 	}
 
-	private static void updateBox(TileFarmer farmer) {
-		ClientEvents.farmerLines.put(farmer.getBlockPos(), farmer.getLines(farmer));
+	private void updateBox(TileFarmer farmer) {
+		HandlerFarmerLines.addRenderData(farmer.getBlockPos(), Pair.of(COLORS, farmer.getLines(farmer)));
 	}
 
 }
