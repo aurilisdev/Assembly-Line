@@ -1,7 +1,7 @@
 package assemblyline.common.inventory.container;
 
-import assemblyline.DeferredRegisters;
 import assemblyline.common.inventory.container.generic.AbstractHarvesterContainer;
+import assemblyline.registers.AssemblyLineMenuTypes;
 import electrodynamics.prefab.inventory.container.slot.item.type.SlotUpgrade;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -16,7 +16,7 @@ public class ContainerBlockBreaker extends AbstractHarvesterContainer {
 	}
 
 	public ContainerBlockBreaker(int id, Inventory playerinv, Container inventory, ContainerData inventorydata) {
-		super(DeferredRegisters.CONTAINER_BLOCKBREAKER.get(), id, playerinv, inventory, inventorydata);
+		super(AssemblyLineMenuTypes.CONTAINER_BLOCKBREAKER.get(), id, playerinv, inventory, inventorydata);
 	}
 
 	@Override

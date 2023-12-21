@@ -1,15 +1,24 @@
 package assemblyline.client.screen;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import assemblyline.client.screen.generic.AbstractHarvesterScreen;
 import assemblyline.common.inventory.container.ContainerFrontHarvester;
 import assemblyline.common.tile.generic.TileFrontHarvester;
+import assemblyline.prefab.utils.AssemblyTextUtils;
+import electrodynamics.prefab.screen.component.types.wrapper.InventoryIOWrapper;
+import electrodynamics.prefab.screen.component.utils.AbstractScreenComponentInfo;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 
 public class ScreenFrontHarvester extends AbstractHarvesterScreen<ContainerFrontHarvester> {
 
 	public ScreenFrontHarvester(ContainerFrontHarvester container, Inventory inv, Component titleIn) {
 		super(container, inv, titleIn);
+		new InventoryIOWrapper(this, -AbstractScreenComponentInfo.SIZE + 1, AbstractScreenComponentInfo.SIZE + 2, 75, 82, 8, 72);
 	}
 
 	@Override
@@ -19,12 +28,18 @@ public class ScreenFrontHarvester extends AbstractHarvesterScreen<ContainerFront
 
 	@Override
 	protected double getProgress(TileFrontHarvester harvester) {
-		return 1 - harvester.clientProgress;
+		return 1 - harvester.getProgress();
 	}
 
 	@Override
-	protected String getLangKey() {
-		return "tooltip.countdown.cooldown";
+	protected List<? extends FormattedCharSequence> getTooltip() {
+		List<FormattedCharSequence> tips = new ArrayList<>();
+		TileFrontHarvester harvester = menu.getHostFromIntArray();
+		if (harvester != null) {
+			tips.add(AssemblyTextUtils.tooltip("cooldown", harvester.currentWaitTime.get() - harvester.ticksSinceCheck.get()).withStyle(ChatFormatting.GRAY).getVisualOrderText());
+		}
+
+		return tips;
 	}
 
 }

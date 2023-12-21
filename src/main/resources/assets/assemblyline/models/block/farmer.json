@@ -6,9 +6,9 @@
 		64
 	],
 	"textures": {
-		"0": "assemblyline:model/block/farmer",
+		"0": "assemblyline:block/model/farmer",
 		"1" : "electrodynamics:fluid/water",
-		"particle": "assemblyline:model/block/farmer"
+		"particle": "minecraft:block/birch_planks"
 	},
 	"elements": [
 		{

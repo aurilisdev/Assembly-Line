@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "assemblyline:autocrafter",
+    "assemblyline:blockbreaker",
+    "assemblyline:blockplacer",
+    "assemblyline:conveyorbelt",
+    "assemblyline:crate",
+    "assemblyline:cratelarge",
+    "assemblyline:cratemedium",
+    "assemblyline:detector",
+    "assemblyline:farmer",
+    "assemblyline:mobgrinder",
+    "assemblyline:rancher",
+    "assemblyline:sorterbelt"
+  ]
+}
