@@ -36,4 +36,5 @@ public abstract class TileOutlineArea extends GenericTile {
 		}
 	}
 
+
 }

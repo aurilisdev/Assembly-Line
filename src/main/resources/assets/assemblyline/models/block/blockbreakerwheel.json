@@ -3,8 +3,8 @@
 	"parent": "block/cube_all",
 	"texture_size": [128, 128],
 	"textures": {
-		"0": "assemblyline:model/block/blockbreaker",
-		"particle": "assemblyline:model/block/blockbreaker"
+		"0": "assemblyline:block/model/blockbreaker",
+		"particle": "assemblyline:block/model/blockbreaker"
 	},
 	"elements": [
 		{

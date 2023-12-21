@@ -11,8 +11,7 @@ import assemblyline.registers.AssemblyLineBlockTypes;
 import electrodynamics.prefab.properties.Property;
 import electrodynamics.prefab.properties.PropertyType;
 import electrodynamics.prefab.tile.GenericTile;
-import electrodynamics.prefab.tile.components.ComponentType;
-import electrodynamics.prefab.tile.components.type.ComponentDirection;
+import electrodynamics.prefab.tile.components.IComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryBuilder;
@@ -22,8 +21,11 @@ import electrodynamics.prefab.utilities.object.Location;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.Containers;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -33,6 +35,8 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class TileConveyorBelt extends GenericTile {
+
+	public static final int INVENTORY_INDEX = 0;
 
 	public final Property<Integer> currentSpread = property(new Property<>(PropertyType.Integer, "currentSpread", 0));
 	public final Property<Boolean> running = property(new Property<>(PropertyType.Boolean, "running", false));
@@ -51,22 +55,37 @@ public class TileConveyorBelt extends GenericTile {
 	public TileConveyorBelt(BlockPos worldPosition, BlockState blockState) {
 		super(AssemblyLineBlockTypes.TILE_BELT.get(), worldPosition, blockState);
 		addComponent(new ComponentTickable(this).tickCommon(this::tickCommon));
-		addComponent(new ComponentDirection(this));
 		addComponent(new ComponentPacketHandler(this));
 		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().forceSize(1)));
-		addComponent(new ComponentElectrodynamic(this).input(Direction.DOWN).relativeInput(Direction.EAST).relativeInput(Direction.WEST).maxJoules(Constants.CONVEYORBELT_USAGE * 100));
+		addComponent(new ComponentElectrodynamic(this, false, true).setInputDirections(Direction.DOWN, Direction.EAST, Direction.WEST).maxJoules(Constants.CONVEYORBELT_USAGE * 100));
+	}
+
+	@Override
+	public void onEntityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+		if (entity instanceof ItemEntity item && entity.tickCount > 5) {
+			item.setItem(addItemOnBelt(item.getItem()));
+		}
+	}
+
+	@Override
+	public void onBlockDestroyed() {
+		Containers.dropContents(level, getBlockPos(), (ComponentInventory) getComponent(IComponentType.Inventory));
 	}
 
 	public ComponentInventory getInventory() {
-		return getComponent(ComponentType.Inventory);
+		return getComponent(IComponentType.Inventory);
 	}
 
 	public ItemStack getStackOnBelt() {
-		return getInventory().getItem(0);
+		return getInventory().getItem(INVENTORY_INDEX);
 	}
 
 	public void setInvToEmpty() {
-		getInventory().setItem(0, ItemStack.EMPTY);
+		setItemOnBelt(ItemStack.EMPTY);
+	}
+
+	public void setItemOnBelt(ItemStack stack) {
+		getInventory().setItem(INVENTORY_INDEX, stack);
 	}
 
 	public ItemStack addItemOnBelt(ItemStack add) {
@@ -76,7 +95,7 @@ public class TileConveyorBelt extends GenericTile {
 			conveyorObject.set(new Location(0.5f + worldPosition.getX(), worldPosition.getY() + (type == ConveyorType.SlopedDown ? -4.0f / 16.0f : type == ConveyorType.SlopedUp ? 8.0f / 16.0f : 0), 0.5f + worldPosition.getZ()));
 		}
 		if (!add.isEmpty()) {
-			ComponentInventory inventory = getComponent(ComponentType.Inventory);
+			ComponentInventory inventory = getComponent(IComponentType.Inventory);
 			ItemStack returner = new InvWrapper(inventory).insertItem(0, add, false);
 			if (returner.getCount() != add.getCount()) {
 				return returner;
@@ -98,25 +117,26 @@ public class TileConveyorBelt extends GenericTile {
 	}
 
 	protected void tickCommon(ComponentTickable tickable) {
-		ComponentElectrodynamic electro = getComponent(ComponentType.Electrodynamic);
+		ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
 		ItemStack stackOnBelt = getStackOnBelt();
 		isQueueReady.set(stackOnBelt.isEmpty());
 		running.set(currentSpread.get() > 0 && isQueueReady.get());
 		BlockEntity nextBlockEntity = getNextEntity();
-		Direction direction = this.<ComponentDirection>getComponent(ComponentType.Direction).getDirection();
-		isPusher.set(false);
+		Direction direction = getFacing();
 		if (nextBlockEntity != null && !(nextBlockEntity instanceof TileConveyorBelt)) {
-			LazyOptional<IItemHandler> handlerOptional = nextBlockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction);
-			isPusher.set(handlerOptional.isPresent());
+			isPusher.set(nextBlockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction).isPresent());
+		} else {
+			isPusher.set(false);
 		}
 		if (currentSpread.get() > 0) {
 			attemptMove();
 		}
 		BlockEntity lastBlockEntity = level.getBlockEntity(worldPosition.offset(direction.getNormal()));
-		isPuller.set(false);
 		if (lastBlockEntity != null && !(lastBlockEntity instanceof TileConveyorBelt)) {
 			LazyOptional<IItemHandler> handlerOptional = lastBlockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction);
 			isPuller.set(handlerOptional.isPresent());
+		} else {
+			isPuller.set(false);
 		}
 		if (isQueueReady.get()) {
 			if (!inQueue.isEmpty()) {
@@ -162,7 +182,7 @@ public class TileConveyorBelt extends GenericTile {
 	}
 
 	public Vector3f getDirectionAsVector() {
-		Direction direction = this.<ComponentDirection>getComponent(ComponentType.Direction).getDirection().getOpposite();
+		Direction direction = getFacing().getOpposite();
 		return new Vector3f(direction.getStepX(), direction.getStepY(), direction.getStepZ());
 	}
 
@@ -178,11 +198,7 @@ public class TileConveyorBelt extends GenericTile {
 			return type == ConveyorType.SlopedDown ? conveyorObject.get().y() <= worldPosition.getY() - 1 : conveyorObject.get().y() >= worldPosition.getY() + 1;
 		}
 
-		float value = 1;
-		if (belt != null && (belt.inQueue.isEmpty() || belt.inQueue.get(0) == this) && belt.isQueueReady.get()) {
-			ConveyorType beltType = ConveyorType.values()[belt.conveyorType.get()];
-			value = beltType == ConveyorType.SlopedUp || type == ConveyorType.Vertical ? 1 : 1.25f;
-		}
+		float value = belt != null && (belt.inQueue.isEmpty() || belt.inQueue.get(0) == this) && belt.isQueueReady.get() ? ConveyorType.values()[belt.conveyorType.get()] == ConveyorType.SlopedUp || ConveyorType.values()[conveyorType.get()] == ConveyorType.Vertical ? 1 : 1.25f : 1;
 
 		if (direction.x() + direction.y() + direction.z() > 0) {
 			return !pos.equals(worldPosition) && coordComponent >= value;
@@ -212,14 +228,14 @@ public class TileConveyorBelt extends GenericTile {
 				}
 			} else if (nextBlockEntity != null) {
 				if (shouldTransfer) {
-					Direction direction = this.<ComponentDirection>getComponent(ComponentType.Direction).getDirection();
+					Direction direction = getFacing();
 					LazyOptional<IItemHandler> handlerOptional = nextBlockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction);
-					ComponentInventory inventory = getComponent(ComponentType.Inventory);
 					if (handlerOptional.isPresent()) {
 						if (wait == 0) {
-							if (putItemsIntoInventory(handlerOptional, inventory) == 0) {
+							if (putItemsIntoInventory(handlerOptional.resolve().get()) == 0) {
 								wait = 20;
 							} else {
+
 							}
 						} else {
 							wait--;
@@ -253,46 +269,47 @@ public class TileConveyorBelt extends GenericTile {
 		level.addFreshEntity(entity);
 	}
 
-	private int putItemsIntoInventory(LazyOptional<IItemHandler> handlerOptional, ComponentInventory inventory) {
+	private int putItemsIntoInventory(IItemHandler handler) {
 
-		IItemHandler handler = handlerOptional.resolve().get();
 		int amtTaken = 0;
 
-		ItemStack conveyerStack, remainder;
+		ItemStack conveyerStack = getStackOnBelt();
 
-		for (int conveyerIndex = 0; conveyerIndex < inventory.getContainerSize(); conveyerIndex++) {
+		ItemStack remainder;
 
-			conveyerStack = inventory.getItem(conveyerIndex);
+		for (int targetIndex = 0; targetIndex < handler.getSlots(); targetIndex++) {
 
-			for (int targetIndex = 0; targetIndex < handler.getSlots(); targetIndex++) {
+			remainder = handler.insertItem(targetIndex, conveyerStack, false);
 
-				remainder = handler.insertItem(targetIndex, conveyerStack, false);
+			int taken = conveyerStack.getCount() - remainder.getCount();
 
-				int taken = conveyerStack.getCount() - remainder.getCount();
+			if (taken <= 0) {
 
-				if (taken > 0) {
-
-					amtTaken += taken;
-
-					conveyerStack.shrink(taken);
-
-					inventory.setItem(conveyerIndex, conveyerStack);
-
-					if (conveyerStack.isEmpty()) {
-						break;
-					}
-
-				}
+				continue;
 
 			}
 
+			amtTaken += taken;
+
+			conveyerStack = conveyerStack.copy();
+
+			conveyerStack.shrink(taken);
+
+			if (conveyerStack.isEmpty()) {
+				break;
+			}
+
 		}
+
+		conveyerStack.shrink(amtTaken);
+
+		setItemOnBelt(conveyerStack);
 
 		return amtTaken;
 	}
 
 	public BlockPos getNextPos() {
-		Direction direction = this.<ComponentDirection>getComponent(ComponentType.Direction).getDirection().getOpposite();
+		Direction direction = getFacing().getOpposite();
 		return switch (ConveyorType.values()[conveyorType.get()]) {
 		case Horizontal -> worldPosition.relative(direction);
 		case SlopedDown -> worldPosition.relative(direction).below();
