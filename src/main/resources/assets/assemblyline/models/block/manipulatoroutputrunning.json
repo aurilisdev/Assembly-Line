@@ -3,8 +3,8 @@
 	"parent": "block/cube_all",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "assemblyline:model/block/manipulatoroutputrunning",
-		"particle": "assemblyline:model/block/manipulatoroutputrunning"
+		"0": "assemblyline:block/model/manipulatoroutputrunning",
+		"particle": "assemblyline:block/model/manipulatoroutputrunning"
 	},
 	"elements": [
 		{
