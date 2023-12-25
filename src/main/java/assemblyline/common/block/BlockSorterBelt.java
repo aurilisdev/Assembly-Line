@@ -11,7 +11,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
-import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext.Builder;
@@ -35,9 +34,6 @@ public class BlockSorterBelt extends GenericEntityBlockWaterloggable {
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		if (worldIn instanceof ClientWorld) {
-			return VoxelShapes.block();
-		}
 		return shape;
 	}
 
