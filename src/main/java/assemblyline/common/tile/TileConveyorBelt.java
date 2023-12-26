@@ -190,7 +190,7 @@ public class TileConveyorBelt extends GenericTile {
 		Vector3f local = getObjectLocal();
 		Vector3f direction = getDirectionAsVector();
 
-		float coordComponent = local.dot(direction);
+		float coordComponent = local.x() * direction.x() + local.y() * direction.y() + local.z() * direction.z();
 		ConveyorType type = ConveyorType.values()[conveyorType.get()];
 		if (type != ConveyorType.Horizontal) {
 			return type == ConveyorType.SlopedDown ? conveyorObject.get().y() <= worldPosition.getY() - 1 : conveyorObject.get().y() >= worldPosition.getY() + 1;
@@ -249,7 +249,8 @@ public class TileConveyorBelt extends GenericTile {
 				setInvToEmpty();
 			}
 			if (!shouldTransfer) {
-				move.mul(1 / 16.0f);
+				move = new Vector3f(move.x() * 1 / 16.0f, move.y() * 1 / 16.0f, move.z() * 1 / 16.0f);
+				//move.mul(1 / 16.0f);
 				conveyorObject.set(conveyorObject.get().add(move.x(), move.y(), move.z()));
 				ConveyorType type = ConveyorType.values()[conveyorType.get()];
 				if (type != ConveyorType.Horizontal) {
