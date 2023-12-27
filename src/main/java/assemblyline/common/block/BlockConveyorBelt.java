@@ -3,117 +3,77 @@ package assemblyline.common.block;
 import java.util.Arrays;
 import java.util.List;
 
-import assemblyline.DeferredRegisters;
 import assemblyline.common.tile.TileConveyorBelt;
-import electrodynamics.common.block.BlockGenericMachine;
-import electrodynamics.prefab.tile.GenericTile;
-import electrodynamics.prefab.tile.components.ComponentType;
+import assemblyline.common.tile.TileConveyorBelt.ConveyorType;
+import electrodynamics.prefab.block.GenericEntityBlock;
+import electrodynamics.prefab.block.GenericEntityBlockWaterloggable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.loot.LootContext.Builder;
-import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Mirror;
-import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 
-public class BlockConveyorBelt extends Block {
-    private static final VoxelShape shape = VoxelShapes.create(0, 0, 0, 1, 5.0 / 16.0, 1);
+public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
+	private static final VoxelShape shape = VoxelShapes.box(0, 0, 0, 1, 5.0 / 16.0, 1);
 
-    public BlockConveyorBelt() {
-	super(Properties.create(Material.IRON).hardnessAndResistance(3.5F).sound(SoundType.METAL).harvestTool(ToolType.PICKAXE).notSolid());
-	setDefaultState(stateContainer.getBaseState().with(BlockGenericMachine.FACING, Direction.NORTH));
-    }
-
-    @Override
-    @Deprecated
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-	return shape;
-    }
-
-    @Override
-    @Deprecated
-    public List<ItemStack> getDrops(BlockState state, Builder builder) {
-	return Arrays.asList(new ItemStack(DeferredRegisters.blockConveyorBelt));
-    }
-
-    @Override
-    @Deprecated
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entityIn) {
-	TileEntity tile = world.getTileEntity(pos);
-	if (!world.isRemote && tile instanceof TileConveyorBelt && entityIn instanceof ItemEntity && entityIn.ticksExisted > 5) {
-	    TileConveyorBelt belt = (TileConveyorBelt) tile;
-	    ItemEntity item = (ItemEntity) entityIn;
-	    item.setItem(belt.addItemOnBelt(item.getItem()));
+	public BlockConveyorBelt() {
+		super(Properties.copy(Blocks.IRON_BLOCK).strength(3.5F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion().harvestTool(ToolType.PICKAXE).harvestLevel(1));
+		registerDefaultState(stateDefinition.any().setValue(GenericEntityBlock.FACING, Direction.NORTH));
 	}
-    }
 
-    @Override
-    @Deprecated
-    public BlockState rotate(BlockState state, Rotation rot) {
-	return state.with(BlockGenericMachine.FACING, rot.rotate(state.get(BlockGenericMachine.FACING)));
-    }
+	@Override
+	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+		return shape;
+	}
 
-    @Deprecated
-    @Override
-    public BlockState mirror(BlockState state, Mirror mirrorIn) {
-	return state.rotate(mirrorIn.toRotation(state.get(BlockGenericMachine.FACING)));
-    }
-
-    @Deprecated
-    @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-	if (!(newState.getBlock() instanceof BlockConveyorBelt)) {
-	    TileEntity tile = worldIn.getTileEntity(pos);
-	    if (!(state.getBlock() == newState.getBlock() && state.get(BlockGenericMachine.FACING) != newState.get(BlockGenericMachine.FACING))
-		    && tile instanceof GenericTile) {
-		GenericTile generic = (GenericTile) tile;
-		if (generic.hasComponent(ComponentType.Inventory)) {
-		    InventoryHelper.dropInventoryItems(worldIn, pos, generic.getComponent(ComponentType.Inventory));
+	@Override
+	public void onRotate(ItemStack stack, BlockPos pos, PlayerEntity player) {
+		TileEntity tile = player.level.getBlockEntity(pos);
+		if (tile instanceof TileConveyorBelt) {
+			TileConveyorBelt belt = (TileConveyorBelt) tile;
+			if (belt.conveyorType.get() + 1 <= ConveyorType.values().length - 1) {
+				belt.conveyorType.set(ConveyorType.values()[belt.conveyorType.get() + 1].ordinal());
+			} else {
+				belt.conveyorType.set(ConveyorType.values()[0].ordinal());
+			}
 		}
-	    }
-	    super.onReplaced(state, worldIn, pos, newState, isMoving);
 	}
-    }
+	
+	@Override
+	public List<ItemStack> getDrops(BlockState arg0, Builder arg1) {
+		return Arrays.asList(new ItemStack(this));
+	}
 
-    @Override
-    @Deprecated
-    public BlockRenderType getRenderType(BlockState state) {
-	return BlockRenderType.INVISIBLE;
-    }
+	@Override
+	public BlockRenderType getRenderShape(BlockState state) {
+		return BlockRenderType.INVISIBLE;
+	}
 
-    @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-	return getDefaultState().with(BlockGenericMachine.FACING, context.getPlacementHorizontalFacing().getOpposite());
-    }
+	@Override
+	public BlockState getStateForPlacement(BlockItemUseContext context) {
+		return super.getStateForPlacement(context).setValue(GenericEntityBlock.FACING, context.getHorizontalDirection().getOpposite());
+	}
+	
+	@Override
+	protected void createBlockStateDefinition(net.minecraft.state.StateContainer.Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
+		builder.add(GenericEntityBlock.FACING);
+	}
 
-    @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-	builder.add(BlockGenericMachine.FACING);
-    }
-
-    @Override
-    public boolean hasTileEntity(BlockState state) {
-	return true;
-    }
-
-    @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-	return new TileConveyorBelt();
-    }
+	@Override
+	public TileEntity createTileEntity(BlockState arg0, IBlockReader arg1) {
+		return new TileConveyorBelt();
+	}
 }

@@ -2,97 +2,114 @@ package assemblyline.common.tile;
 
 import java.util.HashSet;
 
-import assemblyline.DeferredRegisters;
-import electrodynamics.prefab.tile.GenericTileTicking;
-import electrodynamics.prefab.tile.components.ComponentType;
+import assemblyline.registers.AssemblyLineBlockTypes;
+import assemblyline.registers.AssemblyLineBlocks;
+import electrodynamics.prefab.tile.GenericTile;
+import electrodynamics.prefab.tile.components.IComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
-import electrodynamics.prefab.utilities.Scheduler;
+import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryBuilder;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.HopperTileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
+import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraftforge.items.CapabilityItemHandler;
 
-public class TileCrate extends GenericTileTicking {
-    private int lastCheckCount = 0;
-    private int count = 0;
+public class TileCrate extends GenericTile {
 
-    public TileCrate() {
-	this(64);
-    }
+	public int size = 64;
 
-    public TileCrate(int size) {
-	super(DeferredRegisters.TILE_CRATE.get());
-	addComponent(new ComponentPacketHandler().guiPacketWriter(this::writeCustomPacket).guiPacketReader(this::readCustomPacket)
-		.customPacketReader(this::readCustomPacket).customPacketWriter(this::writeCustomPacket));
-	addComponent(new ComponentInventory(this).size(size).getSlots(this::getSlotsForFace).valid(this::isItemValidForSlot).slotFaces(0,
-		Direction.values()));
-	addComponent(new ComponentTickable().tickServer(this::tickServer));
-    }
+	public TileCrate() {
+		super(AssemblyLineBlockTypes.TILE_CRATE.get());
 
-    public HashSet<Integer> getSlotsForFace(Direction side) {
-	HashSet<Integer> set = new HashSet<>();
-	for (int i = 0; i < this.<ComponentInventory>getComponent(ComponentType.Inventory).getSizeInventory(); i++) {
-	    set.add(i);
+		addComponent(new ComponentPacketHandler(this));
+		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().forceSize(this.size)).getSlots(this::getSlotsForFace).valid(this::isItemValidForSlot).setSlotsForAllDirections(0));
+		addComponent(new ComponentTickable(this));
 	}
-	Scheduler.schedule(1, () -> this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking());
-	return set;
-    }
 
-    public boolean isItemValidForSlot(int index, ItemStack stack) {
-	ComponentInventory inv = getComponent(ComponentType.Inventory);
-	if (stack.isEmpty()) {
-	    return true;
-	}
-	for (int i = 0; i < inv.getSizeInventory(); i++) {
-	    ItemStack s = inv.getStackInSlot(i);
-	    if (s.isEmpty()) {
-		continue;
-	    }
-	    if (stack.getItem() != s.getItem()) {
-		return false;
-	    }
-	}
-	return true;
-    }
+	@Override
+	public void onLoad() {
+		super.onLoad();
+		int size = 64;
 
-    public void writeCustomPacket(CompoundNBT nbt) {
-	ComponentInventory inv = getComponent(ComponentType.Inventory);
-	ItemStack stack = ItemStack.EMPTY;
-	for (int i = 0; i < inv.getSizeInventory(); i++) {
-	    if (!inv.getStackInSlot(i).isEmpty()) {
-		stack = inv.getStackInSlot(i);
-		break;
-	    }
-	}
-	new ItemStack(stack.getItem()).write(nbt);
-	nbt.putInt("acccount", getCount());
-    }
-
-    public void readCustomPacket(CompoundNBT nbt) {
-	this.<ComponentInventory>getComponent(ComponentType.Inventory).setInventorySlotContents(0, ItemStack.read(nbt));
-	count = nbt.getInt("acccount");
-    }
-
-    public void tickServer(ComponentTickable tickable) {
-	if (tickable.getTicks() % 40 == 0) {
-	    this.<ComponentPacketHandler>getComponent(ComponentType.PacketHandler).sendGuiPacketToTracking();
-	    count = lastCheckCount;
-	}
-    }
-
-    public int getCount() {
-	if (!world.isRemote) {
-	    ComponentInventory inv = getComponent(ComponentType.Inventory);
-	    count = 0;
-	    for (int i = 0; i < inv.getSizeInventory(); i++) {
-		ItemStack stack = inv.getStackInSlot(i);
-		if (!stack.isEmpty()) {
-		    count += stack.getCount();
+		if (getBlockState().is(AssemblyLineBlocks.blockCrate)) {
+			size = 64;
+		} else if (getBlockState().is(AssemblyLineBlocks.blockCrateMedium)) {
+			size = 128;
+		} else if (getBlockState().is(AssemblyLineBlocks.blockCrateLarge)) {
+			size = 256;
 		}
-	    }
+
+		this.size = size;
 	}
-	return count;
-    }
+
+	public HashSet<Integer> getSlotsForFace(Direction side) {
+		HashSet<Integer> set = new HashSet<>();
+		for (int i = 0; i < this.<ComponentInventory>getComponent(IComponentType.Inventory).getContainerSize(); i++) {
+			set.add(i);
+		}
+		return set;
+	}
+
+	public boolean isItemValidForSlot(int index, ItemStack stack, ComponentInventory inv) {
+		if (stack.isEmpty()) {
+			return true;
+		}
+		for (int i = 0; i < inv.getContainerSize(); i++) {
+			ItemStack s = inv.getItem(i);
+			if (s.isEmpty()) {
+				continue;
+			}
+			if (stack.getItem() != s.getItem()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public int getCount() {
+		int count = 0;
+		ComponentInventory inv = getComponent(IComponentType.Inventory);
+		count = 0;
+		for (int i = 0; i < inv.getContainerSize(); i++) {
+			ItemStack stack = inv.getItem(i);
+			if (!stack.isEmpty()) {
+				count += stack.getCount();
+			}
+		}
+
+		return count;
+	}
+
+	@Override
+	public int getComparatorSignal() {
+		ComponentInventory inv = getComponent(IComponentType.Inventory);
+		return (int) (((double) getCount() / (double) Math.max(1, inv.getContainerSize())) * 15.0);
+	}
+
+	@Override
+	public ActionResultType use(PlayerEntity player, Hand hand, BlockRayTraceResult result) {
+		if (!player.isShiftKeyDown()) {
+			player.setItemInHand(hand, HopperTileEntity.addItem(player.inventory, getComponent(IComponentType.Inventory), player.getItemInHand(hand), Direction.EAST));
+			return ActionResultType.CONSUME;
+		}
+		ComponentInventory inv = getComponent(IComponentType.Inventory);
+		for (int i = 0; i < inv.getContainerSize(); i++) {
+			ItemStack stack = inv.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.UP).resolve().get().extractItem(i, inv.getMaxStackSize(), level.isClientSide());
+			if (!stack.isEmpty()) {
+				if (!level.isClientSide()) {
+					ItemEntity item = new ItemEntity(level, player.getX() + 0.5, player.getY() + 0.5, player.getZ() + 0.5, stack);
+					level.addFreshEntity(item);
+				}
+				return ActionResultType.CONSUME;
+			}
+		}
+		return ActionResultType.FAIL;
+	}
 
 }
