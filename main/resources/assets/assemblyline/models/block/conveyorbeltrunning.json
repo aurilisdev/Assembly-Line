@@ -1,8 +1,0 @@
-{
-	"credit": "aurilisdev",
-	"parent": "assemblyline:block/conveyorbelt",
-	"textures": {
-		"0": "assemblyline:model/block/conveyorbeltrunning",
-		"particle": "assemblyline:model/block/conveyorbeltrunning"
-	}
-}
