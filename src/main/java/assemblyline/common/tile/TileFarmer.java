@@ -103,75 +103,82 @@ public class TileFarmer extends GenericTile {
 
 		ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
 		// faster starting speed, but the fastest speed is one block in area checked per tick
-		if (electro.getJoulesStored() >= Constants.MOBGRINDER_USAGE) {
-			electro.extractPower(TransferPack.joulesVoltage(Constants.MOBGRINDER_USAGE, electro.getVoltage()), false);
-			if (ticksSinceCheck.get() == 0) {
-				BlockPos machinePos = getBlockPos();
-				BlockPos startPos = new BlockPos(machinePos.getX() - currentWidth.get() / 2, machinePos.getY() + OPERATION_OFFSET, machinePos.getZ() - currentLength.get() / 2);
-				genQuadrants();
-				BlockPos checkPos = new BlockPos(startPos.getX() + prevXShift, startPos.getY(), startPos.getZ() + prevZShift);
-				int quadrant = getQuadrant(prevXShift, prevZShift);
-				if (quadrant >= 0) {
-					handleHarvest(checkPos, quadrant);
-					handlePlanting(checkPos, quadrant);
-				}
-				refillInputs();
-				prevZShift++;
-				if (prevZShift >= currentLength.get()) {
-					prevZShift = 0;
-					prevXShift++;
-					if (prevXShift >= currentWidth.get()) {
-						prevXShift = 0;
-					}
-				}
-				quadrants.clear();
-			}
-			ticksSinceCheck.set(ticksSinceCheck.get() + 1);
-			if (ticksSinceCheck.get() >= currentWaitTime.get()) {
-				ticksSinceCheck.set(0);
+		if (electro.getJoulesStored() < Constants.FARMER_USAGE * powerUsageMultiplier.get()) {
+			return;
+		}
+
+		electro.joules(electro.getJoulesStored() - Constants.FARMER_USAGE * powerUsageMultiplier.get());
+
+		ticksSinceCheck.set(ticksSinceCheck.get() + 1);
+
+		if (ticksSinceCheck.get() >= currentWaitTime.get()) {
+			ticksSinceCheck.set(0);
+		}
+
+		if (ticksSinceCheck.get() != 0) {
+			return;
+		}
+
+		BlockPos machinePos = getBlockPos();
+		BlockPos startPos = new BlockPos(machinePos.getX() - currentWidth.get() / 2, machinePos.getY() + OPERATION_OFFSET, machinePos.getZ() - currentLength.get() / 2);
+		genQuadrants();
+		BlockPos checkPos = new BlockPos(startPos.getX() + prevXShift, startPos.getY(), startPos.getZ() + prevZShift);
+		int quadrant = getQuadrant(prevXShift, prevZShift);
+		if (quadrant >= 0) {
+			handleHarvest(checkPos, quadrant);
+			handlePlanting(checkPos, quadrant);
+		}
+		refillInputs();
+		prevZShift++;
+		if (prevZShift >= currentLength.get()) {
+			prevZShift = 0;
+			prevXShift++;
+			if (prevXShift >= currentWidth.get()) {
+				prevXShift = 0;
 			}
 		}
+		quadrants.clear();
 
 	}
 
 	private void handleHarvest(BlockPos checkPos, int quadrant) {
 		ComponentInventory inv = getComponent(IComponentType.Inventory);
-		ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
-		if (inv.areOutputsEmpty()) {
-			Level world = getLevel();
-			BlockState checkState = world.getBlockState(checkPos);
-			Block checkBlock = checkState.getBlock();
-			if (checkBlock instanceof CropBlock crop && crop.isMaxAge(checkState)) {
-				breakBlock(checkState, world, checkPos, inv, electro, SoundEvents.CROP_BREAK);
-			} else if (checkBlock instanceof StemGrownBlock) {
-				breakBlock(checkState, world, checkPos, inv, electro, SoundEvents.WOOD_BREAK);
-			} else if (checkBlock instanceof CactusBlock || checkBlock instanceof SugarCaneBlock) {
-				BlockPos above = checkPos.above();
-				List<BlockPos> positions = new ArrayList<>();
-				while (world.getBlockState(above).is(checkBlock)) {
-					positions.add(above);
-					above = above.above();
-				}
-				BlockPos currPos;
-				BlockState currState;
-				for (int i = positions.size() - 1; i >= 0; i--) {
-					currPos = positions.get(i);
-					currState = world.getBlockState(currPos);
-					if (checkBlock instanceof CactusBlock) {
-						breakBlock(currState, world, currPos, inv, electro, SoundEvents.WOOL_BREAK);
-					} else {
-						breakBlock(currState, world, currPos, inv, electro, SoundEvents.GRASS_BREAK);
-					}
-				}
-			} else if (checkBlock instanceof NetherWartBlock && checkState.getValue(NetherWartBlock.AGE).intValue() == NetherWartBlock.MAX_AGE) {
-				breakBlock(checkState, world, checkPos, inv, electro, SoundEvents.NETHER_WART_BREAK);
-			} else if (ForgeRegistries.BLOCKS.tags().getTag(BlockTags.LOGS).contains(checkBlock)) {
-				handleTree(world, checkPos, inv, electro);
+		if (!inv.areInputsEmpty()) {
+			return;
+		}
+		Level world = getLevel();
+		BlockState checkState = world.getBlockState(checkPos);
+		Block checkBlock = checkState.getBlock();
+		if (checkBlock instanceof CropBlock crop && crop.isMaxAge(checkState)) {
+			breakBlock(checkState, world, checkPos, inv, SoundEvents.CROP_BREAK);
+		} else if (checkBlock instanceof StemGrownBlock) {
+			breakBlock(checkState, world, checkPos, inv, SoundEvents.WOOD_BREAK);
+		} else if (checkBlock instanceof CactusBlock || checkBlock instanceof SugarCaneBlock) {
+			BlockPos above = checkPos.above();
+			List<BlockPos> positions = new ArrayList<>();
+			while (world.getBlockState(above).is(checkBlock)) {
+				positions.add(above);
+				above = above.above();
 			}
+			BlockPos currPos;
+			BlockState currState;
+			for (int i = positions.size() - 1; i >= 0; i--) {
+				currPos = positions.get(i);
+				currState = world.getBlockState(currPos);
+				if (checkBlock instanceof CactusBlock) {
+					breakBlock(currState, world, currPos, inv, SoundEvents.WOOL_BREAK);
+				} else {
+					breakBlock(currState, world, currPos, inv, SoundEvents.GRASS_BREAK);
+				}
+			}
+		} else if (checkBlock instanceof NetherWartBlock && checkState.getValue(NetherWartBlock.AGE).intValue() == NetherWartBlock.MAX_AGE) {
+			breakBlock(checkState, world, checkPos, inv, SoundEvents.NETHER_WART_BREAK);
+		} else if (ForgeRegistries.BLOCKS.tags().getTag(BlockTags.LOGS).contains(checkBlock)) {
+			handleTree(world, checkPos, inv);
 		}
 	}
 
-	private void handleTree(Level world, BlockPos checkPos, ComponentInventory inv, ComponentElectrodynamic electro) {
+	private void handleTree(Level world, BlockPos checkPos, ComponentInventory inv) {
 
 		ITag<Block> logs = ForgeRegistries.BLOCKS.tags().getTag(BlockTags.LOGS);
 		ITag<Block> leaves = ForgeRegistries.BLOCKS.tags().getTag(BlockTags.LEAVES);
@@ -181,7 +188,7 @@ public class TileFarmer extends GenericTile {
 		toScan.add(checkPos);
 
 		BlockState currState = world.getBlockState(checkPos);
-		breakBlock(currState, world, checkPos, inv, electro, leaves.contains(currState.getBlock()) ? SoundEvents.GRASS_BREAK : SoundEvents.WOOD_BREAK);
+		breakBlock(currState, world, checkPos, inv, leaves.contains(currState.getBlock()) ? SoundEvents.GRASS_BREAK : SoundEvents.WOOD_BREAK);
 
 		while (!toScan.isEmpty()) {
 			BlockPos itemPos = toScan.remove();
@@ -201,10 +208,17 @@ public class TileFarmer extends GenericTile {
 				isLeaves = leaves.contains(currBlock);
 				if (logs.contains(currBlock) || isLeaves) {
 					toScan.add(currPos);
-					breakBlock(currState, world, currPos, inv, electro, isLeaves ? SoundEvents.GRASS_BREAK : SoundEvents.WOOD_BREAK);
+					breakBlock(currState, world, currPos, inv, isLeaves ? SoundEvents.GRASS_BREAK : SoundEvents.WOOD_BREAK);
 				}
 			}
 		}
+	}
+
+	private void breakBlock(BlockState checkState, Level world, BlockPos checkPos, ComponentInventory inv, SoundEvent event) {
+		List<ItemStack> drops = Block.getDrops(checkState, (ServerLevel) world, checkPos, null);
+		InventoryUtils.addItemsToInventory(inv, drops, inv.getOutputStartIndex(), inv.getOutputContents().size());
+		world.setBlockAndUpdate(checkPos, AIR);
+		world.playSound(null, checkPos, event, SoundSource.BLOCKS, 1.0F, 1.0F);
 	}
 
 	private void handlePlanting(BlockPos checkPos, int quadrant) {
@@ -368,14 +382,6 @@ public class TileFarmer extends GenericTile {
 			return quadrant.get(2) <= zShift && quadrant.get(3) >= zShift;
 		}
 		return false;
-	}
-
-	private void breakBlock(BlockState checkState, Level world, BlockPos checkPos, ComponentInventory inv, ComponentElectrodynamic electro, SoundEvent event) {
-		electro.extractPower(TransferPack.joulesVoltage(Constants.FARMER_USAGE * powerUsageMultiplier.get(), electro.getVoltage()), false);
-		List<ItemStack> drops = Block.getDrops(checkState, (ServerLevel) world, checkPos, null);
-		InventoryUtils.addItemsToInventory(inv, drops, inv.getOutputStartIndex(), inv.getOutputContents().size());
-		world.setBlockAndUpdate(checkPos, AIR);
-		world.playSound(null, checkPos, event, SoundSource.BLOCKS, 1.0F, 1.0F);
 	}
 
 	@Override

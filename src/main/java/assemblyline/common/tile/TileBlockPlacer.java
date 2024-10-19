@@ -52,29 +52,42 @@ public class TileBlockPlacer extends TileFrontHarvester {
 				}
 			}
 		}
-		if (!inv.areInputsEmpty() && electro.getJoulesStored() >= Constants.BLOCKPLACER_USAGE) {
-			if (ticksSinceCheck.get() == 0) {
-				Direction facing = getFacing();
-				BlockPos off = worldPosition.offset(facing.getOpposite().getNormal());
-				BlockState state = level.getBlockState(off);
-				electro.extractPower(TransferPack.joulesVoltage(Constants.BLOCKBREAKER_USAGE, ElectrodynamicsCapabilities.DEFAULT_VOLTAGE), false);
-				if (state.isAir()) {
-					ItemStack stack = inv.getItem(0);
-					if (!stack.isEmpty() && stack.getItem() instanceof BlockItem bi) {
-						Block b = bi.getBlock();
-						BlockState newState = b.getStateForPlacement(new BlockPlaceContext(level, null, InteractionHand.MAIN_HAND, stack, new BlockHitResult(Vec3.ZERO, facing, off, false)));
-						if (newState.canSurvive(level, off)) {
-							level.setBlockAndUpdate(off, newState);
-							stack.shrink(1);
-						}
-					}
-				}
-			}
-			ticksSinceCheck.set(ticksSinceCheck.get() + 1);
-			if (ticksSinceCheck.get() >= currentWaitTime.get()) {
-				ticksSinceCheck.set(0);
+		
+		
+		if(electro.getJoulesStored() < Constants.BLOCKPLACER_USAGE || inv.areInputsEmpty()) {
+			return;
+		}
+		
+		ticksSinceCheck.set(ticksSinceCheck.get() + 1);
+		
+		if (ticksSinceCheck.get() >= currentWaitTime.get()) {
+			ticksSinceCheck.set(0);
+		}
+		
+		if (ticksSinceCheck.get() != 0) {
+			return;
+		}
+		
+		Direction facing = getFacing();
+		BlockPos off = worldPosition.offset(facing.getOpposite().getNormal());
+		BlockState state = level.getBlockState(off);
+		electro.extractPower(TransferPack.joulesVoltage(Constants.BLOCKBREAKER_USAGE, ElectrodynamicsCapabilities.DEFAULT_VOLTAGE), false);
+		if (!state.isAir()) {
+			return;
+		}
+		
+		ItemStack stack = inv.getItem(0);
+		
+		if (!stack.isEmpty() && stack.getItem() instanceof BlockItem bi) {
+			Block b = bi.getBlock();
+			BlockState newState = b.getStateForPlacement(new BlockPlaceContext(level, null, InteractionHand.MAIN_HAND, stack, new BlockHitResult(Vec3.ZERO, facing, off, false)));
+			if (newState.canSurvive(level, off)) {
+				level.setBlockAndUpdate(off, newState);
+				stack.shrink(1);
 			}
 		}
+		
+		
 	}
 
 	@Override
