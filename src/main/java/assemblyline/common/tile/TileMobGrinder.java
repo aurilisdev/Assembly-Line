@@ -15,7 +15,6 @@ import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryBuilder;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
-import electrodynamics.prefab.utilities.object.TransferPack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -44,23 +43,41 @@ public class TileMobGrinder extends TileFrontHarvester {
 		}
 
 		ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
-		if (inv.areOutputsEmpty() && electro.getJoulesStored() >= Constants.MOBGRINDER_USAGE) {
-			if (ticksSinceCheck.get() == 0) {
-				checkArea = getAABB(width.get(), length.get(), height.get(), true, false, this);
-				List<Entity> entities = level.getEntities(null, checkArea);
-				for (Entity entity : entities) {
-					if (electro.getJoulesStored() >= Constants.RANCHER_USAGE && !(entity instanceof Player)) {
-						electro.extractPower(TransferPack.joulesVoltage(Constants.MOBGRINDER_USAGE * powerUsageMultiplier.get(), electro.getVoltage()), false);
-						entity.getCapability(ElectrodynamicsCapabilities.LOCATION_STORAGE_CAPABILITY).ifPresent(h -> h.setLocation(0, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()));
-						entity.kill();
-					}
-				}
-			}
-			ticksSinceCheck.set(ticksSinceCheck.get() + 1);
-			if (ticksSinceCheck.get() >= currentWaitTime.get()) {
-				ticksSinceCheck.set(0);
-			}
+
+		if (electro.getJoulesStored() < Constants.MOBGRINDER_USAGE || !inv.areOutputsEmpty()) {
+			return;
 		}
+
+		ticksSinceCheck.set(ticksSinceCheck.get() + 1);
+
+		if (ticksSinceCheck.get() >= currentWaitTime.get()) {
+			ticksSinceCheck.set(0);
+		}
+
+		if (ticksSinceCheck.get() != 0) {
+			return;
+		}
+
+		checkArea = getAABB(width.get(), length.get(), height.get(), true, false, this);
+		List<Entity> entities = level.getEntities(null, checkArea);
+		
+		for (Entity entity : entities) {
+			
+			if(electro.getJoulesStored() < Constants.MOBGRINDER_USAGE) {
+				break;
+			}
+			
+			if(entity instanceof Player) {
+				continue;
+			}
+			
+			electro.joules(electro.getJoulesStored() - Constants.MOBGRINDER_USAGE);
+			
+			entity.getCapability(ElectrodynamicsCapabilities.LOCATION_STORAGE_CAPABILITY).ifPresent(h -> h.setLocation(0, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()));
+			
+			entity.kill();
+		}
+
 	}
 
 	@Override
@@ -73,10 +90,9 @@ public class TileMobGrinder extends TileFrontHarvester {
 
 	@Override
 	public ComponentInventory getInv(TileFrontHarvester harvester) {
-		return new ComponentInventory(harvester, InventoryBuilder.newInv().outputs(9).upgrades(3)).setDirectionsBySlot(0, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST).setDirectionsBySlot(1, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST)
-				.setDirectionsBySlot(2, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST).setDirectionsBySlot(3, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST).setDirectionsBySlot(4, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST)
-				.setDirectionsBySlot(5, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST).setDirectionsBySlot(6, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST).setDirectionsBySlot(7, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST)
-				.setDirectionsBySlot(8, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST).validUpgrades(ContainerFrontHarvester.VALID_UPGRADES).valid(machineValidator());
+		return new ComponentInventory(harvester, InventoryBuilder.newInv().outputs(9).upgrades(3)).setDirectionsBySlot(0, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST).setDirectionsBySlot(1, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST).setDirectionsBySlot(2, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST)
+				.setDirectionsBySlot(3, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST).setDirectionsBySlot(4, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST).setDirectionsBySlot(5, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST).setDirectionsBySlot(6, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST)
+				.setDirectionsBySlot(7, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST).setDirectionsBySlot(8, Direction.UP, Direction.DOWN, Direction.WEST, Direction.EAST).validUpgrades(ContainerFrontHarvester.VALID_UPGRADES).valid(machineValidator());
 	}
 
 	@Override

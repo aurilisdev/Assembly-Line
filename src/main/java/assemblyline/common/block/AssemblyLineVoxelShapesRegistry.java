@@ -32,13 +32,13 @@ public class AssemblyLineVoxelShapesRegistry {
 				//
 				Block.box(4, 0, 4, 12, 1, 12),
 				//
-				Block.box(4, 4, 15.05, 12, 12, 16.05),
+				Block.box(4, 4, 15.05, 12, 12, 15.05),
 				//
-				Block.box(-0.05, 4, 4, 0.95, 12, 12),
+				Block.box(0.05, 4, 4, 0.95, 12, 12),
 				//
-				Block.box(15.05, 4, 4, 16.05, 12, 12),
+				Block.box(15.05, 4, 4, 15.05, 12, 12),
 				//
-				Block.box(4, 4, -0.05, 12, 12, 0.95),
+				Block.box(4, 4, 0.05, 12, 12, 0.95),
 				//
 				Block.box(15, 0, 1, 16, 1, 15),
 				//

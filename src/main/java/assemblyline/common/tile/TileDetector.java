@@ -27,16 +27,17 @@ public class TileDetector extends GenericTile {
 
 	public void tickServer(ComponentTickable component) {
 		if (component.getTicks() % 4 == 0) {
-			List<ItemEntity> entities = level.getEntities(EntityType.ITEM, new AABB(worldPosition.relative(getFacing())), (Predicate<ItemEntity>) t -> t != null && !t.getItem().isEmpty());
-			if (!entities.isEmpty()) {
-				if (!isPowered) {
-					isPowered = true;
-					level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
-				}
-			} else if (isPowered) {
-				isPowered = false;
+			return;
+		}
+		List<ItemEntity> entities = level.getEntities(EntityType.ITEM, new AABB(worldPosition.relative(getFacing())), (Predicate<ItemEntity>) t -> t != null && !t.getItem().isEmpty());
+		if (!entities.isEmpty()) {
+			if (!isPowered) {
+				isPowered = true;
 				level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
 			}
+		} else if (isPowered) {
+			isPowered = false;
+			level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
 		}
 	}
 

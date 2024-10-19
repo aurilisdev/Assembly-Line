@@ -16,7 +16,6 @@ import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryBuilder;
 import electrodynamics.prefab.tile.components.type.ComponentTickable;
-import electrodynamics.prefab.utilities.object.TransferPack;
 import electrodynamics.registers.ElectrodynamicsSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -44,30 +43,45 @@ public class TileBlockBreaker extends TileFrontHarvester {
 	public void tickServer(ComponentTickable component) {
 
 		ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
+		
+		if(electro.getJoulesStored() < Constants.BLOCKBREAKER_USAGE) {
+			progress.set(0.0);
+			return;
+		}
+		
 		ticksSinceCheck.set((int) (progress.get() * 100));
 		currentWaitTime.set(100);
 
 		Direction facing = getFacing();
 		BlockPos block = worldPosition.offset(facing.getOpposite().getNormal());
 		BlockState blockState = level.getBlockState(block);
-		works.set(!blockState.isAir() && blockState.getDestroySpeed(level, block) > 0 && electro.getJoulesStored() >= Constants.BLOCKBREAKER_USAGE);
-		if (works.get()) {
-			double k1 = 1 / blockState.getDestroySpeed(level, block) / 30;
-			if (progress.get() < 1) {
-				progress.set(progress.get() + k1 * 5);
-				electro.extractPower(TransferPack.joulesVoltage(Constants.BLOCKBREAKER_USAGE, ElectrodynamicsCapabilities.DEFAULT_VOLTAGE), false);
-			} else {
-				if (!level.isClientSide) {
-					// Block block = state.getBlock();
-					level.destroyBlock(block, true); // TODO: What are these comments above/below ; They were left here by you originally I think
-					progress.set(0.0);
-					// output block here somewhere
-				}
-				works.set(false);
-			}
-		} else {
+		
+		works.set(!blockState.isAir() && blockState.getDestroySpeed(level, block) > 0);
+		
+		if(!works.get()) {
 			progress.set(0.0);
+			return;
 		}
+		
+		double k1 = 1 / blockState.getDestroySpeed(level, block) / 30;
+		
+		if (progress.get() < 1) {
+			progress.set(progress.get() + k1 * 5);
+			
+			electro.joules(electro.getJoulesStored() - Constants.BLOCKBREAKER_USAGE);
+			
+			return;
+			
+		} 
+		
+		if (!level.isClientSide) {
+			
+			level.destroyBlock(block, true); 
+			progress.set(0.0);
+
+		}
+		works.set(false);
+		
 	}
 
 	@Override
