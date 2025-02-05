@@ -1,7 +1,13 @@
 package assemblyline.registers;
 
 import assemblyline.References;
-import assemblyline.common.inventory.container.*;
+import assemblyline.common.inventory.container.ContainerAutocrafter;
+import assemblyline.common.inventory.container.ContainerBlockBreaker;
+import assemblyline.common.inventory.container.ContainerBlockPlacer;
+import assemblyline.common.inventory.container.ContainerFarmer;
+import assemblyline.common.inventory.container.ContainerMobGrinder;
+import assemblyline.common.inventory.container.ContainerRancher;
+import assemblyline.common.inventory.container.ContainerSorterBelt;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;

@@ -1,9 +1,13 @@
 package assemblyline.client.render.tile;
 
+import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+
 import assemblyline.client.ClientRegister;
 import assemblyline.common.tile.belt.TileSorterBelt;
 import assemblyline.common.tile.belt.utils.ConveyorType;
-import com.mojang.blaze3d.vertex.PoseStack;
 import electrodynamics.client.render.tile.AbstractTileRenderer;
 import electrodynamics.prefab.tile.components.IComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
@@ -16,8 +20,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
-import org.joml.Vector3f;
 
 public class RenderSorterBelt extends AbstractTileRenderer<TileSorterBelt> {
 

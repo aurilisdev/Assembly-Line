@@ -1,5 +1,7 @@
 package assemblyline.common.tile.belt;
 
+import org.joml.Vector3f;
+
 import assemblyline.common.inventory.container.ContainerSorterBelt;
 import assemblyline.common.tile.belt.utils.ConveyorBeltProperties;
 import assemblyline.common.tile.belt.utils.ConveyorClass;
@@ -13,7 +15,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import org.joml.Vector3f;
 
 public class TileSorterBelt extends GenericTileConveyorBelt {
 

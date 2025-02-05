@@ -1,5 +1,8 @@
 package assemblyline.client.screen;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import assemblyline.client.render.event.levelstage.HandlerHarvesterLines;
 import assemblyline.client.screen.generic.GenericOutlineAreaScreen;
 import assemblyline.common.inventory.container.ContainerRancher;
@@ -18,9 +21,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ScreenRancher extends GenericOutlineAreaScreen<ContainerRancher> {
 

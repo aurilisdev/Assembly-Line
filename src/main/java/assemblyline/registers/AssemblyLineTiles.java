@@ -1,18 +1,18 @@
 package assemblyline.registers;
 
-import assemblyline.common.block.subtype.SubtypeAssemblyMachine;
 import com.google.common.collect.Sets;
 
 import assemblyline.References;
+import assemblyline.common.block.subtype.SubtypeAssemblyMachine;
 import assemblyline.common.tile.TileAutocrafter;
 import assemblyline.common.tile.TileBlockBreaker;
 import assemblyline.common.tile.TileBlockPlacer;
-import assemblyline.common.tile.belt.TileConveyorBelt;
 import assemblyline.common.tile.TileCrate;
-import assemblyline.common.tile.belt.TileDetector;
 import assemblyline.common.tile.TileFarmer;
 import assemblyline.common.tile.TileMobGrinder;
 import assemblyline.common.tile.TileRancher;
+import assemblyline.common.tile.belt.TileConveyorBelt;
+import assemblyline.common.tile.belt.TileDetector;
 import assemblyline.common.tile.belt.TileSorterBelt;
 import electrodynamics.common.block.BlockMachine;
 import net.minecraft.core.registries.Registries;

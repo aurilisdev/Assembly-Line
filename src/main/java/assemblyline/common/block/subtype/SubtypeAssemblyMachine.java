@@ -1,7 +1,13 @@
 package assemblyline.common.block.subtype;
 
 import assemblyline.common.block.AssemblyLineVoxelShapes;
-import assemblyline.common.tile.*;
+import assemblyline.common.tile.TileAutocrafter;
+import assemblyline.common.tile.TileBlockBreaker;
+import assemblyline.common.tile.TileBlockPlacer;
+import assemblyline.common.tile.TileCrate;
+import assemblyline.common.tile.TileFarmer;
+import assemblyline.common.tile.TileMobGrinder;
+import assemblyline.common.tile.TileRancher;
 import electrodynamics.api.ISubtype;
 import electrodynamics.api.multiblock.subnodebased.parent.IMultiblockParentBlock;
 import electrodynamics.api.tile.IMachine;

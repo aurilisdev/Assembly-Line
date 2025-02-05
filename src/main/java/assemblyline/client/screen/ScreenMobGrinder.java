@@ -1,5 +1,8 @@
 package assemblyline.client.screen;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import assemblyline.client.render.event.levelstage.HandlerHarvesterLines;
 import assemblyline.client.screen.generic.GenericOutlineAreaScreen;
 import assemblyline.common.inventory.container.ContainerMobGrinder;
@@ -19,9 +22,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ScreenMobGrinder extends GenericOutlineAreaScreen<ContainerMobGrinder> {
 

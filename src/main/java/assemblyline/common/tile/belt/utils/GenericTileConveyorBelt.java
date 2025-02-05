@@ -1,5 +1,10 @@
 package assemblyline.common.tile.belt.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.joml.Vector3f;
+
 import assemblyline.common.block.BlockConveyorBelt;
 import assemblyline.common.settings.Constants;
 import electrodynamics.common.tags.ElectrodynamicsTags;
@@ -30,10 +35,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
-import org.joml.Vector3f;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class GenericTileConveyorBelt extends GenericTile {
 

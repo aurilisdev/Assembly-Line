@@ -4,8 +4,8 @@ import java.util.List;
 
 import assemblyline.References;
 import assemblyline.common.block.subtype.SubtypeAssemblyMachine;
-import assemblyline.registers.AssemblyLineTiles;
 import assemblyline.registers.AssemblyLineBlocks;
+import assemblyline.registers.AssemblyLineTiles;
 import electrodynamics.datagen.server.ElectrodynamicsLootTablesProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.level.block.Block;

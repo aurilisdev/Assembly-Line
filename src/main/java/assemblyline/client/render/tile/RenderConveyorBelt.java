@@ -1,16 +1,14 @@
 package assemblyline.client.render.tile;
 
-import assemblyline.common.tile.belt.utils.ConveyorType;
-import assemblyline.common.tile.belt.utils.GenericTileConveyorBelt;
-import electrodynamics.client.render.tile.AbstractTileRenderer;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.world.phys.AABB;
 import org.joml.Vector3f;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import assemblyline.client.ClientRegister;
 import assemblyline.common.tile.belt.TileConveyorBelt;
+import assemblyline.common.tile.belt.utils.ConveyorType;
+import assemblyline.common.tile.belt.utils.GenericTileConveyorBelt;
+import electrodynamics.client.render.tile.AbstractTileRenderer;
 import electrodynamics.prefab.tile.components.IComponentType;
 import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import electrodynamics.prefab.utilities.RenderingUtils;
@@ -19,11 +17,13 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.AABB;
 
 public class RenderConveyorBelt extends AbstractTileRenderer<TileConveyorBelt> {
 

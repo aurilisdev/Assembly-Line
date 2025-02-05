@@ -1,7 +1,8 @@
 package assemblyline.common.block;
 
-import assemblyline.common.tile.belt.TileDetector;
 import com.mojang.serialization.MapCodec;
+
+import assemblyline.common.tile.belt.TileDetector;
 import electrodynamics.common.block.states.ElectrodynamicsBlockStates;
 import electrodynamics.prefab.block.GenericEntityBlockWaterloggable;
 import net.minecraft.core.BlockPos;

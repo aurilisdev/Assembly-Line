@@ -1,9 +1,9 @@
 package assemblyline.client.render.tile;
 
-import assemblyline.common.settings.Constants;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import assemblyline.client.ClientRegister;
+import assemblyline.common.settings.Constants;
 import assemblyline.common.tile.TileMobGrinder;
 import electrodynamics.client.render.tile.AbstractTileRenderer;
 import electrodynamics.prefab.tile.components.IComponentType;
