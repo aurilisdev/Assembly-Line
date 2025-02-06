@@ -4,7 +4,7 @@
 	"texture_size": [64, 64],
 	"textures": {
 		"0": "assemblyline:block/model/detector",
-		"particle": "electrodynamics:blocks/steelcasing"
+		"particle": "assemblyline:block/model/detector"
 	},
 	"elements": [
 		{
