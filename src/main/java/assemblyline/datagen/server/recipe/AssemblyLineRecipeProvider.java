@@ -15,6 +15,7 @@ public class AssemblyLineRecipeProvider extends RecipeProvider {
 
 	public final List<AbstractRecipeGenerator> GENERATORS = new ArrayList<>();
 
+	@SuppressWarnings("unused")
 	private final CompletableFuture<HolderLookup.Provider> lookupProvider;
 
 	public AssemblyLineRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {

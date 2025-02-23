@@ -26,13 +26,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.storage.loot.LootParams.Builder;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
 
 	public static final double MAX_Y = 5.0 / 16.0;
-	private static final VoxelShape SHAPE = Shapes.box(0, 0, 0, 1, MAX_Y, 1);
 
 	private final VoxelShapeProvider shapeProvider;
 	private final BlockEntityType.BlockEntitySupplier<?> supplier;

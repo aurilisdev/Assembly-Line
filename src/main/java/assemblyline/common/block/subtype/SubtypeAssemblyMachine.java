@@ -33,11 +33,11 @@ public enum SubtypeAssemblyMachine implements ISubtype, IMachine {
     private final boolean showInItemGroup;
     private final MachineProperties properties;
 
-    private SubtypeAssemblyMachine(boolean showInItemGroup, BlockEntityType.BlockEntitySupplier blockEntitySupplier) {
+    private SubtypeAssemblyMachine(boolean showInItemGroup, BlockEntityType.BlockEntitySupplier<BlockEntity> blockEntitySupplier) {
         this(showInItemGroup, blockEntitySupplier, MachineProperties.DEFAULT);
     }
 
-    private SubtypeAssemblyMachine(boolean showInItemGroup, BlockEntityType.BlockEntitySupplier blockEntitySupplier, MachineProperties properties) {
+    private SubtypeAssemblyMachine(boolean showInItemGroup, BlockEntityType.BlockEntitySupplier<BlockEntity> blockEntitySupplier, MachineProperties properties) {
         this.showInItemGroup = showInItemGroup;
         this.blockEntitySupplier = blockEntitySupplier;
         this.properties = properties;
