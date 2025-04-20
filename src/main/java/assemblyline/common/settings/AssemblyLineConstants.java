@@ -1,10 +1,10 @@
 package assemblyline.common.settings;
 
-import electrodynamics.api.configuration.Configuration;
-import electrodynamics.api.configuration.DoubleValue;
+import voltaic.api.configuration.Configuration;
+import voltaic.api.configuration.DoubleValue;
 
 @Configuration(name = "Assembly Line")
-public class Constants {
+public class AssemblyLineConstants {
 	@DoubleValue(def = 8.0, comment = "Usage is joules per tick")
 	public static double CONVEYORBELT_USAGE = 8.0;
 	@DoubleValue(def = 8.0, comment = "Usage is joules per entity movement.")

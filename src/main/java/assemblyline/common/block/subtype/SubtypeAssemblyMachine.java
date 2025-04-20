@@ -8,14 +8,14 @@ import assemblyline.common.tile.TileCrate;
 import assemblyline.common.tile.TileFarmer;
 import assemblyline.common.tile.TileMobGrinder;
 import assemblyline.common.tile.TileRancher;
-import electrodynamics.api.ISubtype;
-import electrodynamics.api.multiblock.subnodebased.parent.IMultiblockParentBlock;
-import electrodynamics.api.tile.IMachine;
-import electrodynamics.api.tile.MachineProperties;
-import electrodynamics.common.block.voxelshapes.VoxelShapeProvider;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import voltaic.api.ISubtype;
+import voltaic.api.multiblock.subnodebased.parent.IMultiblockParentBlock;
+import voltaic.api.tile.IMachine;
+import voltaic.api.tile.MachineProperties;
+import voltaic.common.block.voxelshapes.VoxelShapeProvider;
 
 public enum SubtypeAssemblyMachine implements ISubtype, IMachine {
 

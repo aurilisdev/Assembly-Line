@@ -1,14 +1,14 @@
 package assemblyline.common.tile.util;
 
-import assemblyline.client.render.event.levelstage.HandlerHarvesterLines;
-import electrodynamics.prefab.properties.Property;
-import electrodynamics.prefab.properties.PropertyTypes;
-import electrodynamics.prefab.tile.GenericTile;
+import assemblyline.client.event.levelstage.HandlerHarvesterLines;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import voltaic.prefab.properties.types.PropertyTypes;
+import voltaic.prefab.properties.variant.SingleProperty;
+import voltaic.prefab.tile.GenericTile;
 
 public abstract class TileOutlineArea extends GenericTile {
 
@@ -18,9 +18,9 @@ public abstract class TileOutlineArea extends GenericTile {
     protected static final int DEFAULT_CHECK_HEIGHT = 5;
     protected static final int MAX_CHECK_WIDTH = 25;
     protected static final int MAX_CHECK_LENGTH = 25;
-    public Property<Integer> width = property(new Property<>(PropertyTypes.INTEGER, "width", DEFAULT_CHECK_WIDTH));
-    public Property<Integer> length = property(new Property<>(PropertyTypes.INTEGER, "length", DEFAULT_CHECK_LENGTH));
-    public Property<Integer> height = property(new Property<>(PropertyTypes.INTEGER, "height", DEFAULT_CHECK_HEIGHT));
+    public SingleProperty<Integer> width = property(new SingleProperty<>(PropertyTypes.INTEGER, "width", DEFAULT_CHECK_WIDTH));
+    public SingleProperty<Integer> length = property(new SingleProperty<>(PropertyTypes.INTEGER, "length", DEFAULT_CHECK_LENGTH));
+    public SingleProperty<Integer> height = property(new SingleProperty<>(PropertyTypes.INTEGER, "height", DEFAULT_CHECK_HEIGHT));
     protected AABB checkArea;
 
     protected TileOutlineArea(BlockEntityType<?> type, BlockPos pos, BlockState state) {

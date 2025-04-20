@@ -4,15 +4,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-import assemblyline.References;
+import assemblyline.AssemblyLine;
 import assemblyline.datagen.client.AssemblyLineBlockStateProvider;
 import assemblyline.datagen.client.AssemblyLineItemModelsProvider;
 import assemblyline.datagen.client.AssemblyLineLangKeyProvider;
+import assemblyline.datagen.client.AssemblyLineSoundProvider;
 import assemblyline.datagen.server.AssemblyLineAdvancementProvider;
 import assemblyline.datagen.server.AssemblyLineBlockTagsProvider;
 import assemblyline.datagen.server.AssemblyLineLootTablesProvider;
 import assemblyline.datagen.server.recipe.AssemblyLineRecipeProvider;
-import electrodynamics.datagen.client.ElectrodynamicsLangKeyProvider.Locale;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
@@ -22,8 +22,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
+import voltaic.datagen.utils.client.BaseLangKeyProvider;
 
-@EventBusSubscriber(modid = References.ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = AssemblyLine.ID, bus = EventBusSubscriber.Bus.MOD)
 public class DataGenerators {
 
     @SubscribeEvent
@@ -48,7 +49,8 @@ public class DataGenerators {
         if (event.includeClient()) {
             generator.addProvider(true, new AssemblyLineBlockStateProvider(output, helper));
             generator.addProvider(true, new AssemblyLineItemModelsProvider(output, helper));
-            generator.addProvider(true, new AssemblyLineLangKeyProvider(output, Locale.EN_US));
+            generator.addProvider(true, new AssemblyLineLangKeyProvider(output, BaseLangKeyProvider.Locale.EN_US));
+            generator.addProvider(true, new AssemblyLineSoundProvider(output, helper));
         }
     }
 

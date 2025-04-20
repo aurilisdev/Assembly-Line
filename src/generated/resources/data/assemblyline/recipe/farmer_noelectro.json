@@ -1,4 +1,13 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:mod_loaded",
+        "modid": "electrodynamics"
+      }
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
@@ -6,19 +15,19 @@
       "item": "minecraft:iron_axe"
     },
     "C": {
-      "tag": "c:circuits/basic"
+      "tag": "c:dusts/redstone"
     },
     "H": {
       "item": "minecraft:iron_hoe"
     },
     "P": {
-      "tag": "c:plates/steel"
+      "tag": "c:ingots/iron"
     },
     "S": {
       "item": "minecraft:shears"
     },
     "W": {
-      "tag": "c:wires/insulated_copper"
+      "tag": "c:ingots/copper"
     }
   },
   "pattern": [

@@ -11,7 +11,7 @@ import static electrodynamics.prefab.utilities.ElectroTextUtils.JEI_INFO_ITEM;
 import static electrodynamics.prefab.utilities.ElectroTextUtils.MESSAGE_BASE;
 import static electrodynamics.prefab.utilities.ElectroTextUtils.TOOLTIP_BASE;
 
-import assemblyline.References;
+import assemblyline.AssemblyLine;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -59,7 +59,7 @@ public class AssemblyTextUtils {
 	}
 
 	public static MutableComponent translated(String base, String key, Object... additional) {
-		return Component.translatable(base + "." + References.ID + "." + key, additional);
+		return Component.translatable(base + "." + AssemblyLine.ID + "." + key, additional);
 	}
 
 	public static boolean guiExists(String key) {
@@ -71,7 +71,7 @@ public class AssemblyTextUtils {
 	}
 
 	public static boolean translationExists(String base, String key) {
-		return I18n.exists(base + "." + References.ID + "." + key);
+		return I18n.exists(base + "." + AssemblyLine.ID + "." + key);
 	}
 
 }

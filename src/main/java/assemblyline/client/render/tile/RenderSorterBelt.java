@@ -5,14 +5,9 @@ import org.joml.Vector3f;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import assemblyline.client.ClientRegister;
+import assemblyline.client.AssemblyLineClientRegister;
 import assemblyline.common.tile.belt.TileSorterBelt;
 import assemblyline.common.tile.belt.utils.ConveyorType;
-import electrodynamics.client.render.tile.AbstractTileRenderer;
-import electrodynamics.prefab.tile.components.IComponentType;
-import electrodynamics.prefab.tile.components.type.ComponentInventory;
-import electrodynamics.prefab.utilities.RenderingUtils;
-import electrodynamics.prefab.utilities.math.MathUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -20,6 +15,11 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
+import voltaic.client.render.AbstractTileRenderer;
+import voltaic.prefab.tile.components.IComponentType;
+import voltaic.prefab.tile.components.type.ComponentInventory;
+import voltaic.prefab.utilities.RenderingUtils;
+import voltaic.prefab.utilities.math.MathUtils;
 
 public class RenderSorterBelt extends AbstractTileRenderer<TileSorterBelt> {
 
@@ -56,7 +56,7 @@ public class RenderSorterBelt extends AbstractTileRenderer<TileSorterBelt> {
 
             move = move.mul(1.0F / 16.0F);
 
-            if (tile.running.get()) {
+            if (tile.running.getValue()) {
 
                 itemVec = itemVec.add(move);
 
@@ -213,7 +213,7 @@ public class RenderSorterBelt extends AbstractTileRenderer<TileSorterBelt> {
 
         RenderingUtils.prepareRotationalTileModel(tile, matrixStackIn);
 
-        RenderingUtils.renderModel(getModel(tile.running.get() ? ClientRegister.MODEL_SORTERBELT_RUNNING : ClientRegister.MODEL_SORTERBELT), tile, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+        RenderingUtils.renderModel(getModel(tile.running.getValue() ? AssemblyLineClientRegister.MODEL_SORTERBELT_RUNNING : AssemblyLineClientRegister.MODEL_SORTERBELT), tile, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 
         matrixStackIn.popPose();
 

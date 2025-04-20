@@ -5,11 +5,11 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import assemblyline.datagen.server.recipe.vanilla.AssemblyLineCraftingTableRecipes;
-import electrodynamics.datagen.utils.recipe.AbstractRecipeGenerator;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
+import voltaic.datagen.utils.server.recipe.AbstractRecipeGenerator;
 
 public class AssemblyLineRecipeProvider extends RecipeProvider {
 

@@ -3,9 +3,8 @@ package assemblyline.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import assemblyline.client.render.event.levelstage.HandlerFarmerLines;
-import assemblyline.client.render.event.levelstage.HandlerHarvesterLines;
-import electrodynamics.client.render.event.levelstage.AbstractLevelStageHandler;
+import assemblyline.client.event.levelstage.HandlerFarmerLines;
+import assemblyline.client.event.levelstage.HandlerHarvesterLines;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
@@ -13,9 +12,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import voltaic.client.event.AbstractLevelStageHandler;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
-public class ClientEvents {
+public class AssemblyLineClientEvents {
 
 	private static final List<AbstractLevelStageHandler> LEVEL_STAGE_RENDER_HANDLERS = new ArrayList<>();
 

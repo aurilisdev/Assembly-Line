@@ -1,4 +1,4 @@
-package assemblyline.client.render.event.levelstage;
+package assemblyline.client.event.levelstage;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -8,7 +8,6 @@ import org.joml.Matrix4f;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import electrodynamics.client.render.event.levelstage.AbstractLevelStageHandler;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -20,6 +19,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import voltaic.client.event.AbstractLevelStageHandler;
 
 public class HandlerHarvesterLines extends AbstractLevelStageHandler {
 

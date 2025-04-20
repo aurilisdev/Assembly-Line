@@ -6,9 +6,6 @@ import java.util.List;
 import com.mojang.serialization.MapCodec;
 
 import assemblyline.common.tile.belt.utils.GenericTileConveyorBelt;
-import electrodynamics.common.block.states.ElectrodynamicsBlockStates;
-import electrodynamics.common.block.voxelshapes.VoxelShapeProvider;
-import electrodynamics.prefab.block.GenericEntityBlockWaterloggable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
@@ -27,6 +24,9 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.storage.loot.LootParams.Builder;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import voltaic.common.block.states.VoltaicBlockStates;
+import voltaic.common.block.voxelshapes.VoxelShapeProvider;
+import voltaic.prefab.block.GenericEntityBlockWaterloggable;
 
 public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
 
@@ -37,7 +37,7 @@ public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
 
 	public BlockConveyorBelt(VoxelShapeProvider shapeProvider, BlockEntityType.BlockEntitySupplier<?> supplier) {
 		super(Blocks.IRON_BLOCK.properties().strength(3.5F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion());
-		registerDefaultState(stateDefinition.any().setValue(ElectrodynamicsBlockStates.FACING, Direction.NORTH));
+		registerDefaultState(stateDefinition.any().setValue(VoltaicBlockStates.FACING, Direction.NORTH));
 		this.shapeProvider = shapeProvider;
 		this.supplier = supplier;
 	}
@@ -46,8 +46,8 @@ public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 
 		Direction dir = null;
-		if (state.hasProperty(ElectrodynamicsBlockStates.FACING)) {
-			dir = state.getValue(ElectrodynamicsBlockStates.FACING);
+		if (state.hasProperty(VoltaicBlockStates.FACING)) {
+			dir = state.getValue(VoltaicBlockStates.FACING);
 		}
 
 		return this.shapeProvider.getShape(dir);
@@ -78,13 +78,13 @@ public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
 
 	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return super.getStateForPlacement(context).setValue(ElectrodynamicsBlockStates.FACING, context.getHorizontalDirection().getOpposite());
+		return super.getStateForPlacement(context).setValue(VoltaicBlockStates.FACING, context.getHorizontalDirection().getOpposite());
 	}
 
 	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		super.createBlockStateDefinition(builder);
-		builder.add(ElectrodynamicsBlockStates.FACING);
+		builder.add(VoltaicBlockStates.FACING);
 	}
 
 	@Override

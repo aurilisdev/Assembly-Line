@@ -4,9 +4,6 @@ import java.util.List;
 
 import assemblyline.common.tile.belt.utils.GenericTileConveyorBelt;
 import assemblyline.registers.AssemblyLineTiles;
-import electrodynamics.prefab.tile.GenericTile;
-import electrodynamics.prefab.tile.components.type.ComponentTickable;
-import electrodynamics.prefab.utilities.object.CachedTileOutput;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -21,6 +18,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import voltaic.prefab.tile.GenericTile;
+import voltaic.prefab.tile.components.type.ComponentTickable;
+import voltaic.prefab.utilities.object.CachedTileOutput;
 
 public class TileDetector extends GenericTile {
 

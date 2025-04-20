@@ -1,12 +1,21 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:mod_loaded",
+        "modid": "electrodynamics"
+      }
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
     "M": {
-      "item": "electrodynamics:motor"
+      "tag": "c:ingots/copper"
     },
     "S": {
-      "tag": "c:ingots/steel"
+      "tag": "c:ingots/iron"
     },
     "W": {
       "tag": "minecraft:planks"
