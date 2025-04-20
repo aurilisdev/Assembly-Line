@@ -56,7 +56,7 @@ public class TileRancher extends TileOutlineArea {
 				.setDirectionsBySlot(7, BlockEntityUtils.MachineDirection.TOP, BlockEntityUtils.MachineDirection.BOTTOM, BlockEntityUtils.MachineDirection.LEFT, BlockEntityUtils.MachineDirection.RIGHT)
 				//
 				.setDirectionsBySlot(8, BlockEntityUtils.MachineDirection.TOP, BlockEntityUtils.MachineDirection.BOTTOM, BlockEntityUtils.MachineDirection.LEFT, BlockEntityUtils.MachineDirection.RIGHT).validUpgrades(ContainerRancher.VALID_UPGRADES).valid(machineValidator()));
-		addComponent(new ComponentContainerProvider("container.rancher", this).createMenu((id, player) -> new ContainerRancher(id, player, getComponent(IComponentType.Inventory), getCoordsArray())));
+		addComponent(new ComponentContainerProvider("rancher", this).createMenu((id, player) -> new ContainerRancher(id, player, getComponent(IComponentType.Inventory), getCoordsArray())));
 		addComponent(new ComponentForgeEnergy(this));
 	}
 

@@ -32,7 +32,7 @@ public class TileBlockBreaker extends TileOutlineArea {
 		addComponent(new ComponentTickable(this).tickServer(this::tickServer).tickClient(this::tickClient));
 		addComponent(new ComponentElectrodynamic(this, false, true).setInputDirections(BlockEntityUtils.MachineDirection.FRONT).voltage(VoltaicCapabilities.DEFAULT_VOLTAGE).maxJoules(AssemblyLineConstants.BLOCKBREAKER_USAGE * 20));
 		addComponent(new ComponentInventory(this, ComponentInventory.InventoryBuilder.newInv().upgrades(3)).validUpgrades(ContainerBlockBreaker.VALID_UPGRADES).valid(machineValidator()));
-		addComponent(new ComponentContainerProvider("container.blockbreaker", this).createMenu((id, player) -> new ContainerBlockBreaker(id, player, getComponent(IComponentType.Inventory), getCoordsArray())));
+		addComponent(new ComponentContainerProvider("blockbreaker", this).createMenu((id, player) -> new ContainerBlockBreaker(id, player, getComponent(IComponentType.Inventory), getCoordsArray())));
 		addComponent(new ComponentForgeEnergy(this));
 		height.setValue(1);
 	}

@@ -54,7 +54,7 @@ public class TileMobGrinder extends TileOutlineArea {
                 .setDirectionsBySlot(7, BlockEntityUtils.MachineDirection.TOP, BlockEntityUtils.MachineDirection.BOTTOM, BlockEntityUtils.MachineDirection.LEFT, BlockEntityUtils.MachineDirection.RIGHT)
                 //
                 .setDirectionsBySlot(8, BlockEntityUtils.MachineDirection.TOP, BlockEntityUtils.MachineDirection.BOTTOM, BlockEntityUtils.MachineDirection.LEFT, BlockEntityUtils.MachineDirection.RIGHT).validUpgrades(ContainerMobGrinder.VALID_UPGRADES).valid(machineValidator()));
-        addComponent(new ComponentContainerProvider("container.mobgrinder", this).createMenu((id, player) -> new ContainerMobGrinder(id, player, getComponent(IComponentType.Inventory), getCoordsArray())));
+        addComponent(new ComponentContainerProvider("mobgrinder", this).createMenu((id, player) -> new ContainerMobGrinder(id, player, getComponent(IComponentType.Inventory), getCoordsArray())));
         addComponent(new ComponentForgeEnergy(this));
     }
 

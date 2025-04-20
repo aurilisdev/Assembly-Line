@@ -43,7 +43,7 @@ public class TileAutocrafter extends GenericTile {
 				.setSlotsByDirection(BlockEntityUtils.MachineDirection.LEFT, 2, 5, 8)
 				//
 				.setSlotsByDirection(BlockEntityUtils.MachineDirection.RIGHT, 0, 3, 6));
-		addComponent(new ComponentContainerProvider("container.autocrafter", this).createMenu((id, player) -> new ContainerAutocrafter(id, player, getComponent(IComponentType.Inventory), getCoordsArray())));
+		addComponent(new ComponentContainerProvider("autocrafter", this).createMenu((id, player) -> new ContainerAutocrafter(id, player, getComponent(IComponentType.Inventory), getCoordsArray())));
 		addComponent(new ComponentForgeEnergy(this));
 	}
 

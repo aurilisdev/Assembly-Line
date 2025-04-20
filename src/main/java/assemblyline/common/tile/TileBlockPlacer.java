@@ -35,7 +35,7 @@ public class TileBlockPlacer extends TileOutlineArea {
         addComponent(new ComponentInventory(this, ComponentInventory.InventoryBuilder.newInv().inputs(1).upgrades(3))
                 //
                 .setDirectionsBySlot(0, BlockEntityUtils.MachineDirection.TOP, BlockEntityUtils.MachineDirection.BOTTOM, BlockEntityUtils.MachineDirection.LEFT, BlockEntityUtils.MachineDirection.RIGHT).validUpgrades(ContainerBlockPlacer.VALID_UPGRADES).valid(machineValidator()));
-        addComponent(new ComponentContainerProvider("container.blockplacer", this).createMenu((id, player) -> new ContainerBlockPlacer(id, player, getComponent(IComponentType.Inventory), getCoordsArray())));
+        addComponent(new ComponentContainerProvider("blockplacer", this).createMenu((id, player) -> new ContainerBlockPlacer(id, player, getComponent(IComponentType.Inventory), getCoordsArray())));
         addComponent(new ComponentForgeEnergy(this));
         height.setValue(1);
     }
