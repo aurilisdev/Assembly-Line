@@ -3,6 +3,7 @@ package assemblyline.datagen.server.recipe.vanilla;
 import assemblyline.AssemblyLine;
 import assemblyline.common.block.subtype.SubtypeAssemblyMachine;
 import assemblyline.registers.AssemblyLineItems;
+import electrodynamics.Electrodynamics;
 import electrodynamics.common.block.subtype.SubtypeWire;
 import electrodynamics.registers.ElectrodynamicsItems;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -11,6 +12,7 @@ import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.common.conditions.NotCondition;
+import voltaic.common.item.subtype.SubtypeItemUpgrade;
 import voltaic.common.tags.VoltaicTags;
 import voltaic.datagen.utils.server.recipe.AbstractRecipeGenerator;
 import voltaic.datagen.utils.server.recipe.ShapedCraftingRecipeBuilder;
@@ -58,6 +60,102 @@ public class AssemblyLineCraftingTableRecipes extends AbstractRecipeGenerator {
 				.addKey('C', Tags.Items.CHESTS)
 				//
 				.complete(AssemblyLine.ID, "crate_large", output);
+
+		ShapedCraftingRecipeBuilder.start(AssemblyLineItems.ITEM_SPEEDUPGRADE_ADVANCED.get(), 1)
+				//
+				.addPattern("PGP")
+				//
+				.addPattern("BWB")
+				//
+				.addPattern("CGC")
+				//
+				.addKey('P', Tags.Items.INGOTS_IRON)
+				//
+				.addKey('G', Tags.Items.STORAGE_BLOCKS_REDSTONE)
+				//
+				.addKey('B', ElectrodynamicsItems.ITEMS_UPGRADE.getValue(SubtypeItemUpgrade.basicspeed))
+				//
+				.addKey('W', Tags.Items.INGOTS_COPPER)
+				//
+				.addKey('C', Tags.Items.INGOTS_GOLD)
+				//
+				.addConditions(ELECTRO_NOT_LOADED)
+				//
+				.complete(Electrodynamics.ID, "upgrade_advanced_speed", output);
+
+		ShapedCraftingRecipeBuilder.start(AssemblyLineItems.ITEM_SPEEDUPGRADE_BASIC.get(), 1)
+				//
+				.addPattern("PGP")
+				//
+				.addPattern("WWW")
+				//
+				.addPattern("CGC")
+				//
+				.addKey('P', Tags.Items.INGOTS_IRON)
+				//
+				.addKey('G', Tags.Items.STORAGE_BLOCKS_REDSTONE)
+				//
+				.addKey('W', Tags.Items.INGOTS_GOLD)
+				//
+				.addKey('C', Tags.Items.INGOTS_COPPER)
+				//
+				.addConditions(ELECTRO_NOT_LOADED)
+				//
+				.complete(Electrodynamics.ID, "upgrade_basic_speed", output);
+
+		ShapedCraftingRecipeBuilder.start(AssemblyLineItems.ITEM_UPGRADEITEMINPUT.get(), 1)
+				//
+				.addPattern("C")
+				//
+				.addPattern("P")
+				//
+				.addPattern("A")
+				//
+				.addKey('A', Tags.Items.INGOTS_GOLD)
+				//
+				.addKey('C', Tags.Items.DUSTS_REDSTONE)
+				//
+				.addKey('P', Items.STICKY_PISTON)
+				//
+				.addConditions(ELECTRO_NOT_LOADED)
+				//
+				.complete(Electrodynamics.ID, "upgrade_item_input", output);
+
+		ShapedCraftingRecipeBuilder.start(AssemblyLineItems.ITEM_UPGRADEITEMOUTPUT.get(), 1)
+				//
+				.addPattern("C")
+				//
+				.addPattern("P")
+				//
+				.addPattern("A")
+				//
+				.addKey('A', Tags.Items.INGOTS_GOLD)
+				//
+				.addKey('C', Tags.Items.DUSTS_REDSTONE)
+				//
+				.addKey('P', Items.PISTON)
+				//
+				.addConditions(ELECTRO_NOT_LOADED)
+				//
+				.complete(Electrodynamics.ID, "upgrade_item_output", output);
+
+		ShapedCraftingRecipeBuilder.start(AssemblyLineItems.ITEM_UPGRADERANGE.get(), 1)
+				//
+				.addPattern("PWP")
+				//
+				.addPattern("WBW")
+				//
+				.addPattern("PWP")
+				//
+				.addKey('P', Tags.Items.INGOTS_IRON)
+				//
+				.addKey('W', Tags.Items.INGOTS_COPPER)
+				//
+				.addKey('B', Tags.Items.DUSTS_REDSTONE)
+				//
+				.addConditions(ELECTRO_NOT_LOADED)
+				//
+				.complete(Electrodynamics.ID, "upgrade_range", output);
 
 		addMachines(output);
 

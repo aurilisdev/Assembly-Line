@@ -3,6 +3,7 @@ package assemblyline.datagen.client;
 import assemblyline.AssemblyLine;
 import assemblyline.common.block.subtype.SubtypeAssemblyMachine;
 import assemblyline.registers.AssemblyLineBlocks;
+import assemblyline.registers.AssemblyLineItems;
 import assemblyline.registers.AssemblyLineSounds;
 import net.minecraft.data.PackOutput;
 import voltaic.datagen.utils.client.BaseLangKeyProvider;
@@ -34,6 +35,13 @@ public class AssemblyLineLangKeyProvider extends BaseLangKeyProvider {
                 addBlock(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(SubtypeAssemblyMachine.rancher), "Energized Rancher");
                 addBlock(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(SubtypeAssemblyMachine.mobgrinder), "Mob Grinder");
                 addBlock(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(SubtypeAssemblyMachine.farmer), "Farmer");
+
+                addItem(AssemblyLineItems.ITEM_SPEEDUPGRADE_BASIC, "Basic Speed Upgrade");
+                addItem(AssemblyLineItems.ITEM_SPEEDUPGRADE_ADVANCED, "Advanced Speed Upgrade");
+                addItem(AssemblyLineItems.ITEM_UPGRADEITEMOUTPUT, "Auto-Ejector Upgrade");
+                addItem(AssemblyLineItems.ITEM_UPGRADEITEMINPUT, "Auto-Injector Upgrade");
+                addItem(AssemblyLineItems.ITEM_UPGRADERANGE, "Range Upgrade");
+
 
                 addContainer("sorterbelt", "Sorter Belt");
                 addContainer("autocrafter", "Autocrafter");
