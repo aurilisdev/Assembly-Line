@@ -69,7 +69,7 @@ public class RenderBlockBreaker extends AbstractTileRenderer<TileBlockBreaker> {
 
         PoseStack.Pose pose = matrixStackIn.last();
 
-        VertexConsumer vertexconsumer1 = new SheetedDecalTextureGenerator(Minecraft.getInstance().renderBuffers().crumblingBufferSource().getBuffer(ModelBakery.DESTROY_TYPES.get((int) (breaker.progress.getValue() * 9))), pose, 1.0F);
+        VertexConsumer vertexconsumer1 = new SheetedDecalTextureGenerator(Minecraft.getInstance().renderBuffers().crumblingBufferSource().getBuffer(ModelBakery.DESTROY_TYPES.get((int) (Math.min(breaker.progress.getValue(), 1) * 9))), pose, 1.0F);
 
         matrixStackIn.translate(breaking.getStepX(), 0, breaking.getStepZ());
 
