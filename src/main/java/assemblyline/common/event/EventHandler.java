@@ -3,21 +3,21 @@ package assemblyline.common.event;
 import java.util.ArrayList;
 import java.util.List;
 
-import assemblyline.References;
+import assemblyline.AssemblyLine;
 import assemblyline.common.tile.TileMobGrinder;
 import assemblyline.registers.AssemblyLineAttachmentTypes;
-import electrodynamics.prefab.tile.components.IComponentType;
-import electrodynamics.prefab.tile.components.type.ComponentInventory;
-import electrodynamics.prefab.utilities.BlockEntityUtils;
-import electrodynamics.prefab.utilities.ItemUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
+import voltaic.prefab.tile.components.IComponentType;
+import voltaic.prefab.tile.components.type.ComponentInventory;
+import voltaic.prefab.utilities.BlockEntityUtils;
+import voltaic.prefab.utilities.ItemUtils;
 
-@EventBusSubscriber(modid = References.ID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = AssemblyLine.ID, bus = EventBusSubscriber.Bus.GAME)
 public class EventHandler {
 
     @SubscribeEvent

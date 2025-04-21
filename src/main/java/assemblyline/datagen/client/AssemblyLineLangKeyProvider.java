@@ -1,15 +1,17 @@
 package assemblyline.datagen.client;
 
-import assemblyline.References;
+import assemblyline.AssemblyLine;
 import assemblyline.common.block.subtype.SubtypeAssemblyMachine;
 import assemblyline.registers.AssemblyLineBlocks;
-import electrodynamics.datagen.client.ElectrodynamicsLangKeyProvider;
+import assemblyline.registers.AssemblyLineItems;
+import assemblyline.registers.AssemblyLineSounds;
 import net.minecraft.data.PackOutput;
+import voltaic.datagen.utils.client.BaseLangKeyProvider;
 
-public class AssemblyLineLangKeyProvider extends ElectrodynamicsLangKeyProvider {
+public class AssemblyLineLangKeyProvider extends BaseLangKeyProvider {
 
     public AssemblyLineLangKeyProvider(PackOutput output, Locale locale) {
-        super(output, locale, References.ID);
+        super(output, locale, AssemblyLine.ID);
     }
 
     @Override
@@ -34,6 +36,13 @@ public class AssemblyLineLangKeyProvider extends ElectrodynamicsLangKeyProvider 
                 addBlock(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(SubtypeAssemblyMachine.mobgrinder), "Mob Grinder");
                 addBlock(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(SubtypeAssemblyMachine.farmer), "Farmer");
 
+                addItem(AssemblyLineItems.ITEM_SPEEDUPGRADE_BASIC, "Basic Speed Upgrade");
+                addItem(AssemblyLineItems.ITEM_SPEEDUPGRADE_ADVANCED, "Advanced Speed Upgrade");
+                addItem(AssemblyLineItems.ITEM_UPGRADEITEMOUTPUT, "Auto-Ejector Upgrade");
+                addItem(AssemblyLineItems.ITEM_UPGRADEITEMINPUT, "Auto-Injector Upgrade");
+                addItem(AssemblyLineItems.ITEM_UPGRADERANGE, "Range Upgrade");
+
+
                 addContainer("sorterbelt", "Sorter Belt");
                 addContainer("autocrafter", "Autocrafter");
                 addContainer("blockplacer", "Block Placer");
@@ -41,6 +50,8 @@ public class AssemblyLineLangKeyProvider extends ElectrodynamicsLangKeyProvider 
                 addContainer("rancher", "Energized Rancher");
                 addContainer("mobgrinder", "Mob Grinder");
                 addContainer("farmer", "Farmer");
+
+                addSubtitle(AssemblyLineSounds.SOUND_BLOCKBREAKER, "Block Breaker grinds");
 
                 addGuiLabel("machine.voltage", "Voltage: %s");
                 addGuiLabel("machine.usage", "Usage: %s");
@@ -67,7 +78,7 @@ public class AssemblyLineLangKeyProvider extends ElectrodynamicsLangKeyProvider 
                 addAdvancement("crate.title", "No More Chests");
                 addAdvancement("crate.desc", "Make a Crate");
 
-                addGuidebook(References.ID, "Assembly Line");
+                addGuidebook(AssemblyLine.ID, "Assembly Line");
 
                 addGuidebook("chapter.conveyers", "Conveyers");
                 addGuidebook("chapter.conveyers.l1", "Conveyor Belts provide a robust method for moving items between inventories. Requiring only 8 J/t or 160W at 120 V to run, they offer a valuable alternative to moving items manually. Furthermore, only one belt in a segment needs to have a cable attached, as it will distribute power to the other belts. Power is fed in from " +

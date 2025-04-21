@@ -3,44 +3,39 @@ package assemblyline.common.tile;
 import java.util.List;
 
 import assemblyline.common.inventory.container.ContainerMobGrinder;
-import assemblyline.common.settings.Constants;
+import assemblyline.common.settings.AssemblyLineConstants;
 import assemblyline.common.tile.util.TileOutlineArea;
 import assemblyline.registers.AssemblyLineAttachmentTypes;
 import assemblyline.registers.AssemblyLineTiles;
-import electrodynamics.common.item.ItemUpgrade;
-import electrodynamics.common.item.subtype.SubtypeItemUpgrade;
-import electrodynamics.prefab.properties.Property;
-import electrodynamics.prefab.properties.PropertyTypes;
-import electrodynamics.prefab.tile.components.IComponentType;
-import electrodynamics.prefab.tile.components.type.ComponentContainerProvider;
-import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
-import electrodynamics.prefab.tile.components.type.ComponentInventory;
-import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryBuilder;
-import electrodynamics.prefab.tile.components.type.ComponentPacketHandler;
-import electrodynamics.prefab.tile.components.type.ComponentTickable;
-import electrodynamics.prefab.utilities.BlockEntityUtils;
-import electrodynamics.registers.ElectrodynamicsCapabilities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import voltaic.common.item.ItemUpgrade;
+import voltaic.common.item.subtype.SubtypeItemUpgrade;
+import voltaic.prefab.properties.types.PropertyTypes;
+import voltaic.prefab.properties.variant.SingleProperty;
+import voltaic.prefab.tile.components.IComponentType;
+import voltaic.prefab.tile.components.type.*;
+import voltaic.prefab.utilities.BlockEntityUtils;
+import voltaic.registers.VoltaicCapabilities;
 
 public class TileMobGrinder extends TileOutlineArea {
 
     public static final int DEFAULT_WAIT_TICKS = 600;
     public static final int FASTEST_WAIT_TICKS = 60;
 
-    public Property<Double> powerUsageMultiplier = property(new Property<>(PropertyTypes.DOUBLE, "powerUsageMultiplier", 1.0));
-    public Property<Integer> ticksSinceCheck = property(new Property<>(PropertyTypes.INTEGER, "ticksSinceCheck", 0));
-    public Property<Integer> currentWaitTime = property(new Property<>(PropertyTypes.INTEGER, "currentWaitTime", 0));
+    public SingleProperty<Double> powerUsageMultiplier = property(new SingleProperty<>(PropertyTypes.DOUBLE, "powerUsageMultiplier", 1.0));
+    public SingleProperty<Integer> ticksSinceCheck = property(new SingleProperty<>(PropertyTypes.INTEGER, "ticksSinceCheck", 0));
+    public SingleProperty<Integer> currentWaitTime = property(new SingleProperty<>(PropertyTypes.INTEGER, "currentWaitTime", 0));
 
     public TileMobGrinder(BlockPos pos, BlockState state) {
         super(AssemblyLineTiles.TILE_MOBGRINDER.get(), pos, state);
         addComponent(new ComponentPacketHandler(this));
         addComponent(new ComponentTickable(this).tickServer(this::tickServer));
-        addComponent(new ComponentElectrodynamic(this, false, true).setInputDirections(BlockEntityUtils.MachineDirection.FRONT).voltage(ElectrodynamicsCapabilities.DEFAULT_VOLTAGE).maxJoules(Constants.MOBGRINDER_USAGE * 40));
-        addComponent(new ComponentInventory(this, InventoryBuilder.newInv().outputs(9).upgrades(3))
+        addComponent(new ComponentElectrodynamic(this, false, true).setInputDirections(BlockEntityUtils.MachineDirection.FRONT).voltage(VoltaicCapabilities.DEFAULT_VOLTAGE).maxJoules(AssemblyLineConstants.MOBGRINDER_USAGE * 40));
+        addComponent(new ComponentInventory(this, ComponentInventory.InventoryBuilder.newInv().outputs(9).upgrades(3))
                 //
                 .setDirectionsBySlot(0, BlockEntityUtils.MachineDirection.TOP, BlockEntityUtils.MachineDirection.BOTTOM, BlockEntityUtils.MachineDirection.LEFT, BlockEntityUtils.MachineDirection.RIGHT)
                 //
@@ -59,7 +54,8 @@ public class TileMobGrinder extends TileOutlineArea {
                 .setDirectionsBySlot(7, BlockEntityUtils.MachineDirection.TOP, BlockEntityUtils.MachineDirection.BOTTOM, BlockEntityUtils.MachineDirection.LEFT, BlockEntityUtils.MachineDirection.RIGHT)
                 //
                 .setDirectionsBySlot(8, BlockEntityUtils.MachineDirection.TOP, BlockEntityUtils.MachineDirection.BOTTOM, BlockEntityUtils.MachineDirection.LEFT, BlockEntityUtils.MachineDirection.RIGHT).validUpgrades(ContainerMobGrinder.VALID_UPGRADES).valid(machineValidator()));
-        addComponent(new ComponentContainerProvider("container.mobgrinder", this).createMenu((id, player) -> new ContainerMobGrinder(id, player, getComponent(IComponentType.Inventory), getCoordsArray())));
+        addComponent(new ComponentContainerProvider("mobgrinder", this).createMenu((id, player) -> new ContainerMobGrinder(id, player, getComponent(IComponentType.Inventory), getCoordsArray())));
+        addComponent(new ComponentForgeEnergy(this));
     }
 
     public void tickServer(ComponentTickable tickable) {
@@ -69,33 +65,33 @@ public class TileMobGrinder extends TileOutlineArea {
             if (!stack.isEmpty()) {
                 ItemUpgrade upgrade = (ItemUpgrade) stack.getItem();
                 if (upgrade.subtype == SubtypeItemUpgrade.itemoutput) {
-                    upgrade.subtype.applyUpgrade.accept(this, null, stack);
+                    upgrade.subtype.applyUpgrade.accept(this, stack, 0);
                 }
             }
         }
 
         ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
 
-        if (electro.getJoulesStored() < Constants.MOBGRINDER_USAGE * powerUsageMultiplier.get() || !inv.areOutputsEmpty()) {
+        if (electro.getJoulesStored() < AssemblyLineConstants.MOBGRINDER_USAGE * powerUsageMultiplier.getValue() || !inv.areOutputsEmpty()) {
             return;
         }
 
-        ticksSinceCheck.set(ticksSinceCheck.get() + 1);
+        ticksSinceCheck.setValue(ticksSinceCheck.getValue() + 1);
 
-        if (ticksSinceCheck.get() >= currentWaitTime.get()) {
-            ticksSinceCheck.set(0);
+        if (ticksSinceCheck.getValue() >= currentWaitTime.getValue()) {
+            ticksSinceCheck.setValue(0);
         }
 
-        if (ticksSinceCheck.get() != 0) {
+        if (ticksSinceCheck.getValue() != 0) {
             return;
         }
 
-        checkArea = getAABB(width.get(), length.get(), height.get(), true).inflate(1);
+        checkArea = getAABB(width.getValue(), length.getValue(), height.getValue(), true).inflate(1);
         List<Entity> entities = level.getEntities(null, checkArea);
 
         for (Entity entity : entities) {
 
-            if (electro.getJoulesStored() < Constants.MOBGRINDER_USAGE) {
+            if (electro.getJoulesStored() < AssemblyLineConstants.MOBGRINDER_USAGE) {
                 break;
             }
 
@@ -103,7 +99,7 @@ public class TileMobGrinder extends TileOutlineArea {
                 continue;
             }
 
-            electro.joules(electro.getJoulesStored() - Constants.MOBGRINDER_USAGE);
+            electro.joules(electro.getJoulesStored() - AssemblyLineConstants.MOBGRINDER_USAGE);
 
             entity.setData(AssemblyLineAttachmentTypes.GRINDER_KILLED_MOB, getBlockPos());
 
@@ -151,11 +147,11 @@ public class TileMobGrinder extends TileOutlineArea {
                 }
             }
 
-            currentWaitTime.set(waitTime);
-            width.set(newWidth);
-            length.set(newLength);
-            height.set(newHeight);
-            powerUsageMultiplier.set(powerMultiplier);
+            currentWaitTime.setValue(waitTime);
+            width.setValue(newWidth);
+            length.setValue(newLength);
+            height.setValue(newHeight);
+            powerUsageMultiplier.setValue(powerMultiplier);
         }
 
     }

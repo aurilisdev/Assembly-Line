@@ -1,16 +1,16 @@
 package assemblyline.datagen.client;
 
-import assemblyline.References;
+import assemblyline.AssemblyLine;
 import assemblyline.common.block.subtype.SubtypeAssemblyMachine;
 import assemblyline.registers.AssemblyLineBlocks;
-import electrodynamics.datagen.client.ElectrodynamicsBlockStateProvider;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import voltaic.datagen.utils.client.BaseBlockstateProvider;
 
-public class AssemblyLineBlockStateProvider extends ElectrodynamicsBlockStateProvider {
+public class AssemblyLineBlockStateProvider extends BaseBlockstateProvider {
 
 	public AssemblyLineBlockStateProvider(PackOutput output, ExistingFileHelper exFileHelper) {
-		super(output, exFileHelper, References.ID);
+		super(output, exFileHelper, AssemblyLine.ID);
 	}
 
 	@Override

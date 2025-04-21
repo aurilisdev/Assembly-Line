@@ -2,20 +2,20 @@ package assemblyline.datagen.server;
 
 import java.util.concurrent.CompletableFuture;
 
-import assemblyline.References;
+import assemblyline.AssemblyLine;
 import assemblyline.registers.AssemblyLineBlocks;
-import electrodynamics.common.block.BlockMachine;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import voltaic.common.block.BlockMachine;
 
 public class AssemblyLineBlockTagsProvider extends BlockTagsProvider {
 
     public AssemblyLineBlockTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper) {
-        super(output, lookupProvider, References.ID, existingFileHelper);
+        super(output, lookupProvider, AssemblyLine.ID, existingFileHelper);
     }
 
     @Override

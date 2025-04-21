@@ -3,16 +3,8 @@ package assemblyline.common.tile;
 import java.util.List;
 
 import assemblyline.common.inventory.container.ContainerAutocrafter;
-import assemblyline.common.settings.Constants;
+import assemblyline.common.settings.AssemblyLineConstants;
 import assemblyline.registers.AssemblyLineTiles;
-import electrodynamics.prefab.tile.GenericTile;
-import electrodynamics.prefab.tile.components.IComponentType;
-import electrodynamics.prefab.tile.components.type.ComponentContainerProvider;
-import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
-import electrodynamics.prefab.tile.components.type.ComponentInventory;
-import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryBuilder;
-import electrodynamics.prefab.tile.components.type.ComponentTickable;
-import electrodynamics.prefab.utilities.BlockEntityUtils;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.StackedContents;
@@ -25,6 +17,10 @@ import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.util.RecipeMatcher;
+import voltaic.prefab.tile.GenericTile;
+import voltaic.prefab.tile.components.IComponentType;
+import voltaic.prefab.tile.components.type.*;
+import voltaic.prefab.utilities.BlockEntityUtils;
 
 public class TileAutocrafter extends GenericTile {
 
@@ -33,8 +29,8 @@ public class TileAutocrafter extends GenericTile {
 	public TileAutocrafter(BlockPos worldPosition, BlockState blockState) {
 		super(AssemblyLineTiles.TILE_AUTOCRAFTER.get(), worldPosition, blockState);
 		addComponent(new ComponentTickable(this).tickServer(this::tickServer));
-		addComponent(new ComponentElectrodynamic(this, false, true).maxJoules(Constants.AUTOCRAFTER_USAGE * 20).setInputDirections(BlockEntityUtils.MachineDirection.values()));
-		addComponent(new ComponentInventory(this, InventoryBuilder.newInv().inputs(9).outputs(1))
+		addComponent(new ComponentElectrodynamic(this, false, true).maxJoules(AssemblyLineConstants.AUTOCRAFTER_USAGE * 20).setInputDirections(BlockEntityUtils.MachineDirection.values()));
+		addComponent(new ComponentInventory(this, ComponentInventory.InventoryBuilder.newInv().inputs(9).outputs(1))
 				//
 				.setSlotsByDirection(BlockEntityUtils.MachineDirection.BOTTOM, 9)
 				//
@@ -47,7 +43,8 @@ public class TileAutocrafter extends GenericTile {
 				.setSlotsByDirection(BlockEntityUtils.MachineDirection.LEFT, 2, 5, 8)
 				//
 				.setSlotsByDirection(BlockEntityUtils.MachineDirection.RIGHT, 0, 3, 6));
-		addComponent(new ComponentContainerProvider("container.autocrafter", this).createMenu((id, player) -> new ContainerAutocrafter(id, player, getComponent(IComponentType.Inventory), getCoordsArray())));
+		addComponent(new ComponentContainerProvider("autocrafter", this).createMenu((id, player) -> new ContainerAutocrafter(id, player, getComponent(IComponentType.Inventory), getCoordsArray())));
+		addComponent(new ComponentForgeEnergy(this));
 	}
 
 	public static boolean shapedMatches(ComponentInventory inv, ShapedRecipe shaped) {
@@ -107,7 +104,7 @@ public class TileAutocrafter extends GenericTile {
 
 	public void tickServer(ComponentTickable tick) {
 		ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
-		boolean canContinue = electro.getJoulesStored() >= Constants.AUTOCRAFTER_USAGE;
+		boolean canContinue = electro.getJoulesStored() >= AssemblyLineConstants.AUTOCRAFTER_USAGE;
 		if (tick.getTicks() % 20 == 0) {
 			if (canContinue) {
 				ComponentInventory inventory = getComponent(IComponentType.Inventory);
@@ -145,7 +142,7 @@ public class TileAutocrafter extends GenericTile {
 							} else {
 								currentItemStack.grow(result.getCount());
 							}
-							electro.joules(electro.getJoulesStored() - Constants.AUTOCRAFTER_USAGE);
+							electro.joules(electro.getJoulesStored() - AssemblyLineConstants.AUTOCRAFTER_USAGE);
 						}
 					}
 				}

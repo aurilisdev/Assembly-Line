@@ -1,0 +1,42 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:mod_loaded",
+        "modid": "electrodynamics"
+      }
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "tag": "c:dusts/redstone"
+    },
+    "C": {
+      "tag": "c:chests"
+    },
+    "G": {
+      "tag": "c:ingots/iron"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "T": {
+      "item": "minecraft:crafting_table"
+    },
+    "W": {
+      "tag": "c:ingots/copper"
+    }
+  },
+  "pattern": [
+    "GBG",
+    "CTC",
+    "PWP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "assemblyline:autocrafter"
+  }
+}

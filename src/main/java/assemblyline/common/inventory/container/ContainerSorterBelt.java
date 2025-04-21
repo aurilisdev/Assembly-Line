@@ -2,13 +2,13 @@ package assemblyline.common.inventory.container;
 
 import assemblyline.common.tile.belt.TileSorterBelt;
 import assemblyline.registers.AssemblyLineMenuTypes;
-import electrodynamics.prefab.inventory.container.slot.item.SlotGeneric;
-import electrodynamics.prefab.inventory.container.types.GenericContainerBlockEntity;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
+import voltaic.prefab.inventory.container.slot.item.SlotGeneric;
+import voltaic.prefab.inventory.container.types.GenericContainerBlockEntity;
 
 public class ContainerSorterBelt extends GenericContainerBlockEntity<TileSorterBelt> {
 

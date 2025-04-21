@@ -8,19 +8,19 @@ import assemblyline.common.tile.belt.utils.ConveyorClass;
 import assemblyline.common.tile.belt.utils.ConveyorType;
 import assemblyline.common.tile.belt.utils.GenericTileConveyorBelt;
 import assemblyline.registers.AssemblyLineTiles;
-import electrodynamics.prefab.tile.components.IComponentType;
-import electrodynamics.prefab.tile.components.type.ComponentContainerProvider;
-import electrodynamics.prefab.tile.components.type.ComponentInventory;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import voltaic.prefab.tile.components.IComponentType;
+import voltaic.prefab.tile.components.type.ComponentContainerProvider;
+import voltaic.prefab.tile.components.type.ComponentInventory;
 
 public class TileSorterBelt extends GenericTileConveyorBelt {
 
     public TileSorterBelt(BlockPos worldPosition, BlockState blockState) {
         super(AssemblyLineTiles.TILE_SORTERBELT.get(), worldPosition, blockState, ConveyorBeltProperties.builder(ConveyorClass.REGULAR).setNoPuller().setInvSize(19));
-        addComponent(new ComponentContainerProvider("container.sorterbelt", this).createMenu((id, player) -> new ContainerSorterBelt(id, player, getComponent(IComponentType.Inventory), getCoordsArray())));
+        addComponent(new ComponentContainerProvider("sorterbelt", this).createMenu((id, player) -> new ContainerSorterBelt(id, player, getComponent(IComponentType.Inventory), getCoordsArray())));
     }
 
     @Override

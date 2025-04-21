@@ -5,29 +5,29 @@ import java.util.List;
 
 import com.mojang.datafixers.util.Pair;
 
-import assemblyline.client.render.event.levelstage.HandlerFarmerLines;
+import assemblyline.client.event.levelstage.HandlerFarmerLines;
 import assemblyline.common.inventory.container.ContainerFarmer;
-import assemblyline.common.settings.Constants;
+import assemblyline.common.settings.AssemblyLineConstants;
 import assemblyline.common.tile.TileFarmer;
 import assemblyline.prefab.utils.AssemblyTextUtils;
-import electrodynamics.api.electricity.formatting.ChatFormatter;
-import electrodynamics.api.electricity.formatting.DisplayUnit;
-import electrodynamics.prefab.screen.GenericScreen;
-import electrodynamics.prefab.screen.component.button.ScreenComponentButton;
-import electrodynamics.prefab.screen.component.types.ScreenComponentCountdown;
-import electrodynamics.prefab.screen.component.types.ScreenComponentSlot;
-import electrodynamics.prefab.screen.component.types.guitab.ScreenComponentElectricInfo;
-import electrodynamics.prefab.screen.component.types.wrapper.WrapperInventoryIO;
-import electrodynamics.prefab.screen.component.utils.AbstractScreenComponentInfo;
-import electrodynamics.prefab.tile.components.IComponentType;
-import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
-import electrodynamics.prefab.utilities.math.Color;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
+import voltaic.api.electricity.formatting.ChatFormatter;
+import voltaic.api.electricity.formatting.DisplayUnits;
+import voltaic.prefab.screen.GenericScreen;
+import voltaic.prefab.screen.component.button.ScreenComponentButton;
+import voltaic.prefab.screen.component.types.ScreenComponentCountdown;
+import voltaic.prefab.screen.component.types.ScreenComponentSlot;
+import voltaic.prefab.screen.component.types.guitab.ScreenComponentElectricInfo;
+import voltaic.prefab.screen.component.types.wrapper.WrapperInventoryIO;
+import voltaic.prefab.screen.component.utils.AbstractScreenComponentInfo;
+import voltaic.prefab.tile.components.IComponentType;
+import voltaic.prefab.tile.components.type.ComponentElectrodynamic;
+import voltaic.prefab.utilities.math.Color;
 
 public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 
@@ -66,7 +66,7 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
         addComponent(new ScreenComponentCountdown(() -> {
             TileFarmer farmer = menu.getSafeHost();
             if (farmer != null) {
-                return 1 - (float) farmer.ticksSinceCheck.get() / Math.max(farmer.currentWaitTime.get(), 1.0F);
+                return 1 - (float) farmer.ticksSinceCheck.getValue() / Math.max(farmer.currentWaitTime.getValue(), 1.0F);
             }
             return 0.0;
         }, 10, 50 + 58));
@@ -78,13 +78,13 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
             if (farmer == null) {
                 return Component.empty();
             }
-            return farmer.fullGrowBonemeal.get() ? AssemblyTextUtils.gui("regbonemeal") : AssemblyTextUtils.gui("fullbonemeal");
+            return farmer.fullGrowBonemeal.getValue() ? AssemblyTextUtils.gui("regbonemeal") : AssemblyTextUtils.gui("fullbonemeal");
         }).setOnPress(button -> {
             TileFarmer farmer = menu.getSafeHost();
             if (farmer == null) {
                 return;
             }
-            farmer.fullGrowBonemeal.set(!farmer.fullGrowBonemeal.get());
+            farmer.fullGrowBonemeal.setValue(!farmer.fullGrowBonemeal.getValue());
         }));
 
         addComponent(refillEmpty = new ScreenComponentButton<>(10, 50, 60, 20).setLabel(() -> {
@@ -92,13 +92,13 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
             if (farmer == null) {
                 return Component.empty();
             }
-            return farmer.refillEmpty.get() ? AssemblyTextUtils.gui("ignoreempty") : AssemblyTextUtils.gui("refillempty");
+            return farmer.refillEmpty.getValue() ? AssemblyTextUtils.gui("ignoreempty") : AssemblyTextUtils.gui("refillempty");
         }).setOnPress(button -> {
             TileFarmer farmer = menu.getSafeHost();
             if (farmer == null) {
                 return;
             }
-            farmer.refillEmpty.set(!farmer.refillEmpty.get());
+            farmer.refillEmpty.setValue(!farmer.refillEmpty.getValue());
         }));
 
         addComponent(renderArea = new ScreenComponentButton<>(10, 80, 60, 20).setLabel(() -> {
@@ -133,8 +133,8 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
         TileFarmer farmer = menu.getSafeHost();
         if (farmer != null) {
             ComponentElectrodynamic electro = farmer.getComponent(IComponentType.Electrodynamic);
-            list.add(AssemblyTextUtils.gui("machine.usage", ChatFormatter.getChatDisplayShort(Constants.FARMER_USAGE * farmer.powerUsageMultiplier.get() * 20, DisplayUnit.WATT).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
-            list.add(AssemblyTextUtils.gui("machine.voltage", ChatFormatter.getChatDisplayShort(electro.getVoltage(), DisplayUnit.VOLTAGE).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
+            list.add(AssemblyTextUtils.gui("machine.usage", ChatFormatter.getChatDisplayShort(AssemblyLineConstants.FARMER_USAGE * farmer.powerUsageMultiplier.getValue() * 20, DisplayUnits.WATT).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
+            list.add(AssemblyTextUtils.gui("machine.voltage", ChatFormatter.getChatDisplayShort(electro.getVoltage(), DisplayUnits.VOLTAGE).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
         }
         return list;
     }

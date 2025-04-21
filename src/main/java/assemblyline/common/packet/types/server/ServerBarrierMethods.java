@@ -13,10 +13,10 @@ public class ServerBarrierMethods {
         if (world.getBlockEntity(pos) instanceof TileFarmer farmer) {
             switch (num) {
                 case 0:
-                    farmer.fullGrowBonemeal.set(!farmer.fullGrowBonemeal.get());
+                    farmer.fullGrowBonemeal.setValue(!farmer.fullGrowBonemeal.getValue());
                     break;
                 case 1:
-                    farmer.refillEmpty.set(!farmer.refillEmpty.get());
+                    farmer.refillEmpty.setValue(!farmer.refillEmpty.getValue());
                     break;
                 default:
                     break;

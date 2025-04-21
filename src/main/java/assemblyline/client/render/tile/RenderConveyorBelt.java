@@ -4,15 +4,10 @@ import org.joml.Vector3f;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import assemblyline.client.ClientRegister;
+import assemblyline.client.AssemblyLineClientRegister;
 import assemblyline.common.tile.belt.TileConveyorBelt;
 import assemblyline.common.tile.belt.utils.ConveyorType;
 import assemblyline.common.tile.belt.utils.GenericTileConveyorBelt;
-import electrodynamics.client.render.tile.AbstractTileRenderer;
-import electrodynamics.prefab.tile.components.IComponentType;
-import electrodynamics.prefab.tile.components.type.ComponentInventory;
-import electrodynamics.prefab.utilities.RenderingUtils;
-import electrodynamics.prefab.utilities.math.MathUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -24,6 +19,11 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
+import voltaic.client.render.AbstractTileRenderer;
+import voltaic.prefab.tile.components.IComponentType;
+import voltaic.prefab.tile.components.type.ComponentInventory;
+import voltaic.prefab.utilities.RenderingUtils;
+import voltaic.prefab.utilities.math.MathUtils;
 
 public class RenderConveyorBelt extends AbstractTileRenderer<TileConveyorBelt> {
 
@@ -62,7 +62,7 @@ public class RenderConveyorBelt extends AbstractTileRenderer<TileConveyorBelt> {
 
             move = move.mul(1.0F / 16.0F);
 
-            if (tile.running.get()) {
+            if (tile.running.getValue()) {
 
                 itemVec = itemVec.add(move);
 
@@ -230,22 +230,22 @@ public class RenderConveyorBelt extends AbstractTileRenderer<TileConveyorBelt> {
 
         ModelResourceLocation location = switch (type) {
 
-            case SLOPED_DOWN -> tile.running.get() ? ClientRegister.MODEL_SLOPEDCONVEYORDOWNANIMATED : ClientRegister.MODEL_SLOPEDCONVEYORDOWN;
-            case SLOPED_UP -> tile.running.get() ? ClientRegister.MODEL_SLOPEDCONVEYORUPANIMATED : ClientRegister.MODEL_SLOPEDCONVEYORUP;
+            case SLOPED_DOWN -> tile.running.getValue() ? AssemblyLineClientRegister.MODEL_SLOPEDCONVEYORDOWNANIMATED : AssemblyLineClientRegister.MODEL_SLOPEDCONVEYORDOWN;
+            case SLOPED_UP -> tile.running.getValue() ? AssemblyLineClientRegister.MODEL_SLOPEDCONVEYORUPANIMATED : AssemblyLineClientRegister.MODEL_SLOPEDCONVEYORUP;
             case VERTICAL -> {
 
                 if (tile.getLevel().getBlockEntity(tile.getBlockPos().below()) instanceof GenericTileConveyorBelt belt && belt.getConveyorType() == ConveyorType.VERTICAL) {
 
-                    yield tile.running.get() ? ClientRegister.MODEL_ELEVATORRUNNING : ClientRegister.MODEL_ELEVATOR;
+                    yield tile.running.getValue() ? AssemblyLineClientRegister.MODEL_ELEVATORRUNNING : AssemblyLineClientRegister.MODEL_ELEVATOR;
 
                 } else {
 
-                    yield tile.running.get() ? ClientRegister.MODEL_ELEVATORBOTTOMRUNNING : ClientRegister.MODEL_ELEVATORBOTTOM;
+                    yield tile.running.getValue() ? AssemblyLineClientRegister.MODEL_ELEVATORBOTTOMRUNNING : AssemblyLineClientRegister.MODEL_ELEVATORBOTTOM;
 
                 }
 
             }
-            default -> tile.running.get() ? ClientRegister.MODEL_CONVEYORANIMATED : ClientRegister.MODEL_CONVEYOR;
+            default -> tile.running.getValue() ? AssemblyLineClientRegister.MODEL_CONVEYORANIMATED : AssemblyLineClientRegister.MODEL_CONVEYOR;
         };
 
         RenderingUtils.renderModel(getModel(location), tile, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
@@ -254,9 +254,9 @@ public class RenderConveyorBelt extends AbstractTileRenderer<TileConveyorBelt> {
 
         move = tile.getDirectionVector();
 
-        BakedModel model = getModel(ClientRegister.MODEL_MANIPULATOR);
+        BakedModel model = getModel(AssemblyLineClientRegister.MODEL_MANIPULATOR);
 
-        if (tile.isPusher.get()) {
+        if (tile.isPusher.getValue()) {
 
             BlockPos nextBlockPos = tile.getNextPos().subtract(tile.getBlockPos());
 
@@ -279,7 +279,7 @@ public class RenderConveyorBelt extends AbstractTileRenderer<TileConveyorBelt> {
             matrixStackIn.popPose();
 
         }
-        if (tile.isPuller.get()) {
+        if (tile.isPuller.getValue()) {
 
             matrixStackIn.pushPose();
 

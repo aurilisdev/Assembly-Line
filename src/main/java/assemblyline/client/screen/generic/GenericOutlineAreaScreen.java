@@ -1,12 +1,12 @@
 package assemblyline.client.screen.generic;
 
-import assemblyline.client.render.event.levelstage.HandlerHarvesterLines;
+import assemblyline.client.event.levelstage.HandlerHarvesterLines;
 import assemblyline.common.tile.util.TileOutlineArea;
-import electrodynamics.prefab.inventory.container.types.GenericContainerBlockEntity;
-import electrodynamics.prefab.screen.GenericScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import voltaic.prefab.inventory.container.types.GenericContainerBlockEntity;
+import voltaic.prefab.screen.GenericScreen;
 
 public abstract class GenericOutlineAreaScreen<T extends GenericContainerBlockEntity<? extends TileOutlineArea>> extends GenericScreen<T> {
 
@@ -38,7 +38,7 @@ public abstract class GenericOutlineAreaScreen<T extends GenericContainerBlockEn
     }
 
     public void updateBox(TileOutlineArea area) {
-        HandlerHarvesterLines.addLines(area.getBlockPos(), area.getAABB(area.width.get(), area.length.get(), area.height.get(), isFlipped()));
+        HandlerHarvesterLines.addLines(area.getBlockPos(), area.getAABB(area.width.getValue(), area.length.getValue(), area.height.getValue(), isFlipped()));
     }
 
     public abstract boolean isFlipped();

@@ -1,8 +1,8 @@
 package assemblyline.registers;
 
+import assemblyline.AssemblyLine;
 import com.google.common.collect.Sets;
 
-import assemblyline.References;
 import assemblyline.common.block.subtype.SubtypeAssemblyMachine;
 import assemblyline.common.tile.TileAutocrafter;
 import assemblyline.common.tile.TileBlockBreaker;
@@ -14,15 +14,15 @@ import assemblyline.common.tile.TileRancher;
 import assemblyline.common.tile.belt.TileConveyorBelt;
 import assemblyline.common.tile.belt.TileDetector;
 import assemblyline.common.tile.belt.TileSorterBelt;
-import electrodynamics.common.block.BlockMachine;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import voltaic.common.block.BlockMachine;
 
 public class AssemblyLineTiles {
 
-	public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, References.ID);
+	public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, AssemblyLine.ID);
 	
 	public static final DeferredHolder<BlockEntityType<?>,BlockEntityType<TileConveyorBelt>> TILE_BELT = BLOCK_ENTITY_TYPES.register("belt", () -> new BlockEntityType<>(TileConveyorBelt::new, Sets.newHashSet(AssemblyLineBlocks.BLOCK_CONVEYORBELT.get()), null));
 	public static final DeferredHolder<BlockEntityType<?>,BlockEntityType<TileDetector>> TILE_DETECTOR = BLOCK_ENTITY_TYPES.register("detector", () -> new BlockEntityType<>(TileDetector::new, Sets.newHashSet(AssemblyLineBlocks.BLOCK_DETECTOR.get()), null));

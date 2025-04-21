@@ -1,13 +1,12 @@
 package assemblyline.client.guidebook;
 
 import assemblyline.AssemblyLine;
-import assemblyline.References;
 import assemblyline.client.guidebook.chapters.ChapterConveyers;
 import assemblyline.client.guidebook.chapters.ChapterMachines;
 import assemblyline.prefab.utils.AssemblyTextUtils;
-import electrodynamics.client.guidebook.utils.components.Module;
-import electrodynamics.client.guidebook.utils.pagedata.graphics.ImageWrapperObject;
 import net.minecraft.network.chat.MutableComponent;
+import voltaic.client.guidebook.utils.components.Module;
+import voltaic.client.guidebook.utils.pagedata.graphics.ImageWrapperObject;
 
 public class ModuleAssemblyLine extends Module {
 
@@ -20,7 +19,7 @@ public class ModuleAssemblyLine extends Module {
 
 	@Override
 	public MutableComponent getTitle() {
-		return AssemblyTextUtils.guidebook(References.ID);
+		return AssemblyTextUtils.guidebook(AssemblyLine.ID);
 	}
 
 	@Override

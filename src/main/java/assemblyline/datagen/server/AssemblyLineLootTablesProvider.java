@@ -2,18 +2,18 @@ package assemblyline.datagen.server;
 
 import java.util.List;
 
-import assemblyline.References;
+import assemblyline.AssemblyLine;
 import assemblyline.common.block.subtype.SubtypeAssemblyMachine;
 import assemblyline.registers.AssemblyLineBlocks;
 import assemblyline.registers.AssemblyLineTiles;
-import electrodynamics.datagen.server.ElectrodynamicsLootTablesProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.level.block.Block;
+import voltaic.datagen.utils.server.loottable.BaseLootTablesProvider;
 
-public class AssemblyLineLootTablesProvider extends ElectrodynamicsLootTablesProvider {
+public class AssemblyLineLootTablesProvider extends BaseLootTablesProvider {
 
     public AssemblyLineLootTablesProvider(HolderLookup.Provider provider) {
-        super(References.ID, provider);
+        super(AssemblyLine.ID, provider);
     }
 
     @Override

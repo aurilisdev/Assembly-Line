@@ -1,7 +1,6 @@
 package assemblyline.client;
 
 import assemblyline.AssemblyLine;
-import assemblyline.References;
 import assemblyline.client.guidebook.ModuleAssemblyLine;
 import assemblyline.client.render.tile.RenderBlockBreaker;
 import assemblyline.client.render.tile.RenderConveyorBelt;
@@ -19,7 +18,6 @@ import assemblyline.client.screen.ScreenRancher;
 import assemblyline.client.screen.ScreenSorterBelt;
 import assemblyline.registers.AssemblyLineMenuTypes;
 import assemblyline.registers.AssemblyLineTiles;
-import electrodynamics.client.guidebook.ScreenGuidebook;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -28,10 +26,11 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import voltaic.client.guidebook.ScreenGuidebook;
 
 @OnlyIn(Dist.CLIENT)
-@EventBusSubscriber(modid = References.ID, bus = EventBusSubscriber.Bus.MOD, value = {Dist.CLIENT})
-public class ClientRegister {
+@EventBusSubscriber(modid = AssemblyLine.ID, bus = EventBusSubscriber.Bus.MOD, value = {Dist.CLIENT})
+public class AssemblyLineClientRegister {
 
     public static final ModelResourceLocation MODEL_CONVEYOR = ModelResourceLocation.standalone(AssemblyLine.rl("block/conveyorbelt"));
     public static final ModelResourceLocation MODEL_CONVEYORCLEAR = ModelResourceLocation.standalone(AssemblyLine.rl("block/conveyorbeltclear"));
@@ -68,7 +67,7 @@ public class ClientRegister {
     public static final ModelResourceLocation MODEL_RANCHERRIGHT = ModelResourceLocation.standalone(AssemblyLine.rl("block/rancherright"));
 
     public static void setup() {
-        ClientEvents.init();
+        AssemblyLineClientEvents.init();
 
         ScreenGuidebook.addGuidebookModule(new ModuleAssemblyLine());
     }
