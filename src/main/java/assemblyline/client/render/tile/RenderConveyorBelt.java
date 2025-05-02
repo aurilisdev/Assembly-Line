@@ -238,11 +238,8 @@ public class RenderConveyorBelt extends AbstractTileRenderer<TileConveyorBelt> {
 
                     yield tile.running.getValue() ? AssemblyLineClientRegister.MODEL_ELEVATORRUNNING : AssemblyLineClientRegister.MODEL_ELEVATOR;
 
-                } else {
-
-                    yield tile.running.getValue() ? AssemblyLineClientRegister.MODEL_ELEVATORBOTTOMRUNNING : AssemblyLineClientRegister.MODEL_ELEVATORBOTTOM;
-
                 }
+		yield tile.running.getValue() ? AssemblyLineClientRegister.MODEL_ELEVATORBOTTOMRUNNING : AssemblyLineClientRegister.MODEL_ELEVATORBOTTOM;
 
             }
             default -> tile.running.getValue() ? AssemblyLineClientRegister.MODEL_CONVEYORANIMATED : AssemblyLineClientRegister.MODEL_CONVEYOR;

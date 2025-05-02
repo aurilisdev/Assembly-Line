@@ -1,8 +1,8 @@
 package assemblyline.registers;
 
-import assemblyline.AssemblyLine;
 import com.google.common.collect.Sets;
 
+import assemblyline.AssemblyLine;
 import assemblyline.common.block.subtype.SubtypeAssemblyMachine;
 import assemblyline.common.tile.TileAutocrafter;
 import assemblyline.common.tile.TileBlockBreaker;

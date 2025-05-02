@@ -159,7 +159,7 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
         return component;
     }
 
-    private void updateBox(TileFarmer farmer) {
+    private static void updateBox(TileFarmer farmer) {
         HandlerFarmerLines.addRenderData(farmer.getBlockPos(), Pair.of(COLORS, farmer.getLines(farmer)));
     }
 

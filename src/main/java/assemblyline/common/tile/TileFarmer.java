@@ -46,7 +46,12 @@ import voltaic.prefab.properties.types.PropertyTypes;
 import voltaic.prefab.properties.variant.SingleProperty;
 import voltaic.prefab.tile.GenericTile;
 import voltaic.prefab.tile.components.IComponentType;
-import voltaic.prefab.tile.components.type.*;
+import voltaic.prefab.tile.components.type.ComponentContainerProvider;
+import voltaic.prefab.tile.components.type.ComponentElectrodynamic;
+import voltaic.prefab.tile.components.type.ComponentForgeEnergy;
+import voltaic.prefab.tile.components.type.ComponentInventory;
+import voltaic.prefab.tile.components.type.ComponentPacketHandler;
+import voltaic.prefab.tile.components.type.ComponentTickable;
 import voltaic.prefab.utilities.BlockEntityUtils;
 import voltaic.prefab.utilities.ItemUtils;
 import voltaic.prefab.utilities.object.TransferPack;
@@ -253,7 +258,7 @@ public class TileFarmer extends GenericTile {
         }
     }
 
-    private void handleChorusTree(Level world, BlockPos checkPos, ComponentInventory inv) {
+    private static void handleChorusTree(Level world, BlockPos checkPos, ComponentInventory inv) {
 
         List<BlockPos> scannedBlocks = new ArrayList<>(64);
         Queue<BlockPos> toScan = new ConcurrentLinkedQueue<>();
@@ -310,7 +315,7 @@ public class TileFarmer extends GenericTile {
 
     }
 
-    private void handleTree(Level world, BlockPos checkPos, ComponentInventory inv) {
+    private static void handleTree(Level world, BlockPos checkPos, ComponentInventory inv) {
 
         List<BlockPos> scannedBlocks = new ArrayList<>(64);
         Queue<BlockPos> toScan = new ConcurrentLinkedQueue<>();
@@ -342,7 +347,7 @@ public class TileFarmer extends GenericTile {
         }
     }
 
-    private void breakBlock(BlockState checkState, Level world, BlockPos checkPos, ComponentInventory inv, SoundEvent event) {
+    private static void breakBlock(BlockState checkState, Level world, BlockPos checkPos, ComponentInventory inv, SoundEvent event) {
         List<ItemStack> drops = Block.getDrops(checkState, (ServerLevel) world, checkPos, null);
         if(checkState.is(Blocks.CHORUS_FLOWER)) {
             drops.add(new ItemStack(Blocks.CHORUS_FLOWER));
@@ -459,7 +464,7 @@ public class TileFarmer extends GenericTile {
         }
     }
 
-    private boolean checkVanilla(ItemStack plantingContents, BlockItem blockItem) {
+    private static boolean checkVanilla(ItemStack plantingContents, BlockItem blockItem) {
         for (TagKey<Item> tag : VANILLA_SEED_TAGS) {
             if (plantingContents.is(tag)) {
                 return true;
@@ -473,7 +478,7 @@ public class TileFarmer extends GenericTile {
         return false;
     }
 
-    private boolean isVanillaTillable(ItemStack plantingContents) {
+    private static boolean isVanillaTillable(ItemStack plantingContents) {
         for (TagKey<Item> tag : VANILLA_TILLABLE_SEED_TAGS) {
             if (plantingContents.is(tag)) {
                 return true;
