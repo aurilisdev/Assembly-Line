@@ -1,16 +1,16 @@
 {
   "values": [
-    "assemblyline:autocrafter",
-    "assemblyline:blockbreaker",
-    "assemblyline:blockplacer",
     "assemblyline:conveyorbelt",
-    "assemblyline:crate",
-    "assemblyline:cratelarge",
-    "assemblyline:cratemedium",
+    "assemblyline:sorterbelt",
     "assemblyline:detector",
-    "assemblyline:farmer",
-    "assemblyline:mobgrinder",
+    "assemblyline:blockbreaker",
+    "assemblyline:cratemedium",
     "assemblyline:rancher",
-    "assemblyline:sorterbelt"
+    "assemblyline:blockplacer",
+    "assemblyline:cratelarge",
+    "assemblyline:crate",
+    "assemblyline:autocrafter",
+    "assemblyline:mobgrinder",
+    "assemblyline:farmer"
   ]
 }
