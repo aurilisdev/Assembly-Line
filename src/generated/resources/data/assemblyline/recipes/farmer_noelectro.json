@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "PSP",
+    "ACH",
+    "PWP"
+  ],
+  "key": {
+    "P": {
+      "tag": "forge:ingots/iron"
+    },
+    "A": {
+      "item": "minecraft:iron_axe"
+    },
+    "S": {
+      "item": "minecraft:shears"
+    },
+    "C": {
+      "tag": "forge:dusts/redstone"
+    },
+    "W": {
+      "tag": "forge:ingots/copper"
+    },
+    "H": {
+      "item": "minecraft:iron_hoe"
+    }
+  },
+  "result": {
+    "item": "assemblyline:farmer"
+  },
+  "conditions": [
+    {
+      "value": {
+        "modid": "electrodynamics",
+        "type": "forge:mod_loaded"
+      },
+      "type": "forge:not"
+    }
+  ]
+}

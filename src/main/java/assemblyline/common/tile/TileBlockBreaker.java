@@ -1,82 +1,94 @@
 package assemblyline.common.tile;
 
 import assemblyline.common.inventory.container.ContainerBlockBreaker;
-import assemblyline.common.inventory.container.ContainerFrontHarvester;
-import assemblyline.common.inventory.container.generic.AbstractHarvesterContainer;
-import assemblyline.common.settings.Constants;
-import assemblyline.common.tile.generic.TileFrontHarvester;
-import assemblyline.registers.AssemblyLineBlockTypes;
-import electrodynamics.api.capability.ElectrodynamicsCapabilities;
-import electrodynamics.api.particle.ParticleAPI;
-import electrodynamics.api.sound.SoundAPI;
-import electrodynamics.prefab.properties.Property;
-import electrodynamics.prefab.properties.PropertyType;
-import electrodynamics.prefab.tile.components.IComponentType;
-import electrodynamics.prefab.tile.components.type.ComponentElectrodynamic;
-import electrodynamics.prefab.tile.components.type.ComponentInventory;
-import electrodynamics.prefab.tile.components.type.ComponentTickable;
-import electrodynamics.prefab.tile.components.type.ComponentInventory.InventoryBuilder;
-import electrodynamics.prefab.utilities.object.TransferPack;
-import electrodynamics.registers.ElectrodynamicsSounds;
+import assemblyline.common.settings.AssemblyLineConstants;
+import assemblyline.common.tile.util.TileOutlineArea;
+import assemblyline.registers.AssemblyLineSounds;
+import assemblyline.registers.AssemblyLineTiles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import voltaic.api.particle.ParticleAPI;
+import voltaic.api.sound.SoundAPI;
+import voltaic.prefab.properties.types.PropertyTypes;
+import voltaic.prefab.properties.variant.SingleProperty;
+import voltaic.prefab.tile.components.IComponentType;
+import voltaic.prefab.tile.components.type.ComponentContainerProvider;
+import voltaic.prefab.tile.components.type.ComponentElectrodynamic;
+import voltaic.prefab.tile.components.type.ComponentForgeEnergy;
+import voltaic.prefab.tile.components.type.ComponentInventory;
+import voltaic.prefab.tile.components.type.ComponentPacketHandler;
+import voltaic.prefab.tile.components.type.ComponentTickable;
+import voltaic.prefab.utilities.BlockEntityUtils;
+import voltaic.registers.VoltaicCapabilities;
 
-public class TileBlockBreaker extends TileFrontHarvester {
+public class TileBlockBreaker extends TileOutlineArea {
 
-	public final Property<Boolean> works = property(new Property<>(PropertyType.Boolean, "works", false));
-	public final Property<Double> progress = property(new Property<>(PropertyType.Double, "progress", 0.0));
+	public SingleProperty<Integer> ticksSinceCheck = property(new SingleProperty<>(PropertyTypes.INTEGER, "ticksSinceCheck", 0));
+	public SingleProperty<Integer> currentWaitTime = property(new SingleProperty<>(PropertyTypes.INTEGER, "currentWaitTime", 0));
+	public final SingleProperty<Boolean> works = property(new SingleProperty<>(PropertyTypes.BOOLEAN, "works", false));
+	public final SingleProperty<Double> progress = property(new SingleProperty<>(PropertyTypes.DOUBLE, "progress", 0.0));
 
 	public TileBlockBreaker(BlockPos pos, BlockState state) {
-		super(AssemblyLineBlockTypes.TILE_BLOCKBREAKER.get(), pos, state, Constants.BLOCKBREAKER_USAGE * 20, (int) ElectrodynamicsCapabilities.DEFAULT_VOLTAGE, "blockbreaker");
-		height.set(2);
+		super(AssemblyLineTiles.TILE_BLOCKBREAKER.get(), pos, state);
+		addComponent(new ComponentPacketHandler(this));
+		addComponent(new ComponentTickable(this).tickServer(this::tickServer).tickClient(this::tickClient));
+		addComponent(new ComponentElectrodynamic(this, false, true).setInputDirections(BlockEntityUtils.MachineDirection.FRONT).voltage(VoltaicCapabilities.DEFAULT_VOLTAGE).maxJoules(AssemblyLineConstants.BLOCKBREAKER_USAGE * 20));
+		addComponent(new ComponentInventory(this, ComponentInventory.InventoryBuilder.newInv().upgrades(3)).validUpgrades(ContainerBlockBreaker.VALID_UPGRADES).valid(machineValidator()));
+		addComponent(new ComponentContainerProvider("blockbreaker", this).createMenu((id, player) -> new ContainerBlockBreaker(id, player, getComponent(IComponentType.Inventory), getCoordsArray())));
+		addComponent(new ComponentForgeEnergy(this));
+		height.setValue(1);
 	}
 
-	@Override
-	public void tickCommon(ComponentTickable tickable) {
-
-	}
-
-	@Override
 	public void tickServer(ComponentTickable component) {
 
 		ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
-		ticksSinceCheck.set((int) (progress.get() * 100));
-		currentWaitTime.set(100);
+		
+		if(electro.getJoulesStored() < AssemblyLineConstants.BLOCKBREAKER_USAGE) {
+			progress.setValue(0.0);
+			return;
+		}
+		
+		ticksSinceCheck.setValue((int) (progress.getValue() * 100));
+		currentWaitTime.setValue(100);
 
 		Direction facing = getFacing();
 		BlockPos block = worldPosition.offset(facing.getOpposite().getNormal());
 		BlockState blockState = level.getBlockState(block);
-		works.set(!blockState.isAir() && blockState.getDestroySpeed(level, block) > 0 && electro.getJoulesStored() >= Constants.BLOCKBREAKER_USAGE);
-		if (works.get()) {
-			double k1 = 1 / blockState.getDestroySpeed(level, block) / 30;
-			if (progress.get() < 1) {
-				progress.set(progress.get() + k1 * 5);
-				electro.extractPower(TransferPack.joulesVoltage(Constants.BLOCKBREAKER_USAGE, ElectrodynamicsCapabilities.DEFAULT_VOLTAGE), false);
-			} else {
-				if (!level.isClientSide) {
-					// Block block = state.getBlock();
-					level.destroyBlock(block, true); // TODO: What are these comments above/below ; They were left here by you originally I think
-					progress.set(0.0);
-					// output block here somewhere
-				}
-				works.set(false);
-			}
-		} else {
-			progress.set(0.0);
+		
+		works.setValue(!blockState.isAir() && blockState.getDestroySpeed(level, block) > 0);
+		
+		if(!works.getValue()) {
+			progress.setValue(0.0);
+			return;
 		}
+		
+		double k1 = 1 / blockState.getDestroySpeed(level, block) / 30;
+		
+		if (progress.getValue() < 1) {
+			progress.setValue(progress.getValue() + k1 * 5);
+			
+			electro.joules(electro.getJoulesStored() - AssemblyLineConstants.BLOCKBREAKER_USAGE);
+			
+			return;
+			
+		}
+
+		level.destroyBlock(block, true);
+		progress.setValue(0.0);
+
+		works.setValue(false);
+		
 	}
 
-	@Override
 	public void tickClient(ComponentTickable component) {
-		if (!works.get()) {
+		if (!works.getValue()) {
 			return;
 		}
 		if (component.getTicks() % 200 == 0) {
-			SoundAPI.playSound(ElectrodynamicsSounds.SOUND_MINERALGRINDER.get(), SoundSource.BLOCKS, 0.5f, 1, worldPosition);
+			SoundAPI.playSound(AssemblyLineSounds.SOUND_BLOCKBREAKER.get(), SoundSource.BLOCKS, 0.5f, 1, worldPosition);
 		}
 		BlockPos offset = worldPosition.offset(getFacing().getOpposite().getNormal());
 		Block block = level.getBlockState(offset).getBlock();
@@ -87,23 +99,8 @@ public class TileBlockBreaker extends TileFrontHarvester {
 	}
 
 	@Override
-	public double getUsage() {
-		return Constants.BLOCKBREAKER_USAGE;
-	}
-
-	@Override
-	public ComponentInventory getInv(TileFrontHarvester harvester) {
-		return new ComponentInventory(harvester, InventoryBuilder.newInv().upgrades(3)).validUpgrades(ContainerFrontHarvester.VALID_UPGRADES).valid(machineValidator());
-	}
-
-	@Override
-	public AbstractHarvesterContainer getContainer(int id, Inventory player) {
-		return new ContainerBlockBreaker(id, player, getComponent(IComponentType.Inventory), getCoordsArray());
-	}
-
-	@Override
 	public int getComparatorSignal() {
-		return works.get() ? 15 : 0;
+		return works.getValue() ? 15 : 0;
 	}
-	
+
 }
