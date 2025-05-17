@@ -8,7 +8,6 @@ import assemblyline.common.inventory.container.ContainerFarmer;
 import assemblyline.common.inventory.container.ContainerMobGrinder;
 import assemblyline.common.inventory.container.ContainerRancher;
 import assemblyline.common.inventory.container.ContainerSorterBelt;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;

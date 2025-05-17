@@ -14,15 +14,15 @@ import assemblyline.common.tile.TileRancher;
 import assemblyline.common.tile.belt.TileConveyorBelt;
 import assemblyline.common.tile.belt.TileDetector;
 import assemblyline.common.tile.belt.TileSorterBelt;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import voltaic.common.block.BlockMachine;
 
 public class AssemblyLineTiles {
 
-	public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, AssemblyLine.ID);
+	public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, AssemblyLine.ID);
 	
 	public static final RegistryObject<BlockEntityType<TileConveyorBelt>> TILE_BELT = BLOCK_ENTITY_TYPES.register("belt", () -> new BlockEntityType<>(TileConveyorBelt::new, Sets.newHashSet(AssemblyLineBlocks.BLOCK_CONVEYORBELT.get()), null));
 	public static final RegistryObject<BlockEntityType<TileDetector>> TILE_DETECTOR = BLOCK_ENTITY_TYPES.register("detector", () -> new BlockEntityType<>(TileDetector::new, Sets.newHashSet(AssemblyLineBlocks.BLOCK_DETECTOR.get()), null));

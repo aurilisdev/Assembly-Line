@@ -7,7 +7,6 @@ import assemblyline.common.block.BlockDetector;
 import assemblyline.common.block.subtype.SubtypeAssemblyMachine;
 import assemblyline.common.tile.belt.TileConveyorBelt;
 import assemblyline.common.tile.belt.TileSorterBelt;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
