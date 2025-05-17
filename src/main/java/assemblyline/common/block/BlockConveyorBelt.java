@@ -2,11 +2,7 @@ package assemblyline.common.block;
 
 import java.util.Arrays;
 import java.util.List;
-
-import assemblyline.common.tile.TileConveyorBelt;
-import assemblyline.common.tile.TileConveyorBelt.ConveyorType;
-import electrodynamics.prefab.block.GenericEntityBlock;
-import electrodynamics.prefab.block.GenericEntityBlockWaterloggable;
+import assemblyline.common.tile.belt.utils.GenericTileConveyorBelt;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -15,44 +11,55 @@ import net.minecraft.block.SoundType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext.Builder;
+import net.minecraft.loot.LootContext;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
 import net.minecraft.world.IBlockReader;
-import net.minecraftforge.common.ToolType;
+import voltaic.api.tile.TileEntitySupplier;
+import voltaic.common.block.states.VoltaicBlockStates;
+import voltaic.common.block.voxelshapes.VoxelShapeProvider;
+import voltaic.prefab.block.GenericEntityBlockWaterloggable;
 
 public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
-	private static final VoxelShape shape = VoxelShapes.box(0, 0, 0, 1, 5.0 / 16.0, 1);
 
-	public BlockConveyorBelt() {
-		super(Properties.copy(Blocks.IRON_BLOCK).strength(3.5F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion().harvestTool(ToolType.PICKAXE).harvestLevel(1));
-		registerDefaultState(stateDefinition.any().setValue(GenericEntityBlock.FACING, Direction.NORTH));
+	public static final double MAX_Y = 5.0 / 16.0;
+
+	private final VoxelShapeProvider shapeProvider;
+	private final TileEntitySupplier<? extends TileEntity> supplier;
+
+	public BlockConveyorBelt(VoxelShapeProvider shapeProvider, TileEntitySupplier<? extends TileEntity> supplier) {
+		super(Properties.copy(Blocks.IRON_BLOCK).strength(3.5F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion());
+		registerDefaultState(stateDefinition.any().setValue(VoltaicBlockStates.FACING, Direction.NORTH));
+		this.shapeProvider = shapeProvider;
+		this.supplier = supplier;
 	}
 
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return shape;
+
+		Direction dir = null;
+		if (state.hasProperty(VoltaicBlockStates.FACING)) {
+			dir = state.getValue(VoltaicBlockStates.FACING);
+		}
+
+		return this.shapeProvider.getShape(dir);
+
 	}
 
 	@Override
 	public void onRotate(ItemStack stack, BlockPos pos, PlayerEntity player) {
-		TileEntity tile = player.level.getBlockEntity(pos);
-		if (tile instanceof TileConveyorBelt) {
-			TileConveyorBelt belt = (TileConveyorBelt) tile;
-			if (belt.conveyorType.get() + 1 <= ConveyorType.values().length - 1) {
-				belt.conveyorType.set(ConveyorType.values()[belt.conveyorType.get() + 1].ordinal());
-			} else {
-				belt.conveyorType.set(ConveyorType.values()[0].ordinal());
-			}
+		TileEntity tileentity = player.level.getBlockEntity(pos);
+		if (tileentity instanceof GenericTileConveyorBelt) {
+			((GenericTileConveyorBelt) tileentity).cycleConveyorType();
 		}
 	}
-	
+
 	@Override
-	public List<ItemStack> getDrops(BlockState arg0, Builder arg1) {
+	public List<ItemStack> getDrops(BlockState state, LootContext.Builder builder) {
 		return Arrays.asList(new ItemStack(this));
 	}
 
@@ -63,17 +70,18 @@ public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
 
 	@Override
 	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return super.getStateForPlacement(context).setValue(GenericEntityBlock.FACING, context.getHorizontalDirection().getOpposite());
-	}
-	
-	@Override
-	protected void createBlockStateDefinition(net.minecraft.state.StateContainer.Builder<Block, BlockState> builder) {
-		super.createBlockStateDefinition(builder);
-		builder.add(GenericEntityBlock.FACING);
+		return super.getStateForPlacement(context).setValue(VoltaicBlockStates.FACING, context.getHorizontalDirection().getOpposite());
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState arg0, IBlockReader arg1) {
-		return new TileConveyorBelt();
+	protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
+		builder.add(VoltaicBlockStates.FACING);
 	}
+	
+	@Override
+	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+		return supplier.create();
+	}
+
 }

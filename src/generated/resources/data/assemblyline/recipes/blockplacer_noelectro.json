@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "CPC",
+    "COC",
+    "CMC"
+  ],
+  "key": {
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "C": {
+      "tag": "forge:cobblestone"
+    },
+    "M": {
+      "tag": "forge:ingots/copper"
+    },
+    "O": {
+      "item": "minecraft:observer"
+    }
+  },
+  "result": {
+    "item": "assemblyline:blockplacer"
+  },
+  "conditions": [
+    {
+      "value": {
+        "modid": "electrodynamics",
+        "type": "forge:mod_loaded"
+      },
+      "type": "forge:not"
+    }
+  ]
+}

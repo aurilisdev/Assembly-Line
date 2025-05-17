@@ -1,6 +1,6 @@
 package assemblyline.common.tab;
 
-import assemblyline.registers.AssemblyLineBlocks;
+import assemblyline.registers.AssemblyLineItems;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 
@@ -12,6 +12,6 @@ public class ItemGroupAssemblyLine extends ItemGroup {
 
 	@Override
 	public ItemStack makeIcon() {
-		return new ItemStack(AssemblyLineBlocks.blockConveyorBelt);
+		return new ItemStack(AssemblyLineItems.ITEM_CONVEYORBELT.get());
 	}
 }

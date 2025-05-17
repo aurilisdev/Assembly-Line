@@ -1,16 +1,11 @@
 package assemblyline.client.render.tile;
 
-
 import com.mojang.blaze3d.matrix.MatrixStack;
 
-import assemblyline.client.ClientRegister;
-import assemblyline.common.tile.TileConveyorBelt;
-import assemblyline.common.tile.TileConveyorBelt.ConveyorType;
-import electrodynamics.client.render.tile.AbstractTileRenderer;
-import electrodynamics.prefab.tile.components.IComponentType;
-import electrodynamics.prefab.tile.components.type.ComponentInventory;
-import electrodynamics.prefab.utilities.RenderingUtils;
-import net.minecraft.client.Minecraft;
+import assemblyline.client.AssemblyLineClientRegister;
+import assemblyline.common.tile.belt.TileConveyorBelt;
+import assemblyline.common.tile.belt.utils.ConveyorType;
+import assemblyline.common.tile.belt.utils.GenericTileConveyorBelt;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.IBakedModel;
@@ -24,6 +19,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
+import voltaic.client.render.AbstractTileRenderer;
+import voltaic.prefab.tile.components.IComponentType;
+import voltaic.prefab.tile.components.type.ComponentInventory;
+import voltaic.prefab.utilities.RenderingUtils;
 
 public class RenderConveyorBelt extends AbstractTileRenderer<TileConveyorBelt> {
 
@@ -40,173 +39,174 @@ public class RenderConveyorBelt extends AbstractTileRenderer<TileConveyorBelt> {
 
 		ItemStack stack = inv.getItem(0);
 
-		Vector3f itemVec = tile.getObjectLocal();
+		Vector3f move;
 
-		Vector3f move = tile.getDirectionAsVector();
-
-		Direction direct = tile.getFacing().getOpposite();
-
-		if (ConveyorType.values()[tile.conveyorType.get()] != ConveyorType.Horizontal) {
-
-			move.add(0, ConveyorType.values()[tile.conveyorType.get()] == ConveyorType.SlopedDown ? -1 : 1, 0);
-
-		}
-
-		move.mul(partialTicks / 16.0f);
-
-		if (tile.running.get()) {
-
-			itemVec.add(move);
-
-		}
+		ConveyorType type = tile.getConveyorType();
 
 		matrixStackIn.pushPose();
 
-		ResourceLocation location = ClientRegister.MODEL_CONVEYOR;
+		if (!stack.isEmpty()) {
 
-		if (tile.running.get()) {
+			Vector3f itemVec = tile.getLocalItemLocationVector();
 
-			location = ClientRegister.MODEL_CONVEYORANIMATED;
+			move = tile.getDirectionVector();
 
+			Direction direct = tile.getFacing().getOpposite();
+
+			if (type != ConveyorType.HORIZONTAL) {
+
+				move.add(0, type == ConveyorType.SLOPED_DOWN ? -1 : 1, 0);
+
+			}
+
+			move.mul(1.0F / 16.0F);
+
+			if (tile.running.getValue()) {
+
+				itemVec.add(move);
+
+			}
+
+			boolean blockItem = stack.getItem() instanceof BlockItem;
+
+			switch (type) {
+
+			case HORIZONTAL:
+
+				matrixStackIn.translate(itemVec.x(), itemVec.y() + (blockItem ? 0.167 : 5.0f / 16.0f) + move.y(), itemVec.z());
+
+				matrixStackIn.scale(0.35f, 0.35f, 0.35f);
+
+				matrixStackIn.translate(0, 5.0f / (16.0f * 0.35f), 0);
+
+				if (!blockItem) {
+
+					matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(90));
+
+				}
+
+				if (direct == Direction.EAST || direct == Direction.WEST) {
+					matrixStackIn.mulPose(Vector3f.YN.rotationDegrees(90));
+				}
+
+				break;
+
+			case SLOPED_DOWN:
+
+				matrixStackIn.translate(itemVec.x(), itemVec.y() + (blockItem ? 0.167 : 2.0f / 16.0f), itemVec.z());
+
+				matrixStackIn.scale(0.35f, 0.35f, 0.35f);
+
+				if (!blockItem) {
+
+					matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(90));
+
+				}
+
+				int rotate = -45;
+
+				if (direct == Direction.NORTH) {
+
+					matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(180));
+					matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(rotate));
+					// matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(180));
+
+				} else if (direct == Direction.EAST) {
+
+					matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90));
+					matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(-rotate));
+					// matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90));
+
+				} else if (direct == Direction.WEST) {
+
+					matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-90));
+					matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(rotate));
+					// matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-90));
+
+				} else if (direct == Direction.SOUTH) {
+
+					matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(-rotate));
+
+				}
+
+				// matrixStackIn.mulPose(direct == Direction.NORTH ? Vector3f.XN.rotationDegrees(rotate) : direct == Direction.SOUTH ?
+				// Vector3f.XP.rotationDegrees(-rotate) : direct == Direction.WEST ? Vector3f.XN.rotationDegrees(rotate) :
+				// Vector3f.XP.rotationDegrees(-rotate));
+
+				matrixStackIn.translate(0, 2.0f / (16.0f * 0.35f), 0);
+
+				break;
+
+			case SLOPED_UP:
+
+				matrixStackIn.translate(itemVec.x(), itemVec.y() + (blockItem ? 0.167 : 7.0f / 16.0f), itemVec.z());
+
+				matrixStackIn.scale(0.35f, 0.35f, 0.35f);
+
+				if (!blockItem) {
+
+					matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(90));
+
+				}
+
+				rotate = 45;
+
+				if (direct == Direction.NORTH) {
+
+					matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(180));
+					matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(rotate));
+					// matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(180));
+
+				} else if (direct == Direction.EAST) {
+
+					matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90));
+					matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(-rotate));
+					// matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90));
+
+				} else if (direct == Direction.WEST) {
+
+					matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-90));
+					matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(rotate));
+					// matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-90));
+
+				} else if (direct == Direction.SOUTH) {
+
+					matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(-rotate));
+
+				}
+
+				// matrixStackIn.mulPose(direct == Direction.NORTH ? Vector3f.XN.rotationDegrees(rotate) : direct == Direction.SOUTH ?
+				// Vector3f.XP.rotationDegrees(-rotate) : direct == Direction.WEST ? Vector3f.XN.rotationDegrees(rotate) :
+				// Vector3f.XP.rotationDegrees(-rotate));
+
+				matrixStackIn.translate(0, 5.0f / (16.0f * 0.35f), 0);
+
+				break;
+
+			case VERTICAL:
+
+				matrixStackIn.translate(0.5, itemVec.y() + (blockItem ? 0.167 : 5.0f / 16.0f) + 5.0f / 16.0f, 0.5);
+
+				matrixStackIn.scale(0.35f, 0.35f, 0.35f);
+
+				if (!blockItem) {
+
+					matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(90));
+
+				}
+
+				break;
+
+			default:
+
+				break;
+
+			}
+
+			minecraft().getItemRenderer().renderStatic(stack, TransformType.NONE, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
 		}
-
-		switch (ConveyorType.values()[tile.conveyorType.get()]) {
-
-		case Horizontal:
-
-			matrixStackIn.translate(itemVec.x(), itemVec.y() + (stack.getItem() instanceof BlockItem ? 0.167 : 5.0f / 16.0f) + move.y(), itemVec.z());
-
-			matrixStackIn.scale(0.35f, 0.35f, 0.35f);
-
-			matrixStackIn.translate(0, 5.0f / (16.0f * 0.35f), 0);
-
-			if (!(stack.getItem() instanceof BlockItem)) {
-
-				matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(90));
-
-			}
-
-			break;
-
-		case SlopedDown:
-
-			matrixStackIn.translate(itemVec.x(), itemVec.y() + (stack.getItem() instanceof BlockItem ? 0.167 : 2.0f / 16.0f), itemVec.z());
-
-			matrixStackIn.scale(0.35f, 0.35f, 0.35f);
-
-			if (!(stack.getItem() instanceof BlockItem)) {
-
-				matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(90));
-
-			}
-
-			int rotate = -45;
-
-			if (direct == Direction.NORTH) {
-
-				matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(180));
-				matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(rotate));
-
-			} else if (direct == Direction.EAST) {
-
-				matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90));
-				matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(-rotate));
-
-			} else if (direct == Direction.WEST) {
-
-				matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-90));
-				matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(rotate));
-
-			} else if (direct == Direction.SOUTH) {
-
-				matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(-rotate));
-
-			}
-
-			matrixStackIn.translate(0, 2.0f / (16.0f * 0.35f), 0);
-
-			location = tile.running.get() ? ClientRegister.MODEL_SLOPEDCONVEYORDOWNANIMATED : ClientRegister.MODEL_SLOPEDCONVEYORDOWN;
-
-			break;
-
-		case SlopedUp:
-
-			matrixStackIn.translate(itemVec.x(), itemVec.y() + (stack.getItem() instanceof BlockItem ? 0.167 : 7.0f / 16.0f), itemVec.z());
-
-			matrixStackIn.scale(0.35f, 0.35f, 0.35f);
-
-			if (!(stack.getItem() instanceof BlockItem)) {
-
-				matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(90));
-
-			}
-
-			rotate = 45;
-
-			if (direct == Direction.NORTH) {
-
-				matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(180));
-				matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(rotate));
-
-			} else if (direct == Direction.EAST) {
-
-				matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90));
-				matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(-rotate));
-
-			} else if (direct == Direction.WEST) {
-
-				matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-90));
-				matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(rotate));
-
-			} else if (direct == Direction.SOUTH) {
-
-				matrixStackIn.mulPose(Vector3f.XP.rotationDegrees(-rotate));
-
-			}
-
-			matrixStackIn.translate(0, 5.0f / (16.0f * 0.35f), 0);
-
-			location = tile.running.get() ? ClientRegister.MODEL_SLOPEDCONVEYORUPANIMATED : ClientRegister.MODEL_SLOPEDCONVEYORUP;
-
-			break;
-
-		case Vertical:
-
-			TileEntity below = tile.getLevel().getBlockEntity(tile.getBlockPos().below());
-			
-			if (below instanceof TileConveyorBelt && ConveyorType.values()[((TileConveyorBelt) below).conveyorType.get()] == ConveyorType.Vertical) {
-
-				location = tile.running.get() ? ClientRegister.MODEL_ELEVATORRUNNING : ClientRegister.MODEL_ELEVATOR;
-
-			} else {
-
-				location = tile.running.get() ? ClientRegister.MODEL_ELEVATORBOTTOMRUNNING : ClientRegister.MODEL_ELEVATORBOTTOM;
-
-			}
-
-			matrixStackIn.translate(0.5, itemVec.y() + (stack.getItem() instanceof BlockItem ? 0.167 : 5.0f / 16.0f) + 5.0f / 16.0f, 0.5);
-
-			matrixStackIn.scale(0.35f, 0.35f, 0.35f);
-
-			if (!(stack.getItem() instanceof BlockItem)) {
-
-				matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(90));
-
-			}
-
-			break;
-
-		default:
-
-			break;
-
-		}
-
-		Minecraft.getInstance().getItemRenderer().renderStatic(stack, TransformType.NONE, combinedLightIn, combinedOverlayIn, matrixStackIn, bufferIn);
 
 		matrixStackIn.popPose();
-
-		IBakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
 
 		matrixStackIn.pushPose();
 
@@ -214,7 +214,7 @@ public class RenderConveyorBelt extends AbstractTileRenderer<TileConveyorBelt> {
 
 		RenderingUtils.prepareRotationalTileModel(tile, matrixStackIn);
 
-		if (ConveyorType.values()[tile.conveyorType.get()] == ConveyorType.SlopedDown) {
+		if (type == ConveyorType.SLOPED_DOWN) {
 
 			matrixStackIn.translate(0, -1, 0);
 
@@ -222,65 +222,90 @@ public class RenderConveyorBelt extends AbstractTileRenderer<TileConveyorBelt> {
 
 		}
 
-		RenderingUtils.renderModel(model, tile, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+		ResourceLocation location;
+
+		switch (type) {
+
+		case SLOPED_DOWN:
+			location = tile.running.getValue() ? AssemblyLineClientRegister.MODEL_SLOPEDCONVEYORDOWNANIMATED : AssemblyLineClientRegister.MODEL_SLOPEDCONVEYORDOWN;
+			break;
+		case SLOPED_UP:
+			location = tile.running.getValue() ? AssemblyLineClientRegister.MODEL_SLOPEDCONVEYORUPANIMATED : AssemblyLineClientRegister.MODEL_SLOPEDCONVEYORUP;
+			break;
+		case VERTICAL:
+			TileEntity tileentity = tile.getLevel().getBlockEntity(tile.getBlockPos().below());
+			if (tileentity instanceof GenericTileConveyorBelt && ((GenericTileConveyorBelt) tileentity).getConveyorType() == ConveyorType.VERTICAL) {
+
+				location = tile.running.getValue() ? AssemblyLineClientRegister.MODEL_ELEVATORRUNNING : AssemblyLineClientRegister.MODEL_ELEVATOR;
+				break;
+			}
+			location = tile.running.getValue() ? AssemblyLineClientRegister.MODEL_ELEVATORBOTTOMRUNNING : AssemblyLineClientRegister.MODEL_ELEVATORBOTTOM;
+			break;
+
+		default:
+			location = tile.running.getValue() ? AssemblyLineClientRegister.MODEL_CONVEYORANIMATED : AssemblyLineClientRegister.MODEL_CONVEYOR;
+			break;
+		}
+
+		RenderingUtils.renderModel(getModel(location), tile, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 
 		matrixStackIn.popPose();
 
-		if (tile.isPusher.get() || tile.isPuller.get()) {
+		move = tile.getDirectionVector();
 
-			model = Minecraft.getInstance().getModelManager().getModel(ClientRegister.MODEL_MANIPULATOR);
+		IBakedModel model = getModel(AssemblyLineClientRegister.MODEL_MANIPULATOR);
 
-			move = tile.getDirectionAsVector();
+		if (tile.isPusher.getValue()) {
 
-			if (tile.isPusher.get()) {
+			BlockPos nextBlockPos = tile.getNextPos().subtract(tile.getBlockPos());
 
-				BlockPos nextBlockPos = tile.getNextPos().subtract(tile.getBlockPos());
+			matrixStackIn.pushPose();
 
-				matrixStackIn.pushPose();
+			matrixStackIn.translate(0, 1 / 16.0, 0);
 
-				matrixStackIn.translate(0, 1 / 16.0, 0);
+			if (type == ConveyorType.SLOPED_DOWN) {
 
-				if (ConveyorType.values()[tile.conveyorType.get()] == ConveyorType.SlopedDown) {
-
-					matrixStackIn.translate(0, 0.4, 0);
-
-				}
-
-				matrixStackIn.translate(nextBlockPos.getX() - move.x(), nextBlockPos.getY() - move.y(), nextBlockPos.getZ() - move.z());
-
-				RenderingUtils.prepareRotationalTileModel(tile, matrixStackIn);
-
-				RenderingUtils.renderModel(model, tile, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
-
-				matrixStackIn.popPose();
+				matrixStackIn.translate(0, 0.4, 0);
 
 			}
 
-			if (tile.isPuller.get()) {
+			matrixStackIn.translate(nextBlockPos.getX() - move.x(), nextBlockPos.getY() - move.y(), nextBlockPos.getZ() - move.z());
 
-				matrixStackIn.pushPose();
+			RenderingUtils.prepareRotationalTileModel(tile, matrixStackIn);
 
-				matrixStackIn.translate(0, 1 / 16.0, 0);
+			RenderingUtils.renderModel(model, tile, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 
-				RenderingUtils.prepareRotationalTileModel(tile, matrixStackIn);
+			matrixStackIn.popPose();
 
-				if (ConveyorType.values()[tile.conveyorType.get()] == ConveyorType.SlopedUp) {
+		}
+		if (tile.isPuller.getValue()) {
 
-					matrixStackIn.translate(0, 0.4, 0);
+			matrixStackIn.pushPose();
 
-				}
+			matrixStackIn.translate(0, 1 / 16.0, 0);
 
-				matrixStackIn.mulPose(new Quaternion(0, 180, 0, true));
+			RenderingUtils.prepareRotationalTileModel(tile, matrixStackIn);
 
-				RenderingUtils.renderModel(model, tile, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+			if (type == ConveyorType.SLOPED_UP) {
 
-				matrixStackIn.popPose();
+				matrixStackIn.translate(0, 0.4, 0);
 
 			}
+
+			matrixStackIn.mulPose(new Quaternion(0, 180, 0, true));
+
+			RenderingUtils.renderModel(model, tile, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+
+			matrixStackIn.popPose();
 
 		}
 
 		matrixStackIn.popPose();
 
 	}
+
+	public int getInventorySize() {
+		return 1;
+	}
+
 }

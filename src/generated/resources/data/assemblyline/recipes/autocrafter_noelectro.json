@@ -1,0 +1,40 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GBG",
+    "CTC",
+    "PWP"
+  ],
+  "key": {
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "B": {
+      "tag": "forge:dusts/redstone"
+    },
+    "C": {
+      "tag": "forge:chests"
+    },
+    "T": {
+      "item": "minecraft:crafting_table"
+    },
+    "G": {
+      "tag": "forge:ingots/iron"
+    },
+    "W": {
+      "tag": "forge:ingots/copper"
+    }
+  },
+  "result": {
+    "item": "assemblyline:autocrafter"
+  },
+  "conditions": [
+    {
+      "value": {
+        "modid": "electrodynamics",
+        "type": "forge:mod_loaded"
+      },
+      "type": "forge:not"
+    }
+  ]
+}
