@@ -1,31 +1,27 @@
 package assemblyline.registers;
 
-import assemblyline.References;
+import assemblyline.AssemblyLine;
+import assemblyline.common.block.AssemblyLineVoxelShapes;
 import assemblyline.common.block.BlockConveyorBelt;
 import assemblyline.common.block.BlockDetector;
-import assemblyline.common.block.BlockSorterBelt;
-import assemblyline.common.tile.TileCrate;
-import electrodynamics.prefab.block.GenericMachineBlock;
+import assemblyline.common.block.subtype.SubtypeAssemblyMachine;
+import assemblyline.common.tile.belt.TileConveyorBelt;
+import assemblyline.common.tile.belt.TileSorterBelt;
 import net.minecraft.block.Block;
+import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import voltaic.api.registration.BulkRegistryObject;
+import voltaic.common.block.BlockMachine;
+import voltaic.common.block.voxelshapes.VoxelShapeProvider;
 
 public class AssemblyLineBlocks {
-	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, References.ID);
-	
-	public static BlockConveyorBelt blockConveyorBelt;
-	public static BlockSorterBelt blockSorterBelt;
-	public static BlockDetector blockDetector;
-	public static GenericMachineBlock blockCrate;
-	public static GenericMachineBlock blockCrateMedium;
-	public static GenericMachineBlock blockCrateLarge;
-	
-	static {
-		BLOCKS.register("conveyorbelt", () -> blockConveyorBelt = new BlockConveyorBelt());
-		BLOCKS.register("sorterbelt", () -> blockSorterBelt = new BlockSorterBelt());
-		BLOCKS.register("detector", () -> blockDetector = new BlockDetector());
-		BLOCKS.register("crate", () -> blockCrate = new GenericMachineBlock(world -> new TileCrate()));
-		BLOCKS.register("cratemedium", () -> blockCrateMedium = new GenericMachineBlock(world -> new TileCrate()));
-		BLOCKS.register("cratelarge", () -> blockCrateLarge = new GenericMachineBlock(world -> new TileCrate()));
-	}
+
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, AssemblyLine.ID);
+
+    public static final RegistryObject<BlockConveyorBelt> BLOCK_CONVEYORBELT = BLOCKS.register("conveyorbelt", () -> new BlockConveyorBelt(AssemblyLineVoxelShapes.CONVEYORBELT, TileConveyorBelt::new));
+    public static final RegistryObject<BlockConveyorBelt> BLOCK_SORTERBELT = BLOCKS.register("sorterbelt", () -> new BlockConveyorBelt(VoxelShapeProvider.DEFAULT, TileSorterBelt::new));
+    public static final RegistryObject<BlockDetector> BLOCK_DETECTOR = BLOCKS.register("detector", BlockDetector::new);
+    public static final BulkRegistryObject<BlockMachine, SubtypeAssemblyMachine> BLOCKS_ASSEMBLYMACHINES = new BulkRegistryObject<>(SubtypeAssemblyMachine.values(), subtype -> BLOCKS.register(subtype.tag(), () -> new BlockMachine(subtype)));
+
 }

@@ -1,0 +1,78 @@
+package assemblyline.client.render.tile;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.MatrixApplyingVertexBuilder;
+
+import assemblyline.client.AssemblyLineClientRegister;
+import assemblyline.common.tile.TileBlockBreaker;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.renderer.model.ModelBakery;
+import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Quaternion;
+import voltaic.client.render.AbstractTileRenderer;
+import voltaic.prefab.tile.components.IComponentType;
+import voltaic.prefab.tile.components.type.ComponentTickable;
+import voltaic.prefab.utilities.RenderingUtils;
+
+public class RenderBlockBreaker extends AbstractTileRenderer<TileBlockBreaker> {
+
+    public RenderBlockBreaker(TileEntityRendererDispatcher context) {
+        super(context);
+    }
+
+    @Override
+    public void render(TileBlockBreaker breaker, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
+
+        double progress = 0;
+        if ((double) breaker.ticksSinceCheck.getValue() / (double) breaker.currentWaitTime.getValue() > 0) {
+            progress = (breaker.<ComponentTickable>getComponent(IComponentType.Tickable).getTicks() + (breaker.works.getValue() ? partialTicks : 0)) * 20;
+        }
+
+        IBakedModel ibakedmodel = Minecraft.getInstance().getModelManager().getModel(AssemblyLineClientRegister.MODEL_BLOCKBREAKERWHEEL);
+        matrixStackIn.pushPose();
+        RenderingUtils.prepareRotationalTileModel(breaker, matrixStackIn);
+        matrixStackIn.mulPose(new Quaternion(0, 0, 90, true));
+        matrixStackIn.translate(1.0 / 16.0, 6.0 / 16.0, 2.5 / 16.0);
+        matrixStackIn.mulPose(new Quaternion((float) -progress, 0, 0, true));
+        RenderingUtils.renderModel(ibakedmodel, breaker, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+        matrixStackIn.popPose();
+        matrixStackIn.pushPose();
+        RenderingUtils.prepareRotationalTileModel(breaker, matrixStackIn);
+        matrixStackIn.mulPose(new Quaternion(0, 0, 90, true));
+        matrixStackIn.translate(1.0 / 16.0, 6.0 / 16.0, -2.5 / 16.0);
+        matrixStackIn.mulPose(new Quaternion((float) progress, 0, 0, true));
+        RenderingUtils.renderModel(ibakedmodel, breaker, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+        matrixStackIn.popPose();
+
+        if ((double) breaker.ticksSinceCheck.getValue() / (double) breaker.currentWaitTime.getValue() <= 0) {
+            return;
+        }
+
+        matrixStackIn.pushPose();
+
+        Direction breaking = breaker.getFacing().getOpposite();
+
+        BlockPos offset = breaker.getBlockPos().relative(breaking);
+
+        BlockState state = breaker.getLevel().getBlockState(offset);
+
+        MatrixStack.Entry pose = matrixStackIn.last();
+
+        IVertexBuilder vertexconsumer1 = new MatrixApplyingVertexBuilder(Minecraft.getInstance().renderBuffers().crumblingBufferSource().getBuffer(ModelBakery.DESTROY_TYPES.get(Math.min(9, (int) (breaker.progress.getValue() * 9)))), pose.pose(), pose.normal());
+
+        matrixStackIn.translate(breaking.getStepX(), 0, breaking.getStepZ());
+
+        Minecraft.getInstance().getBlockRenderer().renderBreakingTexture(state, offset, breaker.getLevel(), matrixStackIn, vertexconsumer1);
+        
+        Minecraft.getInstance().renderBuffers().crumblingBufferSource().endBatch();
+        
+        matrixStackIn.popPose();
+    }
+}
