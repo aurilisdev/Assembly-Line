@@ -2,24 +2,32 @@ package assemblyline.datagen.server.recipe.vanilla;
 
 import java.util.function.Consumer;
 
-import assemblyline.References;
-import assemblyline.registers.AssemblyLineBlocks;
+import assemblyline.AssemblyLine;
+import assemblyline.common.block.subtype.SubtypeAssemblyMachine;
+import assemblyline.registers.AssemblyLineItems;
+import electrodynamics.Electrodynamics;
 import electrodynamics.common.block.subtype.SubtypeWire;
-import electrodynamics.common.tags.ElectrodynamicsTags;
-import electrodynamics.datagen.utils.recipe.AbstractRecipeGenerator;
-import electrodynamics.datagen.utils.recipe.ElectrodynamicsShapedCraftingRecipe;
 import electrodynamics.registers.ElectrodynamicsItems;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
+import net.minecraftforge.common.crafting.conditions.NotCondition;
+import voltaic.common.item.subtype.SubtypeItemUpgrade;
+import voltaic.common.tags.VoltaicTags;
+import voltaic.datagen.utils.server.recipe.AbstractRecipeGenerator;
+import voltaic.datagen.utils.server.recipe.CustomShapedCraftingRecipe;
 
 public class AssemblyLineCraftingTableRecipes extends AbstractRecipeGenerator {
 
-	@Override
-	public void addRecipes(Consumer<FinishedRecipe> consumer) {
+	private static final ModLoadedCondition ELECTRO_LOADED = new ModLoadedCondition("electrodynamics");
+	private static final NotCondition ELECTRO_NOT_LOADED = new NotCondition(ELECTRO_LOADED);
 
-		ElectrodynamicsShapedCraftingRecipe.start(AssemblyLineBlocks.blockCrate.asItem(), 1)
+	@Override
+	public void addRecipes(Consumer<FinishedRecipe> output) {
+
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEMS_ASSEMBLYMACHINE.getValue(SubtypeAssemblyMachine.crate), 1)
 				//
 				.addPattern("IBI")
 				//
@@ -33,35 +41,131 @@ public class AssemblyLineCraftingTableRecipes extends AbstractRecipeGenerator {
 				//
 				.addKey('C', Tags.Items.CHESTS)
 				//
-				.complete(References.ID, "crate_small", consumer);
+				.complete(AssemblyLine.ID, "crate_small", output);
 
-		ElectrodynamicsShapedCraftingRecipe.start(AssemblyLineBlocks.blockCrateMedium.asItem(), 1)
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEMS_ASSEMBLYMACHINE.getValue(SubtypeAssemblyMachine.cratemedium), 1)
 				//
 				.addPattern("SCS")
 				//
-				.addKey('S', AssemblyLineBlocks.blockCrate.asItem())
+				.addKey('S', AssemblyLineItems.ITEMS_ASSEMBLYMACHINE.getValue(SubtypeAssemblyMachine.crate))
 				//
 				.addKey('C', Tags.Items.CHESTS)
 				//
-				.complete(References.ID, "crate_medium", consumer);
+				.complete(AssemblyLine.ID, "crate_medium", output);
 
-		ElectrodynamicsShapedCraftingRecipe.start(AssemblyLineBlocks.blockCrateLarge.asItem(), 1)
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEMS_ASSEMBLYMACHINE.getValue(SubtypeAssemblyMachine.cratelarge), 1)
 				//
 				.addPattern("MCM")
 				//
-				.addKey('M', AssemblyLineBlocks.blockCrateMedium.asItem())
+				.addKey('M', AssemblyLineItems.ITEMS_ASSEMBLYMACHINE.getValue(SubtypeAssemblyMachine.cratemedium))
 				//
 				.addKey('C', Tags.Items.CHESTS)
 				//
-				.complete(References.ID, "crate_large", consumer);
+				.complete(AssemblyLine.ID, "crate_large", output);
 
-		addMachines(consumer);
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEM_SPEEDUPGRADE_ADVANCED.get(), 1)
+				//
+				.addPattern("PGP")
+				//
+				.addPattern("BWB")
+				//
+				.addPattern("CGC")
+				//
+				.addKey('P', Tags.Items.INGOTS_IRON)
+				//
+				.addKey('G', Tags.Items.STORAGE_BLOCKS_REDSTONE)
+				//
+				.addKey('B', ElectrodynamicsItems.ITEMS_UPGRADE.getValue(SubtypeItemUpgrade.basicspeed))
+				//
+				.addKey('W', Tags.Items.INGOTS_COPPER)
+				//
+				.addKey('C', Tags.Items.INGOTS_GOLD)
+				//
+				.addConditions(ELECTRO_NOT_LOADED)
+				//
+				.complete(Electrodynamics.ID, "upgrade_advanced_speed", output);
+
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEM_SPEEDUPGRADE_BASIC.get(), 1)
+				//
+				.addPattern("PGP")
+				//
+				.addPattern("WWW")
+				//
+				.addPattern("CGC")
+				//
+				.addKey('P', Tags.Items.INGOTS_IRON)
+				//
+				.addKey('G', Tags.Items.STORAGE_BLOCKS_REDSTONE)
+				//
+				.addKey('W', Tags.Items.INGOTS_GOLD)
+				//
+				.addKey('C', Tags.Items.INGOTS_COPPER)
+				//
+				.addConditions(ELECTRO_NOT_LOADED)
+				//
+				.complete(Electrodynamics.ID, "upgrade_basic_speed", output);
+
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEM_UPGRADEITEMINPUT.get(), 1)
+				//
+				.addPattern("C")
+				//
+				.addPattern("P")
+				//
+				.addPattern("A")
+				//
+				.addKey('A', Tags.Items.INGOTS_GOLD)
+				//
+				.addKey('C', Tags.Items.DUSTS_REDSTONE)
+				//
+				.addKey('P', Items.STICKY_PISTON)
+				//
+				.addConditions(ELECTRO_NOT_LOADED)
+				//
+				.complete(Electrodynamics.ID, "upgrade_item_input", output);
+
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEM_UPGRADEITEMOUTPUT.get(), 1)
+				//
+				.addPattern("C")
+				//
+				.addPattern("P")
+				//
+				.addPattern("A")
+				//
+				.addKey('A', Tags.Items.INGOTS_GOLD)
+				//
+				.addKey('C', Tags.Items.DUSTS_REDSTONE)
+				//
+				.addKey('P', Items.PISTON)
+				//
+				.addConditions(ELECTRO_NOT_LOADED)
+				//
+				.complete(Electrodynamics.ID, "upgrade_item_output", output);
+
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEM_UPGRADERANGE.get(), 1)
+				//
+				.addPattern("PWP")
+				//
+				.addPattern("WBW")
+				//
+				.addPattern("PWP")
+				//
+				.addKey('P', Tags.Items.INGOTS_IRON)
+				//
+				.addKey('W', Tags.Items.INGOTS_COPPER)
+				//
+				.addKey('B', Tags.Items.DUSTS_REDSTONE)
+				//
+				.addConditions(ELECTRO_NOT_LOADED)
+				//
+				.complete(Electrodynamics.ID, "upgrade_range", output);
+
+		addMachines(output);
 
 	}
 
-	public void addMachines(Consumer<FinishedRecipe> consumer) {
+	public void addMachines(Consumer<FinishedRecipe> output) {
 
-		ElectrodynamicsShapedCraftingRecipe.start(AssemblyLineBlocks.blockAutocrafter.asItem(), 1)
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEMS_ASSEMBLYMACHINE.getValue(SubtypeAssemblyMachine.autocrafter), 1)
 				//
 				.addPattern("GBG")
 				//
@@ -69,9 +173,9 @@ public class AssemblyLineCraftingTableRecipes extends AbstractRecipeGenerator {
 				//
 				.addPattern("PWP")
 				//
-				.addKey('G', ElectrodynamicsTags.Items.GEAR_STEEL)
+				.addKey('G', VoltaicTags.Items.GEAR_STEEL)
 				//
-				.addKey('B', ElectrodynamicsTags.Items.CIRCUITS_BASIC)
+				.addKey('B', VoltaicTags.Items.CIRCUITS_BASIC)
 				//
 				.addKey('C', Tags.Items.CHESTS)
 				//
@@ -79,25 +183,69 @@ public class AssemblyLineCraftingTableRecipes extends AbstractRecipeGenerator {
 				//
 				.addKey('P', Items.PISTON)
 				//
-				.addKey('W', ElectrodynamicsItems.getItem(SubtypeWire.copper))
+				.addKey('W', ElectrodynamicsItems.ITEMS_WIRE.getValue(SubtypeWire.copper))
 				//
-				.complete(References.ID, "autocrafter", consumer);
+				.addConditions(ELECTRO_LOADED)
+				//
+				.complete(AssemblyLine.ID, "autocrafter_electro", output);
 
-		ElectrodynamicsShapedCraftingRecipe.start(AssemblyLineBlocks.blockConveyorBelt.asItem(), 12)
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEMS_ASSEMBLYMACHINE.getValue(SubtypeAssemblyMachine.autocrafter), 1)
+				//
+				.addPattern("GBG")
+				//
+				.addPattern("CTC")
+				//
+				.addPattern("PWP")
+				//
+				.addKey('G', Tags.Items.INGOTS_IRON)
+				//
+				.addKey('B', Tags.Items.DUSTS_REDSTONE)
+				//
+				.addKey('C', Tags.Items.CHESTS)
+				//
+				.addKey('T', Items.CRAFTING_TABLE)
+				//
+				.addKey('P', Items.PISTON)
+				//
+				.addKey('W', Tags.Items.INGOTS_COPPER)
+				//
+				.addConditions(ELECTRO_NOT_LOADED)
+				//
+				.complete(AssemblyLine.ID, "autocrafter_noelectro", output);
+
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEM_CONVEYORBELT.get(), 12)
 				//
 				.addPattern("SSS")
 				//
 				.addPattern("WMW")
 				//
-				.addKey('S', ElectrodynamicsTags.Items.INGOT_STEEL)
+				.addKey('S', VoltaicTags.Items.INGOT_STEEL)
 				//
 				.addKey('W', ItemTags.PLANKS)
 				//
 				.addKey('M', ElectrodynamicsItems.ITEM_MOTOR.get())
 				//
-				.complete(References.ID, "conveyorbelt", consumer);
+				.addConditions(ELECTRO_LOADED)
+				//
+				.complete(AssemblyLine.ID, "conveyorbelt_electro", output);
 
-		ElectrodynamicsShapedCraftingRecipe.start(AssemblyLineBlocks.blockBlockBreaker.asItem(), 1)
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEM_CONVEYORBELT.get(), 12)
+				//
+				.addPattern("SSS")
+				//
+				.addPattern("WMW")
+				//
+				.addKey('S', Tags.Items.INGOTS_IRON)
+				//
+				.addKey('W', ItemTags.PLANKS)
+				//
+				.addKey('M', Tags.Items.INGOTS_COPPER)
+				//
+				.addConditions(ELECTRO_NOT_LOADED)
+				//
+				.complete(AssemblyLine.ID, "conveyorbelt_noelectro", output);
+
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEMS_ASSEMBLYMACHINE.getValue(SubtypeAssemblyMachine.blockbreaker), 1)
 				//
 				.addPattern("CPC")
 				//
@@ -113,9 +261,31 @@ public class AssemblyLineCraftingTableRecipes extends AbstractRecipeGenerator {
 				//
 				.addKey('M', ElectrodynamicsItems.ITEM_MOTOR.get())
 				//
-				.complete(References.ID, "blockbreaker", consumer);
+				.addConditions(ELECTRO_LOADED)
+				//
+				.complete(AssemblyLine.ID, "blockbreaker_electro", output);
 
-		ElectrodynamicsShapedCraftingRecipe.start(AssemblyLineBlocks.blockBlockPlacer.asItem(), 1)
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEMS_ASSEMBLYMACHINE.getValue(SubtypeAssemblyMachine.blockbreaker), 1)
+				//
+				.addPattern("CPC")
+				//
+				.addPattern("COC")
+				//
+				.addPattern("CMC")
+				//
+				.addKey('C', Tags.Items.COBBLESTONE)
+				//
+				.addKey('P', Items.IRON_PICKAXE)
+				//
+				.addKey('O', Items.OBSERVER)
+				//
+				.addKey('M', Tags.Items.INGOTS_COPPER)
+				//
+				.addConditions(ELECTRO_NOT_LOADED)
+				//
+				.complete(AssemblyLine.ID, "blockbreaker_noelectro", output);
+
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEMS_ASSEMBLYMACHINE.getValue(SubtypeAssemblyMachine.blockplacer), 1)
 				//
 				.addPattern("CPC")
 				//
@@ -131,9 +301,32 @@ public class AssemblyLineCraftingTableRecipes extends AbstractRecipeGenerator {
 				//
 				.addKey('M', ElectrodynamicsItems.ITEM_MOTOR.get())
 				//
-				.complete(References.ID, "blockplacer", consumer);
+				.addConditions(ELECTRO_LOADED)
+				//
+				.complete(AssemblyLine.ID, "blockplacer_electro", output);
 
-		ElectrodynamicsShapedCraftingRecipe.start(AssemblyLineBlocks.blockDetector.asItem(), 1)
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEMS_ASSEMBLYMACHINE.getValue(SubtypeAssemblyMachine.blockplacer), 1)
+				//
+				.addPattern("CPC")
+				//
+				.addPattern("COC")
+				//
+				.addPattern("CMC")
+				//
+				.addKey('C', Tags.Items.COBBLESTONE)
+				//
+				.addKey('P', Items.PISTON)
+				//
+				.addKey('O', Items.OBSERVER)
+				//
+				.addKey('M', Tags.Items.INGOTS_COPPER)
+				//
+				.addConditions(ELECTRO_NOT_LOADED)
+				//
+				.complete(AssemblyLine.ID, "blockplacer_noelectro", output);
+
+
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEM_DETECTOR.get(), 1)
 				//
 				.addPattern("IEI")
 				//
@@ -141,15 +334,35 @@ public class AssemblyLineCraftingTableRecipes extends AbstractRecipeGenerator {
 				//
 				.addPattern("I I")
 				//
-				.addKey('I', ElectrodynamicsTags.Items.INGOT_STEEL)
+				.addKey('I', VoltaicTags.Items.INGOT_STEEL)
 				//
 				.addKey('E', Tags.Items.ENDER_PEARLS)
 				//
-				.addKey('C', ElectrodynamicsTags.Items.CIRCUITS_BASIC)
+				.addKey('C', VoltaicTags.Items.CIRCUITS_BASIC)
 				//
-				.complete(References.ID, "detector", consumer);
+				.addConditions(ELECTRO_LOADED)
+				//
+				.complete(AssemblyLine.ID, "detector_electro", output);
 
-		ElectrodynamicsShapedCraftingRecipe.start(AssemblyLineBlocks.blockFarmer.asItem(), 1)
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEM_DETECTOR.get(), 1)
+				//
+				.addPattern("IEI")
+				//
+				.addPattern("ICI")
+				//
+				.addPattern("I I")
+				//
+				.addKey('I', VoltaicTags.Items.INGOT_STEEL)
+				//
+				.addKey('E', Tags.Items.ENDER_PEARLS)
+				//
+				.addKey('C', Tags.Items.DUSTS_REDSTONE)
+				//
+				.addConditions(ELECTRO_NOT_LOADED)
+				//
+				.complete(AssemblyLine.ID, "detector_noelectro", output);
+
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEMS_ASSEMBLYMACHINE.getValue(SubtypeAssemblyMachine.farmer), 1)
 				//
 				.addPattern("PSP")
 				//
@@ -157,57 +370,127 @@ public class AssemblyLineCraftingTableRecipes extends AbstractRecipeGenerator {
 				//
 				.addPattern("PWP")
 				//
-				.addKey('P', ElectrodynamicsTags.Items.PLATE_STEEL)
+				.addKey('P', VoltaicTags.Items.PLATE_STEEL)
 				//
 				.addKey('S', Items.SHEARS)
 				//
 				.addKey('A', Items.IRON_AXE)
 				//
-				.addKey('C', ElectrodynamicsTags.Items.CIRCUITS_BASIC)
+				.addKey('C', VoltaicTags.Items.CIRCUITS_BASIC)
 				//
 				.addKey('H', Items.IRON_HOE)
 				//
-				.addKey('W', ElectrodynamicsTags.Items.INSULATED_COPPER_WIRES)
+				.addKey('W', VoltaicTags.Items.INSULATED_COPPER_WIRES)
 				//
-				.complete(References.ID, "farmer", consumer);
+				.addConditions(ELECTRO_LOADED)
+				//
+				.complete(AssemblyLine.ID, "farmer_electro", output);
 
-		ElectrodynamicsShapedCraftingRecipe.start(AssemblyLineBlocks.blockMobGrinder.asItem(), 1)
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEMS_ASSEMBLYMACHINE.getValue(SubtypeAssemblyMachine.farmer), 1)
 				//
 				.addPattern("PSP")
 				//
-				.addPattern("SCS")
+				.addPattern("ACH")
 				//
 				.addPattern("PWP")
 				//
-				.addKey('P', ElectrodynamicsTags.Items.PLATE_STEEL)
-				//
-				.addKey('S', Items.IRON_SWORD)
-				//
-				.addKey('C', ElectrodynamicsTags.Items.CIRCUITS_BASIC)
-				//
-				.addKey('W', ElectrodynamicsTags.Items.INSULATED_COPPER_WIRES)
-				//
-				.complete(References.ID, "mobgrinder", consumer);
-
-		ElectrodynamicsShapedCraftingRecipe.start(AssemblyLineBlocks.blockRancher.asItem(), 1)
-				//
-				.addPattern("PSP")
-				//
-				.addPattern("SCS")
-				//
-				.addPattern("PWP")
-				//
-				.addKey('P', ElectrodynamicsTags.Items.PLATE_STEEL)
+				.addKey('P', Tags.Items.INGOTS_IRON)
 				//
 				.addKey('S', Items.SHEARS)
 				//
-				.addKey('C', ElectrodynamicsTags.Items.CIRCUITS_BASIC)
+				.addKey('A', Items.IRON_AXE)
 				//
-				.addKey('W', ElectrodynamicsTags.Items.INSULATED_COPPER_WIRES)
+				.addKey('C', Tags.Items.DUSTS_REDSTONE)
 				//
-				.complete(References.ID, "rancher", consumer);
+				.addKey('H', Items.IRON_HOE)
+				//
+				.addKey('W', Tags.Items.INGOTS_COPPER)
+				//
+				.addConditions(ELECTRO_NOT_LOADED)
+				//
+				.complete(AssemblyLine.ID, "farmer_noelectro", output);
 
-		ElectrodynamicsShapedCraftingRecipe.start(AssemblyLineBlocks.blockSorterBelt.asItem(), 1)
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEMS_ASSEMBLYMACHINE.getValue(SubtypeAssemblyMachine.mobgrinder), 1)
+				//
+				.addPattern("PSP")
+				//
+				.addPattern("SCS")
+				//
+				.addPattern("PWP")
+				//
+				.addKey('P', VoltaicTags.Items.PLATE_STEEL)
+				//
+				.addKey('S', Items.IRON_SWORD)
+				//
+				.addKey('C', VoltaicTags.Items.CIRCUITS_BASIC)
+				//
+				.addKey('W', VoltaicTags.Items.INSULATED_COPPER_WIRES)
+				//
+				.addConditions(ELECTRO_LOADED)
+				//
+				.complete(AssemblyLine.ID, "mobgrinder_electro", output);
+
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEMS_ASSEMBLYMACHINE.getValue(SubtypeAssemblyMachine.mobgrinder), 1)
+				//
+				.addPattern("PSP")
+				//
+				.addPattern("SCS")
+				//
+				.addPattern("PWP")
+				//
+				.addKey('P', Tags.Items.INGOTS_IRON)
+				//
+				.addKey('S', Items.IRON_SWORD)
+				//
+				.addKey('C', Tags.Items.DUSTS_REDSTONE)
+				//
+				.addKey('W', Tags.Items.INGOTS_COPPER)
+				//
+				.addConditions(ELECTRO_NOT_LOADED)
+				//
+				.complete(AssemblyLine.ID, "mobgrinder_noelectro", output);
+
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEMS_ASSEMBLYMACHINE.getValue(SubtypeAssemblyMachine.rancher), 1)
+				//
+				.addPattern("PSP")
+				//
+				.addPattern("SCS")
+				//
+				.addPattern("PWP")
+				//
+				.addKey('P', VoltaicTags.Items.PLATE_STEEL)
+				//
+				.addKey('S', Items.SHEARS)
+				//
+				.addKey('C', VoltaicTags.Items.CIRCUITS_BASIC)
+				//
+				.addKey('W', VoltaicTags.Items.INSULATED_COPPER_WIRES)
+				//
+				.addConditions(ELECTRO_LOADED)
+				//
+				.complete(AssemblyLine.ID, "rancher_electro", output);
+
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEMS_ASSEMBLYMACHINE.getValue(SubtypeAssemblyMachine.rancher), 1)
+				//
+				.addPattern("PSP")
+				//
+				.addPattern("SCS")
+				//
+				.addPattern("PWP")
+				//
+				.addKey('P', Tags.Items.INGOTS_IRON)
+				//
+				.addKey('S', Items.SHEARS)
+				//
+				.addKey('C', Tags.Items.DUSTS_REDSTONE)
+				//
+				.addKey('W', Tags.Items.INGOTS_COPPER)
+				//
+				.addConditions(ELECTRO_NOT_LOADED)
+				//
+				.complete(AssemblyLine.ID, "rancher_noelectro", output);
+
+		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEM_SORTERBELT.get(), 1)
 				//
 				.addPattern("WWW")
 				//
@@ -217,9 +500,9 @@ public class AssemblyLineCraftingTableRecipes extends AbstractRecipeGenerator {
 				//
 				.addKey('H', Items.HOPPER)
 				//
-				.addKey('C', AssemblyLineBlocks.blockConveyorBelt.asItem())
+				.addKey('C', AssemblyLineItems.ITEM_CONVEYORBELT.get())
 				//
-				.complete(References.ID, "sorterbelt", consumer);
+				.complete(AssemblyLine.ID, "sorterbelt", output);
 
 	}
 

@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "conditions": [
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:mod_loaded",
+        "modid": "electrodynamics"
+      }
+    }
+  ],
+  "key": {
+    "C": {
+      "tag": "forge:dusts/redstone"
+    },
+    "P": {
+      "tag": "forge:ingots/iron"
+    },
+    "S": {
+      "item": "minecraft:iron_sword"
+    },
+    "W": {
+      "tag": "forge:ingots/copper"
+    }
+  },
+  "pattern": [
+    "PSP",
+    "SCS",
+    "PWP"
+  ],
+  "result": {
+    "item": "assemblyline:mobgrinder"
+  },
+  "show_notification": false
+}
