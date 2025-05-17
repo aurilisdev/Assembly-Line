@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "conditions": [
+    {
+      "type": "forge:not",
+      "value": {
+        "type": "forge:mod_loaded",
+        "modid": "electrodynamics"
+      }
+    }
+  ],
+  "key": {
+    "C": {
+      "tag": "forge:cobblestone"
+    },
+    "M": {
+      "tag": "forge:ingots/copper"
+    },
+    "O": {
+      "item": "minecraft:observer"
+    },
+    "P": {
+      "item": "minecraft:iron_pickaxe"
+    }
+  },
+  "pattern": [
+    "CPC",
+    "COC",
+    "CMC"
+  ],
+  "result": {
+    "item": "assemblyline:blockbreaker"
+  }
+}

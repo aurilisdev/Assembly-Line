@@ -1,33 +1,18 @@
 {
   "variants": {
-    "facing=east,lit=false": {
+    "facing=east": {
       "model": "assemblyline:block/sorterbelt"
     },
-    "facing=east,lit=true": {
-      "model": "assemblyline:block/sorterbeltrunning"
-    },
-    "facing=north,lit=false": {
+    "facing=north": {
       "model": "assemblyline:block/sorterbelt",
       "y": 270
     },
-    "facing=north,lit=true": {
-      "model": "assemblyline:block/sorterbeltrunning",
-      "y": 270
-    },
-    "facing=south,lit=false": {
+    "facing=south": {
       "model": "assemblyline:block/sorterbelt",
       "y": 90
     },
-    "facing=south,lit=true": {
-      "model": "assemblyline:block/sorterbeltrunning",
-      "y": 90
-    },
-    "facing=west,lit=false": {
+    "facing=west": {
       "model": "assemblyline:block/sorterbelt",
-      "y": 180
-    },
-    "facing=west,lit=true": {
-      "model": "assemblyline:block/sorterbeltrunning",
       "y": 180
     }
   }
