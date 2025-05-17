@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import assemblyline.client.event.levelstage.HandlerFarmerLines;
 import assemblyline.common.inventory.container.ContainerFarmer;
 import assemblyline.common.settings.AssemblyLineConstants;
+import assemblyline.common.tile.util.TileOutlineArea;
 import assemblyline.registers.AssemblyLineTiles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -530,7 +531,7 @@ public class TileFarmer extends GenericTile {
                 for (int j = 0; j <= 2; j++) {
                     startPos = new BlockPos(x + i * multiplier - xOffset, y, z + j * multiplier - zOffset);
                     endPos = new BlockPos(x + (i + 1) * multiplier - xOffset - 1, y, z + (j + 1) * multiplier - 1 - zOffset);
-                    boundingBoxes.add(new AABB(startPos, endPos));
+                    boundingBoxes.add(TileOutlineArea.encapsulatingFullBlocks(startPos, endPos));
                 }
             }
         }
