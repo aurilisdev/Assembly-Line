@@ -1,33 +1,34 @@
 package assemblyline.datagen.client;
 
-import assemblyline.References;
+import assemblyline.AssemblyLine;
+import assemblyline.common.block.subtype.SubtypeAssemblyMachine;
 import assemblyline.registers.AssemblyLineBlocks;
-import electrodynamics.datagen.client.ElectrodynamicsBlockStateProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import voltaic.datagen.utils.client.BaseBlockstateProvider;
 
-public class AssemblyLineBlockStateProvider extends ElectrodynamicsBlockStateProvider {
+public class AssemblyLineBlockStateProvider extends BaseBlockstateProvider {
 
 	public AssemblyLineBlockStateProvider(PackOutput output, ExistingFileHelper exFileHelper) {
-		super(output, exFileHelper, References.ID);
+		super(output, exFileHelper, AssemblyLine.ID);
 	}
 
 	@Override
 	protected void registerStatesAndModels() {
 
-		simpleColumnBlock(AssemblyLineBlocks.blockCrate, blockLoc("crate"), blockLoc("cratetop"), true);
-		simpleColumnBlock(AssemblyLineBlocks.blockCrateMedium, blockLoc("cratemedium"), blockLoc("cratetop"), true);
-		simpleColumnBlock(AssemblyLineBlocks.blockCrateLarge, blockLoc("cratelarge"), blockLoc("cratetop"), true);
+		simpleColumnBlock(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(SubtypeAssemblyMachine.crate), blockLoc("crate"), blockLoc("cratetop"), true);
+		simpleColumnBlock(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(SubtypeAssemblyMachine.cratemedium), blockLoc("cratemedium"), blockLoc("cratetop"), true);
+		simpleColumnBlock(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(SubtypeAssemblyMachine.cratelarge), blockLoc("cratelarge"), blockLoc("cratetop"), true);
 
-		horrRotatedBlock(AssemblyLineBlocks.blockAutocrafter, existingBlock(AssemblyLineBlocks.blockAutocrafter), true);
-		horrRotatedBlock(AssemblyLineBlocks.blockBlockBreaker, existingBlock(blockLoc("blockbreakerbase")), 270, 90, false);
-		horrRotatedBlock(AssemblyLineBlocks.blockBlockPlacer, existingBlock(AssemblyLineBlocks.blockBlockPlacer), true);
-		horrRotatedBlock(AssemblyLineBlocks.blockConveyorBelt, existingBlock(blockLoc("conveyorbelt")), true);
-		horrRotatedBlock(AssemblyLineBlocks.blockDetector, existingBlock(AssemblyLineBlocks.blockDetector), true);
-		horrRotatedBlock(AssemblyLineBlocks.blockFarmer, existingBlock(AssemblyLineBlocks.blockFarmer), true);
-		horrRotatedBlock(AssemblyLineBlocks.blockMobGrinder, existingBlock(blockLoc("mobgrinderbase")), 270, 90, false);
-		horrRotatedBlock(AssemblyLineBlocks.blockRancher, existingBlock(AssemblyLineBlocks.blockRancher), 270, 90, true);
-		horrRotatedLitBlock(AssemblyLineBlocks.blockSorterBelt, existingBlock(AssemblyLineBlocks.blockSorterBelt), existingBlock(blockLoc("sorterbeltrunning")), true);
+		horrRotatedBlock(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(SubtypeAssemblyMachine.autocrafter), existingBlock(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(SubtypeAssemblyMachine.autocrafter)), true);
+		horrRotatedBlock(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(SubtypeAssemblyMachine.blockbreaker), existingBlock(blockLoc("blockbreakerbase")), 270, 90, false);
+		horrRotatedBlock(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(SubtypeAssemblyMachine.blockplacer), existingBlock(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(SubtypeAssemblyMachine.blockplacer)), true);
+		horrRotatedBlock(AssemblyLineBlocks.BLOCK_CONVEYORBELT, existingBlock(blockLoc("conveyorbelt")), true);
+		horrRotatedBlock(AssemblyLineBlocks.BLOCK_DETECTOR, existingBlock(AssemblyLineBlocks.BLOCK_DETECTOR), true);
+		horrRotatedBlock(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(SubtypeAssemblyMachine.farmer), existingBlock(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(SubtypeAssemblyMachine.farmer)), true);
+		horrRotatedBlock(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(SubtypeAssemblyMachine.mobgrinder), existingBlock(blockLoc("mobgrinderbase")), 270, 90, false);
+		horrRotatedBlock(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(SubtypeAssemblyMachine.rancher), existingBlock(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(SubtypeAssemblyMachine.rancher)), 270, 90, true);
+		horrRotatedBlock(AssemblyLineBlocks.BLOCK_SORTERBELT, existingBlock(AssemblyLineBlocks.BLOCK_SORTERBELT), true);
 
 	}
 

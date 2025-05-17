@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "conditions": [
+    {
+      "type": "forge:mod_loaded",
+      "modid": "electrodynamics"
+    }
+  ],
+  "key": {
+    "C": {
+      "tag": "forge:circuits/basic"
+    },
+    "E": {
+      "tag": "forge:ender_pearls"
+    },
+    "I": {
+      "tag": "forge:ingots/steel"
+    }
+  },
+  "pattern": [
+    "IEI",
+    "ICI",
+    "I I"
+  ],
+  "result": {
+    "item": "assemblyline:detector"
+  },
+  "show_notification": false
+}
