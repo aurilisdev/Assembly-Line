@@ -5,7 +5,6 @@ import java.util.List;
 
 import assemblyline.AssemblyLine;
 import assemblyline.common.block.subtype.SubtypeAssemblyMachine;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Item.Properties;
 import net.minecraft.world.item.ItemStack;
@@ -16,12 +15,9 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import voltaic.Voltaic;
 import voltaic.api.creativetab.CreativeTabSupplier;
 import voltaic.api.registration.BulkRegistryObject;
 import voltaic.common.blockitem.BlockItemDescriptable;
-import voltaic.common.item.ItemUpgrade;
-import voltaic.common.item.subtype.SubtypeItemUpgrade;
 
 public class AssemblyLineItems {
 
@@ -32,56 +28,6 @@ public class AssemblyLineItems {
 	public static final RegistryObject<BlockItemDescriptable> ITEM_DETECTOR = ITEMS.register("detector", () -> new BlockItemDescriptable(AssemblyLineBlocks.BLOCK_DETECTOR.get(), new Properties(), AssemblyLineCreativeTabs.MAIN));
 
 	public static final BulkRegistryObject<BlockItemDescriptable, SubtypeAssemblyMachine> ITEMS_ASSEMBLYMACHINE = new BulkRegistryObject<>(SubtypeAssemblyMachine.values(), subtype -> ITEMS.register(subtype.tag(), () -> new BlockItemDescriptable(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(subtype), new Properties(), AssemblyLineCreativeTabs.MAIN)));
-
-	public static final RegistryObject<ItemUpgrade> ITEM_SPEEDUPGRADE_BASIC = ITEMS.register("upgradebasicspeed", () -> new ItemUpgrade(new Item.Properties(), SubtypeItemUpgrade.basicspeed, AssemblyLineCreativeTabs.MAIN) {
-		@Override
-		public void addCreativeModeItems(CreativeModeTab tab, List<ItemStack> items) {
-			if(Voltaic.isElectroLoaded()) {
-				return;
-			}
-			super.addCreativeModeItems(tab, items);
-		}
-	});
-
-	public static final RegistryObject<ItemUpgrade> ITEM_SPEEDUPGRADE_ADVANCED = ITEMS.register("upgradeadvancedpeed", () -> new ItemUpgrade(new Item.Properties(), SubtypeItemUpgrade.advancedspeed, AssemblyLineCreativeTabs.MAIN) {
-		@Override
-		public void addCreativeModeItems(CreativeModeTab tab, List<ItemStack> items) {
-			if(Voltaic.isElectroLoaded()) {
-				return;
-			}
-			super.addCreativeModeItems(tab, items);
-		}
-	});
-
-	public static final RegistryObject<ItemUpgrade> ITEM_UPGRADEITEMINPUT = ITEMS.register("upgradeiteminput", () -> new ItemUpgrade(new Item.Properties(), SubtypeItemUpgrade.iteminput, AssemblyLineCreativeTabs.MAIN) {
-		@Override
-		public void addCreativeModeItems(CreativeModeTab tab, List<ItemStack> items) {
-			if(Voltaic.isElectroLoaded()) {
-				return;
-			}
-			super.addCreativeModeItems(tab, items);
-		}
-	});
-
-	public static final RegistryObject<ItemUpgrade> ITEM_UPGRADEITEMOUTPUT = ITEMS.register("upgradeitemoutput", () -> new ItemUpgrade(new Item.Properties(), SubtypeItemUpgrade.itemoutput, AssemblyLineCreativeTabs.MAIN) {
-		@Override
-		public void addCreativeModeItems(CreativeModeTab tab, List<ItemStack> items) {
-			if(Voltaic.isElectroLoaded()) {
-				return;
-			}
-			super.addCreativeModeItems(tab, items);
-		}
-	});
-
-	public static final RegistryObject<ItemUpgrade> ITEM_UPGRADERANGE = ITEMS.register("upgraderange", () -> new ItemUpgrade(new Item.Properties(), SubtypeItemUpgrade.range, AssemblyLineCreativeTabs.MAIN) {
-		@Override
-		public void addCreativeModeItems(CreativeModeTab tab, List<ItemStack> items) {
-			if(Voltaic.isElectroLoaded()) {
-				return;
-			}
-			super.addCreativeModeItems(tab, items);
-		}
-	});
 
 	@EventBusSubscriber(value = Dist.CLIENT, modid = AssemblyLine.ID, bus = EventBusSubscriber.Bus.MOD)
 	private static class AssemblyCreativeRegistry {

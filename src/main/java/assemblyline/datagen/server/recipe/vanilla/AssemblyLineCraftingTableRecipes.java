@@ -63,6 +63,7 @@ public class AssemblyLineCraftingTableRecipes extends AbstractRecipeGenerator {
 				//
 				.complete(AssemblyLine.ID, "crate_large", output);
 
+		/*
 		CustomShapedCraftingRecipe.start(AssemblyLineItems.ITEM_SPEEDUPGRADE_ADVANCED.get(), 1)
 				//
 				.addPattern("PGP")
@@ -158,6 +159,7 @@ public class AssemblyLineCraftingTableRecipes extends AbstractRecipeGenerator {
 				.addConditions(ELECTRO_NOT_LOADED)
 				//
 				.complete(Electrodynamics.ID, "upgrade_range", output);
+				*/
 
 		addMachines(output);
 
@@ -352,7 +354,7 @@ public class AssemblyLineCraftingTableRecipes extends AbstractRecipeGenerator {
 				//
 				.addPattern("I I")
 				//
-				.addKey('I', VoltaicTags.Items.INGOT_STEEL)
+				.addKey('I', Tags.Items.INGOTS_IRON)
 				//
 				.addKey('E', Tags.Items.ENDER_PEARLS)
 				//
