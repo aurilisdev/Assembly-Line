@@ -22,11 +22,11 @@ public class AssemblyLineItemModelsProvider extends BaseItemModelsProvider {
 		simpleBlockItem(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(SubtypeAssemblyMachine.blockbreaker), existingBlock(blockLoc("blockbreaker")));
 		simpleBlockItem(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(SubtypeAssemblyMachine.mobgrinder), existingBlock(blockLoc("mobgrinder")));
 
-		layeredBuilder(name(AssemblyLineItems.ITEM_SPEEDUPGRADE_BASIC), Parent.GENERATED, itemLoc("upgrade/" + SubtypeItemUpgrade.basicspeed.tag())).transforms().transform(Perspective.GUI).scale(0.8F).end();
-		layeredBuilder(name(AssemblyLineItems.ITEM_SPEEDUPGRADE_ADVANCED), Parent.GENERATED, itemLoc("upgrade/" + SubtypeItemUpgrade.advancedspeed.tag())).transforms().transform(Perspective.GUI).scale(0.8F).end();
-		layeredBuilder(name(AssemblyLineItems.ITEM_UPGRADEITEMINPUT), Parent.GENERATED, itemLoc("upgrade/" + SubtypeItemUpgrade.iteminput.tag())).transforms().transform(Perspective.GUI).scale(0.8F).end();
-		layeredBuilder(name(AssemblyLineItems.ITEM_UPGRADEITEMOUTPUT), Parent.GENERATED, itemLoc("upgrade/" + SubtypeItemUpgrade.itemoutput.tag())).transforms().transform(Perspective.GUI).scale(0.8F).end();
-		layeredBuilder(name(AssemblyLineItems.ITEM_UPGRADERANGE), Parent.GENERATED, itemLoc("upgrade/" + SubtypeItemUpgrade.range.tag())).transforms().transform(Perspective.GUI).scale(0.8F).end();
+		//layeredBuilder(name(AssemblyLineItems.ITEM_SPEEDUPGRADE_BASIC), Parent.GENERATED, itemLoc("upgrade/" + SubtypeItemUpgrade.basicspeed.tag())).transforms().transform(Perspective.GUI).scale(0.8F).end();
+		//layeredBuilder(name(AssemblyLineItems.ITEM_SPEEDUPGRADE_ADVANCED), Parent.GENERATED, itemLoc("upgrade/" + SubtypeItemUpgrade.advancedspeed.tag())).transforms().transform(Perspective.GUI).scale(0.8F).end();
+		//layeredBuilder(name(AssemblyLineItems.ITEM_UPGRADEITEMINPUT), Parent.GENERATED, itemLoc("upgrade/" + SubtypeItemUpgrade.iteminput.tag())).transforms().transform(Perspective.GUI).scale(0.8F).end();
+		//layeredBuilder(name(AssemblyLineItems.ITEM_UPGRADEITEMOUTPUT), Parent.GENERATED, itemLoc("upgrade/" + SubtypeItemUpgrade.itemoutput.tag())).transforms().transform(Perspective.GUI).scale(0.8F).end();
+		//layeredBuilder(name(AssemblyLineItems.ITEM_UPGRADERANGE), Parent.GENERATED, itemLoc("upgrade/" + SubtypeItemUpgrade.range.tag())).transforms().transform(Perspective.GUI).scale(0.8F).end();
 
 	}
 
