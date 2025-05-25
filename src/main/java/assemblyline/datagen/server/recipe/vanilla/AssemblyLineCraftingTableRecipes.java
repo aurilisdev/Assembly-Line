@@ -61,6 +61,7 @@ public class AssemblyLineCraftingTableRecipes extends AbstractRecipeGenerator {
 				//
 				.complete(AssemblyLine.ID, "crate_large", output);
 
+		/*
 		ShapedCraftingRecipeBuilder.start(AssemblyLineItems.ITEM_SPEEDUPGRADE_ADVANCED.get(), 1)
 				//
 				.addPattern("PGP")
@@ -81,7 +82,7 @@ public class AssemblyLineCraftingTableRecipes extends AbstractRecipeGenerator {
 				//
 				.addConditions(ELECTRO_NOT_LOADED)
 				//
-				.complete(Electrodynamics.ID, "upgrade_advanced_speed", output);
+				.complete(Electrodynamics.ID, "upgrade_advanced_speed_noelectro", output);
 
 		ShapedCraftingRecipeBuilder.start(AssemblyLineItems.ITEM_SPEEDUPGRADE_BASIC.get(), 1)
 				//
@@ -101,7 +102,7 @@ public class AssemblyLineCraftingTableRecipes extends AbstractRecipeGenerator {
 				//
 				.addConditions(ELECTRO_NOT_LOADED)
 				//
-				.complete(Electrodynamics.ID, "upgrade_basic_speed", output);
+				.complete(Electrodynamics.ID, "upgrade_basic_speed_noelectro", output);
 
 		ShapedCraftingRecipeBuilder.start(AssemblyLineItems.ITEM_UPGRADEITEMINPUT.get(), 1)
 				//
@@ -119,7 +120,7 @@ public class AssemblyLineCraftingTableRecipes extends AbstractRecipeGenerator {
 				//
 				.addConditions(ELECTRO_NOT_LOADED)
 				//
-				.complete(Electrodynamics.ID, "upgrade_item_input", output);
+				.complete(Electrodynamics.ID, "upgrade_item_input_noelectro", output);
 
 		ShapedCraftingRecipeBuilder.start(AssemblyLineItems.ITEM_UPGRADEITEMOUTPUT.get(), 1)
 				//
@@ -137,7 +138,7 @@ public class AssemblyLineCraftingTableRecipes extends AbstractRecipeGenerator {
 				//
 				.addConditions(ELECTRO_NOT_LOADED)
 				//
-				.complete(Electrodynamics.ID, "upgrade_item_output", output);
+				.complete(Electrodynamics.ID, "upgrade_item_output_noelectro", output);
 
 		ShapedCraftingRecipeBuilder.start(AssemblyLineItems.ITEM_UPGRADERANGE.get(), 1)
 				//
@@ -155,8 +156,8 @@ public class AssemblyLineCraftingTableRecipes extends AbstractRecipeGenerator {
 				//
 				.addConditions(ELECTRO_NOT_LOADED)
 				//
-				.complete(Electrodynamics.ID, "upgrade_range", output);
-
+				.complete(Electrodynamics.ID, "upgrade_range_noelectro", output);
+		*/
 		addMachines(output);
 
 	}
@@ -350,7 +351,7 @@ public class AssemblyLineCraftingTableRecipes extends AbstractRecipeGenerator {
 				//
 				.addPattern("I I")
 				//
-				.addKey('I', VoltaicTags.Items.INGOT_STEEL)
+				.addKey('I', Tags.Items.INGOTS_IRON)
 				//
 				.addKey('E', Tags.Items.ENDER_PEARLS)
 				//
