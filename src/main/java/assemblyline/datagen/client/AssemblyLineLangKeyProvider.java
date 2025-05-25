@@ -36,11 +36,11 @@ public class AssemblyLineLangKeyProvider extends BaseLangKeyProvider {
                 addBlock(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(SubtypeAssemblyMachine.mobgrinder), "Mob Grinder");
                 addBlock(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(SubtypeAssemblyMachine.farmer), "Farmer");
 
-                addItem(AssemblyLineItems.ITEM_SPEEDUPGRADE_BASIC, "Basic Speed Upgrade");
-                addItem(AssemblyLineItems.ITEM_SPEEDUPGRADE_ADVANCED, "Advanced Speed Upgrade");
-                addItem(AssemblyLineItems.ITEM_UPGRADEITEMOUTPUT, "Auto-Ejector Upgrade");
-                addItem(AssemblyLineItems.ITEM_UPGRADEITEMINPUT, "Auto-Injector Upgrade");
-                addItem(AssemblyLineItems.ITEM_UPGRADERANGE, "Range Upgrade");
+                //addItem(AssemblyLineItems.ITEM_SPEEDUPGRADE_BASIC, "Basic Speed Upgrade");
+                //addItem(AssemblyLineItems.ITEM_SPEEDUPGRADE_ADVANCED, "Advanced Speed Upgrade");
+                //addItem(AssemblyLineItems.ITEM_UPGRADEITEMOUTPUT, "Auto-Ejector Upgrade");
+                //addItem(AssemblyLineItems.ITEM_UPGRADEITEMINPUT, "Auto-Injector Upgrade");
+                //addItem(AssemblyLineItems.ITEM_UPGRADERANGE, "Range Upgrade");
 
 
                 addContainer("sorterbelt", "Sorter Belt");
