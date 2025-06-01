@@ -95,6 +95,7 @@ public abstract class GenericTileConveyorBelt extends GenericTile {
 		this.properties = properties;
 	}
 
+	@SuppressWarnings("null")
 	public void tickCommon(ComponentTickable tickable) {
 
 		hasDroppedThisTick = false;
@@ -202,49 +203,18 @@ public abstract class GenericTileConveyorBelt extends GenericTile {
 			}
 
 			itemLocation.setValue(itemLocation.getValue().add(x, y, z));
-
-			Vector3f localVector = getLocalItemLocationVector();
-
-			if (x == 0 && localVector.x() - 0.5 * Math.signum(localVector.x()) != 0) {
-
-				localVector.setX(0.5F * Math.signum(localVector.x()));
-				Location loc = new Location(worldPosition.getX() + localVector.x(), worldPosition.getY() + localVector.y(), worldPosition.getZ() + localVector.z());
-				itemLocation.setValue(loc);
-
-			} else if (z == 0 && localVector.z() - 0.5 * Math.signum(localVector.z()) != 0) {
-
-				localVector.setZ(0.5F * Math.signum(localVector.z()));
-				Location loc = new Location(worldPosition.getX() + localVector.x(), worldPosition.getY() + localVector.y(), worldPosition.getZ() + localVector.z());
-				itemLocation.setValue(loc);
-
-			}
-
 			return;
 		}
 
 		if (!nextCache.valid()) {
-			Vector3f local = getLocalItemLocationVector();
-
-			Direction dir = getDirectionForNext();
-
-			float stepX = dir.getStepX();
-			float stepZ = dir.getStepZ();
-
-			float absX = Math.abs(local.x());
-			float absZ = Math.abs(local.z());
-
-			boolean xIs = stepX != 0 && stepX < 0 ? absX <= 0.2F : absX >= 0.8F;
-			boolean zIs = stepZ != 0 && stepZ < 0 ? absZ <= 0.2F : absZ >= 0.8F;
-
-			if (xIs || zIs) {
-				dropItem(getItemOnBelt(), move);
-			}
+			dropItem(getItemOnBelt(), move);
 			return;
 		}
 
 		BlockEntity nextBlockEntity = nextCache.getSafe();
 
-		// boolean shouldTransfer = shouldTransfer(nextBlockEntity, itemLocation.getValue().toBlockPos());
+		// boolean shouldTransfer = shouldTransfer(nextBlockEntity,
+		// itemLocation.getValue().toBlockPos());
 
 		if (nextBlockEntity instanceof GenericTileConveyorBelt belt) {
 
@@ -353,15 +323,23 @@ public abstract class GenericTileConveyorBelt extends GenericTile {
 		Direction next = getDirectionForNext();
 
 		BlockPos nextPos = getNextPos();
-
+		boolean nextGoesUp = false;
+		if (level.getBlockEntity(nextPos) instanceof GenericTileConveyorBelt belt) {
+			nextGoesUp = belt.getConveyorType() == ConveyorType.SLOPED_UP || belt.getConveyorType() == ConveyorType.SLOPED_DOWN;
+			if (getConveyorType() == ConveyorType.SLOPED_UP || getConveyorType() == ConveyorType.SLOPED_DOWN) {
+				if (!nextGoesUp) {
+					nextGoesUp = true;
+				}
+			}
+		}
 		if (next == Direction.SOUTH) {
-			return nextPos.getZ() - itemLocation.getValue().z() > 0;
+			return nextPos.getZ() - itemLocation.getValue().z() > (nextGoesUp ? -0.125 : -0.25);
 		} else if (next == Direction.WEST) {
-			return nextPos.getX() - itemLocation.getValue().x() < -1;
+			return nextPos.getX() - itemLocation.getValue().x() < (nextGoesUp ? -0.875 : -0.75);
 		} else if (next == Direction.NORTH) {
-			return nextPos.getZ() - itemLocation.getValue().z() < -1;
+			return nextPos.getZ() - itemLocation.getValue().z() < (nextGoesUp ? -0.875 : -0.75);
 		} else if (next == Direction.EAST) {
-			return nextPos.getX() - itemLocation.getValue().x() > 0;
+			return nextPos.getX() - itemLocation.getValue().x() > (nextGoesUp ? -0.125 : -0.25);
 		}
 
 		return false;
@@ -423,7 +401,6 @@ public abstract class GenericTileConveyorBelt extends GenericTile {
 				Vector3f vec = getDirectionVector();
 
 				object = object.add(vec.x(), vec.y(), vec.z());
-
 			}
 
 			itemLocation.setValue(object);
@@ -433,20 +410,15 @@ public abstract class GenericTileConveyorBelt extends GenericTile {
 	}
 
 	public void dropItem(ItemStack stackOnBelt, Vector3f move) {
-
 		if (hasDroppedThisTick) {
 			return;
 		}
-
 		hasDroppedThisTick = true;
 
 		if (!level.isClientSide) {
 
-			double x = worldPosition.getX() + 0.5 + (move.x() / 2.0f);
-			double y = worldPosition.getY() + 0.4 + (getConveyorType() == ConveyorType.SLOPED_DOWN ? -1.0 : 0.0);
-			double z = worldPosition.getZ() + 0.5 + (move.z() / 2.0f);
-
-			ItemEntity entity = new ItemEntity(level, x, y, z, stackOnBelt.copy());
+			Location itemLoc = itemLocation.getValue();
+			ItemEntity entity = new ItemEntity(level, itemLoc.x(), itemLoc.y(), itemLoc.z(), stackOnBelt.copy());
 
 			entity.setDeltaMovement(move.x() / 12.0, 1.5 / 16.0, move.z() / 12.0);
 
@@ -550,11 +522,17 @@ public abstract class GenericTileConveyorBelt extends GenericTile {
 	public void onEntityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
 		if (entity instanceof ItemEntity item && !isRemoved()) {
 
-			if (entity.tickCount > 5 && !level.isClientSide) {
+			if (entity.tickCount > 10 && !level.isClientSide) {
 
 				ItemStack stack = item.getItem().copy();
 
-				ItemStack inserted = addItemOnBelt(stack, getDefaultItemLocation(false)).copy();
+				Location setloc = new Location(entity.position());
+
+				Location defaultLocation = getDefaultItemLocation(false);
+
+				setloc.set(setloc.x(), defaultLocation.y(), setloc.z());
+
+				ItemStack inserted = addItemOnBelt(stack, setloc).copy();
 
 				stack.shrink(inserted.getCount());
 
