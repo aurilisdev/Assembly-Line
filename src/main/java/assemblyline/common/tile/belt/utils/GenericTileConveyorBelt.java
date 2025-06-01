@@ -39,596 +39,566 @@ import voltaic.prefab.utilities.object.Location;
 
 public abstract class GenericTileConveyorBelt extends GenericTile {
 
-    public static final int MIN_SPREAD = 0;
-
-    public static final BlockPos[] SPREAD_OFFSETS = {
-            //
-            new BlockPos(0, 0, 1),
-            //
-            new BlockPos(0, 0, -1),
-            //
-            new BlockPos(1, 0, 0),
-            //
-            new BlockPos(-1, 0, 0),
-            //
-            new BlockPos(0, -1, 1),
-            //
-            new BlockPos(0, -1, -1),
-            //
-            new BlockPos(1, -1, 0),
-            //
-            new BlockPos(-1, -1, 0),
-            //
-            new BlockPos(0, 1, 1),
-            //
-            new BlockPos(0, 1, -1),
-            //
-            new BlockPos(1, 1, 0),
-            //
-            new BlockPos(-1, 1, 0),
-            //
-    };
+	public static final int MIN_SPREAD = 0;
+
+	public static final BlockPos[] SPREAD_OFFSETS = {
+			//
+			new BlockPos(0, 0, 1),
+			//
+			new BlockPos(0, 0, -1),
+			//
+			new BlockPos(1, 0, 0),
+			//
+			new BlockPos(-1, 0, 0),
+			//
+			new BlockPos(0, -1, 1),
+			//
+			new BlockPos(0, -1, -1),
+			//
+			new BlockPos(1, -1, 0),
+			//
+			new BlockPos(-1, -1, 0),
+			//
+			new BlockPos(0, 1, 1),
+			//
+			new BlockPos(0, 1, -1),
+			//
+			new BlockPos(1, 1, 0),
+			//
+			new BlockPos(-1, 1, 0),
+			//
+	};
 
+	public final SingleProperty<Integer> currentSpread = property(new SingleProperty<>(PropertyTypes.INTEGER, "currentspread", 0)).setNoUpdateServer();
+	public final SingleProperty<Boolean> running = property(new SingleProperty<>(PropertyTypes.BOOLEAN, "running", false)).setNoUpdateServer();
+	public final SingleProperty<Location> itemLocation = property(new SingleProperty<>(PropertyTypes.LOCATION, "conveyorobject", new Location(0, 0, 0))).setNoUpdateServer();
+	public final SingleProperty<Integer> conveyorType = property(new SingleProperty<>(PropertyTypes.INTEGER, "conveyortype", ConveyorType.HORIZONTAL.ordinal())).setNoUpdateServer();
+	public final SingleProperty<Boolean> isPusher = property(new SingleProperty<>(PropertyTypes.BOOLEAN, "pusher", false)).setNoUpdateServer();
+	public final SingleProperty<Boolean> isPuller = property(new SingleProperty<>(PropertyTypes.BOOLEAN, "puller", false)).setNoUpdateServer();
 
-    public final SingleProperty<Integer> currentSpread = property(new SingleProperty<>(PropertyTypes.INTEGER, "currentspread", 0)).setNoUpdateServer();
-    public final SingleProperty<Boolean> running = property(new SingleProperty<>(PropertyTypes.BOOLEAN, "running", false)).setNoUpdateServer();
-    public final SingleProperty<Location> itemLocation = property(new SingleProperty<>(PropertyTypes.LOCATION, "conveyorobject", new Location(0, 0, 0))).setNoUpdateServer();
-    public final SingleProperty<Integer> conveyorType = property(new SingleProperty<>(PropertyTypes.INTEGER, "conveyortype", ConveyorType.HORIZONTAL.ordinal())).setNoUpdateServer();
-    public final SingleProperty<Boolean> isPusher = property(new SingleProperty<>(PropertyTypes.BOOLEAN, "pusher", false)).setNoUpdateServer();
-    public final SingleProperty<Boolean> isPuller = property(new SingleProperty<>(PropertyTypes.BOOLEAN, "puller", false)).setNoUpdateServer();
+	public int wait = 0;
+	private CachedTileOutput nextCache;
+	private CachedTileOutput beforeCache;
 
-    public int wait = 0;
-    private CachedTileOutput nextCache;
-    private CachedTileOutput beforeCache;
+	private boolean hasDroppedThisTick = false; // There is a dupe bug I found. Unknown how it happens but this fixes it
 
-    private boolean hasDroppedThisTick = false; // There is a dupe bug I found. Unknown how it happens but this fixes it
+	private final ConveyorBeltProperties properties;
 
-    private final ConveyorBeltProperties properties;
+	public GenericTileConveyorBelt(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, ConveyorBeltProperties properties) {
+		super(type, worldPosition, blockState);
+		addComponent(new ComponentTickable(this).tickCommon(this::tickCommon));
+		addComponent(new ComponentPacketHandler(this));
+		addComponent(new ComponentInventory(this, ComponentInventory.InventoryBuilder.newInv().forceSize(properties.invSize)));
+		addComponent(new ComponentElectrodynamic(this, false, true).setInputDirections(BlockEntityUtils.MachineDirection.BOTTOM, BlockEntityUtils.MachineDirection.LEFT, BlockEntityUtils.MachineDirection.RIGHT).maxJoules(AssemblyLineConstants.CONVEYORBELT_USAGE * 100));
+		addComponent(new ComponentForgeEnergy(this));
+		this.properties = properties;
+	}
 
-    public GenericTileConveyorBelt(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, ConveyorBeltProperties properties) {
-        super(type, worldPosition, blockState);
-        addComponent(new ComponentTickable(this).tickCommon(this::tickCommon));
-        addComponent(new ComponentPacketHandler(this));
-        addComponent(new ComponentInventory(this, ComponentInventory.InventoryBuilder.newInv().forceSize(properties.invSize)));
-        addComponent(new ComponentElectrodynamic(this, false, true).setInputDirections(BlockEntityUtils.MachineDirection.BOTTOM, BlockEntityUtils.MachineDirection.LEFT, BlockEntityUtils.MachineDirection.RIGHT).maxJoules(AssemblyLineConstants.CONVEYORBELT_USAGE * 100));
-        addComponent(new ComponentForgeEnergy(this));
-        this.properties = properties;
-    }
+	@SuppressWarnings("null")
+	public void tickCommon(ComponentTickable tickable) {
 
-    @SuppressWarnings("null")
-    public void tickCommon(ComponentTickable tickable) {
+		hasDroppedThisTick = false;
 
-        hasDroppedThisTick = false;
+		if (nextCache == null) {
+			nextCache = new CachedTileOutput(getLevel(), getNextPos());
+		}
 
-        if (nextCache == null) {
-            nextCache = new CachedTileOutput(getLevel(), getNextPos());
-        }
+		if (beforeCache == null) {
+			beforeCache = new CachedTileOutput(getLevel(), getBeforePos());
+		}
 
-        if (beforeCache == null) {
-            beforeCache = new CachedTileOutput(getLevel(), getBeforePos());
-        }
+		if (tickable.getTicks() % 5 == 0) {
+			nextCache.update(getNextPos());
+			beforeCache.update(getBeforePos());
+		}
 
-        if (tickable.getTicks() % 5 == 0) {
-            nextCache.update(getNextPos());
-            beforeCache.update(getBeforePos());
-        }
+		if (!level.isClientSide) {
 
-        if (!level.isClientSide) {
+			isPusher.setValue(properties.canBePusher && nextCache.valid() && !(nextCache.getSafe() instanceof GenericTileConveyorBelt) && ((BlockEntity) nextCache.getSafe()).getCapability(ForgeCapabilities.ITEM_HANDLER, getDirectionForNext().getOpposite()).orElse(CapabilityUtils.EMPTY_ITEM_HANDLER) != CapabilityUtils.EMPTY_ITEM_HANDLER);
+			isPuller.setValue(properties.canBePuller && beforeCache.valid() && !(beforeCache.getSafe() instanceof GenericTileConveyorBelt) && ((BlockEntity) beforeCache.getSafe()).getCapability(ForgeCapabilities.ITEM_HANDLER, getDirectionForLast().getOpposite()).orElse(CapabilityUtils.EMPTY_ITEM_HANDLER) != CapabilityUtils.EMPTY_ITEM_HANDLER);
 
-            isPusher.setValue(properties.canBePusher && nextCache.valid() && !(nextCache.getSafe() instanceof GenericTileConveyorBelt) && ((BlockEntity) nextCache.getSafe()).getCapability(ForgeCapabilities.ITEM_HANDLER, getDirectionForNext().getOpposite()).orElse(CapabilityUtils.EMPTY_ITEM_HANDLER) != CapabilityUtils.EMPTY_ITEM_HANDLER);
-            isPuller.setValue(properties.canBePuller && beforeCache.valid() && !(beforeCache.getSafe() instanceof GenericTileConveyorBelt) && ((BlockEntity) beforeCache.getSafe()).getCapability(ForgeCapabilities.ITEM_HANDLER, getDirectionForLast().getOpposite()).orElse(CapabilityUtils.EMPTY_ITEM_HANDLER) != CapabilityUtils.EMPTY_ITEM_HANDLER);
+			int currSpread = currentSpread.getValue();
 
-            int currSpread = currentSpread.getValue();
+			int maxSpread = 0;
 
-            int maxSpread = 0;
+			BlockEntity offsetTile;
 
-            BlockEntity offsetTile;
+			for (BlockPos offset : SPREAD_OFFSETS) {
 
-            for (BlockPos offset : SPREAD_OFFSETS) {
+				offsetTile = level.getBlockEntity(worldPosition.offset(offset));
 
-                offsetTile = level.getBlockEntity(worldPosition.offset(offset));
+				if (offsetTile instanceof GenericTileConveyorBelt belt) {
 
-                if (offsetTile instanceof GenericTileConveyorBelt belt) {
+					int offsetSpread = belt.currentSpread.getValue();
 
-                    int offsetSpread = belt.currentSpread.getValue();
+					if (offsetSpread - 1 > maxSpread) {
 
-                    if (offsetSpread - 1 > maxSpread) {
+						maxSpread = offsetSpread - 1;
 
-                        maxSpread = offsetSpread - 1;
+					}
 
-                    }
+				}
+			}
 
-                }
-            }
+			ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
 
-            ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
+			currentSpread.setValue(maxSpread);
 
-            currentSpread.setValue(maxSpread);
+			if (currSpread > currentSpread.getValue()) {
 
-            if (currSpread > currentSpread.getValue()) {
+				currentSpread.setValue(MIN_SPREAD);
 
-                currentSpread.setValue(MIN_SPREAD);
+			}
 
-            }
+			if (currentSpread.getValue() == MIN_SPREAD || currentSpread.getValue() == AssemblyLineConstants.CONVEYOR_MAX_SPREAD) {
 
-            if (currentSpread.getValue() == MIN_SPREAD || currentSpread.getValue() == AssemblyLineConstants.CONVEYOR_MAX_SPREAD) {
+				if (electro.getJoulesStored() < AssemblyLineConstants.CONVEYORBELT_USAGE) {
 
-                if (electro.getJoulesStored() < AssemblyLineConstants.CONVEYORBELT_USAGE) {
+					currentSpread.setValue(MIN_SPREAD);
 
-                    currentSpread.setValue(MIN_SPREAD);
+				} else {
 
-                } else {
+					electro.joules(electro.getJoulesStored() - AssemblyLineConstants.CONVEYORBELT_USAGE);
 
-                    electro.joules(electro.getJoulesStored() - AssemblyLineConstants.CONVEYORBELT_USAGE);
+					currentSpread.setValue(AssemblyLineConstants.CONVEYOR_MAX_SPREAD);
 
-                    currentSpread.setValue(AssemblyLineConstants.CONVEYOR_MAX_SPREAD);
+				}
+			}
+			running.setValue(currentSpread.getValue() > MIN_SPREAD);
+		}
 
-                }
-            }
-            running.setValue(currentSpread.getValue() > MIN_SPREAD);
-        }
+		if (getItemOnBelt().isEmpty()) {
+			itemLocation.setValue(getDefaultItemLocation(false));
+			if (!level.isClientSide && running.getValue()) {
+				pullItemFromInventory();
+			}
+			if (getItemOnBelt().isEmpty()) {
+				return;
+			}
+		}
 
-        if (getItemOnBelt().isEmpty()) {
-            itemLocation.setValue(getDefaultItemLocation(false));
-            if (!level.isClientSide && running.getValue()) {
-                pullItemFromInventory();
-            }
-            if (getItemOnBelt().isEmpty()) {
-                return;
-            }
-        }
+		if (!running.getValue()) {
+			return;
+		}
 
-        if(!running.getValue()) {
-            return;
-        }
+		Vector3f move = getDirectionVector();
 
-        Vector3f move = getDirectionVector();
+		if (canMove()) {
 
-        if(canMove()) {
+			move.mul(1 / 16.0f);
 
-            move.mul(1 / 16.0f);
+			double speed = properties.conveyorClass.speed;
 
-            double speed = properties.conveyorClass.speed;
+			double x = move.x() * speed;
+			double y = move.y();
+			double z = move.z() * speed;
 
-            double x = move.x() * speed;
-            double y = move.y();
-            double z = move.z() * speed;
+			ConveyorType type = getConveyorType();
 
-            ConveyorType type = getConveyorType();
+			if (type != ConveyorType.HORIZONTAL) {
 
-            if (type != ConveyorType.HORIZONTAL) {
+				y += 1 / 16.0f * (type == ConveyorType.SLOPED_DOWN ? -1 : 1) * speed;
 
-                y += 1 / 16.0f * (type == ConveyorType.SLOPED_DOWN ? -1 : 1) * speed;
+			}
 
-            }
+			itemLocation.setValue(itemLocation.getValue().add(x, y, z));
+			return;
+		}
 
-            itemLocation.setValue(itemLocation.getValue().add(x, y, z));
+		if (!nextCache.valid()) {
+			dropItem(getItemOnBelt(), move);
+			return;
+		}
 
-            Vector3f localVector = getLocalItemLocationVector();
+		BlockEntity nextBlockEntity = nextCache.getSafe();
 
-            if (x == 0 && localVector.x() - 0.5 * Math.signum(localVector.x()) != 0) {
+		// boolean shouldTransfer = shouldTransfer(nextBlockEntity,
+		// itemLocation.getValue().toBlockPos());
 
-                localVector.x = 0.5F * Math.signum(localVector.x);
-                Location loc = new Location(worldPosition.getX() + localVector.x, worldPosition.getY() + localVector.y, worldPosition.getZ() + localVector.z);
-                itemLocation.setValue(loc);
+		if (nextBlockEntity instanceof GenericTileConveyorBelt belt) {
 
-            } else if (z == 0 && localVector.z() - 0.5 * Math.signum(localVector.z()) != 0) {
+			if (belt.getItemOnBelt().isEmpty()) {
+				belt.addItemOnBelt(getItemOnBelt().copy(), itemLocation.getValue());
+				setItemOnBelt(ItemStack.EMPTY);
+			}
 
-                localVector.z = 0.5F * Math.signum(localVector.z);
-                Location loc = new Location(worldPosition.getX() + localVector.x, worldPosition.getY() + localVector.y, worldPosition.getZ() + localVector.z);
-                itemLocation.setValue(loc);
+		} else {
 
-            }
+			Direction direction = getFacing();
 
-            return;
-        }
+			IItemHandler handler = nextBlockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction).orElse(CapabilityUtils.EMPTY_ITEM_HANDLER);
 
-        if(!nextCache.valid()) {
-            Vector3f local = getLocalItemLocationVector();
+			ItemStack stackOnBelt = getItemOnBelt().copy();
 
-            Direction dir = getDirectionForNext();
+			if (handler != CapabilityUtils.EMPTY_ITEM_HANDLER && !level.isClientSide) {
 
-            float stepX = dir.getStepX();
-            float stepZ = dir.getStepZ();
+				if (wait == 0) {
 
-            float absX = Math.abs(local.x());
-            float absZ = Math.abs(local.z());
+					int amtTaken = 0;
 
-            boolean xIs = stepX != 0 && stepX < 0 ? absX <= 0.2F : absX >= 0.8F;
-            boolean zIs = stepZ != 0 && stepZ < 0 ? absZ <= 0.2F : absZ >= 0.8F;
+					ItemStack remainder;
 
-            if (xIs || zIs) {
-                dropItem(getItemOnBelt(), move);
-            }
-            return;
-        }
+					for (int targetIndex = 0; targetIndex < handler.getSlots(); targetIndex++) {
 
-        BlockEntity nextBlockEntity = nextCache.getSafe();
+						remainder = handler.insertItem(targetIndex, stackOnBelt, level.isClientSide);
 
-        //boolean shouldTransfer = shouldTransfer(nextBlockEntity, itemLocation.getValue().toBlockPos());
+						int taken = stackOnBelt.getCount() - remainder.getCount();
 
-        if (nextBlockEntity instanceof GenericTileConveyorBelt belt) {
+						if (taken <= 0) {
 
-            if(belt.getItemOnBelt().isEmpty()) {
-                belt.addItemOnBelt(getItemOnBelt().copy(), itemLocation.getValue());
-                setItemOnBelt(ItemStack.EMPTY);
-            }
+							continue;
 
-        } else  {
+						}
 
-            Direction direction = getFacing();
+						amtTaken += taken;
 
-            IItemHandler handler = nextBlockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, direction).orElse(CapabilityUtils.EMPTY_ITEM_HANDLER);
+						stackOnBelt = stackOnBelt.copy();
 
-            ItemStack stackOnBelt = getItemOnBelt().copy();
+						stackOnBelt.shrink(taken);
 
-            if (handler != CapabilityUtils.EMPTY_ITEM_HANDLER && !level.isClientSide) {
+						if (stackOnBelt.isEmpty()) {
+							break;
+						}
 
-                if (wait == 0) {
+					}
 
-                    int amtTaken = 0;
+					stackOnBelt.shrink(amtTaken);
 
-                    ItemStack remainder;
+					setItemOnBelt(stackOnBelt);
 
-                    for (int targetIndex = 0; targetIndex < handler.getSlots(); targetIndex++) {
+					if (amtTaken == 0) {
 
-                        remainder = handler.insertItem(targetIndex, stackOnBelt, level.isClientSide);
+						wait = 20;
 
-                        int taken = stackOnBelt.getCount() - remainder.getCount();
+					}
 
-                        if (taken <= 0) {
+				} else {
 
-                            continue;
+					wait--;
 
-                        }
+				}
 
-                        amtTaken += taken;
+			}
 
-                        stackOnBelt = stackOnBelt.copy();
+		}
 
-                        stackOnBelt.shrink(taken);
+	}
 
-                        if (stackOnBelt.isEmpty()) {
-                            break;
-                        }
+	// Serverside only
+	public void pullItemFromInventory() {
 
-                    }
+		if (!isPuller.getValue() || !getItemOnBelt().isEmpty()) {
+			return;
+		}
 
-                    stackOnBelt.shrink(amtTaken);
+		BlockEntity lastBlockEntity = beforeCache.getSafe();
 
-                    setItemOnBelt(stackOnBelt);
+		IItemHandler handler = lastBlockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, getDirectionForLast().getOpposite()).orElse(CapabilityUtils.EMPTY_ITEM_HANDLER);
 
-                    if (amtTaken == 0) {
+		if (handler != CapabilityUtils.EMPTY_ITEM_HANDLER) {
 
-                        wait = 20;
+			for (int slot = 0; slot < handler.getSlots(); slot++) {
 
-                    }
+				ItemStack accepted = addItemOnBelt(handler.extractItem(slot, 64, true), getDefaultItemLocation(true));
 
-                } else {
+				if (!accepted.isEmpty()) {
 
-                    wait--;
+					handler.extractItem(slot, accepted.getCount(), level.isClientSide);
 
-                }
+					break;
+				}
+			}
+		}
+	}
 
-            }
+	public boolean canMove() {
 
-        }
+		if (getConveyorType() == ConveyorType.VERTICAL) {
 
-    }
+			return getLocalItemLocationVector().y < 1;
 
-    //Serverside only
-    public void pullItemFromInventory() {
+		}
 
-        if (!isPuller.getValue() || !getItemOnBelt().isEmpty()) {
-            return;
-        }
+		Direction next = getDirectionForNext();
 
-        BlockEntity lastBlockEntity = beforeCache.getSafe();
+		BlockPos nextPos = getNextPos();
+		boolean nextGoesUp = false;
+		if (level.getBlockEntity(nextPos) instanceof GenericTileConveyorBelt belt) {
+			nextGoesUp = belt.getConveyorType() == ConveyorType.SLOPED_UP || belt.getConveyorType() == ConveyorType.SLOPED_DOWN;
+			if (getConveyorType() == ConveyorType.SLOPED_UP || getConveyorType() == ConveyorType.SLOPED_DOWN) {
+				if (!nextGoesUp) {
+					nextGoesUp = true;
+				}
+			}
+		}
+		if (next == Direction.SOUTH) {
+			return nextPos.getZ() - itemLocation.getValue().z() > (nextGoesUp ? -0.125 : -0.25);
+		} else if (next == Direction.WEST) {
+			return nextPos.getX() - itemLocation.getValue().x() < (nextGoesUp ? -0.875 : -0.75);
+		} else if (next == Direction.NORTH) {
+			return nextPos.getZ() - itemLocation.getValue().z() < (nextGoesUp ? -0.875 : -0.75);
+		} else if (next == Direction.EAST) {
+			return nextPos.getX() - itemLocation.getValue().x() > (nextGoesUp ? -0.125 : -0.25);
+		}
 
-        IItemHandler handler = lastBlockEntity.getCapability(ForgeCapabilities.ITEM_HANDLER, getDirectionForLast().getOpposite()).orElse(CapabilityUtils.EMPTY_ITEM_HANDLER);
+		return false;
 
-        if (handler != CapabilityUtils.EMPTY_ITEM_HANDLER) {
+	}
 
-            for (int slot = 0; slot < handler.getSlots(); slot++) {
+	// Returns the amount that was taken
+	public ItemStack addItemOnBelt(ItemStack add, Location object) {
 
-                ItemStack accepted = addItemOnBelt(handler.extractItem(slot, 64, true), getDefaultItemLocation(true));
+		ItemStack taken = ItemStack.EMPTY;
 
-                if (!accepted.isEmpty()) {
+		if (add.isEmpty()) {
+			return taken;
+		}
 
-                    handler.extractItem(slot, accepted.getCount(), level.isClientSide);
+		taken = ItemStack.EMPTY;
 
-                    break;
-                }
-            }
-        }
-    }
+		boolean inserted = false;
 
-    public boolean canMove() {
+		boolean newItem = true;
 
-        if(getConveyorType() == ConveyorType.VERTICAL) {
+		ItemStack beltItem = getItemOnBelt();
 
-            return getLocalItemLocationVector().y < 1;
+		if (beltItem.isEmpty()) {
 
-        }
+			taken = add.copy();
 
-        Direction next = getDirectionForNext();
+			setItemOnBelt(add.copy());
 
-        BlockPos nextPos = getNextPos();
+			inserted = true;
 
-        if(next == Direction.SOUTH) {
-            return nextPos.getZ() - itemLocation.getValue().z() > 0;
-        } else if (next == Direction.WEST) {
-            return nextPos.getX() - itemLocation.getValue().x() < -1;
-        } else if (next == Direction.NORTH) {
-            return nextPos.getZ() - itemLocation.getValue().z() < -1;
-        } else if (next == Direction.EAST) {
-            return nextPos.getX() - itemLocation.getValue().x() > 0;
-        }
+		} else if (ItemStack.isSameItem(beltItem, add)) {
 
-        return false;
+			int room = beltItem.getMaxStackSize() - beltItem.getCount();
 
-    }
+			int accepted = Math.min(room, add.getCount());
 
-    //Returns the amount that was taken
-    public ItemStack addItemOnBelt(ItemStack add, Location object) {
+			if (accepted > 0) {
 
-        ItemStack taken = ItemStack.EMPTY;
+				taken = add.copy();
 
-        if (add.isEmpty()) {
-            return taken;
-        }
+				beltItem.grow(accepted);
 
-        taken = ItemStack.EMPTY;
+				setItemOnBelt(beltItem.copy());
 
-        boolean inserted = false;
+				taken.setCount(accepted);
 
-        boolean newItem = true;
+				inserted = true;
 
-        ItemStack beltItem = getItemOnBelt();
+				newItem = false;
+			}
 
-        if (beltItem.isEmpty()) {
+		}
 
-            taken = add.copy();
+		if (inserted && newItem) {
 
-            setItemOnBelt(add.copy());
+			if (getConveyorType() == ConveyorType.VERTICAL) {
 
-            inserted = true;
+				Vector3f vec = getDirectionVector();
 
-        } else if (ItemStack.isSameItem(beltItem, add)) {
+				object = object.add(vec.x(), vec.y(), vec.z());
+			}
 
-            int room = beltItem.getMaxStackSize() - beltItem.getCount();
+			itemLocation.setValue(object);
+		}
 
-            int accepted = Math.min(room, add.getCount());
+		return taken;
+	}
 
-            if (accepted > 0) {
+	public void dropItem(ItemStack stackOnBelt, Vector3f move) {
+		if (hasDroppedThisTick) {
+			return;
+		}
+		hasDroppedThisTick = true;
 
-                taken = add.copy();
+		if (!level.isClientSide) {
 
-                beltItem.grow(accepted);
+			Location itemLoc = itemLocation.getValue();
+			ItemEntity entity = new ItemEntity(level, itemLoc.x(), itemLoc.y(), itemLoc.z(), stackOnBelt.copy());
 
-                setItemOnBelt(beltItem.copy());
+			entity.setDeltaMovement(move.x() / 12.0, 1.5 / 16.0, move.z() / 12.0);
 
-                taken.setCount(accepted);
+			entity.setPickUpDelay(20);
 
-                inserted = true;
+			level.addFreshEntity(entity);
 
-                newItem = false;
-            }
+		}
 
-        }
+		setItemOnBelt(ItemStack.EMPTY);
 
-        if (inserted && newItem) {
+	}
 
-            if (getConveyorType() == ConveyorType.VERTICAL) {
+	public BlockPos getNextPos() {
 
-                Vector3f vec = getDirectionVector();
+		Direction direction = getDirectionForNext();
 
-                object = object.add(vec.x(), vec.y(), vec.z());
+		return switch (ConveyorType.values()[conveyorType.getValue()]) {
+		case SLOPED_DOWN -> worldPosition.relative(direction).below();
+		case SLOPED_UP -> worldPosition.relative(direction).above();
+		case VERTICAL -> level.getBlockEntity(worldPosition.relative(Direction.UP)) instanceof GenericTileConveyorBelt belt && belt.getConveyorType() == ConveyorType.VERTICAL ? worldPosition.relative(Direction.UP) : worldPosition.relative(direction).above();
+		default -> worldPosition.relative(direction);
 
-            }
+		};
+	}
 
-            itemLocation.setValue(object);
-        }
+	public BlockPos getBeforePos() {
+		Direction direction = getDirectionForLast();
 
-        return taken;
-    }
+		return switch (ConveyorType.values()[conveyorType.getValue()]) {
+		case SLOPED_DOWN -> worldPosition.relative(direction).above();
+		case SLOPED_UP -> worldPosition.relative(direction).below();
+		case VERTICAL -> level.getBlockEntity(worldPosition.relative(Direction.DOWN)) instanceof GenericTileConveyorBelt belt && belt.getConveyorType() == ConveyorType.VERTICAL ? worldPosition.relative(Direction.DOWN) : worldPosition.relative(direction).below();
+		default -> worldPosition.relative(direction);
 
-    public void dropItem(ItemStack stackOnBelt, Vector3f move) {
+		};
+	}
 
-        if (hasDroppedThisTick) {
-            return;
-        }
+	public Direction getDirectionForNext() {
+		return getFacing().getOpposite();
+	}
 
-        hasDroppedThisTick = true;
+	public Direction getDirectionForLast() {
+		return getFacing();
+	}
 
-        if (!level.isClientSide) {
+	public ItemStack getItemOnBelt() {
+		return this.<ComponentInventory>getComponent(IComponentType.Inventory).getItem(0);
+	}
 
-            double x = worldPosition.getX() + 0.5 + (move.x() / 2.0f);
-            double y = worldPosition.getY() + 0.4 + (getConveyorType() == ConveyorType.SLOPED_DOWN ? -1.0 : 0.0);
-            double z = worldPosition.getZ() + 0.5 + (move.z() / 2.0f);
+	public void setItemOnBelt(ItemStack item) {
+		this.<ComponentInventory>getComponent(IComponentType.Inventory).setItem(0, item);
+	}
 
-            ItemEntity entity = new ItemEntity(level, x, y, z, stackOnBelt.copy());
+	public ConveyorType getConveyorType() {
+		return ConveyorType.values()[conveyorType.getValue()];
+	}
 
-            entity.setDeltaMovement(move.x() / 12.0, 1.5 / 16.0, move.z() / 12.0);
+	public Vector3f getLocalItemLocationVector() {
+		return new Vector3f((float) (itemLocation.getValue().x() - (float) worldPosition.getX()), (float) (itemLocation.getValue().y() - (float) worldPosition.getY()), (float) (itemLocation.getValue().z() - (float) worldPosition.getZ()));
+	}
 
-            entity.setPickUpDelay(20);
+	public Vector3f getDirectionVector() {
+		Direction direction = getDirectionForNext();
+		return new Vector3f(direction.getStepX(), direction.getStepY(), direction.getStepZ());
+	}
 
-            level.addFreshEntity(entity);
+	public Location getDefaultItemLocation(boolean setToEnd) {
+		double x = worldPosition.getX() + 0.5D;
+		double y = worldPosition.getY();
+		double z = worldPosition.getZ() + 0.5D;
 
-        }
+		switch (getConveyorType()) {
+		case SLOPED_DOWN:
+			y += -4.0D / 16.0D;
+			break;
+		case SLOPED_UP:
+			y += 8.0D / 16.0D;
+			break;
+		}
 
-        setItemOnBelt(ItemStack.EMPTY);
+		if (setToEnd) {
+			Direction directionForNext = getDirectionForNext();
 
-    }
+			x -= (directionForNext.getStepX() / 2.0);
+			z -= (directionForNext.getStepZ() / 2.0);
+		}
 
-    public BlockPos getNextPos() {
+		return new Location(x, y, z);
+	}
 
-        Direction direction = getDirectionForNext();
+	public void cycleConveyorType() {
+		if (conveyorType.getValue() + 1 <= ConveyorType.values().length - 1) {
+			conveyorType.setValue(ConveyorType.values()[conveyorType.getValue() + 1].ordinal());
+		} else {
+			conveyorType.setValue(ConveyorType.values()[0].ordinal());
+		}
+	}
 
-        return switch (ConveyorType.values()[conveyorType.getValue()]) {
-            case SLOPED_DOWN -> worldPosition.relative(direction).below();
-            case SLOPED_UP -> worldPosition.relative(direction).above();
-            case VERTICAL -> level.getBlockEntity(worldPosition.relative(Direction.UP)) instanceof GenericTileConveyorBelt belt && belt.getConveyorType() == ConveyorType.VERTICAL ? worldPosition.relative(Direction.UP) : worldPosition.relative(direction).above();
-            default -> worldPosition.relative(direction);
+	@Override
+	public void onEntityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+		if (entity instanceof ItemEntity item && !isRemoved()) {
 
-        };
-    }
+			if (entity.tickCount > 10 && !level.isClientSide) {
 
-    public BlockPos getBeforePos() {
-        Direction direction = getDirectionForLast();
+				ItemStack stack = item.getItem().copy();
 
-        return switch (ConveyorType.values()[conveyorType.getValue()]) {
-            case SLOPED_DOWN -> worldPosition.relative(direction).above();
-            case SLOPED_UP -> worldPosition.relative(direction).below();
-            case VERTICAL -> level.getBlockEntity(worldPosition.relative(Direction.DOWN)) instanceof GenericTileConveyorBelt belt && belt.getConveyorType() == ConveyorType.VERTICAL ? worldPosition.relative(Direction.DOWN) : worldPosition.relative(direction).below();
-            default -> worldPosition.relative(direction);
+				Location setloc = new Location(entity.position());
 
-        };
-    }
+				Location defaultLocation = getDefaultItemLocation(false);
 
-    public Direction getDirectionForNext() {
-        return getFacing().getOpposite();
-    }
+				setloc.set(setloc.x(), defaultLocation.y(), setloc.z());
 
-    public Direction getDirectionForLast() {
-        return getFacing();
-    }
+				ItemStack inserted = addItemOnBelt(stack, setloc).copy();
 
-    public ItemStack getItemOnBelt() {
-        return this.<ComponentInventory>getComponent(IComponentType.Inventory).getItem(0);
-    }
+				stack.shrink(inserted.getCount());
 
-    public void setItemOnBelt(ItemStack item) {
-        this.<ComponentInventory>getComponent(IComponentType.Inventory).setItem(0, item);
-    }
+				item.setItem(stack);
 
-    public ConveyorType getConveyorType() {
-        return ConveyorType.values()[conveyorType.getValue()];
-    }
+			}
+		} else if (running.getValue() && entity instanceof LivingEntity living && living.getOnPos().equals(getBlockPos())) {
 
-    public Vector3f getLocalItemLocationVector() {
-        return new Vector3f((float) (itemLocation.getValue().x() - (float) worldPosition.getX()), (float) (itemLocation.getValue().y() - (float) worldPosition.getY()), (float) (itemLocation.getValue().z() - (float) worldPosition.getZ()));
-    }
+			if (living instanceof Player && !level.isClientSide()) {
+				return;
+			} else if (!(living instanceof Player) && level.isClientSide) {
+				return;
+			}
 
-    public Vector3f getDirectionVector() {
-        Direction direction = getDirectionForNext();
-        return new Vector3f(direction.getStepX(), direction.getStepY(), direction.getStepZ());
-    }
+			double deltaY = living.getY() - living.getOnPos().getY();
 
-    public Location getDefaultItemLocation(boolean setToEnd) {
-        double x = worldPosition.getX() + 0.5D;
-        double y = worldPosition.getY();
-        double z = worldPosition.getZ() + 0.5D;
+			if (deltaY > BlockConveyorBelt.MAX_Y) {
+				return;
+			}
 
-        switch (getConveyorType()) {
-            case SLOPED_DOWN:
-                y += -4.0D / 16.0D;
-                break;
-            case SLOPED_UP:
-                y += 8.0D / 16.0D;
-                break;
-        }
+			List<ItemStack> armorPieces = new ArrayList<>();
+			living.getArmorSlots().forEach(piece -> armorPieces.add(piece));
 
-        if (setToEnd) {
-            Direction directionForNext = getDirectionForNext();
+			if (armorPieces.size() > 3 && armorPieces.get(0).is(VoltaicTags.Items.INSULATES_PLAYER_FEET)) {
+				return;
+			}
 
-            x -= (directionForNext.getStepX() / 2.0);
-            z -= (directionForNext.getStepZ() / 2.0);
-        }
+			Vector3f dirVec = getDirectionVector();
+			dirVec = dirVec.mul(1.0F / 16.0F);
+			dirVec = dirVec.mul((float) properties.conveyorClass.speed);
+			living.push(dirVec.x, 0, dirVec.z);
+		}
+	}
 
-        return new Location(x, y, z);
-    }
+	@Override
+	public void onBlockDestroyed() {
+		if (!level.isClientSide) {
 
-    public void cycleConveyorType() {
-        if (conveyorType.getValue() + 1 <= ConveyorType.values().length - 1) {
-            conveyorType.setValue(ConveyorType.values()[conveyorType.getValue() + 1].ordinal());
-        } else {
-            conveyorType.setValue(ConveyorType.values()[0].ordinal());
-        }
-    }
+			ItemStack stack = getItemOnBelt().copy();
 
-    @Override
-    public void onEntityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
-        if (entity instanceof ItemEntity item && !isRemoved()) {
+			if (stack.isEmpty()) {
+				return;
+			}
 
-            if (entity.tickCount > 5 && !level.isClientSide) {
+			double d0 = EntityType.ITEM.getWidth();
+			double d1 = 1.0 - d0;
+			double d2 = d0 / 2.0;
+			double d3 = Math.floor(getBlockPos().getX()) + level.random.nextDouble() * d1 + d2;
+			double d4 = Math.floor(getBlockPos().getY()) + level.random.nextDouble() * d1;
+			double d5 = Math.floor(getBlockPos().getZ()) + level.random.nextDouble() * d1 + d2;
 
-                ItemStack stack = item.getItem().copy();
+			ItemEntity itementity = new ItemEntity(level, d3, d4, d5, stack);
+			itementity.setDeltaMovement(level.random.triangle(0.0, 0.11485000171139836), level.random.triangle(0.2, 0.11485000171139836), level.random.triangle(0.0, 0.11485000171139836));
+			level.addFreshEntity(itementity);
+		}
+	}
 
-                ItemStack inserted = addItemOnBelt(stack, getDefaultItemLocation(false)).copy();
+	@Override
+	public void saveAdditional(CompoundTag compound) {
+		super.saveAdditional(compound);
+		compound.putInt("conveyorwait", wait);
+	}
 
-                stack.shrink(inserted.getCount());
-
-                item.setItem(stack);
-
-            }
-        } else if (running.getValue() && entity instanceof LivingEntity living && living.getOnPos().equals(getBlockPos())) {
-
-            if (living instanceof Player && !level.isClientSide()) {
-                return;
-            } else if (!(living instanceof Player) &&  level.isClientSide) {
-                return;
-            }
-
-            double deltaY = living.getY() - living.getOnPos().getY();
-
-            if (deltaY > BlockConveyorBelt.MAX_Y) {
-                return;
-            }
-
-
-            List<ItemStack> armorPieces = new ArrayList<>();
-            living.getArmorSlots().forEach(piece -> armorPieces.add(piece));
-
-            if (armorPieces.size() > 3 && armorPieces.get(0).is(VoltaicTags.Items.INSULATES_PLAYER_FEET)) {
-                return;
-            }
-
-            Vector3f dirVec = getDirectionVector();
-            dirVec = dirVec.mul(1.0F / 16.0F);
-            dirVec = dirVec.mul((float) properties.conveyorClass.speed);
-            living.push(dirVec.x, 0, dirVec.z);
-        }
-    }
-
-    @Override
-    public void onBlockDestroyed() {
-        if (!level.isClientSide) {
-
-            ItemStack stack = getItemOnBelt().copy();
-
-            if (stack.isEmpty()) {
-                return;
-            }
-
-            double d0 = EntityType.ITEM.getWidth();
-            double d1 = 1.0 - d0;
-            double d2 = d0 / 2.0;
-            double d3 = Math.floor(getBlockPos().getX()) + level.random.nextDouble() * d1 + d2;
-            double d4 = Math.floor(getBlockPos().getY()) + level.random.nextDouble() * d1;
-            double d5 = Math.floor(getBlockPos().getZ()) + level.random.nextDouble() * d1 + d2;
-
-            ItemEntity itementity = new ItemEntity(level, d3, d4, d5, stack);
-            float f = 0.05F;
-            itementity.setDeltaMovement(
-                    level.random.triangle(0.0, 0.11485000171139836),
-                    level.random.triangle(0.2, 0.11485000171139836),
-                    level.random.triangle(0.0, 0.11485000171139836)
-            );
-            level.addFreshEntity(itementity);
-        }
-    }
-
-    @Override
-    public void saveAdditional(CompoundTag compound) {
-        super.saveAdditional(compound);
-        compound.putInt("conveyorwait", wait);
-    }
-
-    @Override
-    public void load(CompoundTag compound) {
-        super.load(compound);
-        wait = compound.getInt("conveyorwait");
-    }
+	@Override
+	public void load(CompoundTag compound) {
+		super.load(compound);
+		wait = compound.getInt("conveyorwait");
+	}
 
 }
