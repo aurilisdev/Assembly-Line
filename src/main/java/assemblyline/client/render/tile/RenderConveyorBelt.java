@@ -59,7 +59,7 @@ public class RenderConveyorBelt extends AbstractTileRenderer<TileConveyorBelt> {
 
 			}
 
-			move = move.mul(1.0F / 16.0F);
+			move.mul(partialTicks / 16.0f); // Must add tile speed later aka multiply by properties.conveyorClass.speed
 
 			if (tile.running.getValue()) {
 
@@ -73,28 +73,21 @@ public class RenderConveyorBelt extends AbstractTileRenderer<TileConveyorBelt> {
 
 			case HORIZONTAL:
 
-				matrixStackIn.translate(itemVec.x(), itemVec.y() + (blockItem ? 0.167 : 5.0f / 16.0f) + move.y(), itemVec.z());
+				matrixStackIn.translate(itemVec.x(), itemVec.y() + (blockItem ? 0.167 : 0.05f / 16.0f) + move.y(), itemVec.z());
 
 				matrixStackIn.scale(0.35f, 0.35f, 0.35f);
 
 				matrixStackIn.translate(0, 5.0f / (16.0f * 0.35f), 0);
 
 				if (!blockItem) {
-
 					matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(90, MathUtils.XN));
-					// matrixStackIn.mulPose(Vector3f.XN.rotationDegrees(90));
-
-				}
-
-				if (direct == Direction.EAST || direct == Direction.WEST) {
-					matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(90, MathUtils.YN));
 				}
 
 				break;
 
 			case SLOPED_DOWN:
 
-				matrixStackIn.translate(itemVec.x(), itemVec.y() + (blockItem ? 0.167 : 2.0f / 16.0f), itemVec.z());
+				matrixStackIn.translate(itemVec.x(), itemVec.y() + (blockItem ? 0.167 : 1.0f / 16.0f), itemVec.z());
 
 				matrixStackIn.scale(0.35f, 0.35f, 0.35f);
 
@@ -111,29 +104,33 @@ public class RenderConveyorBelt extends AbstractTileRenderer<TileConveyorBelt> {
 
 					matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(180, MathUtils.YP));
 					matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(rotate, MathUtils.XN));
-					// matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(180));
-
+					if (!blockItem) {
+						matrixStackIn.translate(0, 0, -0.3);
+					}
 				} else if (direct == Direction.EAST) {
-
-					matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(90, MathUtils.YP));
-					matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(-rotate, MathUtils.XP));
-					// matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90));
-
+					if (blockItem) {
+						matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(90, MathUtils.YP));
+						matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(-rotate, MathUtils.XP));
+					} else {
+						matrixStackIn.translate(0, -0.4, 0.4);
+						matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(45, MathUtils.YP));
+					}
 				} else if (direct == Direction.WEST) {
-
-					matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(-90, MathUtils.YP));
-					matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(rotate, MathUtils.XN));
-					// matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-90));
+					if (blockItem) {
+						matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(-90, MathUtils.YP));
+						matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(rotate, MathUtils.XN));
+					} else {
+						matrixStackIn.translate(0, -0.3, 0.5);
+						matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(-45, MathUtils.YP));
+					}
 
 				} else if (direct == Direction.SOUTH) {
 
 					matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(-rotate, MathUtils.XP));
-
+					if (!blockItem) {
+						matrixStackIn.translate(0, 0, 0.4);
+					}
 				}
-
-				// matrixStackIn.mulPose(direct == Direction.NORTH ? Vector3f.XN.rotationDegrees(rotate) : direct == Direction.SOUTH ?
-				// Vector3f.XP.rotationDegrees(-rotate) : direct == Direction.WEST ? Vector3f.XN.rotationDegrees(rotate) :
-				// Vector3f.XP.rotationDegrees(-rotate));
 
 				matrixStackIn.translate(0, 2.0f / (16.0f * 0.35f), 0);
 
@@ -141,7 +138,7 @@ public class RenderConveyorBelt extends AbstractTileRenderer<TileConveyorBelt> {
 
 			case SLOPED_UP:
 
-				matrixStackIn.translate(itemVec.x(), itemVec.y() + (blockItem ? 0.167 : 7.0f / 16.0f), itemVec.z());
+				matrixStackIn.translate(itemVec.x(), itemVec.y() + (blockItem ? 0.4 : 7.0f / 16.0f), itemVec.z());
 
 				matrixStackIn.scale(0.35f, 0.35f, 0.35f);
 
@@ -159,23 +156,33 @@ public class RenderConveyorBelt extends AbstractTileRenderer<TileConveyorBelt> {
 					matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(180, MathUtils.YP));
 					matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(rotate, MathUtils.XN));
 					// matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(180));
-
+					if (!blockItem) {
+						matrixStackIn.translate(0, 0, -0.2);
+					}
 				} else if (direct == Direction.EAST) {
-
-					matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(90, MathUtils.YP));
-					matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(-rotate, MathUtils.XP));
-					// matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(90));
-
+					if (blockItem) {
+						matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(90, MathUtils.YP));
+						matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(-rotate, MathUtils.XP));
+					} else {
+						matrixStackIn.translate(0, -0.9, 0.3);
+						matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(-45, MathUtils.YP));
+					}
 				} else if (direct == Direction.WEST) {
 
-					matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(-90, MathUtils.YP));
-					matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(rotate, MathUtils.XN));
-					// matrixStackIn.mulPose(Vector3f.YP.rotationDegrees(-90));
+					if (blockItem) {
+						matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(-90, MathUtils.YP));
+						matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(rotate, MathUtils.XN));
+					} else {
+						matrixStackIn.translate(0, -1, 0.4);
+						matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(45, MathUtils.YP));
+					}
 
 				} else if (direct == Direction.SOUTH) {
 
 					matrixStackIn.mulPose(MathUtils.rotVectorQuaternionDeg(-rotate, MathUtils.XP));
-
+					if (!blockItem) {
+						matrixStackIn.translate(0, 0, 0.2);
+					}
 				}
 
 				// matrixStackIn.mulPose(direct == Direction.NORTH ? Vector3f.XN.rotationDegrees(rotate) : direct == Direction.SOUTH ?
