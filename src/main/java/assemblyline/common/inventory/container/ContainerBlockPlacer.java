@@ -18,7 +18,7 @@ public class ContainerBlockPlacer extends GenericContainerBlockEntity<TileBlockP
 	public static final SubtypeItemUpgrade[] VALID_UPGRADES = new SubtypeItemUpgrade[] { SubtypeItemUpgrade.iteminput };
 
 	public ContainerBlockPlacer(int id, PlayerInventory playerinv) {
-		this(id, playerinv, new Inventory(4), new IntArray(3));
+		this(id, playerinv, new Inventory(4), new IntArray(5));
 	}
 
 	public ContainerBlockPlacer(int id, PlayerInventory playerinv, IInventory inventory, IIntArray inventorydata) {

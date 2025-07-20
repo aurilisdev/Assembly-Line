@@ -22,7 +22,7 @@ public class ContainerMobGrinder extends GenericContainerBlockEntity<TileMobGrin
     }
 
     public ContainerMobGrinder(int id, PlayerInventory playerinv) {
-        this(id, playerinv, new Inventory(12), new IntArray(3));
+        this(id, playerinv, new Inventory(12), new IntArray(5));
     }
 
     @Override
