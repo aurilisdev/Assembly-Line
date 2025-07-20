@@ -16,7 +16,7 @@ public class ContainerBlockBreaker extends GenericContainerBlockEntity<TileBlock
 	public static final SubtypeItemUpgrade[] VALID_UPGRADES = new SubtypeItemUpgrade[] { SubtypeItemUpgrade.basicspeed, SubtypeItemUpgrade.advancedspeed };
 
 	public ContainerBlockBreaker(int id, Inventory playerinv) {
-		this(id, playerinv, new SimpleContainer(3), new SimpleContainerData(3));
+		this(id, playerinv, new SimpleContainer(3), new SimpleContainerData(5));
 	}
 
 	public ContainerBlockBreaker(int id, Inventory playerinv, Container inventory, ContainerData inventorydata) {
