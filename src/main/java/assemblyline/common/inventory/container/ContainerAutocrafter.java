@@ -37,7 +37,7 @@ public class ContainerAutocrafter extends GenericContainerBlockEntity<TileAutocr
     };
 
     public ContainerAutocrafter(int id, Inventory playerinv) {
-        this(id, playerinv, new SimpleContainer(10), new SimpleContainerData(3));
+        this(id, playerinv, new SimpleContainer(10), new SimpleContainerData(5));
     }
 
     public ContainerAutocrafter(int id, Inventory playerinv, Container inventory, ContainerData inventorydata) {
