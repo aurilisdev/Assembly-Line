@@ -20,7 +20,7 @@ public class ContainerFarmer extends GenericContainerBlockEntity<TileFarmer> {
 	public static final SubtypeItemUpgrade[] VALID_UPGRADES = new SubtypeItemUpgrade[] { SubtypeItemUpgrade.advancedspeed, SubtypeItemUpgrade.basicspeed, SubtypeItemUpgrade.itemoutput, SubtypeItemUpgrade.range };
 
 	public ContainerFarmer(int id, PlayerInventory playerinv) {
-		this(id, playerinv, new Inventory(22), new IntArray(3));
+		this(id, playerinv, new Inventory(22), new IntArray(5));
 	}
 
 	public ContainerFarmer(int id, PlayerInventory playerinv, IInventory inventory, IIntArray inventorydata) {

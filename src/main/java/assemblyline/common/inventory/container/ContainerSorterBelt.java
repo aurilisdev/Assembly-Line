@@ -13,7 +13,7 @@ import voltaic.prefab.inventory.container.types.GenericContainerBlockEntity;
 public class ContainerSorterBelt extends GenericContainerBlockEntity<TileSorterBelt> {
 
 	public ContainerSorterBelt(int id, PlayerInventory playerinv) {
-		this(id, playerinv, new Inventory(19), new IntArray(3));
+		this(id, playerinv, new Inventory(19), new IntArray(5));
 	}
 
 	public ContainerSorterBelt(int id, PlayerInventory playerinv, IInventory inventory, IIntArray inventorydata) {
