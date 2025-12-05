@@ -250,8 +250,14 @@ public class RenderConveyorBelt extends AbstractTileRenderer<TileConveyorBelt> {
             case VERTICAL -> {
 
                 if (tile.getLevel().getBlockEntity(tile.getBlockPos().below()) instanceof GenericTileConveyorBelt belt && belt.getConveyorType() == ConveyorType.VERTICAL) {
+                    if(!(tile.getLevel().getBlockEntity(tile.getBlockPos().above()) instanceof GenericTileConveyorBelt)){
+    			yield tile.running.getValue() ? AssemblyLineClientRegister.MODEL_ELEVATORRUNNINGBUTLAST : AssemblyLineClientRegister.MODEL_ELEVATORBUTLAST;
 
+                    }
                     yield tile.running.getValue() ? AssemblyLineClientRegister.MODEL_ELEVATORRUNNING : AssemblyLineClientRegister.MODEL_ELEVATOR;
+
+                } else if(!(tile.getLevel().getBlockEntity(tile.getBlockPos().above()) instanceof GenericTileConveyorBelt)){
+    			yield tile.running.getValue() ? AssemblyLineClientRegister.MODEL_ELEVATORBOTTOMRUNNINGBUTLAST : AssemblyLineClientRegister.MODEL_ELEVATORBOTTOMBUTLAST;
 
                 }
 		yield tile.running.getValue() ? AssemblyLineClientRegister.MODEL_ELEVATORBOTTOMRUNNING : AssemblyLineClientRegister.MODEL_ELEVATORBOTTOM;

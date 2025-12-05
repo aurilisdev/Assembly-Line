@@ -52,8 +52,12 @@ public class AssemblyLineClientRegister {
     public static final ModelResourceLocation MODEL_MANIPULATOROUTPUTRUNNING = ModelResourceLocation.standalone(AssemblyLine.rl("block/manipulatoroutputrunning"));
     public static final ModelResourceLocation MODEL_ELEVATOR = ModelResourceLocation.standalone(AssemblyLine.rl("block/elevatorbelt"));
     public static final ModelResourceLocation MODEL_ELEVATORRUNNING = ModelResourceLocation.standalone(AssemblyLine.rl("block/elevatorbeltrunning"));
+    public static final ModelResourceLocation MODEL_ELEVATORBUTLAST = ModelResourceLocation.standalone(AssemblyLine.rl("block/elevatorbeltbutlast"));
+    public static final ModelResourceLocation MODEL_ELEVATORRUNNINGBUTLAST = ModelResourceLocation.standalone(AssemblyLine.rl("block/elevatorbeltrunningbutlast"));
     public static final ModelResourceLocation MODEL_ELEVATORBOTTOM = ModelResourceLocation.standalone(AssemblyLine.rl("block/elevatorbeltbottom"));
     public static final ModelResourceLocation MODEL_ELEVATORBOTTOMRUNNING = ModelResourceLocation.standalone(AssemblyLine.rl("block/elevatorbeltbottomrunning"));
+    public static final ModelResourceLocation MODEL_ELEVATORBOTTOMBUTLAST = ModelResourceLocation.standalone(AssemblyLine.rl("block/elevatorbeltbottombutlast"));
+    public static final ModelResourceLocation MODEL_ELEVATORBOTTOMRUNNINGBUTLAST = ModelResourceLocation.standalone(AssemblyLine.rl("block/elevatorbeltbottomrunningbutlast"));
     public static final ModelResourceLocation MODEL_MANIPULATOR = ModelResourceLocation.standalone(AssemblyLine.rl("block/manipulator"));
 
 
@@ -107,6 +111,10 @@ public class AssemblyLineClientRegister {
         event.register(MODEL_ELEVATORRUNNING);
         event.register(MODEL_ELEVATORBOTTOM);
         event.register(MODEL_ELEVATORBOTTOMRUNNING);
+        event.register(MODEL_ELEVATORBUTLAST);
+        event.register(MODEL_ELEVATORRUNNINGBUTLAST);
+        event.register(MODEL_ELEVATORBOTTOMBUTLAST);
+        event.register(MODEL_ELEVATORBOTTOMRUNNINGBUTLAST);
         event.register(MODEL_MANIPULATOR);
         event.register(MODEL_SORTERBELT);
         event.register(MODEL_SORTERBELT_RUNNING

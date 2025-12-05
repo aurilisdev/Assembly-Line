@@ -210,18 +210,22 @@ public abstract class GenericTileConveyorBelt extends GenericTile {
 
 	    double speed = properties.conveyorClass.speed;
 
-	    double x = move.x() * speed;
-	    double y = move.y();
-	    double z = move.z() * speed;
 
 	    ConveyorType type = getConveyorType();
 
+	    double x = move.x() * speed * (type == ConveyorType.VERTICAL ? 0: 1);
+	    double y = move.y();
+	    double z = move.z() * speed * (type == ConveyorType.VERTICAL ? 0: 1);
+	    
 	    if (type != ConveyorType.HORIZONTAL) {
 
 		y += 1 / 16.0f * (type == ConveyorType.SLOPED_DOWN ? -1 : 1) * speed;
 
 	    }
-
+	    if(type == ConveyorType.VERTICAL)
+	    {
+		itemLocation.setValue(getDefaultItemLocation(false).add(0, itemLocation.getValue().y()- getDefaultItemLocation(false).y(), 0));
+	    }
 	    itemLocation.setValue(itemLocation.getValue().add(x, y, z));
 	    return;
 	}
@@ -420,13 +424,7 @@ public abstract class GenericTileConveyorBelt extends GenericTile {
 
 	if (inserted && newItem) {
 
-	    if (getConveyorType() == ConveyorType.VERTICAL) {
-
-		Vector3f vec = getDirectionVector();
-
-		object = object.add(vec.x(), vec.y(), vec.z());
-	    }
-
+	    Location next = new Location(Math.clamp(object.x(), worldPosition.getX(), worldPosition.getX()+1),Math.clamp(object.y(), worldPosition.getY(), worldPosition.getY()+1),Math.clamp(object.z(), worldPosition.getZ(), worldPosition.getZ()+1));
 	    itemLocation.setValue(object);
 	}
 
