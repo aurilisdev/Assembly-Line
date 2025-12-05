@@ -3,7 +3,7 @@ package assemblyline.common.tile;
 import java.util.List;
 
 import assemblyline.common.inventory.container.ContainerAutocrafter;
-import assemblyline.common.settings.AssemblyLineConstants;
+import assemblyline.common.settings.AssemblyLineConfig;
 import assemblyline.registers.AssemblyLineTiles;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.core.BlockPos;
@@ -33,7 +33,7 @@ public class TileAutocrafter extends GenericTile {
 	public TileAutocrafter(BlockPos worldPosition, BlockState blockState) {
 		super(AssemblyLineTiles.TILE_AUTOCRAFTER.get(), worldPosition, blockState);
 		addComponent(new ComponentTickable(this).tickServer(this::tickServer));
-		addComponent(new ComponentElectrodynamic(this, false, true).maxJoules(AssemblyLineConstants.AUTOCRAFTER_USAGE * 20).setInputDirections(BlockEntityUtils.MachineDirection.values()));
+		addComponent(new ComponentElectrodynamic(this, false, true).maxJoules(AssemblyLineConfig.INSTANCE.AUTOCRAFTER_USAGE.getAsDouble() * 20).setInputDirections(BlockEntityUtils.MachineDirection.values()));
 		addComponent(new ComponentInventory(this, ComponentInventory.InventoryBuilder.newInv().inputs(9).outputs(1))
 				//
 				.setSlotsByDirection(BlockEntityUtils.MachineDirection.BOTTOM, 9)
@@ -108,7 +108,7 @@ public class TileAutocrafter extends GenericTile {
 
 	public void tickServer(ComponentTickable tick) {
 		ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
-		boolean canContinue = electro.getJoulesStored() >= AssemblyLineConstants.AUTOCRAFTER_USAGE;
+		boolean canContinue = electro.getJoulesStored() >= AssemblyLineConfig.INSTANCE.AUTOCRAFTER_USAGE.getAsDouble();
 		if (tick.getTicks() % 20 == 0) {
 			if (canContinue) {
 				ComponentInventory inventory = getComponent(IComponentType.Inventory);
@@ -146,7 +146,7 @@ public class TileAutocrafter extends GenericTile {
 							} else {
 								currentItemStack.grow(result.getCount());
 							}
-							electro.joules(electro.getJoulesStored() - AssemblyLineConstants.AUTOCRAFTER_USAGE);
+							electro.joules(electro.getJoulesStored() - AssemblyLineConfig.INSTANCE.AUTOCRAFTER_USAGE.getAsDouble());
 						}
 					}
 				}

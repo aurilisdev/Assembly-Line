@@ -1,7 +1,7 @@
 package assemblyline.common.tile;
 
 import assemblyline.common.inventory.container.ContainerBlockPlacer;
-import assemblyline.common.settings.AssemblyLineConstants;
+import assemblyline.common.settings.AssemblyLineConfig;
 import assemblyline.common.tile.util.TileOutlineArea;
 import assemblyline.registers.AssemblyLineTiles;
 import net.minecraft.core.BlockPos;
@@ -36,7 +36,7 @@ public class TileBlockPlacer extends TileOutlineArea {
         super(AssemblyLineTiles.TILE_BLOCKPLACER.get(), pos, state);
         addComponent(new ComponentPacketHandler(this));
         addComponent(new ComponentTickable(this).tickServer(this::tickServer));
-        addComponent(new ComponentElectrodynamic(this, false, true).setInputDirections(BlockEntityUtils.MachineDirection.FRONT).voltage(VoltaicCapabilities.DEFAULT_VOLTAGE).maxJoules(AssemblyLineConstants.BLOCKPLACER_USAGE * 2));
+        addComponent(new ComponentElectrodynamic(this, false, true).setInputDirections(BlockEntityUtils.MachineDirection.FRONT).voltage(VoltaicCapabilities.DEFAULT_VOLTAGE).maxJoules(AssemblyLineConfig.INSTANCE.BLOCKPLACER_USAGE.getAsDouble() * 2));
         addComponent(new ComponentInventory(this, ComponentInventory.InventoryBuilder.newInv().inputs(1).upgrades(3))
                 //
                 .setDirectionsBySlot(0, BlockEntityUtils.MachineDirection.TOP, BlockEntityUtils.MachineDirection.BOTTOM, BlockEntityUtils.MachineDirection.LEFT, BlockEntityUtils.MachineDirection.RIGHT).validUpgrades(ContainerBlockPlacer.VALID_UPGRADES).valid(machineValidator()));
@@ -66,7 +66,7 @@ public class TileBlockPlacer extends TileOutlineArea {
         }
 
 
-        if (electro.getJoulesStored() < AssemblyLineConstants.BLOCKPLACER_USAGE || inv.areInputsEmpty()) {
+        if (electro.getJoulesStored() < AssemblyLineConfig.INSTANCE.BLOCKPLACER_USAGE.getAsDouble() || inv.areInputsEmpty()) {
             return;
         }
 
@@ -83,7 +83,7 @@ public class TileBlockPlacer extends TileOutlineArea {
         Direction facing = getFacing();
         BlockPos off = worldPosition.offset(facing.getOpposite().getNormal());
         BlockState state = level.getBlockState(off);
-        electro.setJoulesStored(electro.getJoulesStored() - AssemblyLineConstants.BLOCKBREAKER_USAGE);
+        electro.setJoulesStored(electro.getJoulesStored() - AssemblyLineConfig.INSTANCE.BLOCKBREAKER_USAGE.getAsDouble());
         if (!state.isAir()) {
             return;
         }

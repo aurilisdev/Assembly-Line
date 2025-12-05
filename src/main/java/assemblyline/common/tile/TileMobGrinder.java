@@ -3,7 +3,7 @@ package assemblyline.common.tile;
 import java.util.List;
 
 import assemblyline.common.inventory.container.ContainerMobGrinder;
-import assemblyline.common.settings.AssemblyLineConstants;
+import assemblyline.common.settings.AssemblyLineConfig;
 import assemblyline.common.tile.util.TileOutlineArea;
 import assemblyline.registers.AssemblyLineAttachmentTypes;
 import assemblyline.registers.AssemblyLineTiles;
@@ -39,7 +39,7 @@ public class TileMobGrinder extends TileOutlineArea {
         super(AssemblyLineTiles.TILE_MOBGRINDER.get(), pos, state);
         addComponent(new ComponentPacketHandler(this));
         addComponent(new ComponentTickable(this).tickServer(this::tickServer));
-        addComponent(new ComponentElectrodynamic(this, false, true).setInputDirections(BlockEntityUtils.MachineDirection.FRONT).voltage(VoltaicCapabilities.DEFAULT_VOLTAGE).maxJoules(AssemblyLineConstants.MOBGRINDER_USAGE * 40));
+        addComponent(new ComponentElectrodynamic(this, false, true).setInputDirections(BlockEntityUtils.MachineDirection.FRONT).voltage(VoltaicCapabilities.DEFAULT_VOLTAGE).maxJoules(AssemblyLineConfig.INSTANCE.MOBGRINDER_USAGE.getAsDouble() * 40));
         addComponent(new ComponentInventory(this, ComponentInventory.InventoryBuilder.newInv().outputs(9).upgrades(3))
                 //
                 .setDirectionsBySlot(0, BlockEntityUtils.MachineDirection.TOP, BlockEntityUtils.MachineDirection.BOTTOM, BlockEntityUtils.MachineDirection.LEFT, BlockEntityUtils.MachineDirection.RIGHT)
@@ -77,7 +77,7 @@ public class TileMobGrinder extends TileOutlineArea {
 
         ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
 
-        if (electro.getJoulesStored() < AssemblyLineConstants.MOBGRINDER_USAGE * powerUsageMultiplier.getValue() || !inv.areOutputsEmpty()) {
+        if (electro.getJoulesStored() < AssemblyLineConfig.INSTANCE.MOBGRINDER_USAGE.getAsDouble() * powerUsageMultiplier.getValue() || !inv.areOutputsEmpty()) {
             return;
         }
 
@@ -96,7 +96,7 @@ public class TileMobGrinder extends TileOutlineArea {
 
         for (Entity entity : entities) {
 
-            if (electro.getJoulesStored() < AssemblyLineConstants.MOBGRINDER_USAGE) {
+            if (electro.getJoulesStored() < AssemblyLineConfig.INSTANCE.MOBGRINDER_USAGE.getAsDouble()) {
                 break;
             }
 
@@ -104,7 +104,7 @@ public class TileMobGrinder extends TileOutlineArea {
                 continue;
             }
 
-            electro.joules(electro.getJoulesStored() - AssemblyLineConstants.MOBGRINDER_USAGE);
+            electro.joules(electro.getJoulesStored() - AssemblyLineConfig.INSTANCE.MOBGRINDER_USAGE.getAsDouble());
 
             entity.setData(AssemblyLineAttachmentTypes.GRINDER_KILLED_MOB, getBlockPos());
 

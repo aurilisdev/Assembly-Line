@@ -1,7 +1,7 @@
 package assemblyline.common.tile;
 
 import assemblyline.common.inventory.container.ContainerBlockBreaker;
-import assemblyline.common.settings.AssemblyLineConstants;
+import assemblyline.common.settings.AssemblyLineConfig;
 import assemblyline.common.tile.util.TileOutlineArea;
 import assemblyline.registers.AssemblyLineSounds;
 import assemblyline.registers.AssemblyLineTiles;
@@ -35,7 +35,7 @@ public class TileBlockBreaker extends TileOutlineArea {
 		super(AssemblyLineTiles.TILE_BLOCKBREAKER.get(), pos, state);
 		addComponent(new ComponentPacketHandler(this));
 		addComponent(new ComponentTickable(this).tickServer(this::tickServer).tickClient(this::tickClient));
-		addComponent(new ComponentElectrodynamic(this, false, true).setInputDirections(BlockEntityUtils.MachineDirection.FRONT).voltage(VoltaicCapabilities.DEFAULT_VOLTAGE).maxJoules(AssemblyLineConstants.BLOCKBREAKER_USAGE * 20));
+		addComponent(new ComponentElectrodynamic(this, false, true).setInputDirections(BlockEntityUtils.MachineDirection.FRONT).voltage(VoltaicCapabilities.DEFAULT_VOLTAGE).maxJoules(AssemblyLineConfig.INSTANCE.BLOCKBREAKER_USAGE.getAsDouble()* 20));
 		addComponent(new ComponentInventory(this, ComponentInventory.InventoryBuilder.newInv().upgrades(3)).validUpgrades(ContainerBlockBreaker.VALID_UPGRADES).valid(machineValidator()));
 		addComponent(new ComponentContainerProvider("blockbreaker", this).createMenu((id, player) -> new ContainerBlockBreaker(id, player, getComponent(IComponentType.Inventory), getCoordsArray())));
 		addComponent(new ComponentForgeEnergy(this));
@@ -46,7 +46,7 @@ public class TileBlockBreaker extends TileOutlineArea {
 
 		ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
 		
-		if(electro.getJoulesStored() < AssemblyLineConstants.BLOCKBREAKER_USAGE) {
+		if(electro.getJoulesStored() < AssemblyLineConfig.INSTANCE.BLOCKBREAKER_USAGE.getAsDouble()) {
 			progress.setValue(0.0);
 			return;
 		}
@@ -70,7 +70,7 @@ public class TileBlockBreaker extends TileOutlineArea {
 		if (progress.getValue() < 1) {
 			progress.setValue(progress.getValue() + k1 * 5);
 			
-			electro.joules(electro.getJoulesStored() - AssemblyLineConstants.BLOCKBREAKER_USAGE);
+			electro.joules(electro.getJoulesStored() - AssemblyLineConfig.INSTANCE.BLOCKBREAKER_USAGE.getAsDouble());
 			
 			return;
 			

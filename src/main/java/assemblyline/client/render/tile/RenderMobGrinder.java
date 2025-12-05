@@ -3,7 +3,7 @@ package assemblyline.client.render.tile;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import assemblyline.client.AssemblyLineClientRegister;
-import assemblyline.common.settings.AssemblyLineConstants;
+import assemblyline.common.settings.AssemblyLineConfig;
 import assemblyline.common.tile.TileMobGrinder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -27,7 +27,7 @@ public class RenderMobGrinder extends AbstractTileRenderer<TileMobGrinder> {
 
         double progress = 0;
 
-        if (grinder.<ComponentElectrodynamic>getComponent(IComponentType.Electrodynamic).getJoulesStored() >= AssemblyLineConstants.MOBGRINDER_USAGE * grinder.powerUsageMultiplier.getValue()) {
+        if (grinder.<ComponentElectrodynamic>getComponent(IComponentType.Electrodynamic).getJoulesStored() >= AssemblyLineConfig.INSTANCE.MOBGRINDER_USAGE.getAsDouble() * grinder.powerUsageMultiplier.getValue()) {
             progress = System.currentTimeMillis() % 150 / 150.0 * 360.0;
         }
 

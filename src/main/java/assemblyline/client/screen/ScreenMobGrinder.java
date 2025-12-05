@@ -6,7 +6,7 @@ import java.util.List;
 import assemblyline.client.event.levelstage.HandlerHarvesterLines;
 import assemblyline.client.screen.generic.GenericOutlineAreaScreen;
 import assemblyline.common.inventory.container.ContainerMobGrinder;
-import assemblyline.common.settings.AssemblyLineConstants;
+import assemblyline.common.settings.AssemblyLineConfig;
 import assemblyline.common.tile.TileMobGrinder;
 import assemblyline.prefab.utils.AssemblyTextUtils;
 import net.minecraft.ChatFormatting;
@@ -53,7 +53,7 @@ public class ScreenMobGrinder extends GenericOutlineAreaScreen<ContainerMobGrind
         TileMobGrinder harvester = menu.getSafeHost();
         if (harvester != null) {
             ComponentElectrodynamic electro = harvester.getComponent(IComponentType.Electrodynamic);
-            list.add(AssemblyTextUtils.gui("machine.usage", ChatFormatter.getChatDisplayShort(AssemblyLineConstants.MOBGRINDER_USAGE * harvester.powerUsageMultiplier.getValue() * 20, DisplayUnits.WATT)).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
+            list.add(AssemblyTextUtils.gui("machine.usage", ChatFormatter.getChatDisplayShort(AssemblyLineConfig.INSTANCE.MOBGRINDER_USAGE.getAsDouble()* harvester.powerUsageMultiplier.getValue() * 20, DisplayUnits.WATT)).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
             list.add(AssemblyTextUtils.gui("machine.voltage", ChatFormatter.getChatDisplayShort(electro.getVoltage(), DisplayUnits.VOLTAGE)).withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
         }
         return list;

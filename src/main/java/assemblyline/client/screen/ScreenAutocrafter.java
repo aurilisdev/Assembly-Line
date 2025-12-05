@@ -1,7 +1,7 @@
 package assemblyline.client.screen;
 
 import assemblyline.common.inventory.container.ContainerAutocrafter;
-import assemblyline.common.settings.AssemblyLineConstants;
+import assemblyline.common.settings.AssemblyLineConfig;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import voltaic.prefab.screen.GenericScreen;
@@ -17,7 +17,7 @@ public class ScreenAutocrafter extends GenericScreen<ContainerAutocrafter> {
 		super(container, playerInventory, title);
 
 		addComponent(new ScreenComponentGeneric(ScreenComponentProgress.ProgressTextures.ARROW_RIGHT_OFF, 80, 34));
-		addComponent(new ScreenComponentElectricInfo(-AbstractScreenComponentInfo.SIZE + 1, 2).wattage(AssemblyLineConstants.AUTOCRAFTER_USAGE));
+		addComponent(new ScreenComponentElectricInfo(-AbstractScreenComponentInfo.SIZE + 1, 2).wattage(AssemblyLineConfig.INSTANCE.AUTOCRAFTER_USAGE.getAsDouble()));
 		new WrapperInventoryIO(this, -AbstractScreenComponentInfo.SIZE + 1, AbstractScreenComponentInfo.SIZE + 2, 75, 82, 8, 72);
 	}
 

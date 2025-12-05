@@ -3,7 +3,7 @@ package assemblyline.client.render.tile;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import assemblyline.client.AssemblyLineClientRegister;
-import assemblyline.common.settings.AssemblyLineConstants;
+import assemblyline.common.settings.AssemblyLineConfig;
 import assemblyline.common.tile.TileRancher;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -26,7 +26,7 @@ public class RenderRancher extends AbstractTileRenderer<TileRancher> {
     public void render(TileRancher rancher, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
 
         double progress = 0;
-        if (rancher.<ComponentElectrodynamic>getComponent(IComponentType.Electrodynamic).getJoulesStored() >= AssemblyLineConstants.RANCHER_USAGE) {
+        if (rancher.<ComponentElectrodynamic>getComponent(IComponentType.Electrodynamic).getJoulesStored() >= AssemblyLineConfig.INSTANCE.RANCHER_USAGE.getAsDouble()) {
             progress = System.currentTimeMillis() % 100 / 100.0 * 40;
         }
 

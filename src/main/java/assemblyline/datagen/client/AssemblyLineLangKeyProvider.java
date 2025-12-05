@@ -3,7 +3,6 @@ package assemblyline.datagen.client;
 import assemblyline.AssemblyLine;
 import assemblyline.common.block.subtype.SubtypeAssemblyMachine;
 import assemblyline.registers.AssemblyLineBlocks;
-import assemblyline.registers.AssemblyLineItems;
 import assemblyline.registers.AssemblyLineSounds;
 import net.minecraft.data.PackOutput;
 import voltaic.datagen.utils.client.BaseLangKeyProvider;
@@ -107,7 +106,17 @@ public class AssemblyLineLangKeyProvider extends BaseLangKeyProvider {
 
                 addGuidebook("chapter.machines.farmer1", "The Farmer will plant and harvest crops and trees within its working area. The colors of the input slots corrospond to the regions the items will be planted in. The Farmer must be placed underneath the land it is working. The top right slot is for Bone Meal.");
                 addGuidebook("chapter.machines.farmer2", "The \"Show Area\" button will display the working area of the Farmer. The \"Bone Full\" button toggles whether or not the Farmer will use one Bone Meal per crop, or keep using Bone Meal until the crop is fully grown. The \"Refill Empty\" button toggles whether or not the Farmer will add the seeds " + "from harvested crops back into the planting slots. The Farmer can use up to 4 Range Upgrades to increase its working area. Note the upgrades increase the range by multiples of 3.");
-
+		// Sections
+		addConfiguration("common", "Common");
+		addConfiguration("conveyorbelt_usage", "Conveyor Belt Usage");
+		addConfiguration("sorterbelt_usage", "Sorter Belt Usage");
+		addConfiguration("autocrafter_usage", "Autocrafter Usage");
+		addConfiguration("blockbreaker_usage", "Block Breaker Usage");
+		addConfiguration("blockplacer_usage", "Block Placer Usage");
+		addConfiguration("rancher_usage", "Rancher Usage");
+		addConfiguration("mobgrinder_usage", "Mob Grinder Usage");
+		addConfiguration("farmer_usage", "Farmer Usage");
+		addConfiguration("conveyor_max_spread", "Max Conveyor Connective Spreading");
         }
 
     }

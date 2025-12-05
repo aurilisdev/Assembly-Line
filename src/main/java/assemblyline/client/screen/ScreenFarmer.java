@@ -7,7 +7,7 @@ import com.mojang.datafixers.util.Pair;
 
 import assemblyline.client.event.levelstage.HandlerFarmerLines;
 import assemblyline.common.inventory.container.ContainerFarmer;
-import assemblyline.common.settings.AssemblyLineConstants;
+import assemblyline.common.settings.AssemblyLineConfig;
 import assemblyline.common.tile.TileFarmer;
 import assemblyline.prefab.utils.AssemblyTextUtils;
 import net.minecraft.ChatFormatting;
@@ -133,7 +133,7 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
         TileFarmer farmer = menu.getSafeHost();
         if (farmer != null) {
             ComponentElectrodynamic electro = farmer.getComponent(IComponentType.Electrodynamic);
-            list.add(AssemblyTextUtils.gui("machine.usage", ChatFormatter.getChatDisplayShort(AssemblyLineConstants.FARMER_USAGE * farmer.powerUsageMultiplier.getValue() * 20, DisplayUnits.WATT).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
+            list.add(AssemblyTextUtils.gui("machine.usage", ChatFormatter.getChatDisplayShort(AssemblyLineConfig.INSTANCE.FARMER_USAGE.getAsDouble() * farmer.powerUsageMultiplier.getValue() * 20, DisplayUnits.WATT).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
             list.add(AssemblyTextUtils.gui("machine.voltage", ChatFormatter.getChatDisplayShort(electro.getVoltage(), DisplayUnits.VOLTAGE).withStyle(ChatFormatting.GRAY)).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
         }
         return list;

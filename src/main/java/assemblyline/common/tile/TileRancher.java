@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import assemblyline.common.inventory.container.ContainerRancher;
-import assemblyline.common.settings.AssemblyLineConstants;
+import assemblyline.common.settings.AssemblyLineConfig;
 import assemblyline.common.tile.util.TileOutlineArea;
 import assemblyline.registers.AssemblyLineTiles;
 import net.minecraft.core.BlockPos;
@@ -40,7 +40,7 @@ public class TileRancher extends TileOutlineArea {
 		super(AssemblyLineTiles.TILE_RANCHER.get(), pos, state);
 		//addComponent(new ComponentPacketHandler(this));
 		addComponent(new ComponentTickable(this).tickServer(this::tickServer));
-		addComponent(new ComponentElectrodynamic(this, false, true).setInputDirections(BlockEntityUtils.MachineDirection.FRONT).voltage(VoltaicCapabilities.DEFAULT_VOLTAGE).maxJoules(AssemblyLineConstants.RANCHER_USAGE * 20));
+		addComponent(new ComponentElectrodynamic(this, false, true).setInputDirections(BlockEntityUtils.MachineDirection.FRONT).voltage(VoltaicCapabilities.DEFAULT_VOLTAGE).maxJoules(AssemblyLineConfig.INSTANCE.RANCHER_USAGE.getAsDouble()	 * 20));
 		addComponent(new ComponentInventory(this, ComponentInventory.InventoryBuilder.newInv().outputs(9).upgrades(3))
 				//
 				.setDirectionsBySlot(0, BlockEntityUtils.MachineDirection.TOP, BlockEntityUtils.MachineDirection.BOTTOM, BlockEntityUtils.MachineDirection.LEFT, BlockEntityUtils.MachineDirection.RIGHT)
@@ -77,7 +77,7 @@ public class TileRancher extends TileOutlineArea {
 			}
 		}
 
-		if (electro.getJoulesStored() < AssemblyLineConstants.RANCHER_USAGE || !inv.areOutputsEmpty()) {
+		if (electro.getJoulesStored() < AssemblyLineConfig.INSTANCE.RANCHER_USAGE.getAsDouble() || !inv.areOutputsEmpty()) {
 			return;
 		}
 
@@ -99,7 +99,7 @@ public class TileRancher extends TileOutlineArea {
 		
 		for (Entity entity : entities) {
 			
-			if(electro.getJoulesStored() < AssemblyLineConstants.RANCHER_USAGE) {
+			if(electro.getJoulesStored() < AssemblyLineConfig.INSTANCE.RANCHER_USAGE.getAsDouble()) {
 				break;
 			}
 			
@@ -107,7 +107,7 @@ public class TileRancher extends TileOutlineArea {
 				
 				collectedItems.addAll(sheep.onSheared(null, new ItemStack(Items.SHEARS), level, entity.blockPosition()));
 				
-				electro.joules(electro.getJoulesStored() - AssemblyLineConstants.RANCHER_USAGE);
+				electro.joules(electro.getJoulesStored() - AssemblyLineConfig.INSTANCE.RANCHER_USAGE.getAsDouble());
 				
 			}
 		}

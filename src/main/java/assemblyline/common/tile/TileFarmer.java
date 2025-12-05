@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 
 import assemblyline.client.event.levelstage.HandlerFarmerLines;
 import assemblyline.common.inventory.container.ContainerFarmer;
-import assemblyline.common.settings.AssemblyLineConstants;
+import assemblyline.common.settings.AssemblyLineConfig;
 import assemblyline.registers.AssemblyLineTiles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -149,7 +149,7 @@ public class TileFarmer extends GenericTile {
         super(AssemblyLineTiles.TILE_FARMER.get(), pos, state);
         addComponent(new ComponentPacketHandler(this));
         addComponent(new ComponentTickable(this).tickServer(this::tickServer));
-        addComponent(new ComponentElectrodynamic(this, false, true).setInputDirections(BlockEntityUtils.MachineDirection.BOTTOM).voltage(VoltaicCapabilities.DEFAULT_VOLTAGE).maxJoules(AssemblyLineConstants.FARMER_USAGE * 20));
+        addComponent(new ComponentElectrodynamic(this, false, true).setInputDirections(BlockEntityUtils.MachineDirection.BOTTOM).voltage(VoltaicCapabilities.DEFAULT_VOLTAGE).maxJoules(AssemblyLineConfig.INSTANCE.FARMER_USAGE.getAsDouble() * 20));
         addComponent(new ComponentInventory(this, ComponentInventory.InventoryBuilder.newInv().inputs(10).outputs(9).upgrades(3))
                 //
                 .setSlotsByDirection(BlockEntityUtils.MachineDirection.RIGHT, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18)
@@ -167,11 +167,11 @@ public class TileFarmer extends GenericTile {
 
         ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
         // faster starting speed, but the fastest speed is one block in area checked per tick
-        if (electro.getJoulesStored() < AssemblyLineConstants.FARMER_USAGE * powerUsageMultiplier.getValue()) {
+        if (electro.getJoulesStored() < AssemblyLineConfig.INSTANCE.FARMER_USAGE.getAsDouble() * powerUsageMultiplier.getValue()) {
             return;
         }
 
-        electro.joules(electro.getJoulesStored() - AssemblyLineConstants.FARMER_USAGE * powerUsageMultiplier.getValue());
+        electro.joules(electro.getJoulesStored() - AssemblyLineConfig.INSTANCE.FARMER_USAGE.getAsDouble() * powerUsageMultiplier.getValue());
 
         ticksSinceCheck.setValue(ticksSinceCheck.getValue() + 1);
 
@@ -420,12 +420,12 @@ public class TileFarmer extends GenericTile {
                     plantable.spawnPlantAtPosition(plantingContents, level, checkPos, Direction.DOWN);
                     world.playSound(null, checkPos, SoundEvents.CROP_PLANTED, SoundSource.BLOCKS, 1.0F, 1.0F);
                     plantingContents.shrink(1);
-                    electro.extractPower(TransferPack.joulesVoltage(AssemblyLineConstants.FARMER_USAGE * powerUsageMultiplier.getValue(), electro.getVoltage()), false);
+                    electro.extractPower(TransferPack.joulesVoltage(AssemblyLineConfig.INSTANCE.FARMER_USAGE.getAsDouble() * powerUsageMultiplier.getValue(), electro.getVoltage()), false);
                     // then we check if it can be planted if the block becomes farmland
                 } else if (belowState.is(BlockTags.DIRT)) {
                     world.setBlockAndUpdate(below, farmland);
                     world.playSound(null, below, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    electro.extractPower(TransferPack.joulesVoltage(AssemblyLineConstants.FARMER_USAGE * powerUsageMultiplier.getValue(), electro.getVoltage()), false);
+                    electro.extractPower(TransferPack.joulesVoltage(AssemblyLineConfig.INSTANCE.FARMER_USAGE.getAsDouble() * powerUsageMultiplier.getValue(), electro.getVoltage()), false);
                 }
             } else if (checkVanilla(plantingContents, blockItem)) {
 
@@ -434,7 +434,7 @@ public class TileFarmer extends GenericTile {
                     world.setBlockAndUpdate(checkPos, block.defaultBlockState());
                     world.playSound(null, checkPos, SoundEvents.CROP_PLANTED, SoundSource.BLOCKS, 1.0F, 1.0F);
                     plantingContents.shrink(1);
-                    electro.extractPower(TransferPack.joulesVoltage(AssemblyLineConstants.FARMER_USAGE * powerUsageMultiplier.getValue(), electro.getVoltage()), false);
+                    electro.extractPower(TransferPack.joulesVoltage(AssemblyLineConfig.INSTANCE.FARMER_USAGE.getAsDouble() * powerUsageMultiplier.getValue(), electro.getVoltage()), false);
 
                 } else if (belowState.is(BlockTags.DIRT) && isVanillaTillable(plantingContents)) {
                     world.setBlockAndUpdate(below, farmland);
@@ -442,7 +442,7 @@ public class TileFarmer extends GenericTile {
                     world.setBlockAndUpdate(checkPos, block.defaultBlockState());
                     world.playSound(null, checkPos, SoundEvents.CROP_PLANTED, SoundSource.BLOCKS, 1.0F, 1.0F);
                     plantingContents.shrink(1);
-                    electro.extractPower(TransferPack.joulesVoltage(AssemblyLineConstants.FARMER_USAGE * powerUsageMultiplier.getValue(), electro.getVoltage()), false);
+                    electro.extractPower(TransferPack.joulesVoltage(AssemblyLineConfig.INSTANCE.FARMER_USAGE.getAsDouble() * powerUsageMultiplier.getValue(), electro.getVoltage()), false);
                 }
             }
 

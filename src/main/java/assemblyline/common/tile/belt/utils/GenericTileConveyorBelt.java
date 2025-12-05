@@ -6,7 +6,7 @@ import java.util.List;
 import org.joml.Vector3f;
 
 import assemblyline.common.block.BlockConveyorBelt;
-import assemblyline.common.settings.AssemblyLineConstants;
+import assemblyline.common.settings.AssemblyLineConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -102,12 +102,11 @@ public abstract class GenericTileConveyorBelt extends GenericTile {
 	addComponent(new ComponentElectrodynamic(this, false, true)
 		.setInputDirections(BlockEntityUtils.MachineDirection.BOTTOM, BlockEntityUtils.MachineDirection.LEFT,
 			BlockEntityUtils.MachineDirection.RIGHT)
-		.maxJoules(AssemblyLineConstants.CONVEYORBELT_USAGE * 100));
+		.maxJoules(AssemblyLineConfig.INSTANCE.CONVEYORBELT_USAGE.getAsDouble() * 100));
 	addComponent(new ComponentForgeEnergy(this));
 	this.properties = properties;
     }
 
-    @SuppressWarnings("null")
     public void tickCommon(ComponentTickable tickable) {
 
 	hasDroppedThisTick = false;
@@ -172,17 +171,17 @@ public abstract class GenericTileConveyorBelt extends GenericTile {
 	    }
 
 	    if (currentSpread.getValue() == MIN_SPREAD
-		    || currentSpread.getValue() == AssemblyLineConstants.CONVEYOR_MAX_SPREAD) {
+		    || currentSpread.getValue() == AssemblyLineConfig.INSTANCE.CONVEYOR_MAX_SPREAD.getAsInt()) {
 
-		if (electro.getJoulesStored() < AssemblyLineConstants.CONVEYORBELT_USAGE) {
+		if (electro.getJoulesStored() < AssemblyLineConfig.INSTANCE.CONVEYORBELT_USAGE.getAsDouble()) {
 
 		    currentSpread.setValue(MIN_SPREAD);
 
 		} else {
 
-		    electro.joules(electro.getJoulesStored() - AssemblyLineConstants.CONVEYORBELT_USAGE);
+		    electro.joules(electro.getJoulesStored() - AssemblyLineConfig.INSTANCE.CONVEYORBELT_USAGE.getAsDouble());
 
-		    currentSpread.setValue(AssemblyLineConstants.CONVEYOR_MAX_SPREAD);
+		    currentSpread.setValue(AssemblyLineConfig.INSTANCE.CONVEYOR_MAX_SPREAD.getAsInt());
 
 		}
 	    }

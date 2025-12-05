@@ -6,7 +6,6 @@ import java.util.List;
 import assemblyline.AssemblyLine;
 import assemblyline.common.block.subtype.SubtypeAssemblyMachine;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Item.Properties;
 import net.minecraft.world.item.ItemStack;
@@ -16,12 +15,9 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import voltaic.Voltaic;
 import voltaic.api.creativetab.CreativeTabSupplier;
 import voltaic.api.registration.BulkDeferredHolder;
 import voltaic.common.blockitem.BlockItemDescriptable;
-import voltaic.common.item.ItemUpgrade;
-import voltaic.common.item.subtype.SubtypeItemUpgrade;
 
 public class AssemblyLineItems {
 
