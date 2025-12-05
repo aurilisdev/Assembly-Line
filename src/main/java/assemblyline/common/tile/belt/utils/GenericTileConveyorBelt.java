@@ -43,6 +43,9 @@ public abstract class GenericTileConveyorBelt extends GenericTile {
     public static final int MIN_SPREAD = 0;
 
     public static final BlockPos[] SPREAD_OFFSETS = {
+	    new BlockPos(0, 1, 0),
+	    //
+	    new BlockPos(0, -1, 0),
 	    //
 	    new BlockPos(0, 0, 1),
 	    //
@@ -424,7 +427,6 @@ public abstract class GenericTileConveyorBelt extends GenericTile {
 
 	if (inserted && newItem) {
 
-	    Location next = new Location(Math.clamp(object.x(), worldPosition.getX(), worldPosition.getX()+1),Math.clamp(object.y(), worldPosition.getY(), worldPosition.getY()+1),Math.clamp(object.z(), worldPosition.getZ(), worldPosition.getZ()+1));
 	    itemLocation.setValue(object);
 	}
 
