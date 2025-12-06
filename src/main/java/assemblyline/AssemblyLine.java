@@ -15,6 +15,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
@@ -28,8 +29,9 @@ public final class AssemblyLine {
 	public AssemblyLine(IEventBus bus, ModContainer container) {
 	    	AssemblyLineConfig.INSTANCE = new AssemblyLineConfig();
 		container.registerConfig(ModConfig.Type.COMMON, AssemblyLineConfig.INSTANCE.SPEC);
-		container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
-
+		if (FMLEnvironment.dist == Dist.CLIENT) {
+		    container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+		}
 		AssemblyLineVoxelShapes.init();
 		UnifiedAssemblyLineRegister.register(bus);
 	}
