@@ -94,7 +94,6 @@ public abstract class GenericTileConveyorBelt extends GenericTile {
 		this.properties = properties;
 	}
 
-	@SuppressWarnings("null")
 	public void tickCommon(ComponentTickable tickable) {
 
 		hasDroppedThisTick = false;

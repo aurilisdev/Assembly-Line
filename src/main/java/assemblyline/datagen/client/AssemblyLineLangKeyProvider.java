@@ -3,7 +3,6 @@ package assemblyline.datagen.client;
 import assemblyline.AssemblyLine;
 import assemblyline.common.block.subtype.SubtypeAssemblyMachine;
 import assemblyline.registers.AssemblyLineBlocks;
-import assemblyline.registers.AssemblyLineItems;
 import assemblyline.registers.AssemblyLineSounds;
 import net.minecraft.data.PackOutput;
 import voltaic.datagen.utils.client.BaseLangKeyProvider;

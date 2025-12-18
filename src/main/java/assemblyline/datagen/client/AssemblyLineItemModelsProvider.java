@@ -3,11 +3,8 @@ package assemblyline.datagen.client;
 import assemblyline.AssemblyLine;
 import assemblyline.common.block.subtype.SubtypeAssemblyMachine;
 import assemblyline.registers.AssemblyLineBlocks;
-import assemblyline.registers.AssemblyLineItems;
 import net.minecraft.data.PackOutput;
-import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraftforge.common.data.ExistingFileHelper;
-import voltaic.common.item.subtype.SubtypeItemUpgrade;
 import voltaic.datagen.utils.client.BaseItemModelsProvider;
 
 public class AssemblyLineItemModelsProvider extends BaseItemModelsProvider {
