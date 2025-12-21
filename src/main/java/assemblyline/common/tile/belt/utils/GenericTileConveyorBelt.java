@@ -42,6 +42,9 @@ public abstract class GenericTileConveyorBelt extends GenericTile {
     public static final int MIN_SPREAD = 0;
 
     public static final BlockPos[] SPREAD_OFFSETS = {
+	    new BlockPos(0, 1, 0),
+	    //
+	    new BlockPos(0, -1, 0),
 	    //
 	    new BlockPos(0, 0, 1),
 	    //
