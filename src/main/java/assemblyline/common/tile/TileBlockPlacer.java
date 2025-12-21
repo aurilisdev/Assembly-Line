@@ -6,14 +6,11 @@ import assemblyline.common.tile.util.TileOutlineArea;
 import assemblyline.registers.AssemblyLineTiles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.DirectionalPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.Vec3;
 import voltaic.common.item.ItemUpgrade;
 import voltaic.prefab.properties.types.PropertyTypes;
 import voltaic.prefab.properties.variant.SingleProperty;
@@ -92,8 +89,8 @@ public class TileBlockPlacer extends TileOutlineArea {
 
         if (!stack.isEmpty() && stack.getItem() instanceof BlockItem bi) {
             Block b = bi.getBlock();
-            BlockState newState = b.getStateForPlacement(new BlockPlaceContext(level, null, InteractionHand.MAIN_HAND, stack, new BlockHitResult(Vec3.ZERO, facing, off, false)));
-            if (newState.canSurvive(level, off)) {
+	    BlockState newState = b
+		    .getStateForPlacement(new DirectionalPlaceContext(level, off, facing, stack, facing));            if (newState.canSurvive(level, off)) {
                 level.setBlockAndUpdate(off, newState);
                 stack.shrink(1);
             }
