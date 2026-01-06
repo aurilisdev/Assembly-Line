@@ -152,13 +152,13 @@ public class TileFarmer extends GenericTile {
         addComponent(new ComponentElectrodynamic(this, false, true).setInputDirections(BlockEntityUtils.MachineDirection.BOTTOM).voltage(VoltaicCapabilities.DEFAULT_VOLTAGE).maxJoules(AssemblyLineConfig.INSTANCE.FARMER_USAGE.getAsDouble() * 20));
         addComponent(new ComponentInventory(this, ComponentInventory.InventoryBuilder.newInv().inputs(10).outputs(9).upgrades(3))
                 //
-                .setSlotsByDirection(BlockEntityUtils.MachineDirection.RIGHT, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18)
+                .setSlotsByDirection(BlockEntityUtils.MachineDirection.RIGHT, 0, 1, 2, 3, 4, 5, 6, 7, 8)
                 //
-                .setSlotsByDirection(BlockEntityUtils.MachineDirection.LEFT, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18)
+                .setSlotsByDirection(BlockEntityUtils.MachineDirection.LEFT, 0, 1, 2, 3, 4, 5, 6, 7, 8)
                 //
-                .setSlotsByDirection(BlockEntityUtils.MachineDirection.FRONT, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18)
+                .setSlotsByDirection(BlockEntityUtils.MachineDirection.FRONT, 9)
                 //
-                .setSlotsByDirection(BlockEntityUtils.MachineDirection.BACK, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18).validUpgrades(ContainerFarmer.VALID_UPGRADES).valid(machineValidator()));
+                .setSlotsByDirection(BlockEntityUtils.MachineDirection.BACK, 10, 11, 12, 13, 14, 15, 16, 17, 18).validUpgrades(ContainerFarmer.VALID_UPGRADES).valid(machineValidator()));
         addComponent(new ComponentContainerProvider("farmer", this).createMenu((id, player) -> new ContainerFarmer(id, player, getComponent(IComponentType.Inventory), getCoordsArray())));
         addComponent(new ComponentForgeEnergy(this));
     }
