@@ -14,7 +14,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -25,6 +24,7 @@ import net.minecraft.world.level.storage.loot.LootParams.Builder;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import voltaic.common.block.states.VoltaicBlockStates;
+import voltaic.common.block.states.VoltaicMaterials;
 import voltaic.common.block.voxelshapes.VoxelShapeProvider;
 import voltaic.prefab.block.GenericEntityBlockWaterloggable;
 
@@ -36,7 +36,7 @@ public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
 	private final BlockEntityType.BlockEntitySupplier<?> supplier;
 
 	public BlockConveyorBelt(VoxelShapeProvider shapeProvider, BlockEntityType.BlockEntitySupplier<?> supplier) {
-		super(Blocks.IRON_BLOCK.properties().strength(3.5F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion());
+		super(VoltaicMaterials.metal().strength(3.5F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion());
 		registerDefaultState(stateDefinition.any().setValue(VoltaicBlockStates.FACING, Direction.NORTH));
 		this.shapeProvider = shapeProvider;
 		this.supplier = supplier;
