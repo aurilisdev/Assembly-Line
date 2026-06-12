@@ -36,7 +36,7 @@ public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
 	private final BlockEntityType.BlockEntitySupplier<?> supplier;
 
 	public BlockConveyorBelt(VoxelShapeProvider shapeProvider, BlockEntityType.BlockEntitySupplier<?> supplier) {
-		super(Blocks.IRON_BLOCK.properties().strength(3.5F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion());
+		super(Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(3.5F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion());
 		registerDefaultState(stateDefinition.any().setValue(VoltaicBlockStates.FACING, Direction.NORTH));
 		this.shapeProvider = shapeProvider;
 		this.supplier = supplier;
