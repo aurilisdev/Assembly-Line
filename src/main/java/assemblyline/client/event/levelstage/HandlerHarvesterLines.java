@@ -22,50 +22,51 @@ import voltaic.client.event.AbstractLevelStageHandler;
 
 public class HandlerHarvesterLines extends AbstractLevelStageHandler {
 
-	public static final HandlerHarvesterLines INSTANCE = new HandlerHarvesterLines();
+    public static final HandlerHarvesterLines INSTANCE = new HandlerHarvesterLines();
 
-	private final HashMap<BlockPos, AABB> outlines = new HashMap<>();
+    private final HashMap<BlockPos, AABB> outlines = new HashMap<>();
 
-	@Override
-	public void render(Camera camera, Frustum frustum, LevelRenderer renderer, PoseStack stack, Matrix4f projectionMatrix, Minecraft minecraft, int renderTick, float partialTick) {
+    @Override
+    public void render(Camera camera, Frustum frustum, LevelRenderer renderer, PoseStack stack,
+	    Matrix4f projectionMatrix, Minecraft minecraft, int renderTick, float partialTick) {
 
-		MultiBufferSource.BufferSource buffer = minecraft.renderBuffers().bufferSource();
-		VertexConsumer builder = buffer.getBuffer(RenderType.LINES);
-		Vec3 camPos = camera.getPosition();
+	MultiBufferSource.BufferSource buffer = minecraft.renderBuffers().bufferSource();
+	VertexConsumer builder = buffer.getBuffer(RenderType.LINES);
+	Vec3 camPos = camera.getPosition();
 
-		stack.pushPose();
-		stack.translate(-camPos.x, -camPos.y, -camPos.z);
+	stack.pushPose();
+	stack.translate(-camPos.x, -camPos.y, -camPos.z);
 
-		for (Entry<BlockPos, AABB> en : outlines.entrySet()) {
-			AABB box = en.getValue().deflate(0.001);
-			LevelRenderer.renderLineBox(stack, builder, box, 1.0F, 1.0F, 1.0F, 1.0F);
-		}
-
-		buffer.endBatch(RenderType.LINES);
-		stack.popPose();
-
+	for (Entry<BlockPos, AABB> en : outlines.entrySet()) {
+	    AABB box = en.getValue().deflate(0.001);
+	    LevelRenderer.renderLineBox(stack, builder, box, 1.0F, 1.0F, 1.0F, 1.0F);
 	}
 
-	@Override
-	public boolean shouldRender(RenderLevelStageEvent.Stage stage) {
-		return stage == RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS;
-	}
+	buffer.endBatch(RenderType.LINES);
+	stack.popPose();
 
-	@Override
-	public void clear() {
-		outlines.clear();
-	}
+    }
 
-	public static boolean containsLines(BlockPos pos) {
-		return INSTANCE.outlines.containsKey(pos);
-	}
+    @Override
+    public boolean shouldRender(RenderLevelStageEvent.Stage stage) {
+	return stage == RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS;
+    }
 
-	public static void addLines(BlockPos pos, AABB lines) {
-		INSTANCE.outlines.put(pos, lines);
-	}
+    @Override
+    public void clear() {
+	outlines.clear();
+    }
 
-	public static void removeLines(BlockPos pos) {
-		INSTANCE.outlines.remove(pos);
-	}
+    public static boolean containsLines(BlockPos pos) {
+	return INSTANCE.outlines.containsKey(pos);
+    }
+
+    public static void addLines(BlockPos pos, AABB lines) {
+	INSTANCE.outlines.put(pos, lines);
+    }
+
+    public static void removeLines(BlockPos pos) {
+	INSTANCE.outlines.remove(pos);
+    }
 
 }

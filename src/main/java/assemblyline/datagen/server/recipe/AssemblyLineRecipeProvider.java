@@ -6,14 +6,13 @@ import voltaic.datagen.utils.server.recipe.BaseRecipeProvider;
 
 public class AssemblyLineRecipeProvider extends BaseRecipeProvider {
 
-	public AssemblyLineRecipeProvider(PackOutput output) {
-		super(output);
-	}
+    public AssemblyLineRecipeProvider(PackOutput output) {
+	super(output);
+    }
 
-	@Override
-	public void addRecipes() {
-		generators.add(new AssemblyLineCraftingTableRecipes());
-	}
-
+    @Override
+    public void addRecipes() {
+	generators.add(new AssemblyLineCraftingTableRecipes());
+    }
 
 }

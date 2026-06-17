@@ -15,30 +15,32 @@ import voltaic.prefab.block.GenericEntityBlockWaterloggable;
 
 public class BlockDetector extends GenericEntityBlockWaterloggable {
 
-	public BlockDetector() {
-		super(Properties.copy(Blocks.IRON_BLOCK).strength(3.5F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion());
-		registerDefaultState(stateDefinition.any().setValue(VoltaicBlockStates.FACING, Direction.NORTH));
-	}
+    public BlockDetector() {
+	super(Properties.copy(Blocks.IRON_BLOCK).strength(3.5F).sound(SoundType.METAL).requiresCorrectToolForDrops()
+		.noOcclusion());
+	registerDefaultState(stateDefinition.any().setValue(VoltaicBlockStates.FACING, Direction.NORTH));
+    }
 
-	@Override
-	public boolean isSignalSource(BlockState state) {
-		return true;
-	}
+    @Override
+    public boolean isSignalSource(BlockState state) {
+	return true;
+    }
 
-	@Override
-	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return super.getStateForPlacement(context).setValue(VoltaicBlockStates.FACING, context.getHorizontalDirection().getOpposite());
-	}
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+	return super.getStateForPlacement(context).setValue(VoltaicBlockStates.FACING,
+		context.getHorizontalDirection().getOpposite());
+    }
 
-	@Override
-	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		super.createBlockStateDefinition(builder);
-		builder.add(VoltaicBlockStates.FACING);
-	}
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+	super.createBlockStateDefinition(builder);
+	builder.add(VoltaicBlockStates.FACING);
+    }
 
-	@Override
-	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return new TileDetector(pos, state);
-	}
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+	return new TileDetector(pos, state);
+    }
 
 }

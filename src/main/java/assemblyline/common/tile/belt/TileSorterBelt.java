@@ -19,72 +19,73 @@ import voltaic.prefab.tile.components.type.ComponentInventory;
 public class TileSorterBelt extends GenericTileConveyorBelt {
 
     public TileSorterBelt(BlockPos worldPosition, BlockState blockState) {
-        super(AssemblyLineTiles.TILE_SORTERBELT.get(), worldPosition, blockState, ConveyorBeltProperties.builder(ConveyorClass.REGULAR).setNoPuller().setInvSize(19));
-        addComponent(new ComponentContainerProvider("sorterbelt", this).createMenu((id, player) -> new ContainerSorterBelt(id, player, getComponent(IComponentType.Inventory), getCoordsArray())));
+	super(AssemblyLineTiles.TILE_SORTERBELT.get(), worldPosition, blockState,
+		ConveyorBeltProperties.builder(ConveyorClass.REGULAR).setNoPuller().setInvSize(19));
+	addComponent(new ComponentContainerProvider("sorterbelt", this)
+		.createMenu((id, player) -> new ContainerSorterBelt(id, player, getComponent(IComponentType.Inventory),
+			getCoordsArray())));
     }
 
     @Override
     public Direction getDirectionForNext() {
 
-        Direction superDirection = super.getDirectionForNext();
+	Direction superDirection = super.getDirectionForNext();
 
-        float stepX = superDirection.getStepX();
-        float stepZ = superDirection.getStepZ();
+	float stepX = superDirection.getStepX();
+	float stepZ = superDirection.getStepZ();
 
-        Vector3f localVector = getLocalItemLocationVector();
+	Vector3f localVector = getLocalItemLocationVector();
 
-        float absX = Math.abs(localVector.x());
-        float absZ = Math.abs(localVector.z());
+	float absX = Math.abs(localVector.x());
+	float absZ = Math.abs(localVector.z());
 
-        boolean xIs = stepX != 0 && stepX < 0 ? absX <= 0.5F : absX >= 0.5F;
-        boolean zIs = stepZ != 0 && stepZ < 0 ? absZ <= 0.5F : absZ >= 0.5F;
+	boolean xIs = stepX != 0 && stepX < 0 ? absX <= 0.5F : absX >= 0.5F;
+	boolean zIs = stepZ != 0 && stepZ < 0 ? absZ <= 0.5F : absZ >= 0.5F;
 
-        if (xIs || zIs) {
+	if (xIs || zIs) {
 
-            ComponentInventory inv = getComponent(IComponentType.Inventory);
+	    ComponentInventory inv = getComponent(IComponentType.Inventory);
 
-            ItemStack onBelt = getItemOnBelt();
+	    ItemStack onBelt = getItemOnBelt();
 
-            boolean isLeft = false;
-            boolean isRight = false;
+	    boolean isLeft = false;
+	    boolean isRight = false;
 
-            for (int i = 1; i < 10; i++) {
-                ItemStack comparator = inv.getItem(i);
-                if (ItemStack.isSameItemSameTags(comparator, onBelt)) {
-                    isLeft = true;
-                    break;
-                }
-            }
-            for (int i = 10; i < 19; i++) {
-                ItemStack comparator = inv.getItem(i);
-                if (ItemStack.isSameItemSameTags(comparator, onBelt)) {
-                    isRight = true;
-                    break;
-                }
-            }
+	    for (int i = 1; i < 10; i++) {
+		ItemStack comparator = inv.getItem(i);
+		if (ItemStack.isSameItemSameTags(comparator, onBelt)) {
+		    isLeft = true;
+		    break;
+		}
+	    }
+	    for (int i = 10; i < 19; i++) {
+		ItemStack comparator = inv.getItem(i);
+		if (ItemStack.isSameItemSameTags(comparator, onBelt)) {
+		    isRight = true;
+		    break;
+		}
+	    }
 
-            if (isLeft) {
+	    if (isLeft) {
 
-                return superDirection.getCounterClockWise();
+		return superDirection.getCounterClockWise();
 
-            } else if (isRight) {
+	    } else if (isRight) {
 
-                return superDirection.getClockWise();
+		return superDirection.getClockWise();
 
-            } else {
+	    } else {
 
-                return superDirection;
+	    }
+	}
 
-            }
-        }
-
-        return superDirection;
+	return superDirection;
 
     }
 
     @Override
     public ConveyorType getConveyorType() {
-        return ConveyorType.HORIZONTAL;
+	return ConveyorType.HORIZONTAL;
     }
 
     @Override

@@ -21,34 +21,44 @@ import voltaic.common.blockitem.BlockItemDescriptable;
 
 public class AssemblyLineItems {
 
-	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, AssemblyLine.ID);
+    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, AssemblyLine.ID);
 
-	public static final RegistryObject<BlockItemDescriptable> ITEM_CONVEYORBELT = ITEMS.register("conveyorbelt", () -> new BlockItemDescriptable(AssemblyLineBlocks.BLOCK_CONVEYORBELT.get(), new Properties(), AssemblyLineCreativeTabs.MAIN));
-	public static final RegistryObject<BlockItemDescriptable> ITEM_SORTERBELT = ITEMS.register("sorterbelt", () -> new BlockItemDescriptable(AssemblyLineBlocks.BLOCK_SORTERBELT.get(), new Properties(), AssemblyLineCreativeTabs.MAIN));
-	public static final RegistryObject<BlockItemDescriptable> ITEM_DETECTOR = ITEMS.register("detector", () -> new BlockItemDescriptable(AssemblyLineBlocks.BLOCK_DETECTOR.get(), new Properties(), AssemblyLineCreativeTabs.MAIN));
+    public static final RegistryObject<BlockItemDescriptable> ITEM_CONVEYORBELT = ITEMS.register("conveyorbelt",
+	    () -> new BlockItemDescriptable(AssemblyLineBlocks.BLOCK_CONVEYORBELT.get(), new Properties(),
+		    AssemblyLineCreativeTabs.MAIN));
+    public static final RegistryObject<BlockItemDescriptable> ITEM_SORTERBELT = ITEMS.register("sorterbelt",
+	    () -> new BlockItemDescriptable(AssemblyLineBlocks.BLOCK_SORTERBELT.get(), new Properties(),
+		    AssemblyLineCreativeTabs.MAIN));
+    public static final RegistryObject<BlockItemDescriptable> ITEM_DETECTOR = ITEMS.register("detector",
+	    () -> new BlockItemDescriptable(AssemblyLineBlocks.BLOCK_DETECTOR.get(), new Properties(),
+		    AssemblyLineCreativeTabs.MAIN));
 
-	public static final BulkRegistryObject<BlockItemDescriptable, SubtypeAssemblyMachine> ITEMS_ASSEMBLYMACHINE = new BulkRegistryObject<>(SubtypeAssemblyMachine.values(), subtype -> ITEMS.register(subtype.tag(), () -> new BlockItemDescriptable(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(subtype), new Properties(), AssemblyLineCreativeTabs.MAIN)));
+    public static final BulkRegistryObject<BlockItemDescriptable, SubtypeAssemblyMachine> ITEMS_ASSEMBLYMACHINE = new BulkRegistryObject<>(
+	    SubtypeAssemblyMachine.values(),
+	    subtype -> ITEMS.register(subtype.tag(),
+		    () -> new BlockItemDescriptable(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(subtype),
+			    new Properties(), AssemblyLineCreativeTabs.MAIN)));
 
-	@EventBusSubscriber(value = Dist.CLIENT, modid = AssemblyLine.ID, bus = EventBusSubscriber.Bus.MOD)
-	private static class AssemblyCreativeRegistry {
+    @EventBusSubscriber(value = Dist.CLIENT, modid = AssemblyLine.ID, bus = EventBusSubscriber.Bus.MOD)
+    private static class AssemblyCreativeRegistry {
 
-		@SubscribeEvent
-		public static void registerItems(BuildCreativeModeTabContentsEvent event) {
+	@SubscribeEvent
+	public static void registerItems(BuildCreativeModeTabContentsEvent event) {
 
-			ITEMS.getEntries().forEach(reg -> {
+	    ITEMS.getEntries().forEach(reg -> {
 
-				CreativeTabSupplier supplier = (CreativeTabSupplier) reg.get();
+		CreativeTabSupplier supplier = (CreativeTabSupplier) reg.get();
 
-				if (supplier.hasCreativeTab() && supplier.isAllowedInCreativeTab(event.getTab())) {
-					List<ItemStack> toAdd = new ArrayList<>();
-					supplier.addCreativeModeItems(event.getTab(), toAdd);
-					event.acceptAll(toAdd);
-				}
-
-			});
-
+		if (supplier.hasCreativeTab() && supplier.isAllowedInCreativeTab(event.getTab())) {
+		    List<ItemStack> toAdd = new ArrayList<>();
+		    supplier.addCreativeModeItems(event.getTab(), toAdd);
+		    event.acceptAll(toAdd);
 		}
 
+	    });
+
 	}
+
+    }
 
 }

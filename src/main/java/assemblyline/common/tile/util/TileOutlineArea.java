@@ -12,65 +12,62 @@ import voltaic.prefab.tile.GenericTile;
 
 public abstract class TileOutlineArea extends GenericTile {
 
-	public static final int CHECK_HEIGHT = 5;
-	protected static final int DEFAULT_CHECK_WIDTH = 1;
-	protected static final int DEFAULT_CHECK_LENGTH = 1;
-	protected static final int DEFAULT_CHECK_HEIGHT = 5;
-	protected static final int MAX_CHECK_WIDTH = 25;
-	protected static final int MAX_CHECK_LENGTH = 25;
-	public SingleProperty<Integer> width = property(new SingleProperty<>(PropertyTypes.INTEGER, "width", DEFAULT_CHECK_WIDTH));
-	public SingleProperty<Integer> length = property(new SingleProperty<>(PropertyTypes.INTEGER, "length", DEFAULT_CHECK_LENGTH));
-	public SingleProperty<Integer> height = property(new SingleProperty<>(PropertyTypes.INTEGER, "height", DEFAULT_CHECK_HEIGHT));
-	protected AABB checkArea;
+    public static final int CHECK_HEIGHT = 5;
+    protected static final int DEFAULT_CHECK_WIDTH = 1;
+    protected static final int DEFAULT_CHECK_LENGTH = 1;
+    protected static final int DEFAULT_CHECK_HEIGHT = 5;
+    protected static final int MAX_CHECK_WIDTH = 25;
+    protected static final int MAX_CHECK_LENGTH = 25;
+    public SingleProperty<Integer> width = property(
+	    new SingleProperty<>(PropertyTypes.INTEGER, "width", DEFAULT_CHECK_WIDTH));
+    public SingleProperty<Integer> length = property(
+	    new SingleProperty<>(PropertyTypes.INTEGER, "length", DEFAULT_CHECK_LENGTH));
+    public SingleProperty<Integer> height = property(
+	    new SingleProperty<>(PropertyTypes.INTEGER, "height", DEFAULT_CHECK_HEIGHT));
+    protected AABB checkArea;
 
-	protected TileOutlineArea(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-		super(type, pos, state);
+    protected TileOutlineArea(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+	super(type, pos, state);
+    }
+
+    public AABB getAABB(int width, int length, int height, boolean isFlipped) {
+
+	Direction facing = getFacing();
+
+	if (isFlipped) {
+	    facing = facing.getOpposite();
 	}
 
-	public AABB getAABB(int width, int length, int height, boolean isFlipped) {
+	Direction counterClockwise = facing.getCounterClockWise();
+	Direction clockwise = facing.getClockWise();
 
-		Direction facing = getFacing();
+	BlockPos pos = getBlockPos().relative(facing);
 
-		if (isFlipped) {
-			facing = facing.getOpposite();
-		}
+	BlockPos start = pos.relative(facing, length - 1).relative(counterClockwise, width / 2).relative(Direction.UP,
+		height - 1);
 
-		Direction counterClockwise = facing.getCounterClockWise();
-		Direction clockwise = facing.getClockWise();
+	BlockPos end = pos.relative(clockwise, width / 2);
 
-		BlockPos pos = getBlockPos().relative(facing);
+	return encapsulatingFullBlocks(start, end);
+    }
 
-		BlockPos start = pos.relative(facing, length - 1).relative(counterClockwise, width / 2).relative(Direction.UP, height - 1);
-
-		BlockPos end = pos.relative(clockwise, width / 2);
-
-		return encapsulatingFullBlocks(start, end);
+    @Override
+    public void setRemoved() {
+	super.setRemoved();
+	if (getLevel().isClientSide) {
+	    HandlerHarvesterLines.removeLines(getBlockPos());
 	}
+    }
 
-	@Override
-	public void setRemoved() {
-		super.setRemoved();
-		if (getLevel().isClientSide) {
-			HandlerHarvesterLines.removeLines(getBlockPos());
-		}
-	}
-
-	public static AABB encapsulatingFullBlocks(BlockPos startPos, BlockPos endPos) {
-		return new AABB(
-				//
-				(double) Math.min(startPos.getX(), endPos.getX()),
-				//
-				(double) Math.min(startPos.getY(), endPos.getY()),
-				//
-				(double) Math.min(startPos.getZ(), endPos.getZ()),
-				//
-				(double) (Math.max(startPos.getX(), endPos.getX()) + 1),
-				//
-				(double) (Math.max(startPos.getY(), endPos.getY()) + 1),
-				//
-				(double) (Math.max(startPos.getZ(), endPos.getZ()) + 1)
-		//
-		);
-	}
+    public static AABB encapsulatingFullBlocks(BlockPos startPos, BlockPos endPos) {
+	return new AABB(
+		Math.min(startPos.getX(), endPos.getX()),
+		Math.min(startPos.getY(), endPos.getY()),
+		Math.min(startPos.getZ(), endPos.getZ()),
+		Math.max(startPos.getX(), endPos.getX()) + 1,
+		Math.max(startPos.getY(), endPos.getY()) + 1,
+		Math.max(startPos.getZ(), endPos.getZ()) + 1
+	);
+    }
 
 }

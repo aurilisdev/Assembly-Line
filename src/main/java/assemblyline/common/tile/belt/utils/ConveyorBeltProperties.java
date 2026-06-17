@@ -11,26 +11,26 @@ public class ConveyorBeltProperties {
     public final ConveyorClass conveyorClass;
 
     private ConveyorBeltProperties(ConveyorClass conveyorClass) {
-        this.conveyorClass = conveyorClass;
+	this.conveyorClass = conveyorClass;
     }
 
     public static ConveyorBeltProperties builder(ConveyorClass conveyorClass) {
-        return new ConveyorBeltProperties(conveyorClass);
+	return new ConveyorBeltProperties(conveyorClass);
     }
 
     public ConveyorBeltProperties setInvSize(int size) {
-        invSize = size;
-        return this;
+	invSize = size;
+	return this;
     }
 
     public ConveyorBeltProperties setNoPusher() {
-        canBePusher = false;
-        return this;
+	canBePusher = false;
+	return this;
     }
 
     public ConveyorBeltProperties setNoPuller() {
-        canBePuller = false;
-        return this;
+	canBePuller = false;
+	return this;
     }
 
 }

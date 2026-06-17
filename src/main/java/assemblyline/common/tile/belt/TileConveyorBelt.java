@@ -11,12 +11,13 @@ import net.minecraft.world.phys.AABB;
 public class TileConveyorBelt extends GenericTileConveyorBelt {
 
     public TileConveyorBelt(BlockPos worldPosition, BlockState blockState) {
-        super(AssemblyLineTiles.TILE_BELT.get(), worldPosition, blockState, ConveyorBeltProperties.builder(ConveyorClass.REGULAR));
+	super(AssemblyLineTiles.TILE_BELT.get(), worldPosition, blockState,
+		ConveyorBeltProperties.builder(ConveyorClass.REGULAR));
     }
-    
+
     @Override
     public AABB getRenderBoundingBox() {
-       	return super.getRenderBoundingBox().inflate(3);
+	return super.getRenderBoundingBox().inflate(3);
     }
 
 }

@@ -21,76 +21,78 @@ import voltaic.prefab.utilities.object.CachedTileOutput;
 
 public class TileDetector extends GenericTile {
 
-	public boolean isPowered = false;
+    public boolean isPowered = false;
 
-	private CachedTileOutput beltCache;
+    private CachedTileOutput beltCache;
 
-	public TileDetector(BlockPos worldPosition, BlockState blockState) {
-		super(AssemblyLineTiles.TILE_DETECTOR.get(), worldPosition, blockState);
-		addComponent(new ComponentTickable(this).tickServer(this::tickServer));
+    public TileDetector(BlockPos worldPosition, BlockState blockState) {
+	super(AssemblyLineTiles.TILE_DETECTOR.get(), worldPosition, blockState);
+	addComponent(new ComponentTickable(this).tickServer(this::tickServer));
+    }
+
+    public void tickServer(ComponentTickable component) {
+
+	if (beltCache == null) {
+	    beltCache = new CachedTileOutput(getLevel(), getBlockPos().relative(getFacing()));
 	}
 
-	public void tickServer(ComponentTickable component) {
+	if (component.getTicks() % 10 == 0 && !(beltCache.getSafe() instanceof GenericTileConveyorBelt)) {
+	    beltCache.update(getBlockPos().relative(getFacing()));
+	}
 
-		if(beltCache == null) {
-			beltCache = new CachedTileOutput(getLevel(), getBlockPos().relative(getFacing()));
+	if (beltCache.getSafe() instanceof GenericTileConveyorBelt belt) {
+
+	    if (belt.getItemOnBelt().isEmpty() && isPowered) {
+		isPowered = false;
+		level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
+	    }
+	    if (!belt.getItemOnBelt().isEmpty() && !isPowered) {
+		isPowered = true;
+		level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
+	    }
+
+	} else if (component.getTicks() % 4 == 0) {
+
+	    BlockPos relative = worldPosition.relative(getFacing());
+
+	    List<ItemEntity> entities = level.getEntities(EntityType.ITEM, new AABB(relative),
+		    entity -> entity != null && !entity.getItem().isEmpty());
+	    if (!entities.isEmpty()) {
+		if (!isPowered) {
+		    isPowered = true;
+		    level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
 		}
-
-		if(component.getTicks() % 10 == 0 && !(beltCache.getSafe() instanceof GenericTileConveyorBelt)) {
-			beltCache.update(getBlockPos().relative(getFacing()));
-		}
-
-		if(beltCache.getSafe() instanceof GenericTileConveyorBelt belt) {
-
-			if(belt.getItemOnBelt().isEmpty() && isPowered) {
-				isPowered = false;
-				level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
-			} if(!belt.getItemOnBelt().isEmpty() && !isPowered) {
-				isPowered = true;
-				level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
-			}
-
-		} else if (component.getTicks() % 4 == 0) {
-
-			BlockPos relative = worldPosition.relative(getFacing());
-
-			List<ItemEntity> entities = level.getEntities(EntityType.ITEM, new AABB(relative), entity -> entity != null && !entity.getItem().isEmpty());
-			if (!entities.isEmpty()) {
-				if (!isPowered) {
-					isPowered = true;
-					level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
-				}
-			}  else if (isPowered) {
-				isPowered = false;
-				level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
-			}
-		}
+	    } else if (isPowered) {
+		isPowered = false;
+		level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
+	    }
 	}
+    }
 
-	@Override
-	public InteractionResult use(Player player, InteractionHand hand, BlockHitResult hit) {
-		return InteractionResult.PASS;
-	}
+    @Override
+    public InteractionResult use(Player player, InteractionHand hand, BlockHitResult hit) {
+	return InteractionResult.PASS;
+    }
 
-	@Override
-	public int getSignal(Direction dir) {
-		return isPowered ? 15 : 0;
-	}
+    @Override
+    public int getSignal(Direction dir) {
+	return isPowered ? 15 : 0;
+    }
 
-	@Override
-	public int getDirectSignal(Direction dir) {
-		return getSignal(dir);
-	}
+    @Override
+    public int getDirectSignal(Direction dir) {
+	return getSignal(dir);
+    }
 
-	@Override
-	protected void saveAdditional(CompoundTag compound) {
-		super.saveAdditional(compound);
-		compound.putBoolean("powered", isPowered);
-	}
+    @Override
+    protected void saveAdditional(CompoundTag compound) {
+	super.saveAdditional(compound);
+	compound.putBoolean("powered", isPowered);
+    }
 
-	@Override
-	public void load(CompoundTag compound) {
-		super.load(compound);
-		isPowered = compound.getBoolean("powered");
-	}
+    @Override
+    public void load(CompoundTag compound) {
+	super.load(compound);
+	isPowered = compound.getBoolean("powered");
+    }
 }

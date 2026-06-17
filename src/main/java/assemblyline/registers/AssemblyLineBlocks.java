@@ -17,11 +17,16 @@ import voltaic.common.block.voxelshapes.VoxelShapeProvider;
 
 public class AssemblyLineBlocks {
 
-    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, AssemblyLine.ID);
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS,
+	    AssemblyLine.ID);
 
-    public static final RegistryObject<BlockConveyorBelt> BLOCK_CONVEYORBELT = BLOCKS.register("conveyorbelt", () -> new BlockConveyorBelt(AssemblyLineVoxelShapes.CONVEYORBELT, TileConveyorBelt::new));
-    public static final RegistryObject<BlockConveyorBelt> BLOCK_SORTERBELT = BLOCKS.register("sorterbelt", () -> new BlockConveyorBelt(VoxelShapeProvider.DEFAULT, TileSorterBelt::new));
+    public static final RegistryObject<BlockConveyorBelt> BLOCK_CONVEYORBELT = BLOCKS.register("conveyorbelt",
+	    () -> new BlockConveyorBelt(AssemblyLineVoxelShapes.CONVEYORBELT, TileConveyorBelt::new));
+    public static final RegistryObject<BlockConveyorBelt> BLOCK_SORTERBELT = BLOCKS.register("sorterbelt",
+	    () -> new BlockConveyorBelt(VoxelShapeProvider.DEFAULT, TileSorterBelt::new));
     public static final RegistryObject<BlockDetector> BLOCK_DETECTOR = BLOCKS.register("detector", BlockDetector::new);
-    public static final BulkRegistryObject<BlockMachine, SubtypeAssemblyMachine> BLOCKS_ASSEMBLYMACHINES = new BulkRegistryObject<>(SubtypeAssemblyMachine.values(), subtype -> BLOCKS.register(subtype.tag(), () -> new BlockMachine(subtype)));
+    public static final BulkRegistryObject<BlockMachine, SubtypeAssemblyMachine> BLOCKS_ASSEMBLYMACHINES = new BulkRegistryObject<>(
+	    SubtypeAssemblyMachine.values(),
+	    subtype -> BLOCKS.register(subtype.tag(), () -> new BlockMachine(subtype)));
 
 }

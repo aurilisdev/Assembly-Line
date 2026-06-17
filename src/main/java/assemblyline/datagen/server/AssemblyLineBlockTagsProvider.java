@@ -14,32 +14,33 @@ import voltaic.common.block.BlockMachine;
 
 public class AssemblyLineBlockTagsProvider extends BlockTagsProvider {
 
-	public AssemblyLineBlockTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider, ExistingFileHelper existingFileHelper) {
-		super(output, lookupProvider, AssemblyLine.ID, existingFileHelper);
-	}
+    public AssemblyLineBlockTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider,
+	    ExistingFileHelper existingFileHelper) {
+	super(output, lookupProvider, AssemblyLine.ID, existingFileHelper);
+    }
 
-	@Override
-	protected void addTags(Provider provider) {
+    @Override
+    protected void addTags(Provider provider) {
 
-		tag(BlockTags.MINEABLE_WITH_PICKAXE).add(
-                //
-                AssemblyLineBlocks.BLOCK_CONVEYORBELT.get(),
-                //
-                AssemblyLineBlocks.BLOCK_SORTERBELT.get(),
-                //
-                AssemblyLineBlocks.BLOCK_DETECTOR.get()
-                //
-        ).add(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getAllValuesArray(new BlockMachine[0]));
+	tag(BlockTags.MINEABLE_WITH_PICKAXE).add(
+		//
+		AssemblyLineBlocks.BLOCK_CONVEYORBELT.get(),
+		//
+		AssemblyLineBlocks.BLOCK_SORTERBELT.get(),
+		//
+		AssemblyLineBlocks.BLOCK_DETECTOR.get()
+	//
+	).add(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getAllValuesArray(new BlockMachine[0]));
 
-        tag(BlockTags.NEEDS_STONE_TOOL).add(
-                //
-                AssemblyLineBlocks.BLOCK_CONVEYORBELT.get(),
-                //
-                AssemblyLineBlocks.BLOCK_SORTERBELT.get(),
-                //
-                AssemblyLineBlocks.BLOCK_DETECTOR.get()
-                //
-        ).add(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getAllValuesArray(new BlockMachine[0]));
-	}
+	tag(BlockTags.NEEDS_STONE_TOOL).add(
+		//
+		AssemblyLineBlocks.BLOCK_CONVEYORBELT.get(),
+		//
+		AssemblyLineBlocks.BLOCK_SORTERBELT.get(),
+		//
+		AssemblyLineBlocks.BLOCK_DETECTOR.get()
+	//
+	).add(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getAllValuesArray(new BlockMachine[0]));
+    }
 
 }

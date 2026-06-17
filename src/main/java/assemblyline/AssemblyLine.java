@@ -21,31 +21,31 @@ import voltaic.prefab.configuration.ConfigurationHandler;
 @EventBusSubscriber(modid = AssemblyLine.ID, bus = EventBusSubscriber.Bus.MOD)
 public class AssemblyLine {
 
-	public static final String ID = "assemblyline";
-	public static final String NAME = "Assembly Line";
+    public static final String ID = "assemblyline";
+    public static final String NAME = "Assembly Line";
 
-	public AssemblyLine() {
-		IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-		ConfigurationHandler.registerConfig(AssemblyLineConstants.class);
-		AssemblyLineVoxelShapes.init();
-		UnifiedAssemblyLineRegister.register(bus);
-	}
+    public AssemblyLine() {
+	IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+	ConfigurationHandler.registerConfig(AssemblyLineConstants.class);
+	AssemblyLineVoxelShapes.init();
+	UnifiedAssemblyLineRegister.register(bus);
+    }
 
-	@SubscribeEvent
-	public static void onCommonSetup(FMLCommonSetupEvent event) {
-		NetworkHandler.init();
-	}
+    @SubscribeEvent
+    public static void onCommonSetup(FMLCommonSetupEvent event) {
+	NetworkHandler.init();
+    }
 
-	@SubscribeEvent
-	@OnlyIn(Dist.CLIENT)
-	public static void onClientSetup(FMLClientSetupEvent event) {
-		event.enqueueWork(() -> {
-			AssemblyLineClientRegister.setup();
-		});
-	}
-	
-	public static final ResourceLocation rl(String path) {
-		return new ResourceLocation(AssemblyLine.ID, path);
-	}
+    @SubscribeEvent
+    @OnlyIn(Dist.CLIENT)
+    public static void onClientSetup(FMLClientSetupEvent event) {
+	event.enqueueWork(() -> {
+	    AssemblyLineClientRegister.setup();
+	});
+    }
+
+    public static final ResourceLocation rl(String path) {
+	return new ResourceLocation(AssemblyLine.ID, path);
+    }
 
 }

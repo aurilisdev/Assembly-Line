@@ -7,7 +7,7 @@ public enum ConveyorClass {
     public final double speed;
 
     private ConveyorClass(double speed) {
-        this.speed = speed;
+	this.speed = speed;
     }
 
 }
