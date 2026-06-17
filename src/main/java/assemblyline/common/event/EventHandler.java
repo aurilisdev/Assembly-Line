@@ -23,68 +23,68 @@ public class EventHandler {
     @SubscribeEvent
     public static void captureDroppedItems(LivingDropsEvent event) {
 
-        Entity entity = event.getEntity();
+	Entity entity = event.getEntity();
 
-        BlockPos pos = entity.getData(AssemblyLineAttachmentTypes.GRINDER_KILLED_MOB);
+	BlockPos pos = entity.getData(AssemblyLineAttachmentTypes.GRINDER_KILLED_MOB);
 
-        if (pos.equals(BlockEntityUtils.OUT_OF_REACH)) {
-            return;
-        }
+	if (pos.equals(BlockEntityUtils.OUT_OF_REACH)) {
+	    return;
+	}
 
-        if (entity.level().getBlockEntity(pos) instanceof TileMobGrinder grinder) {
+	if (entity.level().getBlockEntity(pos) instanceof TileMobGrinder grinder) {
 
-            List<ItemStack> droppedItems = new ArrayList<>();
+	    List<ItemStack> droppedItems = new ArrayList<>();
 
-            event.getDrops().forEach(h -> droppedItems.add(h.getItem()));
+	    event.getDrops().forEach(h -> droppedItems.add(h.getItem()));
 
-            if(droppedItems.isEmpty()) {
-                return;
-            }
+	    if (droppedItems.isEmpty()) {
+		return;
+	    }
 
-            ComponentInventory inv = grinder.getComponent(IComponentType.Inventory);
+	    ComponentInventory inv = grinder.getComponent(IComponentType.Inventory);
 
-            int max = inv.getOutputStartIndex() + inv.getOutputContents().size();
+	    int max = inv.getOutputStartIndex() + inv.getOutputContents().size();
 
-            for(ItemStack item : droppedItems) {
+	    for (ItemStack item : droppedItems) {
 
-                for (int i = inv.getOutputStartIndex(); i < max; i++) {
+		for (int i = inv.getOutputStartIndex(); i < max; i++) {
 
-                    ItemStack contained = inv.getItem(i);
+		    ItemStack contained = inv.getItem(i);
 
-                    int room = contained.getMaxStackSize() - contained.getCount();
+		    int room = contained.getMaxStackSize() - contained.getCount();
 
-                    int amtAccepted = Math.min(room, item.getCount());
+		    int amtAccepted = Math.min(room, item.getCount());
 
-                    if(amtAccepted == 0) {
-                        continue;
-                    }
+		    if (amtAccepted == 0) {
+			continue;
+		    }
 
-                    if (contained.isEmpty()) {
+		    if (contained.isEmpty()) {
 
-                        inv.setItem(i, new ItemStack(item.getItem(), amtAccepted));
+			inv.setItem(i, new ItemStack(item.getItem(), amtAccepted));
 
-                        item.shrink(amtAccepted);
+			item.shrink(amtAccepted);
 
-                    } else if (ItemUtils.testItems(item.getItem(), contained.getItem())) {
+		    } else if (ItemUtils.testItems(item.getItem(), contained.getItem())) {
 
-                        contained.grow(amtAccepted);
+			contained.grow(amtAccepted);
 
-                        item.shrink(amtAccepted);
+			item.shrink(amtAccepted);
 
-                        inv.setChanged();
+			inv.setChanged();
 
-                    }
+		    }
 
-                    if(item.isEmpty()) {
-                        break;
-                    }
+		    if (item.isEmpty()) {
+			break;
+		    }
 
-                }
+		}
 
-            }
+	    }
 
-            event.setCanceled(true);
-        }
+	    event.setCanceled(true);
+	}
 
     }
 

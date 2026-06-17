@@ -19,91 +19,96 @@ import voltaic.common.block.voxelshapes.VoxelShapeProvider;
 
 public enum SubtypeAssemblyMachine implements ISubtype, IMachine {
 
-    crate(true, TileCrate::new),
-    cratemedium(true, TileCrate::new),
-    cratelarge(true, TileCrate::new),
-    autocrafter(true, TileAutocrafter::new, MachineProperties.builder().setShapeProvider(AssemblyLineVoxelShapes.AUTOCRAFTER)),
-    blockbreaker(true, TileBlockBreaker::new, MachineProperties.builder().setShapeProvider(AssemblyLineVoxelShapes.BLOCKBREAKER)),
-    blockplacer(true, TileBlockPlacer::new, MachineProperties.builder().setShapeProvider(AssemblyLineVoxelShapes.BLOCKPLACER)),
-    rancher(true, TileRancher::new, MachineProperties.builder().setShapeProvider(AssemblyLineVoxelShapes.ENERGIZEDRANCHER)),
-    mobgrinder(true, TileMobGrinder::new, MachineProperties.builder().setShapeProvider(AssemblyLineVoxelShapes.MOBGRINDER)),
+    crate(true, TileCrate::new), cratemedium(true, TileCrate::new), cratelarge(true, TileCrate::new),
+    autocrafter(true, TileAutocrafter::new,
+	    MachineProperties.builder().setShapeProvider(AssemblyLineVoxelShapes.AUTOCRAFTER)),
+    blockbreaker(true, TileBlockBreaker::new,
+	    MachineProperties.builder().setShapeProvider(AssemblyLineVoxelShapes.BLOCKBREAKER)),
+    blockplacer(true, TileBlockPlacer::new,
+	    MachineProperties.builder().setShapeProvider(AssemblyLineVoxelShapes.BLOCKPLACER)),
+    rancher(true, TileRancher::new,
+	    MachineProperties.builder().setShapeProvider(AssemblyLineVoxelShapes.ENERGIZEDRANCHER)),
+    mobgrinder(true, TileMobGrinder::new,
+	    MachineProperties.builder().setShapeProvider(AssemblyLineVoxelShapes.MOBGRINDER)),
     farmer(true, TileFarmer::new, MachineProperties.builder().setShapeProvider(AssemblyLineVoxelShapes.FARMER));
 
     private final BlockEntityType.BlockEntitySupplier<BlockEntity> blockEntitySupplier;
     private final boolean showInItemGroup;
     private final MachineProperties properties;
 
-    private SubtypeAssemblyMachine(boolean showInItemGroup, BlockEntityType.BlockEntitySupplier<BlockEntity> blockEntitySupplier) {
-        this(showInItemGroup, blockEntitySupplier, MachineProperties.DEFAULT);
+    private SubtypeAssemblyMachine(boolean showInItemGroup,
+	    BlockEntityType.BlockEntitySupplier<BlockEntity> blockEntitySupplier) {
+	this(showInItemGroup, blockEntitySupplier, MachineProperties.DEFAULT);
     }
 
-    private SubtypeAssemblyMachine(boolean showInItemGroup, BlockEntityType.BlockEntitySupplier<BlockEntity> blockEntitySupplier, MachineProperties properties) {
-        this.showInItemGroup = showInItemGroup;
-        this.blockEntitySupplier = blockEntitySupplier;
-        this.properties = properties;
+    private SubtypeAssemblyMachine(boolean showInItemGroup,
+	    BlockEntityType.BlockEntitySupplier<BlockEntity> blockEntitySupplier, MachineProperties properties) {
+	this.showInItemGroup = showInItemGroup;
+	this.blockEntitySupplier = blockEntitySupplier;
+	this.properties = properties;
     }
 
     @Override
     public BlockEntityType.BlockEntitySupplier<BlockEntity> getBlockEntitySupplier() {
-        return this.blockEntitySupplier;
+	return this.blockEntitySupplier;
     }
 
     @Override
     public int getLitBrightness() {
-        return this.properties.litBrightness;
+	return this.properties.litBrightness;
     }
 
     @Override
     public RenderShape getRenderShape() {
-        return this.properties.renderShape;
+	return this.properties.renderShape;
     }
 
     @Override
     public boolean isMultiblock() {
-        return this.properties.isMultiblock;
+	return this.properties.isMultiblock;
     }
 
     @Override
     public boolean propegatesLightDown() {
-        return this.properties.propegatesLightDown;
+	return this.properties.propegatesLightDown;
     }
 
     @Override
     public String tag() {
-        return this.name();
+	return this.name();
     }
 
     @Override
     public String forgeTag() {
-        return this.tag();
+	return this.tag();
     }
 
     @Override
     public boolean isItem() {
-        return false;
+	return false;
     }
 
     @Override
     public boolean isPlayerStorable() {
-        return false;
+	return false;
     }
 
     @Override
     public IMultiblockParentBlock.SubnodeWrapper getSubnodes() {
-        return this.properties.wrapper;
+	return this.properties.wrapper;
     }
 
     @Override
     public VoxelShapeProvider getVoxelShapeProvider() {
-        return this.properties.provider;
+	return this.properties.provider;
     }
 
     @Override
     public boolean usesLit() {
-        return properties.usesLit;
+	return properties.usesLit;
     }
 
     public boolean showInItemGroup() {
-        return this.showInItemGroup;
+	return this.showInItemGroup;
     }
 }

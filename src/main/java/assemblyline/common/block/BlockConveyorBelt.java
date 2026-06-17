@@ -30,65 +30,67 @@ import voltaic.prefab.block.GenericEntityBlockWaterloggable;
 
 public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
 
-	public static final double MAX_Y = 5.0 / 16.0;
+    public static final double MAX_Y = 5.0 / 16.0;
 
-	private final VoxelShapeProvider shapeProvider;
-	private final BlockEntityType.BlockEntitySupplier<?> supplier;
+    private final VoxelShapeProvider shapeProvider;
+    private final BlockEntityType.BlockEntitySupplier<?> supplier;
 
-	public BlockConveyorBelt(VoxelShapeProvider shapeProvider, BlockEntityType.BlockEntitySupplier<?> supplier) {
-		super(Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(3.5F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion());
-		registerDefaultState(stateDefinition.any().setValue(VoltaicBlockStates.FACING, Direction.NORTH));
-		this.shapeProvider = shapeProvider;
-		this.supplier = supplier;
+    public BlockConveyorBelt(VoxelShapeProvider shapeProvider, BlockEntityType.BlockEntitySupplier<?> supplier) {
+	super(Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(3.5F).sound(SoundType.METAL)
+		.requiresCorrectToolForDrops().noOcclusion());
+	registerDefaultState(stateDefinition.any().setValue(VoltaicBlockStates.FACING, Direction.NORTH));
+	this.shapeProvider = shapeProvider;
+	this.supplier = supplier;
+    }
+
+    @Override
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+
+	Direction dir = null;
+	if (state.hasProperty(VoltaicBlockStates.FACING)) {
+	    dir = state.getValue(VoltaicBlockStates.FACING);
 	}
 
-	@Override
-	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+	return this.shapeProvider.getShape(dir);
 
-		Direction dir = null;
-		if (state.hasProperty(VoltaicBlockStates.FACING)) {
-			dir = state.getValue(VoltaicBlockStates.FACING);
-		}
+    }
 
-		return this.shapeProvider.getShape(dir);
-
+    @Override
+    public void onRotate(ItemStack stack, BlockPos pos, Player player) {
+	if (player.level().getBlockEntity(pos) instanceof GenericTileConveyorBelt belt) {
+	    belt.cycleConveyorType();
 	}
+    }
 
-	@Override
-	public void onRotate(ItemStack stack, BlockPos pos, Player player) {
-		if (player.level().getBlockEntity(pos) instanceof GenericTileConveyorBelt belt) {
-			belt.cycleConveyorType();
-		}
-	}
+    @Override
+    public List<ItemStack> getDrops(BlockState state, Builder builder) {
+	return Arrays.asList(new ItemStack(this));
+    }
 
-	@Override
-	public List<ItemStack> getDrops(BlockState state, Builder builder) {
-		return Arrays.asList(new ItemStack(this));
-	}
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+	return null;
+    }
 
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return null;
-	}
+    @Override
+    public RenderShape getRenderShape(BlockState state) {
+	return RenderShape.INVISIBLE;
+    }
 
-	@Override
-	public RenderShape getRenderShape(BlockState state) {
-		return RenderShape.INVISIBLE;
-	}
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+	return super.getStateForPlacement(context).setValue(VoltaicBlockStates.FACING,
+		context.getHorizontalDirection().getOpposite());
+    }
 
-	@Override
-	public BlockState getStateForPlacement(BlockPlaceContext context) {
-		return super.getStateForPlacement(context).setValue(VoltaicBlockStates.FACING, context.getHorizontalDirection().getOpposite());
-	}
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+	super.createBlockStateDefinition(builder);
+	builder.add(VoltaicBlockStates.FACING);
+    }
 
-	@Override
-	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-		super.createBlockStateDefinition(builder);
-		builder.add(VoltaicBlockStates.FACING);
-	}
-
-	@Override
-	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return supplier.create(pos, state);
-	}
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+	return supplier.create(pos, state);
+    }
 }

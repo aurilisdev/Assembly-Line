@@ -8,11 +8,11 @@ import voltaic.datagen.utils.client.BaseSoundProvider;
 
 public class AssemblyLineSoundProvider extends BaseSoundProvider {
     public AssemblyLineSoundProvider(PackOutput output, ExistingFileHelper helper) {
-        super(output, helper, AssemblyLine.ID);
+	super(output, helper, AssemblyLine.ID);
     }
 
     @Override
     public void registerSounds() {
-        add(AssemblyLineSounds.SOUND_BLOCKBREAKER);
+	add(AssemblyLineSounds.SOUND_BLOCKBREAKER);
     }
 }

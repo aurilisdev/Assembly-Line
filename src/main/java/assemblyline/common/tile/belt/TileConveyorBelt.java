@@ -10,7 +10,8 @@ import net.minecraft.world.level.block.state.BlockState;
 public class TileConveyorBelt extends GenericTileConveyorBelt {
 
     public TileConveyorBelt(BlockPos worldPosition, BlockState blockState) {
-        super(AssemblyLineTiles.TILE_BELT.get(), worldPosition, blockState, ConveyorBeltProperties.builder(ConveyorClass.REGULAR));
+	super(AssemblyLineTiles.TILE_BELT.get(), worldPosition, blockState,
+		ConveyorBeltProperties.builder(ConveyorClass.REGULAR));
     }
 
 }

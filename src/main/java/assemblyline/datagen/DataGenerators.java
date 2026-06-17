@@ -30,28 +30,32 @@ public class DataGenerators {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
 
-        DataGenerator generator = event.getGenerator();
+	DataGenerator generator = event.getGenerator();
 
-        PackOutput output = generator.getPackOutput();
+	PackOutput output = generator.getPackOutput();
 
-        ExistingFileHelper helper = event.getExistingFileHelper();
+	ExistingFileHelper helper = event.getExistingFileHelper();
 
-        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
+	CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
-        if (event.includeServer()) {
+	if (event.includeServer()) {
 
-            generator.addProvider(true, new LootTableProvider(output, Collections.emptySet(), List.of(new LootTableProvider.SubProviderEntry(AssemblyLineLootTablesProvider::new, LootContextParamSets.BLOCK)), lookupProvider));
-            generator.addProvider(true, new AssemblyLineRecipeProvider(output, lookupProvider));
-            generator.addProvider(true, new AssemblyLineAdvancementProvider(output, lookupProvider));
-            generator.addProvider(true, new AssemblyLineBlockTagsProvider(output, lookupProvider, helper));
+	    generator.addProvider(true,
+		    new LootTableProvider(output, Collections.emptySet(),
+			    List.of(new LootTableProvider.SubProviderEntry(AssemblyLineLootTablesProvider::new,
+				    LootContextParamSets.BLOCK)),
+			    lookupProvider));
+	    generator.addProvider(true, new AssemblyLineRecipeProvider(output, lookupProvider));
+	    generator.addProvider(true, new AssemblyLineAdvancementProvider(output, lookupProvider));
+	    generator.addProvider(true, new AssemblyLineBlockTagsProvider(output, lookupProvider, helper));
 
-        }
-        if (event.includeClient()) {
-            generator.addProvider(true, new AssemblyLineBlockStateProvider(output, helper));
-            generator.addProvider(true, new AssemblyLineItemModelsProvider(output, helper));
-            generator.addProvider(true, new AssemblyLineLangKeyProvider(output, BaseLangKeyProvider.Locale.EN_US));
-            generator.addProvider(true, new AssemblyLineSoundProvider(output, helper));
-        }
+	}
+	if (event.includeClient()) {
+	    generator.addProvider(true, new AssemblyLineBlockStateProvider(output, helper));
+	    generator.addProvider(true, new AssemblyLineItemModelsProvider(output, helper));
+	    generator.addProvider(true, new AssemblyLineLangKeyProvider(output, BaseLangKeyProvider.Locale.EN_US));
+	    generator.addProvider(true, new AssemblyLineSoundProvider(output, helper));
+	}
     }
 
 }

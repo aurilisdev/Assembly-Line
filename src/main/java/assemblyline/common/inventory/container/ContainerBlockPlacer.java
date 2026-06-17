@@ -15,21 +15,21 @@ import voltaic.prefab.utilities.math.Color;
 
 public class ContainerBlockPlacer extends GenericContainerBlockEntity<TileBlockPlacer> {
 
-	public static final SubtypeItemUpgrade[] VALID_UPGRADES = new SubtypeItemUpgrade[] { SubtypeItemUpgrade.iteminput };
+    public static final SubtypeItemUpgrade[] VALID_UPGRADES = { SubtypeItemUpgrade.iteminput };
 
-	public ContainerBlockPlacer(int id, Inventory playerinv) {
-		this(id, playerinv, new SimpleContainer(4), new SimpleContainerData(3));
-	}
+    public ContainerBlockPlacer(int id, Inventory playerinv) {
+	this(id, playerinv, new SimpleContainer(4), new SimpleContainerData(3));
+    }
 
-	public ContainerBlockPlacer(int id, Inventory playerinv, Container inventory, ContainerData inventorydata) {
-		super(AssemblyLineMenuTypes.CONTAINER_BLOCKPLACER.get(), id, playerinv, inventory, inventorydata);
-	}
+    public ContainerBlockPlacer(int id, Inventory playerinv, Container inventory, ContainerData inventorydata) {
+	super(AssemblyLineMenuTypes.CONTAINER_BLOCKPLACER.get(), id, playerinv, inventory, inventorydata);
+    }
 
-	@Override
-	public void addInventorySlots(Container inv, Inventory playerinv) {
-		addSlot(new SlotGeneric(inv, nextIndex(), 103, 35).setIOColor(new Color(0, 240, 255, 255)));
-		addSlot(new SlotUpgrade(inv, nextIndex(), 153, 14, VALID_UPGRADES));
-		addSlot(new SlotUpgrade(inv, nextIndex(), 153, 34, VALID_UPGRADES));
-		addSlot(new SlotUpgrade(inv, nextIndex(), 153, 54, VALID_UPGRADES));
-	}
+    @Override
+    public void addInventorySlots(Container inv, Inventory playerinv) {
+	addSlot(new SlotGeneric(inv, nextIndex(), 103, 35).setIOColor(new Color(0, 240, 255, 255)));
+	addSlot(new SlotUpgrade(inv, nextIndex(), 153, 14, VALID_UPGRADES));
+	addSlot(new SlotUpgrade(inv, nextIndex(), 153, 34, VALID_UPGRADES));
+	addSlot(new SlotUpgrade(inv, nextIndex(), 153, 54, VALID_UPGRADES));
+    }
 }

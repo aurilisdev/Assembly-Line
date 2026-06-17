@@ -23,34 +23,34 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 @EventBusSubscriber(modid = AssemblyLine.ID, bus = EventBusSubscriber.Bus.MOD)
 public final class AssemblyLine {
 
-	public static final String ID = "assemblyline";
-	public static final String NAME = "Assembly Line";
+    public static final String ID = "assemblyline";
+    public static final String NAME = "Assembly Line";
 
-	public AssemblyLine(IEventBus bus, ModContainer container) {
-	    	AssemblyLineConfig.INSTANCE = new AssemblyLineConfig();
-		container.registerConfig(ModConfig.Type.COMMON, AssemblyLineConfig.INSTANCE.SPEC);
-		if (FMLEnvironment.dist == Dist.CLIENT) {
-		    container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
-		}
-		AssemblyLineVoxelShapes.init();
-		UnifiedAssemblyLineRegister.register(bus);
+    public AssemblyLine(IEventBus bus, ModContainer container) {
+	AssemblyLineConfig.INSTANCE = new AssemblyLineConfig();
+	container.registerConfig(ModConfig.Type.COMMON, AssemblyLineConfig.INSTANCE.SPEC);
+	if (FMLEnvironment.dist == Dist.CLIENT) {
+	    container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
 	}
+	AssemblyLineVoxelShapes.init();
+	UnifiedAssemblyLineRegister.register(bus);
+    }
 
-	@SubscribeEvent
-	public static void onCommonSetup(FMLCommonSetupEvent event) {
+    @SubscribeEvent
+    public static void onCommonSetup(FMLCommonSetupEvent event) {
 
-	}
+    }
 
-	@SubscribeEvent
-	@OnlyIn(Dist.CLIENT)
-	public static void onClientSetup(FMLClientSetupEvent event) {
-		event.enqueueWork(() -> {
-			AssemblyLineClientRegister.setup();
-		});
-	}
+    @SubscribeEvent
+    @OnlyIn(Dist.CLIENT)
+    public static void onClientSetup(FMLClientSetupEvent event) {
+	event.enqueueWork(() -> {
+	    AssemblyLineClientRegister.setup();
+	});
+    }
 
-	public static final ResourceLocation rl(String path) {
-		return ResourceLocation.fromNamespaceAndPath(AssemblyLine.ID, path);
-	}
+    public static final ResourceLocation rl(String path) {
+	return ResourceLocation.fromNamespaceAndPath(AssemblyLine.ID, path);
+    }
 
 }

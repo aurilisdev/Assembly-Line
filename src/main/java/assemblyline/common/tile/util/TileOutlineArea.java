@@ -18,41 +18,45 @@ public abstract class TileOutlineArea extends GenericTile {
     protected static final int DEFAULT_CHECK_HEIGHT = 5;
     protected static final int MAX_CHECK_WIDTH = 25;
     protected static final int MAX_CHECK_LENGTH = 25;
-    public SingleProperty<Integer> width = property(new SingleProperty<>(PropertyTypes.INTEGER, "width", DEFAULT_CHECK_WIDTH));
-    public SingleProperty<Integer> length = property(new SingleProperty<>(PropertyTypes.INTEGER, "length", DEFAULT_CHECK_LENGTH));
-    public SingleProperty<Integer> height = property(new SingleProperty<>(PropertyTypes.INTEGER, "height", DEFAULT_CHECK_HEIGHT));
+    public SingleProperty<Integer> width = property(
+	    new SingleProperty<>(PropertyTypes.INTEGER, "width", DEFAULT_CHECK_WIDTH));
+    public SingleProperty<Integer> length = property(
+	    new SingleProperty<>(PropertyTypes.INTEGER, "length", DEFAULT_CHECK_LENGTH));
+    public SingleProperty<Integer> height = property(
+	    new SingleProperty<>(PropertyTypes.INTEGER, "height", DEFAULT_CHECK_HEIGHT));
     protected AABB checkArea;
 
     protected TileOutlineArea(BlockEntityType<?> type, BlockPos pos, BlockState state) {
-        super(type, pos, state);
+	super(type, pos, state);
     }
 
     public AABB getAABB(int width, int length, int height, boolean isFlipped) {
 
-        Direction facing = getFacing();
+	Direction facing = getFacing();
 
-        if(isFlipped) {
-            facing = facing.getOpposite();
-        }
+	if (isFlipped) {
+	    facing = facing.getOpposite();
+	}
 
-        Direction counterClockwise = facing.getCounterClockWise();
-        Direction clockwise = facing.getClockWise();
+	Direction counterClockwise = facing.getCounterClockWise();
+	Direction clockwise = facing.getClockWise();
 
-        BlockPos pos = getBlockPos().relative(facing);
+	BlockPos pos = getBlockPos().relative(facing);
 
-        BlockPos start = pos.relative(facing, length - 1).relative(counterClockwise, width / 2).relative(Direction.UP, height - 1);
+	BlockPos start = pos.relative(facing, length - 1).relative(counterClockwise, width / 2).relative(Direction.UP,
+		height - 1);
 
-        BlockPos end = pos.relative(clockwise, width / 2);
+	BlockPos end = pos.relative(clockwise, width / 2);
 
-        return AABB.encapsulatingFullBlocks(start, end);
+	return AABB.encapsulatingFullBlocks(start, end);
     }
 
     @Override
     public void setRemoved() {
-        super.setRemoved();
-        if (getLevel().isClientSide) {
-            HandlerHarvesterLines.removeLines(getBlockPos());
-        }
+	super.setRemoved();
+	if (getLevel().isClientSide) {
+	    HandlerHarvesterLines.removeLines(getBlockPos());
+	}
     }
 
 }

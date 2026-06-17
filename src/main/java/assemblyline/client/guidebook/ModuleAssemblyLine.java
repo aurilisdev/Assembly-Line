@@ -10,22 +10,23 @@ import voltaic.client.guidebook.utils.pagedata.graphics.ImageWrapperObject;
 
 public class ModuleAssemblyLine extends Module {
 
-	private static final ImageWrapperObject LOGO = new ImageWrapperObject(0, 0, 0, 0, 32, 32, 32, 32, AssemblyLine.rl("textures/screen/guidebook/assemblylinelogo.png"));
+    private static final ImageWrapperObject LOGO = new ImageWrapperObject(0, 0, 0, 0, 32, 32, 32, 32,
+	    AssemblyLine.rl("textures/screen/guidebook/assemblylinelogo.png"));
 
-	@Override
-	public ImageWrapperObject getLogo() {
-		return LOGO;
-	}
+    @Override
+    public ImageWrapperObject getLogo() {
+	return LOGO;
+    }
 
-	@Override
-	public MutableComponent getTitle() {
-		return AssemblyTextUtils.guidebook(AssemblyLine.ID);
-	}
+    @Override
+    public MutableComponent getTitle() {
+	return AssemblyTextUtils.guidebook(AssemblyLine.ID);
+    }
 
-	@Override
-	public void addChapters() {
-		chapters.add(new ChapterConveyers(this));
-		chapters.add(new ChapterMachines(this));
-	}
+    @Override
+    public void addChapters() {
+	chapters.add(new ChapterConveyers(this));
+	chapters.add(new ChapterMachines(this));
+    }
 
 }

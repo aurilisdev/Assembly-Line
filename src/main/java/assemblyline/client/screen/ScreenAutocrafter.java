@@ -13,12 +13,14 @@ import voltaic.prefab.screen.component.utils.AbstractScreenComponentInfo;
 
 public class ScreenAutocrafter extends GenericScreen<ContainerAutocrafter> {
 
-	public ScreenAutocrafter(ContainerAutocrafter container, Inventory playerInventory, Component title) {
-		super(container, playerInventory, title);
+    public ScreenAutocrafter(ContainerAutocrafter container, Inventory playerInventory, Component title) {
+	super(container, playerInventory, title);
 
-		addComponent(new ScreenComponentGeneric(ScreenComponentProgress.ProgressTextures.ARROW_RIGHT_OFF, 80, 34));
-		addComponent(new ScreenComponentElectricInfo(-AbstractScreenComponentInfo.SIZE + 1, 2).wattage(AssemblyLineConfig.INSTANCE.AUTOCRAFTER_USAGE.getAsDouble()));
-		new WrapperInventoryIO(this, -AbstractScreenComponentInfo.SIZE + 1, AbstractScreenComponentInfo.SIZE + 2, 75, 82, 8, 72);
-	}
+	addComponent(new ScreenComponentGeneric(ScreenComponentProgress.ProgressTextures.ARROW_RIGHT_OFF, 80, 34));
+	addComponent(new ScreenComponentElectricInfo(-AbstractScreenComponentInfo.SIZE + 1, 2)
+		.wattage(AssemblyLineConfig.INSTANCE.AUTOCRAFTER_USAGE.getAsDouble()));
+	new WrapperInventoryIO(this, -AbstractScreenComponentInfo.SIZE + 1, AbstractScreenComponentInfo.SIZE + 2, 75,
+		82, 8, 72);
+    }
 
 }

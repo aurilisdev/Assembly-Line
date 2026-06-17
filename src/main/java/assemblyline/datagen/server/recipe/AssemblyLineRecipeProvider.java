@@ -13,26 +13,26 @@ import voltaic.datagen.utils.server.recipe.AbstractRecipeGenerator;
 
 public class AssemblyLineRecipeProvider extends RecipeProvider {
 
-	public final List<AbstractRecipeGenerator> GENERATORS = new ArrayList<>();
+    public final List<AbstractRecipeGenerator> GENERATORS = new ArrayList<>();
 
-	@SuppressWarnings("unused")
-	private final CompletableFuture<HolderLookup.Provider> lookupProvider;
+    @SuppressWarnings("unused")
+    private final CompletableFuture<HolderLookup.Provider> lookupProvider;
 
-	public AssemblyLineRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
-		super(output, lookupProvider);
-		this.lookupProvider = lookupProvider;
-		addRecipes();
+    public AssemblyLineRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+	super(output, lookupProvider);
+	this.lookupProvider = lookupProvider;
+	addRecipes();
+    }
+
+    public void addRecipes() {
+	GENERATORS.add(new AssemblyLineCraftingTableRecipes());
+    }
+
+    @Override
+    protected void buildRecipes(RecipeOutput output) {
+	for (AbstractRecipeGenerator generator : GENERATORS) {
+	    generator.addRecipes(output);
 	}
-
-	public void addRecipes() {
-		GENERATORS.add(new AssemblyLineCraftingTableRecipes());
-	}
-
-	@Override
-	protected void buildRecipes(RecipeOutput output) {
-		for (AbstractRecipeGenerator generator : GENERATORS) {
-			generator.addRecipes(output);
-		}
-	}
+    }
 
 }
