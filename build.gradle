@@ -87,7 +87,7 @@ configurations {
 
 
 dependencies {
-    implementation "voltaic:Voltaic:1.21.1-1.0.3"
+    implementation "voltaic:Voltaic:1.21.1-1.0.9"
     implementation "electrodynamics:Electrodynamics:1.21.1-1.0.3"
 
 

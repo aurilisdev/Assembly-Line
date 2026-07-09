@@ -15,9 +15,8 @@ import voltaic.prefab.utilities.math.Color;
 
 public class ContainerMobGrinder extends GenericContainerBlockEntity<TileMobGrinder> {
 
-    public static final SubtypeItemUpgrade[] VALID_UPGRADES = {
-	    SubtypeItemUpgrade.advancedspeed, SubtypeItemUpgrade.basicspeed, SubtypeItemUpgrade.itemoutput,
-	    SubtypeItemUpgrade.range };
+    public static final SubtypeItemUpgrade[] VALID_UPGRADES = { SubtypeItemUpgrade.advancedspeed,
+	    SubtypeItemUpgrade.basicspeed, SubtypeItemUpgrade.itemoutput, SubtypeItemUpgrade.range };
 
     public ContainerMobGrinder(int id, Inventory playerinv, Container inventory, ContainerData inventorydata) {
 	super(AssemblyLineMenuTypes.CONTAINER_MOBGRINDER.get(), id, playerinv, inventory, inventorydata);

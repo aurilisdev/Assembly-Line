@@ -548,7 +548,8 @@ public abstract class GenericTileConveyorBelt extends GenericTile {
 	} else if (running.getValue() && entity instanceof LivingEntity living
 		&& living.getOnPos().equals(getBlockPos())) {
 
-	    if ((living instanceof Player && !level.isClientSide()) || (!(living instanceof Player) && level.isClientSide)) {
+	    if ((living instanceof Player && !level.isClientSide())
+		    || (!(living instanceof Player) && level.isClientSide)) {
 		return;
 	    }
 
