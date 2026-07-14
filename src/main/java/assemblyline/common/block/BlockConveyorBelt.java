@@ -3,8 +3,6 @@ package assemblyline.common.block;
 import java.util.Arrays;
 import java.util.List;
 
-import com.mojang.serialization.MapCodec;
-
 import assemblyline.common.tile.belt.utils.GenericTileConveyorBelt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -12,7 +10,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;

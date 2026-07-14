@@ -1,9 +1,9 @@
 package assemblyline.datagen.server;
 
-import assemblyline.registers.AssemblyLineTiles;
 import assemblyline.AssemblyLine;
 import assemblyline.common.block.subtype.SubtypeAssemblyMachine;
 import assemblyline.registers.AssemblyLineBlocks;
+import assemblyline.registers.AssemblyLineTiles;
 import net.minecraft.data.DataGenerator;
 import voltaic.datagen.utils.server.loottable.BaseLootTablesProvider;
 
