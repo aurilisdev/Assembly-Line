@@ -15,7 +15,7 @@ import voltaic.prefab.utilities.math.Color;
 
 public class ContainerBlockPlacer extends GenericContainerBlockEntity<TileBlockPlacer> {
 
-	public static final SubtypeItemUpgrade[] VALID_UPGRADES = new SubtypeItemUpgrade[] { SubtypeItemUpgrade.iteminput };
+	public static final SubtypeItemUpgrade[] VALID_UPGRADES = { SubtypeItemUpgrade.iteminput };
 
 	public ContainerBlockPlacer(int id, PlayerInventory playerinv) {
 		this(id, playerinv, new Inventory(4), new IntArray(5));

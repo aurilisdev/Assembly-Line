@@ -70,7 +70,7 @@ public class TileFarmer extends GenericTile {
 
     public static final int MIN_CHORUS_PLANT_SIZE = 5;
 
-    private static final int[][] TREE_SCANNING_GRID = new int[][]{ // Don't need to check bellow any blocks, as trees don't grow like that.
+    private static final int[][] TREE_SCANNING_GRID = { // Don't need to check bellow any blocks, as trees don't grow like that.
             {1, 1, 1}, {1, 1, 0}, {1, 1, -1}, {1, 0, 1}, {1, 0, 0}, {1, 0, -1},
 
             {0, 1, 1}, {0, 1, 0}, {0, 1, -1}, {0, 0, 1}, {0, 0, 0}, {0, 0, -1},
@@ -295,7 +295,7 @@ public class TileFarmer extends GenericTile {
             }
         }
 
-        if((chorusFlowerSet.size() + chorusBlockSet.size()) <= MIN_CHORUS_PLANT_SIZE) {
+        if(chorusFlowerSet.size() + chorusBlockSet.size() <= MIN_CHORUS_PLANT_SIZE) {
             return;
         }
 

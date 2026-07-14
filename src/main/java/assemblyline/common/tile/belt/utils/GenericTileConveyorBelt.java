@@ -490,7 +490,7 @@ public abstract class GenericTileConveyorBelt extends GenericTile {
 	}
 
 	public Vector3f getLocalItemLocationVector() {
-		return new Vector3f((float) (itemLocation.getValue().x() - (float) worldPosition.getX()), (float) (itemLocation.getValue().y() - (float) worldPosition.getY()), (float) (itemLocation.getValue().z() - (float) worldPosition.getZ()));
+		return new Vector3f((float) (itemLocation.getValue().x() - worldPosition.getX()), (float) (itemLocation.getValue().y() - worldPosition.getY()), (float) (itemLocation.getValue().z() - worldPosition.getZ()));
 	}
 
 	public Vector3f getDirectionVector() {
@@ -515,8 +515,8 @@ public abstract class GenericTileConveyorBelt extends GenericTile {
 		if (setToEnd) {
 			Direction directionForNext = getDirectionForNext();
 
-			x -= (directionForNext.getStepX() / 2.0);
-			z -= (directionForNext.getStepZ() / 2.0);
+			x -= directionForNext.getStepX() / 2.0;
+			z -= directionForNext.getStepZ() / 2.0;
 		}
 
 		return new Location(x, y, z);
@@ -557,9 +557,7 @@ public abstract class GenericTileConveyorBelt extends GenericTile {
 
 			LivingEntity living = (LivingEntity) entity;
 
-			if (living instanceof PlayerEntity && !level.isClientSide()) {
-				return;
-			} else if (!(living instanceof PlayerEntity) && level.isClientSide) {
+			if (living instanceof PlayerEntity && !level.isClientSide() || !(living instanceof PlayerEntity) && level.isClientSide) {
 				return;
 			}
 
@@ -601,7 +599,7 @@ public abstract class GenericTileConveyorBelt extends GenericTile {
 			double d5 = Math.floor(getBlockPos().getZ()) + level.random.nextDouble() * d1 + d2;
 
 			ItemEntity itementity = new ItemEntity(level, d3, d4, d5, stack);
-			itementity.setDeltaMovement(Voltaic.RANDOM.nextGaussian() * (double) 0.05F, Voltaic.RANDOM.nextGaussian() * (double) 0.05F + (double) 0.2F, Voltaic.RANDOM.nextGaussian() * (double) 0.05F);
+			itementity.setDeltaMovement(Voltaic.RANDOM.nextGaussian() * 0.05F, Voltaic.RANDOM.nextGaussian() * 0.05F + 0.2F, Voltaic.RANDOM.nextGaussian() * 0.05F);
 			level.addFreshEntity(itementity);
 		}
 	}

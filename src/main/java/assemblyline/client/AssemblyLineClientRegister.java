@@ -16,8 +16,8 @@ import assemblyline.client.screen.ScreenFarmer;
 import assemblyline.client.screen.ScreenMobGrinder;
 import assemblyline.client.screen.ScreenRancher;
 import assemblyline.client.screen.ScreenSorterBelt;
-import assemblyline.registers.AssemblyLineTiles;
 import assemblyline.registers.AssemblyLineMenuTypes;
+import assemblyline.registers.AssemblyLineTiles;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -27,7 +27,6 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import voltaic.client.guidebook.ScreenGuidebook;
 
 @OnlyIn(Dist.CLIENT)

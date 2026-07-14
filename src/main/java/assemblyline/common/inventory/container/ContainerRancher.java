@@ -15,7 +15,7 @@ import voltaic.prefab.utilities.math.Color;
 
 public class ContainerRancher extends GenericContainerBlockEntity<TileRancher> {
 
-    public static final SubtypeItemUpgrade[] VALID_UPGRADES = new SubtypeItemUpgrade[] { SubtypeItemUpgrade.advancedspeed, SubtypeItemUpgrade.basicspeed, SubtypeItemUpgrade.itemoutput, SubtypeItemUpgrade.range };
+    public static final SubtypeItemUpgrade[] VALID_UPGRADES = { SubtypeItemUpgrade.advancedspeed, SubtypeItemUpgrade.basicspeed, SubtypeItemUpgrade.itemoutput, SubtypeItemUpgrade.range };
 
     public ContainerRancher(int id, PlayerInventory playerinv, IInventory inventory, IIntArray inventorydata) {
         super(AssemblyLineMenuTypes.CONTAINER_RANCHER.get(), id, playerinv, inventory, inventorydata);

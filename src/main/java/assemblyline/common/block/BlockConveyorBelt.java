@@ -2,6 +2,7 @@ package assemblyline.common.block;
 
 import java.util.Arrays;
 import java.util.List;
+
 import assemblyline.common.tile.belt.utils.GenericTileConveyorBelt;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;

@@ -70,8 +70,6 @@ public class TileSorterBelt extends GenericTileConveyorBelt {
 
             } else {
 
-                return superDirection;
-
             }
         }
 
