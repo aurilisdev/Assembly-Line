@@ -10,6 +10,7 @@ public class AssemblyLineRecipeProvider extends BaseRecipeProvider {
 		super(gen);
 	}
 
+	@Override
 	public void addRecipes() {
 		generators.add(new AssemblyLineCraftingTableRecipes());
 	}

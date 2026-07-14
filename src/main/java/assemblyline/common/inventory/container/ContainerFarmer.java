@@ -17,7 +17,7 @@ import voltaic.prefab.utilities.math.Color;
 
 public class ContainerFarmer extends GenericContainerBlockEntity<TileFarmer> {
 
-	public static final SubtypeItemUpgrade[] VALID_UPGRADES = new SubtypeItemUpgrade[] { SubtypeItemUpgrade.advancedspeed, SubtypeItemUpgrade.basicspeed, SubtypeItemUpgrade.itemoutput, SubtypeItemUpgrade.range };
+	public static final SubtypeItemUpgrade[] VALID_UPGRADES = { SubtypeItemUpgrade.advancedspeed, SubtypeItemUpgrade.basicspeed, SubtypeItemUpgrade.itemoutput, SubtypeItemUpgrade.range };
 
 	public ContainerFarmer(int id, Inventory playerinv) {
 		this(id, playerinv, new SimpleContainer(22), new SimpleContainerData(5));

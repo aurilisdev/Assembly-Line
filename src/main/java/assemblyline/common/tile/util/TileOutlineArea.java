@@ -57,19 +57,12 @@ public abstract class TileOutlineArea extends GenericTile {
 
 	public static AABB encapsulatingFullBlocks(BlockPos startPos, BlockPos endPos) {
 		return new AABB(
-				//
-				(double) Math.min(startPos.getX(), endPos.getX()),
-				//
-				(double) Math.min(startPos.getY(), endPos.getY()),
-				//
-				(double) Math.min(startPos.getZ(), endPos.getZ()),
-				//
-				(double) (Math.max(startPos.getX(), endPos.getX()) + 1),
-				//
-				(double) (Math.max(startPos.getY(), endPos.getY()) + 1),
-				//
-				(double) (Math.max(startPos.getZ(), endPos.getZ()) + 1)
-		//
+				Math.min(startPos.getX(), endPos.getX()),
+				Math.min(startPos.getY(), endPos.getY()),
+				Math.min(startPos.getZ(), endPos.getZ()),
+				Math.max(startPos.getX(), endPos.getX()) + 1,
+				Math.max(startPos.getY(), endPos.getY()) + 1,
+				Math.max(startPos.getZ(), endPos.getZ()) + 1
 		);
 	}
 

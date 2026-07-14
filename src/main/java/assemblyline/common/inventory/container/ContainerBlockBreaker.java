@@ -13,7 +13,7 @@ import voltaic.prefab.inventory.container.types.GenericContainerBlockEntity;
 
 public class ContainerBlockBreaker extends GenericContainerBlockEntity<TileBlockBreaker> {
 
-	public static final SubtypeItemUpgrade[] VALID_UPGRADES = new SubtypeItemUpgrade[] { SubtypeItemUpgrade.basicspeed, SubtypeItemUpgrade.advancedspeed };
+	public static final SubtypeItemUpgrade[] VALID_UPGRADES = { SubtypeItemUpgrade.basicspeed, SubtypeItemUpgrade.advancedspeed };
 
 	public ContainerBlockBreaker(int id, Inventory playerinv) {
 		this(id, playerinv, new SimpleContainer(3), new SimpleContainerData(5));

@@ -3,7 +3,6 @@ package assemblyline.datagen.client;
 import assemblyline.AssemblyLine;
 import assemblyline.common.block.subtype.SubtypeAssemblyMachine;
 import assemblyline.registers.AssemblyLineBlocks;
-import assemblyline.registers.AssemblyLineItems;
 import assemblyline.registers.AssemblyLineSounds;
 import net.minecraft.data.DataGenerator;
 import voltaic.datagen.utils.client.BaseLangKeyProvider;
@@ -91,8 +90,10 @@ public class AssemblyLineLangKeyProvider extends BaseLangKeyProvider {
                 addGuidebook("chapter.conveyers.vertical", "Vertical");
                 addGuidebook("chapter.conveyers.l3", "These modes are pictured on the following pages. Note where the bounding boxes are:");
 
-                addGuidebook("chapter.conveyers.l4", "A specialized form of the Conveyor Belt is the Sorter Belt. As the name suggests, it is able to sort items that pass through it. The belt has an input at the front, with the other 3 sides being outputs. The GUI of the belt has 2 sets of 9 slots. Any item placed in a left slot will be output to the left of the input. Any " +
-                        "item placed in a right slot will be output to the right of the of the input. Any other items not specified will be output to the back of the Sorter Belt. The Sorter also needs power to function, and has the same usage as a standard Conveyor Belt. This power can either " + "be supplied to the bottom or from an adjacent belt with power.");
+                addGuidebook("chapter.conveyers.l4", """
+			A specialized form of the Conveyor Belt is the Sorter Belt. As the name suggests, it is able to sort items that pass through it. The belt has an input at the front, with the other 3 sides being outputs. The GUI of the belt has 2 sets of 9 slots. Any item placed in a left slot will be output to the left of the input. Any \
+			item placed in a right slot will be output to the right of the of the input. Any other items not specified will be output to the back of the Sorter Belt. The Sorter also needs power to function, and has the same usage as a standard Conveyor Belt. This power can either \
+			be supplied to the bottom or from an adjacent belt with power.""");
 
                 addGuidebook("chapter.conveyers.l5", "Another useful block is the Detector. The Detector will output a 15 redstone signal if an item on a Conveyor Belt passes in front of the green square of the Detector, or if an item is laying on the ground in front of said square.");
 

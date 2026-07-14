@@ -10,7 +10,7 @@ import voltaic.api.codec.StreamCodec;
 
 public class PacketFarmer {
 	
-	public static final StreamCodec<ByteBuf, PacketFarmer> CODEC = new StreamCodec<ByteBuf, PacketFarmer>() {
+	public static final StreamCodec<ByteBuf, PacketFarmer> CODEC = new StreamCodec<>() {
 		
 		@Override
 		public void encode(ByteBuf buf, PacketFarmer data) {

@@ -477,7 +477,7 @@ public abstract class GenericTileConveyorBelt extends GenericTile {
 	}
 
 	public Vector3f getLocalItemLocationVector() {
-		return new Vector3f((float) (itemLocation.getValue().x() - (float) worldPosition.getX()), (float) (itemLocation.getValue().y() - (float) worldPosition.getY()), (float) (itemLocation.getValue().z() - (float) worldPosition.getZ()));
+		return new Vector3f((float) (itemLocation.getValue().x() - worldPosition.getX()), (float) (itemLocation.getValue().y() - worldPosition.getY()), (float) (itemLocation.getValue().z() - worldPosition.getZ()));
 	}
 
 	public Vector3f getDirectionVector() {
@@ -502,8 +502,8 @@ public abstract class GenericTileConveyorBelt extends GenericTile {
 		if (setToEnd) {
 			Direction directionForNext = getDirectionForNext();
 
-			x -= (directionForNext.getStepX() / 2.0);
-			z -= (directionForNext.getStepZ() / 2.0);
+			x -= directionForNext.getStepX() / 2.0;
+			z -= directionForNext.getStepZ() / 2.0;
 		}
 
 		return new Location(x, y, z);
@@ -540,9 +540,7 @@ public abstract class GenericTileConveyorBelt extends GenericTile {
 			}
 		} else if (running.getValue() && entity instanceof LivingEntity living && living.getOnPos().equals(getBlockPos())) {
 
-			if (living instanceof Player && !level.isClientSide()) {
-				return;
-			} else if (!(living instanceof Player) && level.isClientSide) {
+			if ((living instanceof Player && !level.isClientSide()) || (!(living instanceof Player) && level.isClientSide)) {
 				return;
 			}
 
