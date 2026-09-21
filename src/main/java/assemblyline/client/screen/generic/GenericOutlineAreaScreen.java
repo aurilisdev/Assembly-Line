@@ -18,24 +18,24 @@ public abstract class GenericOutlineAreaScreen<T extends GenericContainerBlockEn
     @Override
     protected void containerTick() {
 	super.containerTick();
-	TileOutlineArea harvester = menu.getSafeHost();
-	if (harvester != null && HandlerHarvesterLines.containsLines(harvester.getBlockPos())) {
-	    HandlerHarvesterLines.removeLines(harvester.getBlockPos());
-	    updateBox(harvester);
-	}
+	menu.getSafeHost().ifPresent(harvester -> {
+	    if (harvester != null && HandlerHarvesterLines.containsLines(harvester.getBlockPos())) {
+		HandlerHarvesterLines.removeLines(harvester.getBlockPos());
+		updateBox(harvester);
+	    }
+	});
     }
 
     // convenience method for toggle button
     public void toggleRendering() {
-	TileOutlineArea harvester = menu.getSafeHost();
-	if (harvester != null) {
+	menu.getSafeHost().ifPresent(harvester -> {
 	    BlockPos pos = harvester.getBlockPos();
 	    if (HandlerHarvesterLines.containsLines(pos)) {
 		HandlerHarvesterLines.removeLines(pos);
 	    } else {
 		updateBox(harvester);
 	    }
-	}
+	});
     }
 
     public void updateBox(TileOutlineArea area) {

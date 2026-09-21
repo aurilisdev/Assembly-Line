@@ -13,13 +13,13 @@ import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import voltaic.prefab.tile.GenericTile;
 import voltaic.prefab.tile.components.IComponentType;
 import voltaic.prefab.tile.components.type.ComponentInventory;
-import voltaic.prefab.tile.components.type.ComponentPacketHandler;
 import voltaic.prefab.tile.components.type.ComponentTickable;
 
 public class TileCrate extends GenericTile {
@@ -43,7 +43,6 @@ public class TileCrate extends GenericTile {
 
 	this.size = size;
 
-	addComponent(new ComponentPacketHandler(this));
 	addComponent(new ComponentInventory(this, ComponentInventory.InventoryBuilder.newInv().forceSize(this.size))
 		.getSlots(this::getSlotsForFace).valid(this::isItemValidForSlot).setSlotsForAllDirections(0));
 	addComponent(new ComponentTickable(this));
@@ -51,7 +50,8 @@ public class TileCrate extends GenericTile {
 
     public HashSet<Integer> getSlotsForFace(Direction side) {
 	HashSet<Integer> set = new HashSet<>();
-	for (int i = 0; i < this.<ComponentInventory>getComponent(IComponentType.Inventory).getContainerSize(); i++) {
+	for (int i = 0; i < this.<ComponentInventory>requireComponent(IComponentType.Inventory)
+		.getContainerSize(); i++) {
 	    set.add(i);
 	}
 	return set;
@@ -75,7 +75,7 @@ public class TileCrate extends GenericTile {
 
     public int getCount() {
 	int count = 0;
-	ComponentInventory inv = getComponent(IComponentType.Inventory);
+	ComponentInventory inv = requireComponent(IComponentType.Inventory);
 	count = 0;
 	for (int i = 0; i < inv.getContainerSize(); i++) {
 	    ItemStack stack = inv.getItem(i);
@@ -88,18 +88,19 @@ public class TileCrate extends GenericTile {
     }
 
     @Override
-    public int getComparatorSignal() {
-	ComponentInventory inv = getComponent(IComponentType.Inventory);
+    public int getComparatorSignal(Level level) {
+	ComponentInventory inv = requireComponent(IComponentType.Inventory);
 	return (int) ((double) getCount() / (double) Math.max(1, inv.getContainerSize()) * 15.0);
     }
 
     @Override
-    public ItemInteractionResult useWithItem(ItemStack used, Player player, InteractionHand hand, BlockHitResult hit) {
+    public ItemInteractionResult useWithItem(Level level, ItemStack used, Player player, InteractionHand hand,
+	    BlockHitResult hit) {
 	if (!player.isShiftKeyDown() && !player.getItemInHand(hand).isEmpty()) {
 
 	    if (!level.isClientSide)
 		player.setItemInHand(hand, HopperBlockEntity.addItem(player.getInventory(),
-			getComponent(IComponentType.Inventory), player.getItemInHand(hand), Direction.EAST));
+			requireComponent(IComponentType.Inventory), player.getItemInHand(hand), Direction.EAST));
 
 	    return ItemInteractionResult.CONSUME;
 	}
@@ -108,8 +109,8 @@ public class TileCrate extends GenericTile {
     }
 
     @Override
-    public InteractionResult useWithoutItem(Player player, BlockHitResult hit) {
-	ComponentInventory inv = getComponent(IComponentType.Inventory);
+    public InteractionResult useWithoutItem(Level level, Player player, BlockHitResult hit) {
+	ComponentInventory inv = requireComponent(IComponentType.Inventory);
 
 	for (int i = 0; i < inv.getContainerSize(); i++) {
 	    ItemStack stack = inv.getItem(i);

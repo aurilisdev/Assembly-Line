@@ -18,7 +18,7 @@ public class ScreenAutocrafter extends GenericScreen<ContainerAutocrafter> {
 
 	addComponent(new ScreenComponentGeneric(ScreenComponentProgress.ProgressTextures.ARROW_RIGHT_OFF, 80, 34));
 	addComponent(new ScreenComponentElectricInfo(-AbstractScreenComponentInfo.SIZE + 1, 2)
-		.wattage(AssemblyLineConfig.INSTANCE.AUTOCRAFTER_USAGE.getAsDouble()));
+		.wattage(AssemblyLineConfig.getInstance().AUTOCRAFTER_USAGE.getAsDouble()));
 	new WrapperInventoryIO(this, -AbstractScreenComponentInfo.SIZE + 1, AbstractScreenComponentInfo.SIZE + 2, 75,
 		82, 8, 72);
     }

@@ -22,8 +22,8 @@ public class TileSorterBelt extends GenericTileConveyorBelt {
 	super(AssemblyLineTiles.TILE_SORTERBELT.get(), worldPosition, blockState,
 		ConveyorBeltProperties.builder(ConveyorClass.REGULAR).setNoPuller().setInvSize(19));
 	addComponent(new ComponentContainerProvider("sorterbelt", this)
-		.createMenu((id, player) -> new ContainerSorterBelt(id, player, getComponent(IComponentType.Inventory),
-			getCoordsArray())));
+		.createMenu((id, player) -> new ContainerSorterBelt(id, player,
+			requireComponent(IComponentType.Inventory), getCoordsArray())));
     }
 
     @Override
@@ -44,7 +44,7 @@ public class TileSorterBelt extends GenericTileConveyorBelt {
 
 	if (xIs || zIs) {
 
-	    ComponentInventory inv = getComponent(IComponentType.Inventory);
+	    ComponentInventory inv = requireComponent(IComponentType.Inventory);
 
 	    ItemStack onBelt = getItemOnBelt();
 

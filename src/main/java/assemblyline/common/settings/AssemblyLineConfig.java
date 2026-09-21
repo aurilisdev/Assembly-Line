@@ -3,7 +3,7 @@ package assemblyline.common.settings;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class AssemblyLineConfig {
-    public static AssemblyLineConfig INSTANCE;
+    private static AssemblyLineConfig INSTANCE = new AssemblyLineConfig();
 
     public ModConfigSpec SPEC;
     public ModConfigSpec.DoubleValue CONVEYORBELT_USAGE;
@@ -37,5 +37,9 @@ public class AssemblyLineConfig {
 		.defineInRange("conveyor_max_spread", 16, 0, Integer.MAX_VALUE);
 	builder.pop();
 	SPEC = builder.build();
+    }
+
+    public static AssemblyLineConfig getInstance() {
+	return INSTANCE;
     }
 }

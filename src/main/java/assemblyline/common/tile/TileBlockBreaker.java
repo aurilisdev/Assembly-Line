@@ -8,6 +8,7 @@ import assemblyline.registers.AssemblyLineTiles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import voltaic.api.particle.ParticleAPI;
@@ -19,7 +20,6 @@ import voltaic.prefab.tile.components.type.ComponentContainerProvider;
 import voltaic.prefab.tile.components.type.ComponentElectrodynamic;
 import voltaic.prefab.tile.components.type.ComponentForgeEnergy;
 import voltaic.prefab.tile.components.type.ComponentInventory;
-import voltaic.prefab.tile.components.type.ComponentPacketHandler;
 import voltaic.prefab.tile.components.type.ComponentTickable;
 import voltaic.prefab.utilities.BlockEntityUtils;
 import voltaic.registers.VoltaicCapabilities;
@@ -27,35 +27,34 @@ import voltaic.registers.VoltaicCapabilities;
 public class TileBlockBreaker extends TileOutlineArea {
 
     public SingleProperty<Integer> ticksSinceCheck = property(
-	    new SingleProperty<>(PropertyTypes.INTEGER, "ticksSinceCheck", 0));
+	    new SingleProperty<>(getPropertyManager(), PropertyTypes.INTEGER, "ticksSinceCheck", 0));
     public SingleProperty<Integer> currentWaitTime = property(
-	    new SingleProperty<>(PropertyTypes.INTEGER, "currentWaitTime", 0));
-    public final SingleProperty<Boolean> works = property(new SingleProperty<>(PropertyTypes.BOOLEAN, "works", false));
+	    new SingleProperty<>(getPropertyManager(), PropertyTypes.INTEGER, "currentWaitTime", 0));
+    public final SingleProperty<Boolean> works = property(
+	    new SingleProperty<>(getPropertyManager(), PropertyTypes.BOOLEAN, "works", false));
     public final SingleProperty<Double> progress = property(
-	    new SingleProperty<>(PropertyTypes.DOUBLE, "progress", 0.0));
+	    new SingleProperty<>(getPropertyManager(), PropertyTypes.DOUBLE, "progress", 0.0));
 
     public TileBlockBreaker(BlockPos pos, BlockState state) {
 	super(AssemblyLineTiles.TILE_BLOCKBREAKER.get(), pos, state);
-	addComponent(new ComponentPacketHandler(this));
 	addComponent(new ComponentTickable(this).tickServer(this::tickServer).tickClient(this::tickClient));
 	addComponent(new ComponentElectrodynamic(this, false, true)
 		.setInputDirections(BlockEntityUtils.MachineDirection.FRONT)
 		.voltage(VoltaicCapabilities.DEFAULT_VOLTAGE)
-		.maxJoules(AssemblyLineConfig.INSTANCE.BLOCKBREAKER_USAGE.getAsDouble() * 20));
+		.maxJoules(AssemblyLineConfig.getInstance().BLOCKBREAKER_USAGE.getAsDouble() * 20));
 	addComponent(new ComponentInventory(this, ComponentInventory.InventoryBuilder.newInv().upgrades(3))
 		.validUpgrades(ContainerBlockBreaker.VALID_UPGRADES).valid(machineValidator()));
 	addComponent(new ComponentContainerProvider("blockbreaker", this)
 		.createMenu((id, player) -> new ContainerBlockBreaker(id, player,
-			getComponent(IComponentType.Inventory), getCoordsArray())));
+			requireComponent(IComponentType.Inventory), getCoordsArray())));
 	addComponent(new ComponentForgeEnergy(this));
 	height.setValue(1);
     }
 
-    public void tickServer(ComponentTickable component) {
+    public void tickServer(Level level, ComponentTickable component) {
+	ComponentElectrodynamic electro = requireComponent(IComponentType.Electrodynamic);
 
-	ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
-
-	if (electro.getJoulesStored() < AssemblyLineConfig.INSTANCE.BLOCKBREAKER_USAGE.getAsDouble()) {
+	if (electro.getJoulesStored() < AssemblyLineConfig.getInstance().BLOCKBREAKER_USAGE.getAsDouble()) {
 	    progress.setValue(0.0);
 	    return;
 	}
@@ -79,7 +78,8 @@ public class TileBlockBreaker extends TileOutlineArea {
 	if (progress.getValue() < 1) {
 	    progress.setValue(progress.getValue() + k1 * 5);
 
-	    electro.joules(electro.getJoulesStored() - AssemblyLineConfig.INSTANCE.BLOCKBREAKER_USAGE.getAsDouble());
+	    electro.joules(
+		    electro.getJoulesStored() - AssemblyLineConfig.getInstance().BLOCKBREAKER_USAGE.getAsDouble());
 
 	    return;
 
@@ -92,7 +92,7 @@ public class TileBlockBreaker extends TileOutlineArea {
 
     }
 
-    public void tickClient(ComponentTickable component) {
+    public void tickClient(Level level, ComponentTickable component) {
 	if (!works.getValue()) {
 	    return;
 	}
@@ -108,7 +108,7 @@ public class TileBlockBreaker extends TileOutlineArea {
     }
 
     @Override
-    public int getComparatorSignal() {
+    public int getComparatorSignal(Level level) {
 	return works.getValue() ? 15 : 0;
     }
 

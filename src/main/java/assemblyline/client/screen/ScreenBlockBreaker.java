@@ -28,7 +28,7 @@ public class ScreenBlockBreaker extends GenericOutlineAreaScreen<ContainerBlockB
 	super(screenContainer, inv, titleIn);
 
 	addComponent(new ScreenComponentCountdown(this::getTooltip, () -> {
-	    TileBlockBreaker breaker = menu.getSafeHost();
+	    TileBlockBreaker breaker = menu.getSafeHost().orElse(null);
 	    if (breaker != null) {
 		return (double) breaker.ticksSinceCheck.getValue() / (double) breaker.currentWaitTime.getValue();
 	    }
@@ -39,7 +39,7 @@ public class ScreenBlockBreaker extends GenericOutlineAreaScreen<ContainerBlockB
 		-AbstractScreenComponentInfo.SIZE + 1, 2));
 
 	addComponent(new ScreenComponentButton<>(10, 20, 60, 20).setLabel(() -> {
-	    TileBlockBreaker harvester = menu.getSafeHost();
+	    TileBlockBreaker harvester = menu.getSafeHost().orElse(null);
 	    if (harvester != null) {
 		return HandlerHarvesterLines.containsLines(harvester.getBlockPos()) ? AssemblyTextUtils.gui("hidearea")
 			: AssemblyTextUtils.gui("renderarea");
@@ -51,12 +51,12 @@ public class ScreenBlockBreaker extends GenericOutlineAreaScreen<ContainerBlockB
 
     private List<? extends FormattedCharSequence> getElectricInformation() {
 	ArrayList<FormattedCharSequence> list = new ArrayList<>();
-	TileBlockBreaker harvester = menu.getSafeHost();
+	TileBlockBreaker harvester = menu.getSafeHost().orElse(null);
 	if (harvester != null) {
-	    ComponentElectrodynamic electro = harvester.getComponent(IComponentType.Electrodynamic);
+	    ComponentElectrodynamic electro = harvester.requireComponent(IComponentType.Electrodynamic);
 	    list.add(AssemblyTextUtils
 		    .gui("machine.usage", ChatFormatter.getChatDisplayShort(
-			    AssemblyLineConfig.INSTANCE.BLOCKBREAKER_USAGE.getAsDouble() * 20, DisplayUnits.WATT))
+			    AssemblyLineConfig.getInstance().BLOCKBREAKER_USAGE.getAsDouble() * 20, DisplayUnits.WATT))
 		    .withStyle(ChatFormatting.GRAY).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
 	    list.add(AssemblyTextUtils
 		    .gui("machine.voltage",
@@ -73,15 +73,13 @@ public class ScreenBlockBreaker extends GenericOutlineAreaScreen<ContainerBlockB
 
     protected List<? extends FormattedCharSequence> getTooltip() {
 	List<FormattedCharSequence> tips = new ArrayList<>();
-	TileBlockBreaker breaker = menu.getSafeHost();
-
-	if (breaker != null) {
+	menu.getSafeHost().ifPresent(breaker -> {
 	    tips.add(AssemblyTextUtils
 		    .tooltip("breakingprogress",
 			    ChatFormatter.getChatDisplayShort(100.0 * (double) breaker.ticksSinceCheck.getValue()
 				    / (double) breaker.currentWaitTime.getValue(), DisplayUnits.PERCENTAGE))
 		    .withStyle(ChatFormatting.GRAY).getVisualOrderText());
-	}
+	});
 
 	return tips;
 

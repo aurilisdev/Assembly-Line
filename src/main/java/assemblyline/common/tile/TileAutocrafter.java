@@ -7,6 +7,7 @@ import assemblyline.common.settings.AssemblyLineConfig;
 import assemblyline.registers.AssemblyLineTiles;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
@@ -15,6 +16,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.util.RecipeMatcher;
 import voltaic.prefab.tile.GenericTile;
@@ -34,7 +36,7 @@ public class TileAutocrafter extends GenericTile {
 	super(AssemblyLineTiles.TILE_AUTOCRAFTER.get(), worldPosition, blockState);
 	addComponent(new ComponentTickable(this).tickServer(this::tickServer));
 	addComponent(new ComponentElectrodynamic(this, false, true)
-		.maxJoules(AssemblyLineConfig.INSTANCE.AUTOCRAFTER_USAGE.getAsDouble() * 20)
+		.maxJoules(AssemblyLineConfig.getInstance().AUTOCRAFTER_USAGE.getAsDouble() * 20)
 		.setInputDirections(BlockEntityUtils.MachineDirection.values()));
 	addComponent(new ComponentInventory(this, ComponentInventory.InventoryBuilder.newInv().inputs(9).outputs(1))
 		//
@@ -50,8 +52,8 @@ public class TileAutocrafter extends GenericTile {
 		//
 		.setSlotsByDirection(BlockEntityUtils.MachineDirection.RIGHT, 0, 3, 6));
 	addComponent(new ComponentContainerProvider("autocrafter", this)
-		.createMenu((id, player) -> new ContainerAutocrafter(id, player, getComponent(IComponentType.Inventory),
-			getCoordsArray())));
+		.createMenu((id, player) -> new ContainerAutocrafter(id, player,
+			requireComponent(IComponentType.Inventory), getCoordsArray())));
 	addComponent(new ComponentForgeEnergy(this));
     }
 
@@ -113,19 +115,24 @@ public class TileAutocrafter extends GenericTile {
 		: RecipeMatcher.findMatches(inputs, shaped.getIngredients()) != null);
     }
 
-    public void tickServer(ComponentTickable tick) {
-	ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
-	boolean canContinue = electro.getJoulesStored() >= AssemblyLineConfig.INSTANCE.AUTOCRAFTER_USAGE.getAsDouble();
+    public void tickServer(Level level, ComponentTickable tick) {
+	ComponentElectrodynamic electro = requireComponent(IComponentType.Electrodynamic);
+	boolean canContinue = electro.getJoulesStored() >= AssemblyLineConfig.getInstance().AUTOCRAFTER_USAGE
+		.getAsDouble();
 	if (tick.getTicks() % 20 == 0) {
 	    if (canContinue) {
-		ComponentInventory inventory = getComponent(IComponentType.Inventory);
+		ComponentInventory inventory = requireComponent(IComponentType.Inventory);
 		for (int i = 0; i < 9; i++) {
 		    if (inventory.getItem(i).getCount() == 1) {
 			canContinue = false;
 		    }
 		}
 		if (canContinue) {
-		    List<RecipeHolder<CraftingRecipe>> recipes = level.getServer().getRecipeManager()
+		    MinecraftServer server = level.getServer();
+		    if (server == null) {
+			return;
+		    }
+		    List<RecipeHolder<CraftingRecipe>> recipes = server.getRecipeManager()
 			    .getAllRecipesFor(RecipeType.CRAFTING);
 		    ItemStack result = ItemStack.EMPTY;
 		    canContinue = false;
@@ -156,7 +163,7 @@ public class TileAutocrafter extends GenericTile {
 				currentItemStack.grow(result.getCount());
 			    }
 			    electro.joules(electro.getJoulesStored()
-				    - AssemblyLineConfig.INSTANCE.AUTOCRAFTER_USAGE.getAsDouble());
+				    - AssemblyLineConfig.getInstance().AUTOCRAFTER_USAGE.getAsDouble());
 			}
 		    }
 		}

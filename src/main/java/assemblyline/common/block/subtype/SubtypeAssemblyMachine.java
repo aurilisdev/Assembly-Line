@@ -19,7 +19,9 @@ import voltaic.common.block.voxelshapes.VoxelShapeProvider;
 
 public enum SubtypeAssemblyMachine implements ISubtype, IMachine {
 
-    crate(true, TileCrate::new), cratemedium(true, TileCrate::new), cratelarge(true, TileCrate::new),
+    crate(true, TileCrate::new),
+    cratemedium(true, TileCrate::new),
+    cratelarge(true, TileCrate::new),
     autocrafter(true, TileAutocrafter::new,
 	    MachineProperties.builder().setShapeProvider(AssemblyLineVoxelShapes.AUTOCRAFTER)),
     blockbreaker(true, TileBlockBreaker::new,
@@ -50,37 +52,37 @@ public enum SubtypeAssemblyMachine implements ISubtype, IMachine {
 
     @Override
     public BlockEntityType.BlockEntitySupplier<BlockEntity> getBlockEntitySupplier() {
-	return this.blockEntitySupplier;
+	return blockEntitySupplier;
     }
 
     @Override
     public int getLitBrightness() {
-	return this.properties.litBrightness;
+	return properties.litBrightness;
     }
 
     @Override
     public RenderShape getRenderShape() {
-	return this.properties.renderShape;
+	return properties.renderShape;
     }
 
     @Override
     public boolean isMultiblock() {
-	return this.properties.isMultiblock;
+	return properties.isMultiblock;
     }
 
     @Override
     public boolean propegatesLightDown() {
-	return this.properties.propegatesLightDown;
+	return properties.propegatesLightDown;
     }
 
     @Override
     public String tag() {
-	return this.name();
+	return name();
     }
 
     @Override
     public String forgeTag() {
-	return this.tag();
+	return tag();
     }
 
     @Override
@@ -95,12 +97,12 @@ public enum SubtypeAssemblyMachine implements ISubtype, IMachine {
 
     @Override
     public IMultiblockParentBlock.SubnodeWrapper getSubnodes() {
-	return this.properties.wrapper;
+	return properties.wrapper;
     }
 
     @Override
     public VoxelShapeProvider getVoxelShapeProvider() {
-	return this.properties.provider;
+	return properties.provider;
     }
 
     @Override
@@ -109,6 +111,6 @@ public enum SubtypeAssemblyMachine implements ISubtype, IMachine {
     }
 
     public boolean showInItemGroup() {
-	return this.showInItemGroup;
+	return showInItemGroup;
     }
 }

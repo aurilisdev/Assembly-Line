@@ -15,7 +15,6 @@ import voltaic.client.render.AbstractTileRenderer;
 import voltaic.prefab.utilities.RenderingUtils;
 
 public class RenderFarmer extends AbstractTileRenderer<TileFarmer> {
-
     private static final float MIN_X = 3.0F / 16.0F;
     private static final float MAX_X = 13.0F / 16.0F;
     private static final float MIN_Y = 3.001F / 16.0F;
@@ -35,5 +34,4 @@ public class RenderFarmer extends AbstractTileRenderer<TileFarmer> {
 	RenderingUtils.renderFluidBox(stack, Minecraft.getInstance(), builder, aabb, new FluidStack(Fluids.WATER, 1000),
 		light, overlay, RenderingUtils.ALL_FACES);
     }
-
 }

@@ -3,6 +3,8 @@ package assemblyline.common.block;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.mojang.serialization.MapCodec;
 
 import assemblyline.common.tile.belt.utils.GenericTileConveyorBelt;
@@ -45,13 +47,13 @@ public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-
 	Direction dir = null;
 	if (state.hasProperty(VoltaicBlockStates.FACING)) {
 	    dir = state.getValue(VoltaicBlockStates.FACING);
 	}
-
-	return this.shapeProvider.getShape(dir);
+	if (dir == null)
+	    return super.getShape(state, worldIn, pos, context);
+	return shapeProvider.getShape(dir);
 
     }
 
@@ -67,6 +69,7 @@ public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
 	return Arrays.asList(new ItemStack(this));
     }
 
+    @SuppressWarnings("null")
     @Override
     protected MapCodec<? extends BaseEntityBlock> codec() {
 	return null;
@@ -78,9 +81,13 @@ public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
     }
 
     @Override
+    @Nullable
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-	return super.getStateForPlacement(context).setValue(VoltaicBlockStates.FACING,
-		context.getHorizontalDirection().getOpposite());
+	BlockState stateForPlacement = super.getStateForPlacement(context);
+	if (stateForPlacement == null)
+	    return null;
+
+	return stateForPlacement.setValue(VoltaicBlockStates.FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
@@ -90,7 +97,7 @@ public class BlockConveyorBelt extends GenericEntityBlockWaterloggable {
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 	return supplier.create(pos, state);
     }
 }

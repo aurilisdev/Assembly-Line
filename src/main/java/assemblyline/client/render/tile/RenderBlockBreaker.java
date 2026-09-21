@@ -14,6 +14,7 @@ import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import voltaic.client.render.AbstractTileRenderer;
 import voltaic.prefab.tile.components.IComponentType;
@@ -22,7 +23,6 @@ import voltaic.prefab.utilities.RenderingUtils;
 import voltaic.prefab.utilities.math.MathUtils;
 
 public class RenderBlockBreaker extends AbstractTileRenderer<TileBlockBreaker> {
-
     public RenderBlockBreaker(BlockEntityRendererProvider.Context context) {
 	super(context);
     }
@@ -30,10 +30,13 @@ public class RenderBlockBreaker extends AbstractTileRenderer<TileBlockBreaker> {
     @Override
     public void render(TileBlockBreaker breaker, float partialTicks, PoseStack matrixStackIn,
 	    MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {
+	Level level = breaker.getLevel();
+	if (level == null)
+	    return;
 
 	double progress = 0;
 	if ((double) breaker.ticksSinceCheck.getValue() / (double) breaker.currentWaitTime.getValue() > 0) {
-	    progress = (breaker.<ComponentTickable>getComponent(IComponentType.Tickable).getTicks()
+	    progress = (breaker.<ComponentTickable>requireComponent(IComponentType.Tickable).getTicks()
 		    + (breaker.works.getValue() ? partialTicks : 0)) * 20;
 	}
 
@@ -46,9 +49,10 @@ public class RenderBlockBreaker extends AbstractTileRenderer<TileBlockBreaker> {
 	matrixStackIn.translate(1.0 / 16.0, 6.0 / 16.0, 2.5 / 16.0);
 	matrixStackIn.mulPose(MathUtils.rotQuaternionDeg((float) -progress, 0, 0));
 	// matrixStackIn.mulPose(new Quaternion((float) -progress, 0, 0, true));
-	RenderingUtils.renderModel(ibakedmodel, breaker, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn,
+	RenderingUtils.renderModel(ibakedmodel, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn,
 		combinedOverlayIn);
 	matrixStackIn.popPose();
+
 	matrixStackIn.pushPose();
 	RenderingUtils.prepareRotationalTileModel(breaker, matrixStackIn);
 	matrixStackIn.mulPose(MathUtils.rotQuaternionDeg(0, 0, 90));
@@ -56,33 +60,26 @@ public class RenderBlockBreaker extends AbstractTileRenderer<TileBlockBreaker> {
 	matrixStackIn.translate(1.0 / 16.0, 6.0 / 16.0, -2.5 / 16.0);
 	matrixStackIn.mulPose(MathUtils.rotQuaternionDeg((float) progress, 0, 0));
 	// matrixStackIn.mulPose(new Quaternion((float) progress, 0, 0, true));
-	RenderingUtils.renderModel(ibakedmodel, breaker, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn,
+	RenderingUtils.renderModel(ibakedmodel, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn,
 		combinedOverlayIn);
 	matrixStackIn.popPose();
 
-	if ((double) breaker.ticksSinceCheck.getValue() / (double) breaker.currentWaitTime.getValue() <= 0) {
+	if ((double) breaker.ticksSinceCheck.getValue() / (double) breaker.currentWaitTime.getValue() <= 0)
 	    return;
-	}
 
 	matrixStackIn.pushPose();
-
 	Direction breaking = breaker.getFacing().getOpposite();
-
 	BlockPos offset = breaker.getBlockPos().relative(breaking);
-
-	BlockState state = breaker.getLevel().getBlockState(offset);
-
+	BlockState state = level.getBlockState(offset);
 	PoseStack.Pose pose = matrixStackIn.last();
-
 	VertexConsumer vertexconsumer1 = new SheetedDecalTextureGenerator(
 		Minecraft.getInstance().renderBuffers().crumblingBufferSource()
 			.getBuffer(ModelBakery.DESTROY_TYPES.get((int) (Math.min(breaker.progress.getValue(), 1) * 9))),
 		pose, 1.0F);
 
 	matrixStackIn.translate(breaking.getStepX(), 0, breaking.getStepZ());
-
-	Minecraft.getInstance().getBlockRenderer().renderBreakingTexture(state, offset, breaker.getLevel(),
-		matrixStackIn, vertexconsumer1, level().getModelData(offset));
+	Minecraft.getInstance().getBlockRenderer().renderBreakingTexture(state, offset, level, matrixStackIn,
+		vertexconsumer1, level.getModelData(offset));
 	// Minecraft.getInstance().renderBuffers().crumblingBufferSource().endBatch();
 	matrixStackIn.popPose();
     }

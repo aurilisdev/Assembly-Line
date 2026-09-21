@@ -17,7 +17,6 @@ import voltaic.prefab.utilities.RenderingUtils;
 import voltaic.prefab.utilities.math.MathUtils;
 
 public class RenderRancher extends AbstractTileRenderer<TileRancher> {
-
     public RenderRancher(BlockEntityRendererProvider.Context context) {
 	super(context);
     }
@@ -25,10 +24,9 @@ public class RenderRancher extends AbstractTileRenderer<TileRancher> {
     @Override
     public void render(TileRancher rancher, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn,
 	    int combinedLightIn, int combinedOverlayIn) {
-
 	double progress = 0;
-	if (rancher.<ComponentElectrodynamic>getComponent(IComponentType.Electrodynamic)
-		.getJoulesStored() >= AssemblyLineConfig.INSTANCE.RANCHER_USAGE.getAsDouble()) {
+	if (rancher.<ComponentElectrodynamic>requireComponent(IComponentType.Electrodynamic)
+		.getJoulesStored() >= AssemblyLineConfig.getInstance().RANCHER_USAGE.getAsDouble()) {
 	    progress = System.currentTimeMillis() % 100 / 100.0 * 40;
 	}
 
@@ -42,9 +40,10 @@ public class RenderRancher extends AbstractTileRenderer<TileRancher> {
 	matrixStackIn.translate(9.0 / 16.0, 3 / 16.0, 2.5 / 16.0);
 	matrixStackIn.mulPose(MathUtils.rotQuaternionDeg((float) -progress - 50f, 0, 0));
 	// matrixStackIn.mulPose(new Quaternion((float) -progress - 50f, 0, 0, true));
-	RenderingUtils.renderModel(ibakedmodel, rancher, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn,
+	RenderingUtils.renderModel(ibakedmodel, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn,
 		combinedOverlayIn);
 	matrixStackIn.popPose();
+
 	ibakedmodel = Minecraft.getInstance().getModelManager().getModel(AssemblyLineClientRegister.MODEL_RANCHERRIGHT);
 	matrixStackIn.pushPose();
 	RenderingUtils.prepareRotationalTileModel(rancher, matrixStackIn);
@@ -53,7 +52,7 @@ public class RenderRancher extends AbstractTileRenderer<TileRancher> {
 	matrixStackIn.translate(1.0 / 16.0, 3 / 16.0, -2.5 / 16.0);
 	matrixStackIn.mulPose(MathUtils.rotQuaternionDeg((float) progress + 50f, 0, 0));
 	// matrixStackIn.mulPose(new Quaternion((float) progress + 50f, 0, 0, true));
-	RenderingUtils.renderModel(ibakedmodel, rancher, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn,
+	RenderingUtils.renderModel(ibakedmodel, RenderType.solid(), matrixStackIn, bufferIn, combinedLightIn,
 		combinedOverlayIn);
 	matrixStackIn.popPose();
     }

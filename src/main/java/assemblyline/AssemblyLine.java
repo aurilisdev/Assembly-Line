@@ -27,8 +27,7 @@ public final class AssemblyLine {
     public static final String NAME = "Assembly Line";
 
     public AssemblyLine(IEventBus bus, ModContainer container) {
-	AssemblyLineConfig.INSTANCE = new AssemblyLineConfig();
-	container.registerConfig(ModConfig.Type.COMMON, AssemblyLineConfig.INSTANCE.SPEC);
+	container.registerConfig(ModConfig.Type.COMMON, AssemblyLineConfig.getInstance().SPEC);
 	if (FMLEnvironment.dist == Dist.CLIENT) {
 	    container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
 	}
@@ -44,9 +43,7 @@ public final class AssemblyLine {
     @SubscribeEvent
     @OnlyIn(Dist.CLIENT)
     public static void onClientSetup(FMLClientSetupEvent event) {
-	event.enqueueWork(() -> {
-	    AssemblyLineClientRegister.setup();
-	});
+	event.enqueueWork(() -> { AssemblyLineClientRegister.setup(); });
     }
 
     public static final ResourceLocation rl(String path) {

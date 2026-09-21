@@ -50,7 +50,6 @@ import voltaic.prefab.tile.components.type.ComponentContainerProvider;
 import voltaic.prefab.tile.components.type.ComponentElectrodynamic;
 import voltaic.prefab.tile.components.type.ComponentForgeEnergy;
 import voltaic.prefab.tile.components.type.ComponentInventory;
-import voltaic.prefab.tile.components.type.ComponentPacketHandler;
 import voltaic.prefab.tile.components.type.ComponentTickable;
 import voltaic.prefab.utilities.BlockEntityUtils;
 import voltaic.prefab.utilities.ItemUtils;
@@ -135,31 +134,30 @@ public class TileFarmer extends GenericTile {
     private final List<List<Integer>> quadrants = new ArrayList<>();
 
     public final SingleProperty<Boolean> refillEmpty = property(
-	    new SingleProperty<>(PropertyTypes.BOOLEAN, "refillempty", false));
+	    new SingleProperty<>(getPropertyManager(), PropertyTypes.BOOLEAN, "refillempty", false));
     public final SingleProperty<Boolean> fullGrowBonemeal = property(
-	    new SingleProperty<>(PropertyTypes.BOOLEAN, "fullbonemeal", false));
+	    new SingleProperty<>(getPropertyManager(), PropertyTypes.BOOLEAN, "fullbonemeal", false));
 
     public final SingleProperty<Integer> ticksSinceCheck = property(
-	    new SingleProperty<>(PropertyTypes.INTEGER, "ticks", 0));
+	    new SingleProperty<>(getPropertyManager(), PropertyTypes.INTEGER, "ticks", 0));
     public final SingleProperty<Integer> currentWaitTime = property(
-	    new SingleProperty<>(PropertyTypes.INTEGER, "waitTime", DEFAULT_WAIT_TICKS));
+	    new SingleProperty<>(getPropertyManager(), PropertyTypes.INTEGER, "waitTime", DEFAULT_WAIT_TICKS));
 
     public final SingleProperty<Double> powerUsageMultiplier = property(
-	    new SingleProperty<>(PropertyTypes.DOUBLE, "powermultiplier", 1.0));
+	    new SingleProperty<>(getPropertyManager(), PropertyTypes.DOUBLE, "powermultiplier", 1.0));
 
     public final SingleProperty<Integer> currentWidth = property(
-	    new SingleProperty<>(PropertyTypes.INTEGER, "currwidth", 3));
+	    new SingleProperty<>(getPropertyManager(), PropertyTypes.INTEGER, "currwidth", 3));
     public final SingleProperty<Integer> currentLength = property(
-	    new SingleProperty<>(PropertyTypes.INTEGER, "currlength", 3));
+	    new SingleProperty<>(getPropertyManager(), PropertyTypes.INTEGER, "currlength", 3));
 
     public TileFarmer(BlockPos pos, BlockState state) {
 	super(AssemblyLineTiles.TILE_FARMER.get(), pos, state);
-	addComponent(new ComponentPacketHandler(this));
 	addComponent(new ComponentTickable(this).tickServer(this::tickServer));
 	addComponent(new ComponentElectrodynamic(this, false, true)
 		.setInputDirections(BlockEntityUtils.MachineDirection.BOTTOM)
 		.voltage(VoltaicCapabilities.DEFAULT_VOLTAGE)
-		.maxJoules(AssemblyLineConfig.INSTANCE.FARMER_USAGE.getAsDouble() * 20));
+		.maxJoules(AssemblyLineConfig.getInstance().FARMER_USAGE.getAsDouble() * 20));
 	addComponent(new ComponentInventory(this,
 		ComponentInventory.InventoryBuilder.newInv().inputs(10).outputs(9).upgrades(3))
 		//
@@ -172,22 +170,21 @@ public class TileFarmer extends GenericTile {
 		.setSlotsByDirection(BlockEntityUtils.MachineDirection.BACK, 10, 11, 12, 13, 14, 15, 16, 17, 18)
 		.validUpgrades(ContainerFarmer.VALID_UPGRADES).valid(machineValidator()));
 	addComponent(new ComponentContainerProvider("farmer", this).createMenu((id, player) -> new ContainerFarmer(id,
-		player, getComponent(IComponentType.Inventory), getCoordsArray())));
+		player, requireComponent(IComponentType.Inventory), getCoordsArray())));
 	addComponent(new ComponentForgeEnergy(this));
     }
 
-    public void tickServer(ComponentTickable tick) {
-
-	ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
+    public void tickServer(Level level, ComponentTickable tick) {
+	ComponentElectrodynamic electro = requireComponent(IComponentType.Electrodynamic);
 	// faster starting speed, but the fastest speed is one block in area checked per
 	// tick
-	if (electro.getJoulesStored() < AssemblyLineConfig.INSTANCE.FARMER_USAGE.getAsDouble()
+	if (electro.getJoulesStored() < AssemblyLineConfig.getInstance().FARMER_USAGE.getAsDouble()
 		* powerUsageMultiplier.getValue()) {
 	    return;
 	}
 
 	electro.joules(electro.getJoulesStored()
-		- AssemblyLineConfig.INSTANCE.FARMER_USAGE.getAsDouble() * powerUsageMultiplier.getValue());
+		- AssemblyLineConfig.getInstance().FARMER_USAGE.getAsDouble() * powerUsageMultiplier.getValue());
 
 	ticksSinceCheck.setValue(ticksSinceCheck.getValue() + 1);
 
@@ -206,8 +203,8 @@ public class TileFarmer extends GenericTile {
 	BlockPos checkPos = new BlockPos(startPos.getX() + prevXShift, startPos.getY(), startPos.getZ() + prevZShift);
 	int quadrant = getQuadrant(prevXShift, prevZShift);
 	if (quadrant >= 0) {
-	    handleHarvest(checkPos, quadrant);
-	    handlePlanting(checkPos, quadrant);
+	    handleHarvest(level, checkPos, quadrant);
+	    handlePlanting(level, checkPos, quadrant);
 	}
 	refillInputs();
 	prevZShift++;
@@ -222,22 +219,21 @@ public class TileFarmer extends GenericTile {
 
     }
 
-    private void handleHarvest(BlockPos checkPos, int quadrant) {
-	ComponentInventory inv = getComponent(IComponentType.Inventory);
+    private void handleHarvest(Level level, BlockPos checkPos, int quadrant) {
+	ComponentInventory inv = requireComponent(IComponentType.Inventory);
 	if (!inv.areOutputsEmpty()) {
 	    return;
 	}
-	Level world = getLevel();
-	BlockState checkState = world.getBlockState(checkPos);
+	BlockState checkState = level.getBlockState(checkPos);
 	Block checkBlock = checkState.getBlock();
 	if (checkBlock instanceof CropBlock crop && crop.isMaxAge(checkState)) {
-	    breakBlock(checkState, world, checkPos, inv, SoundEvents.CROP_BREAK);
+	    breakBlock(checkState, level, checkPos, inv, SoundEvents.CROP_BREAK);
 	} else if (checkState.is(Blocks.PUMPKIN) || checkState.is(Blocks.MELON)) {
-	    breakBlock(checkState, world, checkPos, inv, SoundEvents.WOOD_BREAK);
+	    breakBlock(checkState, level, checkPos, inv, SoundEvents.WOOD_BREAK);
 	} else if (checkBlock instanceof CactusBlock || checkBlock instanceof SugarCaneBlock) {
 	    BlockPos above = checkPos.above();
 	    List<BlockPos> positions = new ArrayList<>();
-	    while (world.getBlockState(above).is(checkBlock)) {
+	    while (level.getBlockState(above).is(checkBlock)) {
 		positions.add(above);
 		above = above.above();
 	    }
@@ -245,22 +241,22 @@ public class TileFarmer extends GenericTile {
 	    BlockState currState;
 	    for (int i = positions.size() - 1; i >= 0; i--) {
 		currPos = positions.get(i);
-		currState = world.getBlockState(currPos);
+		currState = level.getBlockState(currPos);
 		if (checkBlock instanceof CactusBlock) {
-		    breakBlock(currState, world, currPos, inv, SoundEvents.WOOL_BREAK);
+		    breakBlock(currState, level, currPos, inv, SoundEvents.WOOL_BREAK);
 		} else {
-		    breakBlock(currState, world, currPos, inv, SoundEvents.GRASS_BREAK);
+		    breakBlock(currState, level, currPos, inv, SoundEvents.GRASS_BREAK);
 		}
 	    }
 	} else if (checkBlock instanceof NetherWartBlock
 		&& checkState.getValue(NetherWartBlock.AGE).intValue() == NetherWartBlock.MAX_AGE) {
-	    breakBlock(checkState, world, checkPos, inv, SoundEvents.NETHER_WART_BREAK);
+	    breakBlock(checkState, level, checkPos, inv, SoundEvents.NETHER_WART_BREAK);
 	} else if (checkState.is(BlockTags.LOGS)) {
-	    handleTree(world, checkPos, inv);
+	    handleTree(level, checkPos, inv);
 	} else if (checkState.is(Blocks.BAMBOO_SAPLING)) {
 	    BlockPos above = checkPos.above();
 	    List<BlockPos> positions = new ArrayList<>();
-	    while (world.getBlockState(above).getBlock() instanceof BambooStalkBlock) {
+	    while (level.getBlockState(above).getBlock() instanceof BambooStalkBlock) {
 		positions.add(above);
 		above = above.above();
 	    }
@@ -268,11 +264,11 @@ public class TileFarmer extends GenericTile {
 	    BlockState currState;
 	    for (int i = positions.size() - 1; i >= 0; i--) {
 		currPos = positions.get(i);
-		currState = world.getBlockState(currPos);
-		breakBlock(currState, world, currPos, inv, SoundEvents.GRASS_BREAK);
+		currState = level.getBlockState(currPos);
+		breakBlock(currState, level, currPos, inv, SoundEvents.GRASS_BREAK);
 	    }
 	} else if (checkState.getBlock() instanceof ChorusPlantBlock) {
-	    handleChorusTree(world, checkPos, inv);
+	    handleChorusTree(level, checkPos, inv);
 	}
     }
 
@@ -417,18 +413,16 @@ public class TileFarmer extends GenericTile {
 	world.playSound(null, checkPos, event, SoundSource.BLOCKS, 1.0F, 1.0F);
     }
 
-    private void handlePlanting(BlockPos checkPos, int quadrant) {
+    private void handlePlanting(Level level, BlockPos checkPos, int quadrant) {
 
-	Level world = getLevel();
-
-	ComponentInventory inv = getComponent(IComponentType.Inventory);
-	ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
+	ComponentInventory inv = requireComponent(IComponentType.Inventory);
+	ComponentElectrodynamic electro = requireComponent(IComponentType.Electrodynamic);
 	List<ItemStack> inputs = inv.getInputContents();
 	ItemStack plantingContents = inputs.get(quadrant);
 	ItemStack bonemeal = inputs.get(9);
-	BlockState checkState = world.getBlockState(checkPos);
+	BlockState checkState = level.getBlockState(checkPos);
 	BlockPos below = checkPos.below();
-	BlockState belowState = world.getBlockState(below);
+	BlockState belowState = level.getBlockState(below);
 	BlockState farmland = Blocks.FARMLAND.defaultBlockState();
 	boolean isAir = checkState.isAir();
 	// Check block type
@@ -437,56 +431,60 @@ public class TileFarmer extends GenericTile {
 	    if (blockItem instanceof SpecialPlantable plantable) {
 		if (plantable.canPlacePlantAtPosition(plantingContents, level, checkPos, Direction.DOWN)) {
 		    plantable.spawnPlantAtPosition(plantingContents, level, checkPos, Direction.DOWN);
-		    world.playSound(null, checkPos, SoundEvents.CROP_PLANTED, SoundSource.BLOCKS, 1.0F, 1.0F);
+		    level.playSound(null, checkPos, SoundEvents.CROP_PLANTED, SoundSource.BLOCKS, 1.0F, 1.0F);
 		    plantingContents.shrink(1);
-		    electro.extractPower(TransferPack.joulesVoltage(
-			    AssemblyLineConfig.INSTANCE.FARMER_USAGE.getAsDouble() * powerUsageMultiplier.getValue(),
-			    electro.getVoltage()), false);
+		    electro.extractPower(
+			    TransferPack.joulesVoltage(AssemblyLineConfig.getInstance().FARMER_USAGE.getAsDouble()
+				    * powerUsageMultiplier.getValue(), electro.getVoltage()),
+			    false);
 		    // then we check if it can be planted if the block becomes farmland
 		} else if (belowState.is(BlockTags.DIRT)) {
-		    world.setBlockAndUpdate(below, farmland);
-		    world.playSound(null, below, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
-		    electro.extractPower(TransferPack.joulesVoltage(
-			    AssemblyLineConfig.INSTANCE.FARMER_USAGE.getAsDouble() * powerUsageMultiplier.getValue(),
-			    electro.getVoltage()), false);
+		    level.setBlockAndUpdate(below, farmland);
+		    level.playSound(null, below, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+		    electro.extractPower(
+			    TransferPack.joulesVoltage(AssemblyLineConfig.getInstance().FARMER_USAGE.getAsDouble()
+				    * powerUsageMultiplier.getValue(), electro.getVoltage()),
+			    false);
 		}
 	    } else if (checkVanilla(plantingContents, blockItem)) {
 
-		if (block.defaultBlockState().canSurvive(world, checkPos)) {
+		if (block.defaultBlockState().canSurvive(level, checkPos)) {
 
-		    world.setBlockAndUpdate(checkPos, block.defaultBlockState());
-		    world.playSound(null, checkPos, SoundEvents.CROP_PLANTED, SoundSource.BLOCKS, 1.0F, 1.0F);
+		    level.setBlockAndUpdate(checkPos, block.defaultBlockState());
+		    level.playSound(null, checkPos, SoundEvents.CROP_PLANTED, SoundSource.BLOCKS, 1.0F, 1.0F);
 		    plantingContents.shrink(1);
-		    electro.extractPower(TransferPack.joulesVoltage(
-			    AssemblyLineConfig.INSTANCE.FARMER_USAGE.getAsDouble() * powerUsageMultiplier.getValue(),
-			    electro.getVoltage()), false);
+		    electro.extractPower(
+			    TransferPack.joulesVoltage(AssemblyLineConfig.getInstance().FARMER_USAGE.getAsDouble()
+				    * powerUsageMultiplier.getValue(), electro.getVoltage()),
+			    false);
 
 		} else if (belowState.is(BlockTags.DIRT) && isVanillaTillable(plantingContents)) {
-		    world.setBlockAndUpdate(below, farmland);
-		    world.playSound(null, below, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
-		    world.setBlockAndUpdate(checkPos, block.defaultBlockState());
-		    world.playSound(null, checkPos, SoundEvents.CROP_PLANTED, SoundSource.BLOCKS, 1.0F, 1.0F);
+		    level.setBlockAndUpdate(below, farmland);
+		    level.playSound(null, below, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+		    level.setBlockAndUpdate(checkPos, block.defaultBlockState());
+		    level.playSound(null, checkPos, SoundEvents.CROP_PLANTED, SoundSource.BLOCKS, 1.0F, 1.0F);
 		    plantingContents.shrink(1);
-		    electro.extractPower(TransferPack.joulesVoltage(
-			    AssemblyLineConfig.INSTANCE.FARMER_USAGE.getAsDouble() * powerUsageMultiplier.getValue(),
-			    electro.getVoltage()), false);
+		    electro.extractPower(
+			    TransferPack.joulesVoltage(AssemblyLineConfig.getInstance().FARMER_USAGE.getAsDouble()
+				    * powerUsageMultiplier.getValue(), electro.getVoltage()),
+			    false);
 		}
 	    }
 
 	}
 	// update checkState in case something has been planted
-	checkState = world.getBlockState(checkPos);
+	checkState = level.getBlockState(checkPos);
 	if (bonemeal.getItem() instanceof BoneMealItem && bonemeal.getCount() > 0) {
 	    if (fullGrowBonemeal.getValue()) {
 		while (bonemeal.getCount() > 0 && checkState.getBlock() instanceof BonemealableBlock bone
-			&& bone.isValidBonemealTarget(world, checkPos, checkState)) {
-		    bone.performBonemeal((ServerLevel) world, world.getRandom(), checkPos, checkState);
+			&& bone.isValidBonemealTarget(level, checkPos, checkState)) {
+		    bone.performBonemeal((ServerLevel) level, level.getRandom(), checkPos, checkState);
 		    bonemeal.shrink(1);
-		    checkState = world.getBlockState(checkPos);
+		    checkState = level.getBlockState(checkPos);
 		}
 	    } else if (checkState.getBlock() instanceof BonemealableBlock bone
-		    && bone.isValidBonemealTarget(world, checkPos, checkState)) {
-		bone.performBonemeal((ServerLevel) world, world.getRandom(), checkPos, checkState);
+		    && bone.isValidBonemealTarget(level, checkPos, checkState)) {
+		bone.performBonemeal((ServerLevel) level, level.getRandom(), checkPos, checkState);
 		bonemeal.shrink(1);
 	    }
 	}
@@ -516,7 +514,7 @@ public class TileFarmer extends GenericTile {
     }
 
     private void refillInputs() {
-	ComponentInventory inv = getComponent(IComponentType.Inventory);
+	ComponentInventory inv = requireComponent(IComponentType.Inventory);
 	List<ItemStack> inputs = inv.getInputContents();
 	for (int i = 0; i < inputs.size(); i++) {
 	    ItemStack input = inputs.get(i);
@@ -587,7 +585,11 @@ public class TileFarmer extends GenericTile {
     @Override
     public void setRemoved() {
 	super.setRemoved();
-	if (getLevel().isClientSide) {
+	Level level = getLevel();
+	if (level == null)
+	    return;
+
+	if (level.isClientSide) {
 	    HandlerFarmerLines.remove(getBlockPos());
 	}
     }

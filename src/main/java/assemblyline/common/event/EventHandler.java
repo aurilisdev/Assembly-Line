@@ -41,7 +41,7 @@ public class EventHandler {
 		return;
 	    }
 
-	    ComponentInventory inv = grinder.getComponent(IComponentType.Inventory);
+	    ComponentInventory inv = grinder.requireComponent(IComponentType.Inventory);
 
 	    int max = inv.getOutputStartIndex() + inv.getOutputContents().size();
 

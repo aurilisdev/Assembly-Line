@@ -1,8 +1,11 @@
 package assemblyline.common.tile.util;
 
+import javax.annotation.Nullable;
+
 import assemblyline.client.event.levelstage.HandlerHarvesterLines;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -19,12 +22,12 @@ public abstract class TileOutlineArea extends GenericTile {
     protected static final int MAX_CHECK_WIDTH = 25;
     protected static final int MAX_CHECK_LENGTH = 25;
     public SingleProperty<Integer> width = property(
-	    new SingleProperty<>(PropertyTypes.INTEGER, "width", DEFAULT_CHECK_WIDTH));
+	    new SingleProperty<>(getPropertyManager(), PropertyTypes.INTEGER, "width", DEFAULT_CHECK_WIDTH));
     public SingleProperty<Integer> length = property(
-	    new SingleProperty<>(PropertyTypes.INTEGER, "length", DEFAULT_CHECK_LENGTH));
+	    new SingleProperty<>(getPropertyManager(), PropertyTypes.INTEGER, "length", DEFAULT_CHECK_LENGTH));
     public SingleProperty<Integer> height = property(
-	    new SingleProperty<>(PropertyTypes.INTEGER, "height", DEFAULT_CHECK_HEIGHT));
-    protected AABB checkArea;
+	    new SingleProperty<>(getPropertyManager(), PropertyTypes.INTEGER, "height", DEFAULT_CHECK_HEIGHT));
+    protected @Nullable AABB checkArea;
 
     protected TileOutlineArea(BlockEntityType<?> type, BlockPos pos, BlockState state) {
 	super(type, pos, state);
@@ -54,7 +57,11 @@ public abstract class TileOutlineArea extends GenericTile {
     @Override
     public void setRemoved() {
 	super.setRemoved();
-	if (getLevel().isClientSide) {
+	Level level = getLevel();
+	if (level == null)
+	    return;
+
+	if (level.isClientSide) {
 	    HandlerHarvesterLines.removeLines(getBlockPos());
 	}
     }

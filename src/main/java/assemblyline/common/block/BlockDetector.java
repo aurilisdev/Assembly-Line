@@ -1,5 +1,7 @@
 package assemblyline.common.block;
 
+import javax.annotation.Nullable;
+
 import com.mojang.serialization.MapCodec;
 
 import assemblyline.common.tile.belt.TileDetector;
@@ -30,9 +32,12 @@ public class BlockDetector extends GenericEntityBlockWaterloggable {
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-	return super.getStateForPlacement(context).setValue(VoltaicBlockStates.FACING,
-		context.getHorizontalDirection().getOpposite());
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
+	BlockState stateForPlacement = super.getStateForPlacement(context);
+	if (stateForPlacement == null)
+	    return null;
+
+	return stateForPlacement.setValue(VoltaicBlockStates.FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
@@ -42,10 +47,11 @@ public class BlockDetector extends GenericEntityBlockWaterloggable {
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 	return new TileDetector(pos, state);
     }
 
+    @SuppressWarnings("null")
     @Override
     protected MapCodec<? extends BaseEntityBlock> codec() {
 	return null;

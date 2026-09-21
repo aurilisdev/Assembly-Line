@@ -63,66 +63,50 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 	imageHeight += 58;
 	inventoryLabelY += 58;
 
-	addComponent(new ScreenComponentCountdown(() -> {
-	    TileFarmer farmer = menu.getSafeHost();
-	    if (farmer != null) {
-		return 1 - (float) farmer.ticksSinceCheck.getValue()
-			/ Math.max(farmer.currentWaitTime.getValue(), 1.0F);
-	    }
-	    return 0.0;
-	}, 10, 50 + 58));
+	addComponent(
+		new ScreenComponentCountdown(
+			() -> menu.getSafeHost()
+				.map(farmer -> 1.0F - (float) farmer.ticksSinceCheck.getValue()
+					/ Math.max(farmer.currentWaitTime.getValue(), 1.0F))
+				.orElse(0.0F),
+			10, 50 + 58));
 
 	addComponent(new ScreenComponentElectricInfo(this::getElectricInformation,
 		-AbstractScreenComponentInfo.SIZE + 1, 2));
 
-	addComponent(fullBonemeal = new ScreenComponentButton<>(10, 20, 60, 20).setLabel(() -> {
-	    TileFarmer farmer = menu.getSafeHost();
-	    if (farmer == null) {
-		return Component.empty();
-	    }
-	    return farmer.fullGrowBonemeal.getValue() ? AssemblyTextUtils.gui("regbonemeal")
-		    : AssemblyTextUtils.gui("fullbonemeal");
-	}).setOnPress(button -> {
-	    TileFarmer farmer = menu.getSafeHost();
-	    if (farmer == null) {
-		return;
-	    }
-	    farmer.fullGrowBonemeal.setValue(!farmer.fullGrowBonemeal.getValue());
-	}));
+	addComponent(fullBonemeal = new ScreenComponentButton<>(10, 20, 60, 20)
+		.setLabel(() -> menu.getSafeHost()
+			.map(farmer -> farmer.fullGrowBonemeal.getValue() ? AssemblyTextUtils.gui("regbonemeal")
+				: AssemblyTextUtils.gui("fullbonemeal"))
+			.orElseGet(Component::empty))
+		.setOnPress(button -> menu.getSafeHost()
+			.ifPresent(farmer -> farmer.fullGrowBonemeal.setValue(!farmer.fullGrowBonemeal.getValue()))));
 
-	addComponent(refillEmpty = new ScreenComponentButton<>(10, 50, 60, 20).setLabel(() -> {
-	    TileFarmer farmer = menu.getSafeHost();
-	    if (farmer == null) {
-		return Component.empty();
-	    }
-	    return farmer.refillEmpty.getValue() ? AssemblyTextUtils.gui("ignoreempty")
-		    : AssemblyTextUtils.gui("refillempty");
-	}).setOnPress(button -> {
-	    TileFarmer farmer = menu.getSafeHost();
-	    if (farmer == null) {
-		return;
-	    }
-	    farmer.refillEmpty.setValue(!farmer.refillEmpty.getValue());
-	}));
+	addComponent(refillEmpty = new ScreenComponentButton<>(10, 50, 60, 20)
+		.setLabel(() -> menu.getSafeHost()
+			.map(farmer -> farmer.refillEmpty.getValue() ? AssemblyTextUtils.gui("ignoreempty")
+				: AssemblyTextUtils.gui("refillempty"))
+			.orElseGet(Component::empty))
+		.setOnPress(button -> menu.getSafeHost()
+			.ifPresent(farmer -> farmer.refillEmpty.setValue(!farmer.refillEmpty.getValue()))));
 
-	addComponent(renderArea = new ScreenComponentButton<>(10, 80, 60, 20).setLabel(() -> {
-	    TileFarmer farmer = menu.getSafeHost();
-	    if (farmer == null) {
-		return Component.empty();
-	    }
-	    return HandlerFarmerLines.isBeingRendered(farmer.getBlockPos()) ? AssemblyTextUtils.gui("hidearea")
-		    : AssemblyTextUtils.gui("renderarea");
-	}).setOnPress(button -> {
-	    TileFarmer farmer = menu.getSafeHost();
-	    if (farmer != null) {
-		BlockPos pos = farmer.getBlockPos();
-		if (HandlerFarmerLines.isBeingRendered(pos)) {
-		    HandlerFarmerLines.remove(pos);
-		} else {
-		    updateBox(farmer);
-		}
-	    }
-	}));
+	addComponent(renderArea = new ScreenComponentButton<>(10, 80, 60, 20)
+		.setLabel(() -> menu.getSafeHost()
+			.map(farmer -> HandlerFarmerLines.isBeingRendered(farmer.getBlockPos())
+				? AssemblyTextUtils.gui("hidearea")
+				: AssemblyTextUtils.gui("renderarea"))
+			.orElseGet(Component::empty))
+		.setOnPress(button -> menu.getSafeHost().ifPresent(farmer -> {
+
+		    BlockPos pos = farmer.getBlockPos();
+
+		    if (HandlerFarmerLines.isBeingRendered(pos)) {
+			HandlerFarmerLines.remove(pos);
+		    } else {
+			updateBox(farmer);
+		    }
+
+		})));
 
 	new WrapperInventoryIO(this, -AbstractScreenComponentInfo.SIZE + 1, AbstractScreenComponentInfo.SIZE + 2, 75,
 		82 + 58, 8, 72 + 58, (slot, index) -> {
@@ -136,33 +120,34 @@ public class ScreenFarmer extends GenericScreen<ContainerFarmer> {
 
     private List<? extends FormattedCharSequence> getElectricInformation() {
 	ArrayList<FormattedCharSequence> list = new ArrayList<>();
-	TileFarmer farmer = menu.getSafeHost();
-	if (farmer != null) {
-	    ComponentElectrodynamic electro = farmer.getComponent(IComponentType.Electrodynamic);
-	    list.add(AssemblyTextUtils
-		    .gui("machine.usage",
-			    ChatFormatter
-				    .getChatDisplayShort(AssemblyLineConfig.INSTANCE.FARMER_USAGE.getAsDouble()
-					    * farmer.powerUsageMultiplier.getValue() * 20, DisplayUnits.WATT)
-				    .withStyle(ChatFormatting.GRAY))
-		    .withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
-	    list.add(AssemblyTextUtils
-		    .gui("machine.voltage",
-			    ChatFormatter.getChatDisplayShort(electro.getVoltage(), DisplayUnits.VOLTAGE)
-				    .withStyle(ChatFormatting.GRAY))
-		    .withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
-	}
+	menu.getSafeHost().ifPresent(farmer -> {
+	    if (farmer != null) {
+		ComponentElectrodynamic electro = farmer.requireComponent(IComponentType.Electrodynamic);
+		list.add(AssemblyTextUtils
+			.gui("machine.usage", ChatFormatter
+				.getChatDisplayShort(AssemblyLineConfig.getInstance().FARMER_USAGE.getAsDouble()
+					* farmer.powerUsageMultiplier.getValue() * 20, DisplayUnits.WATT)
+				.withStyle(ChatFormatting.GRAY))
+			.withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
+		list.add(AssemblyTextUtils
+			.gui("machine.voltage",
+				ChatFormatter.getChatDisplayShort(electro.getVoltage(), DisplayUnits.VOLTAGE)
+					.withStyle(ChatFormatting.GRAY))
+			.withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
+	    }
+	});
 	return list;
     }
 
     @Override
     protected void containerTick() {
 	super.containerTick();
-	TileFarmer farmer = menu.getSafeHost();
-	if (farmer != null && HandlerFarmerLines.isBeingRendered(farmer.getBlockPos())) {
-	    HandlerFarmerLines.remove(farmer.getBlockPos());
-	    updateBox(farmer);
-	}
+	menu.getSafeHost().ifPresent(farmer -> {
+	    if (HandlerFarmerLines.isBeingRendered(farmer.getBlockPos())) {
+		HandlerFarmerLines.remove(farmer.getBlockPos());
+		updateBox(farmer);
+	    }
+	});
     }
 
     @Override

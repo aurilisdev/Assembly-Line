@@ -9,6 +9,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.DirectionalPlaceContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import voltaic.common.item.ItemUpgrade;
@@ -19,7 +20,6 @@ import voltaic.prefab.tile.components.type.ComponentContainerProvider;
 import voltaic.prefab.tile.components.type.ComponentElectrodynamic;
 import voltaic.prefab.tile.components.type.ComponentForgeEnergy;
 import voltaic.prefab.tile.components.type.ComponentInventory;
-import voltaic.prefab.tile.components.type.ComponentPacketHandler;
 import voltaic.prefab.tile.components.type.ComponentTickable;
 import voltaic.prefab.utilities.BlockEntityUtils;
 import voltaic.registers.VoltaicCapabilities;
@@ -27,33 +27,32 @@ import voltaic.registers.VoltaicCapabilities;
 public class TileBlockPlacer extends TileOutlineArea {
 
     public SingleProperty<Integer> ticksSinceCheck = property(
-	    new SingleProperty<>(PropertyTypes.INTEGER, "ticksSinceCheck", 0));
+	    new SingleProperty<>(getPropertyManager(), PropertyTypes.INTEGER, "ticksSinceCheck", 0));
     public SingleProperty<Integer> currentWaitTime = property(
-	    new SingleProperty<>(PropertyTypes.INTEGER, "currentWaitTime", 0));
+	    new SingleProperty<>(getPropertyManager(), PropertyTypes.INTEGER, "currentWaitTime", 0));
 
     public TileBlockPlacer(BlockPos pos, BlockState state) {
 	super(AssemblyLineTiles.TILE_BLOCKPLACER.get(), pos, state);
-	addComponent(new ComponentPacketHandler(this));
 	addComponent(new ComponentTickable(this).tickServer(this::tickServer));
 	addComponent(new ComponentElectrodynamic(this, false, true)
 		.setInputDirections(BlockEntityUtils.MachineDirection.FRONT)
 		.voltage(VoltaicCapabilities.DEFAULT_VOLTAGE)
-		.maxJoules(AssemblyLineConfig.INSTANCE.BLOCKPLACER_USAGE.getAsDouble() * 2));
+		.maxJoules(AssemblyLineConfig.getInstance().BLOCKPLACER_USAGE.getAsDouble() * 2));
 	addComponent(new ComponentInventory(this, ComponentInventory.InventoryBuilder.newInv().inputs(1).upgrades(3))
 		//
 		.setDirectionsBySlot(0, BlockEntityUtils.MachineDirection.TOP, BlockEntityUtils.MachineDirection.BOTTOM,
 			BlockEntityUtils.MachineDirection.LEFT, BlockEntityUtils.MachineDirection.RIGHT)
 		.validUpgrades(ContainerBlockPlacer.VALID_UPGRADES).valid(machineValidator()));
 	addComponent(new ComponentContainerProvider("blockplacer", this)
-		.createMenu((id, player) -> new ContainerBlockPlacer(id, player, getComponent(IComponentType.Inventory),
-			getCoordsArray())));
+		.createMenu((id, player) -> new ContainerBlockPlacer(id, player,
+			requireComponent(IComponentType.Inventory), getCoordsArray())));
 	addComponent(new ComponentForgeEnergy(this));
 	height.setValue(1);
     }
 
-    public void tickServer(ComponentTickable tickable) {
-	ComponentInventory inv = getComponent(IComponentType.Inventory);
-	ComponentElectrodynamic electro = getComponent(IComponentType.Electrodynamic);
+    public void tickServer(Level level, ComponentTickable tickable) {
+	ComponentInventory inv = requireComponent(IComponentType.Inventory);
+	ComponentElectrodynamic electro = requireComponent(IComponentType.Electrodynamic);
 
 	// we can add speed upgrade functionality if you want
 	currentWaitTime.setValue(20);
@@ -71,7 +70,7 @@ public class TileBlockPlacer extends TileOutlineArea {
 	    }
 	}
 
-	if (electro.getJoulesStored() < AssemblyLineConfig.INSTANCE.BLOCKPLACER_USAGE.getAsDouble()
+	if (electro.getJoulesStored() < AssemblyLineConfig.getInstance().BLOCKPLACER_USAGE.getAsDouble()
 		|| inv.areInputsEmpty()) {
 	    return;
 	}
@@ -90,7 +89,7 @@ public class TileBlockPlacer extends TileOutlineArea {
 	BlockPos off = worldPosition.offset(facing.getOpposite().getNormal());
 	BlockState state = level.getBlockState(off);
 	electro.setJoulesStored(
-		electro.getJoulesStored() - AssemblyLineConfig.INSTANCE.BLOCKBREAKER_USAGE.getAsDouble());
+		electro.getJoulesStored() - AssemblyLineConfig.getInstance().BLOCKBREAKER_USAGE.getAsDouble());
 	if (!state.isAir()) {
 	    return;
 	}
@@ -101,9 +100,11 @@ public class TileBlockPlacer extends TileOutlineArea {
 	    Block b = bi.getBlock();
 	    BlockState newState = b
 		    .getStateForPlacement(new DirectionalPlaceContext(level, off, facing, stack, facing));
-	    if (newState.canSurvive(level, off)) {
-		level.setBlockAndUpdate(off, newState);
-		stack.shrink(1);
+	    if (newState != null) {
+		if (newState.canSurvive(level, off)) {
+		    level.setBlockAndUpdate(off, newState);
+		    stack.shrink(1);
+		}
 	    }
 	}
 
