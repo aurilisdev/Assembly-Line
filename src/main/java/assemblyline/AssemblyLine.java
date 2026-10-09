@@ -20,7 +20,7 @@ import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
 @Mod(AssemblyLine.ID)
-@EventBusSubscriber(modid = AssemblyLine.ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = AssemblyLine.ID)
 public final class AssemblyLine {
 
     public static final String ID = "assemblyline";

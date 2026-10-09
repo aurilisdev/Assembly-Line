@@ -29,7 +29,7 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import voltaic.client.guidebook.ScreenGuidebook;
 
 @OnlyIn(Dist.CLIENT)
-@EventBusSubscriber(modid = AssemblyLine.ID, bus = EventBusSubscriber.Bus.MOD, value = { Dist.CLIENT })
+@EventBusSubscriber(modid = AssemblyLine.ID, value = { Dist.CLIENT })
 public class AssemblyLineClientRegister {
 
     public static final ModelResourceLocation MODEL_CONVEYOR = ModelResourceLocation

@@ -39,7 +39,7 @@ public class AssemblyLineItems {
 		    () -> new BlockItemDescriptable(AssemblyLineBlocks.BLOCKS_ASSEMBLYMACHINES.getValue(subtype),
 			    new Properties(), AssemblyLineCreativeTabs.MAIN)));
 
-    @EventBusSubscriber(value = Dist.CLIENT, modid = AssemblyLine.ID, bus = EventBusSubscriber.Bus.MOD)
+    @EventBusSubscriber(value = Dist.CLIENT, modid = AssemblyLine.ID)
     private static class AssemblyCreativeRegistry {
 
 	@SubscribeEvent

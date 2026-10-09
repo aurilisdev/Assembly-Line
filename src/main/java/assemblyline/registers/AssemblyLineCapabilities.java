@@ -9,7 +9,7 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import voltaic.prefab.tile.GenericTile;
 import voltaic.registers.VoltaicCapabilities;
 
-@EventBusSubscriber(modid = AssemblyLine.ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = AssemblyLine.ID)
 public class AssemblyLineCapabilities {
 
     @SubscribeEvent
